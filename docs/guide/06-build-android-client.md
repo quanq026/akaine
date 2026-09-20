@@ -230,6 +230,11 @@ verified APKPure baseline and can be reproduced without a pre-patched native
 library. See the README beside that plan for the exact command and receipt
 checks.
 
+The package rename and managed AKFC bridge are also public in
+`scripts/patch_android_client_sources.py` and the `smali` folder beside the
+native plan. Their README pins the Apktool version and gives the exact decode
+and patch commands.
+
 These changes describe the release contract. The actual native payload stays
 in the private kit because it is coupled to the verified APK input and must not
 be applied to arbitrary versions.
