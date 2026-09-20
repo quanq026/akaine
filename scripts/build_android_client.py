@@ -24,6 +24,13 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_stream(stream) -> str:
+    digest = hashlib.sha256()
+    for block in iter(lambda: stream.read(COPY_BUFFER), b""):
+        digest.update(block)
+    return digest.hexdigest()
+
+
 def archive_path(value: str) -> str:
     path = PurePosixPath(value)
     if not value or path.is_absolute() or "\\" in value or ".." in path.parts:
@@ -53,13 +60,70 @@ def load_plan(path: Path) -> dict:
     plan = json.loads(path.read_text(encoding="utf-8"))
     if plan.get("schema") != SCHEMA:
         raise ValueError(f"plan schema must be {SCHEMA!r}")
-    expected = plan.get("source_sha256", "")
-    if len(expected) != 64 or any(character not in "0123456789abcdef" for character in expected.lower()):
+    expected = plan.get("source_sha256")
+    source_entries = plan.get("source_entries", {})
+    if expected is not None and (
+        len(expected) != 64
+        or any(character not in "0123456789abcdef" for character in expected.lower())
+    ):
         raise ValueError("source_sha256 must contain 64 hexadecimal characters")
-    replacements = plan.get("replacements")
-    if not isinstance(replacements, list) or not replacements:
-        raise ValueError("plan requires at least one replacement")
+    if not expected and not source_entries:
+        raise ValueError("plan requires source_sha256 or source_entries")
+    if not isinstance(source_entries, dict):
+        raise ValueError("source_entries must be an object")
+    for name, value in source_entries.items():
+        archive_path(name)
+        if len(value) != 64 or any(character not in "0123456789abcdef" for character in value.lower()):
+            raise ValueError(f"invalid source entry SHA-256: {name}")
+    replacements = plan.get("replacements", [])
+    binary_patches = plan.get("binary_patches", [])
+    if not isinstance(replacements, list) or not isinstance(binary_patches, list):
+        raise ValueError("replacements and binary_patches must be arrays")
+    if not replacements and not binary_patches:
+        raise ValueError("plan requires a replacement or binary patch")
     return plan
+
+
+def patch_binary(source_zip: zipfile.ZipFile, row: dict) -> tuple[str, bytes, list[str]]:
+    target = archive_path(row["archive_path"])
+    try:
+        data = bytearray(source_zip.read(target))
+    except KeyError as error:
+        raise ValueError(f"source APK is missing binary patch target: {target}") from error
+    actual_source_hash = hashlib.sha256(data).hexdigest()
+    expected_source_hash = row["source_sha256"].lower()
+    if actual_source_hash != expected_source_hash:
+        raise ValueError(
+            f"binary patch source hash mismatch for {target}: "
+            f"expected {expected_source_hash}, got {actual_source_hash}"
+        )
+    occupied: set[int] = set()
+    labels: list[str] = []
+    for operation in row.get("operations", []):
+        offset = operation["offset"]
+        before = bytes.fromhex(operation["before"])
+        after = bytes.fromhex(operation["after"])
+        if not isinstance(offset, int) or offset < 0 or len(before) != len(after):
+            raise ValueError(f"invalid binary patch operation for {target}")
+        end = offset + len(before)
+        positions = set(range(offset, end))
+        if end > len(data) or occupied.intersection(positions):
+            raise ValueError(f"out-of-range or overlapping binary patch for {target}")
+        if data[offset:end] != before:
+            raise ValueError(
+                f"binary patch guard mismatch for {target} at offset {offset:#x}"
+            )
+        data[offset:end] = after
+        occupied.update(positions)
+        labels.append(operation.get("label", f"{offset:#x}"))
+    actual_output_hash = hashlib.sha256(data).hexdigest()
+    expected_output_hash = row["output_sha256"].lower()
+    if actual_output_hash != expected_output_hash:
+        raise ValueError(
+            f"binary patch output hash mismatch for {target}: "
+            f"expected {expected_output_hash}, got {actual_output_hash}"
+        )
+    return target, bytes(data), labels
 
 
 def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
@@ -74,14 +138,15 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
 
     plan = load_plan(plan_path)
     actual_source_hash = sha256_file(source)
-    if actual_source_hash != plan["source_sha256"].lower():
+    expected_source_hash = plan.get("source_sha256")
+    if expected_source_hash and actual_source_hash != expected_source_hash.lower():
         raise ValueError(
             "source APK hash mismatch: "
-            f"expected {plan['source_sha256'].lower()}, got {actual_source_hash}"
+            f"expected {expected_source_hash.lower()}, got {actual_source_hash}"
         )
 
     replacements: dict[str, tuple[Path, str]] = {}
-    for row in plan["replacements"]:
+    for row in plan.get("replacements", []):
         target = archive_path(row["archive_path"])
         payload = private_file(kit_root, row["file"])
         expected = row["sha256"].lower()
@@ -90,6 +155,13 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
         if not payload.is_file() or sha256_file(payload) != expected:
             raise ValueError(f"replacement missing or hash mismatch: {row['file']}")
         replacements[target] = (payload, expected)
+
+    binary_patch_rows = plan.get("binary_patches", [])
+    binary_patch_targets = [archive_path(row["archive_path"]) for row in binary_patch_rows]
+    if len(set(binary_patch_targets)) != len(binary_patch_targets):
+        raise ValueError("duplicate binary patch target")
+    if set(binary_patch_targets).intersection(replacements):
+        raise ValueError("an entry cannot be both replaced and binary-patched")
 
     required = {archive_path(value) for value in plan.get("required_entries", [])}
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -112,6 +184,20 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
             missing = sorted(required - source_names)
             if missing:
                 raise ValueError(f"source APK is missing required entries: {missing}")
+            for name, expected in plan.get("source_entries", {}).items():
+                if name not in source_names:
+                    raise ValueError(f"source APK is missing guarded entry: {name}")
+                with source_zip.open(name, "r") as stream:
+                    actual = sha256_stream(stream)
+                if actual != expected.lower():
+                    raise ValueError(
+                        f"source entry hash mismatch for {name}: "
+                        f"expected {expected.lower()}, got {actual}"
+                    )
+            binary_payloads: dict[str, tuple[bytes, list[str]]] = {}
+            for row in binary_patch_rows:
+                target, payload, labels = patch_binary(source_zip, row)
+                binary_payloads[target] = (payload, labels)
 
             for info in source_zip.infolist():
                 name = archive_path(info.filename)
@@ -127,6 +213,11 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
                         shutil.copyfileobj(source_stream, target_stream, COPY_BUFFER)
                     written.add(name)
                     continue
+                if name in binary_payloads:
+                    payload, _ = binary_payloads[name]
+                    output_zip.writestr(info, payload)
+                    written.add(name)
+                    continue
                 with source_zip.open(info, "r") as source_stream, output_zip.open(info, "w") as target_stream:
                     shutil.copyfileobj(source_stream, target_stream, COPY_BUFFER)
 
@@ -139,8 +230,9 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
                     shutil.copyfileobj(source_stream, target_stream, COPY_BUFFER)
                 written.add(name)
 
-        if written != set(replacements):
-            raise RuntimeError("not every declared replacement was written")
+        declared_targets = set(replacements) | set(binary_patch_targets)
+        if written != declared_targets:
+            raise RuntimeError("not every declared patch target was written")
         os.replace(temporary, output)
     except Exception:
         temporary.unlink(missing_ok=True)
@@ -155,6 +247,9 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
         "output_sha256": sha256_file(output),
         "output_bytes": output.stat().st_size,
         "replaced_entries": sorted(written),
+        "binary_patch_labels": {
+            name: labels for name, (_, labels) in sorted(binary_payloads.items())
+        },
         "removed_v1_signatures": sorted(removed_signatures),
         "expected": plan.get("expected", {}),
     }
