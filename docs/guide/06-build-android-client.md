@@ -136,67 +136,23 @@ python scripts\doctor.py --android
 
 Do not continue unless the strict tool check passes.
 
-## Understand the private patch set
+## Understand the public patch set
 
-The patch release provides two inputs:
+The complete transformation is assembled from public source in this
+repository:
 
-1. A JSON build plan.
-2. Patch payloads generated from the public patch source.
+- `patch_android_client_sources.py` changes the decoded manifest, label,
+  package references and AKFC lifecycle calls;
+- `AkfcLoader.smali` is the managed JNI bridge;
+- `akfc_loader.cpp` implements protected-chart loading;
+- the key scripts generate a different RSA-3072 identity for each operator;
+- `build_boringssl_android.py` builds the loader's crypto dependency from a
+  pinned public revision;
+- `native-plan.json` applies guarded before/after byte operations to the two
+  original native libraries.
 
-The merged APK you created above is the source APK.
-
-The plan uses this shape:
-
-```json
-{
-  "schema": "akaine.client-build.v1",
-  "source_sha256": "746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e",
-  "source_entries": {
-    "AndroidManifest.xml": "64_HEXADECIMAL_CHARACTERS",
-    "classes.dex": "64_HEXADECIMAL_CHARACTERS",
-    "lib/arm64-v8a/libcocos2dcpp.so": "64_HEXADECIMAL_CHARACTERS"
-  },
-  "required_entries": [
-    "AndroidManifest.xml",
-    "classes.dex",
-    "lib/arm64-v8a/libcocos2dcpp.so"
-  ],
-  "replacements": [
-    {
-      "archive_path": "lib/arm64-v8a/libcocos2dcpp.so",
-      "file": "payload/libcocos2dcpp.so",
-      "sha256": "64_HEXADECIMAL_CHARACTERS"
-    }
-  ],
-  "expected": {
-    "label": "AkaineXD",
-    "package": "akai.arc.lmao",
-    "version_name": "7.0.255",
-    "version_code": "1209852",
-    "launchable_activity": "low.moe.AppActivity"
-  }
-}
-```
-
-Every replacement has an archive destination and a SHA-256. The builder stops
-before producing output if the source APK or guarded members, plan schema,
-required entries or any payload does not match. A plan can guard the complete
-merged-APK hash, selected entry hashes, or both. Entry guards tolerate harmless
-ZIP-container variation while still requiring the exact manifest, DEX and
-native inputs. The builder also rejects absolute and parent-relative payload
-paths, so the plan cannot read arbitrary files from the computer.
-
-The release patch set may replace several types of member:
-
-- `AndroidManifest.xml` or `resources.arsc` for package, label and Android
-  configuration changes;
-- one or more `classes*.dex` files for Java/Smali integration;
-- `lib/arm64-v8a/libcocos2dcpp.so` for native routing and gameplay guards;
-- the AKFC loader and its crypto dependency.
-
-Do not hand-copy only one of these pieces. For example, an AKFC chart can
-download successfully and still fail at play time when the loader, crypto
-library and DEX integration are not all from the same verified patch set.
+No patched `.dex` or `.so` is downloaded from Akaine. The only non-source input
+is the verified upstream XAPK.
 
 ## What the native release patch does
 
@@ -239,59 +195,115 @@ The same README now includes the AKFC loader C++ source build. Each operator
 generates a different 3072-bit RSA key pair locally; the private key is embedded
 only into that operator's loader and the public key is used to encrypt charts.
 
-These changes describe the release contract. The actual native payload stays
-in the private kit because it is coupled to the verified APK input and must not
-be applied to arbitrary versions.
-
-## Step 1 — select the build inputs
+## Step 1 — choose build locations
 
 ```powershell
-$sourceApk = Get-Item $baseline
-$planFile = Get-Item (Read-Host "Full path to the client build plan")
-$patchRoot = Get-Item (Read-Host "Full path to the plan's private payload folder")
 $outputFolder = Read-Host "Full path for build output"
 $outputFolder = [IO.Path]::GetFullPath($outputFolder)
 New-Item -ItemType Directory -Force $outputFolder | Out-Null
 
+$decoded = Join-Path $outputFolder "decoded"
+$managedApk = Join-Path $outputFolder "AkaineXD-managed-unsigned.apk"
 $unsignedApk = Join-Path $outputFolder "AkaineXD-unsigned.apk"
 $alignedApk = Join-Path $outputFolder "AkaineXD-aligned.apk"
 $signedApk = Join-Path $outputFolder "AkaineXD-release.apk"
 ```
 
-Check the source hash before doing anything else:
+## Step 2 — decode the merged baseline
 
 ```powershell
-Get-FileHash -Algorithm SHA256 $sourceApk.FullName
+$apktool = Get-Item (Read-Host "Full path to apktool_2.12.1.jar")
+Get-FileHash -Algorithm SHA256 $apktool.FullName
+
+java -Xmx6g -jar $apktool.FullName decode -f `
+  $baseline `
+  -o $decoded
 ```
 
-It must match `source_sha256` in the plan. Do not edit the plan to silence a
-mismatch. Obtain the correct input APK.
+The Apktool jar must be 25,926,183 bytes with SHA-256
+`66cf4524a4a45a7f56567d08b2c9b6ec237bcdd78cee69fd4a59c8a0243aeafa`.
 
-## Step 2 — build the unsigned APK
+## Step 3 — patch the managed sources
 
 ```powershell
 Set-Location $repoRoot
-python scripts\build_android_client.py `
-  --source $sourceApk.FullName `
-  --plan $planFile.FullName `
-  --kit-root $patchRoot.FullName `
-  --output $unsignedApk
+python scripts\patch_android_client_sources.py `
+  --decoded $decoded `
+  --receipt (Join-Path $outputFolder "managed-patch-receipt.json")
 ```
 
-The command streams large ZIP members instead of loading the full APK into
-memory. It preserves undeclared members, replaces only plan entries, removes
-the old JAR/v1 signature and writes a receipt next to the unsigned APK.
+This changes only exact version-locked source strings and adds the public Smali
+bridge. Any missing or duplicate match stops the build.
 
-Open the receipt and confirm the replacement list:
+## Step 4 — generate this server's AKFC key
 
 ```powershell
+$keyFolder = Read-Host "Private folder for this server's AKFC keys"
+$keyFolder = [IO.Path]::GetFullPath($keyFolder)
+$privateKey = Join-Path $keyFolder "akfc-private.pem"
+$publicKey = Join-Path $keyFolder "akfc-public.pem"
+$keyHeader = Join-Path $keyFolder "embedded_key.h"
+
+python scripts\generate_akfc_keypair.py `
+  --private-key $privateKey `
+  --public-key $publicKey
+
+python scripts\generate_akfc_key_header.py `
+  --private-key $privateKey `
+  --output $keyHeader
+```
+
+Keep the private key and generated header outside Git. The server uses the
+public key when encrypting AFF containers.
+
+## Step 5 — build AKFC native dependencies
+
+Install **NDK (Side by side)** and **CMake** from Android Studio's SDK Tools,
+then select the NDK folder:
+
+```powershell
+$env:ANDROID_NDK_ROOT = Read-Host "Full path to the installed Android NDK"
+$loader = Join-Path $outputFolder "libakfcloader.so"
+$crypto = Join-Path $outputFolder "libcrypto.so"
+$cryptoWork = Join-Path $outputFolder "boringssl-work"
+
+python scripts\build_akfc_loader.py `
+  --source patches\arcaea-7.0.255-arm64\native\akfc_loader.cpp `
+  --key-header $keyHeader `
+  --output $loader
+
+python scripts\build_boringssl_android.py `
+  --work $cryptoWork `
+  --output $crypto
+
+$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
+Copy-Item $loader (Join-Path $nativeFolder "libakfcloader.so")
+Copy-Item $crypto (Join-Path $nativeFolder "libcrypto.so")
+```
+
+The BoringSSL builder pins its Git revision and verifies all loader symbols.
+
+## Step 6 — rebuild and apply guarded native patches
+
+```powershell
+java -Xmx6g -jar $apktool.FullName build `
+  $decoded `
+  -o $managedApk
+
+python scripts\build_android_client.py `
+  --source $managedApk `
+  --plan patches\arcaea-7.0.255-arm64\native-plan.json `
+  --kit-root $repoRoot `
+  --output $unsignedApk
+
 Get-Content "$unsignedApk.receipt.json"
 ```
 
-If an unexpected APK member appears in `replaced_entries`, stop and inspect the
-private plan before signing.
+The receipt must list all 16 native labels. The plan guards the exact original
+`libcocos2dcpp.so` and `libfmodProvider.so` hashes even though Apktool changes
+the surrounding ZIP container.
 
-## Step 3 — find Android Build-Tools
+## Step 7 — find Android Build-Tools
 
 Use the newest installed Build-Tools folder instead of assuming a version or
 drive:
@@ -310,7 +322,7 @@ Get-Item $zipalign, $apksigner, $aapt
 
 All three files must exist.
 
-## Step 4 — align the APK
+## Step 8 — align the APK
 
 Native libraries require page alignment. The release pipeline uses 16 KiB page
 alignment and 4-byte ZIP alignment:
@@ -322,7 +334,7 @@ alignment and 4-byte ZIP alignment:
 
 The second command must finish with `Verification successful`.
 
-## Step 5 — create your signing identity once
+## Step 9 — create your signing identity once
 
 Choose a private keystore location and alias. If you already created a key for
 this package, reuse it; creating a new key makes install-over updates
@@ -351,7 +363,7 @@ the resource kit, a screenshot or a shell script.
 Back up this keystore securely. Losing it means future APKs cannot update the
 installed application without uninstalling and deleting its local data.
 
-## Step 6 — sign and verify
+## Step 10 — sign and verify
 
 ```powershell
 & $apksigner sign `
@@ -368,16 +380,14 @@ The verification must report v2 and v3 signatures as verified. Record the
 signer certificate SHA-256; every later build for the same package must report
 the same value.
 
-## Step 7 — inspect package and version
+## Step 11 — inspect package and version
 
 ```powershell
-$plan = Get-Content $planFile.FullName -Raw | ConvertFrom-Json
 $badging = & $aapt dump badging $signedApk
 $badging | Select-String "package:|application-label:|launchable-activity:"
 ```
 
-Compare the output with the `expected` object in the plan. For the current
-reference contract it must show `akai.arc.lmao`, `AkaineXD`, version
+For the current reference contract it must show `akai.arc.lmao`, `AkaineXD`, version
 `7.0.255`, version code `1209852` and `low.moe.AppActivity`.
 
 Also record the artifact identity:
@@ -387,13 +397,14 @@ Get-Item $signedApk | Select-Object Name, Length
 Get-FileHash -Algorithm SHA256 $signedApk
 ```
 
-## Step 8 — choose fresh install or install-over
+## Step 12 — choose fresh install or install-over
 
 Connect the Android device or emulator and run:
 
 ```powershell
 adb devices
-adb shell pm path $plan.expected.package
+$package = "akai.arc.lmao"
+adb shell pm path $package
 ```
 
 If the package is not installed, perform a fresh install:
@@ -413,11 +424,11 @@ adb install -r -d $signedApk
 automatically: uninstalling deletes local application data. Either sign with
 the original key or make an explicit backup-and-fresh-install decision.
 
-## Step 9 — launch with a clean log
+## Step 13 — launch with a clean log
 
 ```powershell
-$package = $plan.expected.package
-$activity = $plan.expected.launchable_activity
+$package = "akai.arc.lmao"
+$activity = "low.moe.AppActivity"
 
 adb logcat -c
 adb shell am force-stop $package
@@ -439,7 +450,7 @@ Select-String -Path $logFile -Pattern `
   "ClassNotFoundException","FMOD"
 ```
 
-## Step 10 — test the release contract
+## Step 14 — test the release contract
 
 Test in this order so a failure identifies the responsible layer:
 
@@ -503,7 +514,7 @@ not mean deleting application data or restoring an unrelated database.
 GitHub intentionally does not contain:
 
 - the source APK;
-- modified native libraries or DEX payloads;
+- prebuilt modified native libraries or DEX payloads;
 - the production signing key;
 - commercial game assets;
 - private chart encryption material;

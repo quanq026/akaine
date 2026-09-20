@@ -72,9 +72,8 @@
   "expected": {
     "stage": "native-and-fmod-patched",
     "remaining_layers": [
-      "manifest and package rename",
-      "Smali AKFC integration",
-      "AKFC native loader and crypto dependency"
+      "alignment and signing",
+      "runtime verification"
     ]
   }
 }
