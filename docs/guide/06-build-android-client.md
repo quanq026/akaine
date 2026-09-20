@@ -235,6 +235,10 @@ The package rename and managed AKFC bridge are also public in
 native plan. Their README pins the Apktool version and gives the exact decode
 and patch commands.
 
+The same README now includes the AKFC loader C++ source build. Each operator
+generates a different 3072-bit RSA key pair locally; the private key is embedded
+only into that operator's loader and the public key is used to encrypt charts.
+
 These changes describe the release contract. The actual native payload stays
 in the private kit because it is coupled to the verified APK input and must not
 be applied to arbitrary versions.
