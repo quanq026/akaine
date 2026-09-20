@@ -53,6 +53,7 @@ more comfortable managing Linux.
 3. [Prepare your Windows computer](docs/guide/03-workstation.md).
 4. [Get and verify the private resource kit](docs/guide/04-private-resources.md).
 5. [Configure R2, protected downloads and caching](docs/guide/05-cloudflare-content.md).
+6. [Build, sign and test the Android client](docs/guide/06-build-android-client.md).
 
 Start with chapter one and continue in order. Every later chapter assumes the
 previous chapter's checks have passed.
