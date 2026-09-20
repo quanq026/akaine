@@ -6,9 +6,10 @@ release: verify the input, apply only declared APK-member replacements, remove
 the obsolete signature, align the archive, sign it, inspect the result, install
 it and collect crash evidence.
 
-The public repository does not contain the commercial APK, patched native
-libraries, DEX payloads or signing keys. Those remain in the private resource
-kit. The public builder only describes and verifies how they are assembled.
+The public repository does not contain the commercial APK or signing keys. You
+download the original application yourself. GitHub contains the build process,
+verification logic and, as each native/Smali patch is consolidated, its
+version-locked patch source.
 
 ## What “matches the release” means
 
@@ -42,6 +43,83 @@ Functional equivalence and byte identity are different:
 
 Never copy another operator's signing key. Generate and protect your own.
 
+## Download the exact upstream XAPK
+
+The target is Arcaea `7.0.255` (`1209852`), package `moe.low.arc`, Android
+`arm64-v8a`. APKPure distributes this version as an XAPK rather than one APK.
+Select the arm64 variant, not the armeabi-v7a variant.
+
+At the time this pipeline was verified, the arm64 XAPK had:
+
+```text
+SHA-256  459bb01f8357dde82b13a817d4dd5dbf81e7a70d0805cc0d5f1aebde36fa2b7a
+Size     1219427332 bytes
+Splits   base, arcassets, config.arm64_v8a, config.en, config.mdpi
+```
+
+After downloading, select the file and verify it before opening it:
+
+```powershell
+$xapk = Get-Item (Read-Host "Full path to the downloaded 7.0.255 arm64 XAPK")
+Get-Item $xapk.FullName | Select-Object Name, Length
+Get-FileHash -Algorithm SHA256 $xapk.FullName
+```
+
+Both size and SHA-256 must match. A file for 7.0.256, an armeabi-v7a variant or
+a repacked mirror is not an interchangeable input. Native offsets and expected
+bytes are tied to this exact build.
+
+## Merge the XAPK splits into one baseline APK
+
+Download `APKEditor-1.4.9.jar` from the official `REAndroid/APKEditor` GitHub
+release. Verify the tool before running it:
+
+```text
+SHA-256  a9cd40df818845456be6d696de6110c89edf4b0a0580cb83438ed6b25a366e67
+Size     7733037 bytes
+```
+
+Choose where to keep the tool and baseline output:
+
+```powershell
+$apkEditor = Get-Item (Read-Host "Full path to APKEditor-1.4.9.jar")
+$baseline = Read-Host "Full output path for the merged baseline APK"
+$baseline = [IO.Path]::GetFullPath($baseline)
+
+Get-FileHash -Algorithm SHA256 $apkEditor.FullName
+java -Xmx4g -jar $apkEditor.FullName merge `
+  -i $xapk.FullName `
+  -o $baseline
+```
+
+Do not simply rename `.xapk` to `.apk`. The base package does not contain the
+arm64 native libraries and asset module by itself. APKEditor merges the five
+modules and sanitizes the split-required manifest declarations.
+
+The merged baseline used for this project has:
+
+```text
+SHA-256  746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e
+Size     1206740473 bytes
+```
+
+Check its identity:
+
+```powershell
+$buildTools = Get-ChildItem (Join-Path $sdk "build-tools") -Directory |
+  Sort-Object Name -Descending |
+  Select-Object -First 1
+$aapt = Join-Path $buildTools.FullName "aapt.exe"
+
+& $aapt dump badging $baseline |
+  Select-String "package:|application-label:|launchable-activity:"
+```
+
+It must still report package `moe.low.arc`, label `Arcaea`, version name
+`7.0.255`, version code `1209852` and launchable activity
+`low.moe.AppActivity`. The old split signature no longer verifies after merge;
+that is expected because the final APK will be aligned and signed later.
+
 ## Before building
 
 Complete chapters 3 and 4. Then open PowerShell and load the locations you
@@ -60,18 +138,24 @@ Do not continue unless the strict tool check passes.
 
 ## Understand the private patch set
 
-The kit provides three inputs:
+The patch release provides two inputs:
 
-1. A source APK that you are authorized to modify.
-2. A JSON build plan.
-3. Replacement payloads referenced by that plan.
+1. A JSON build plan.
+2. Patch payloads generated from the public patch source.
+
+The merged APK you created above is the source APK.
 
 The plan uses this shape:
 
 ```json
 {
   "schema": "akaine.client-build.v1",
-  "source_sha256": "64_HEXADECIMAL_CHARACTERS",
+  "source_sha256": "746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e",
+  "source_entries": {
+    "AndroidManifest.xml": "64_HEXADECIMAL_CHARACTERS",
+    "classes.dex": "64_HEXADECIMAL_CHARACTERS",
+    "lib/arm64-v8a/libcocos2dcpp.so": "64_HEXADECIMAL_CHARACTERS"
+  },
   "required_entries": [
     "AndroidManifest.xml",
     "classes.dex",
@@ -95,8 +179,11 @@ The plan uses this shape:
 ```
 
 Every replacement has an archive destination and a SHA-256. The builder stops
-before producing output if the source APK, plan schema, required entries or any
-payload does not match. It also rejects absolute and parent-relative payload
+before producing output if the source APK or guarded members, plan schema,
+required entries or any payload does not match. A plan can guard the complete
+merged-APK hash, selected entry hashes, or both. Entry guards tolerate harmless
+ZIP-container variation while still requiring the exact manifest, DEX and
+native inputs. The builder also rejects absolute and parent-relative payload
 paths, so the plan cannot read arbitrary files from the computer.
 
 The release patch set may replace several types of member:
@@ -136,6 +223,13 @@ The accepted release contains these behavior changes:
 6. **AKFC runtime.** The APK contains the loader, crypto library and matching
    managed integration. This is one feature unit, not three optional patches.
 
+The guarded byte operations for items 1–5 and the FMOD error-18 repair are
+published in
+`patches/arcaea-7.0.255-arm64/native-plan.json`. They are generated from the
+verified APKPure baseline and can be reproduced without a pre-patched native
+library. See the README beside that plan for the exact command and receipt
+checks.
+
 These changes describe the release contract. The actual native payload stays
 in the private kit because it is coupled to the verified APK input and must not
 be applied to arbitrary versions.
@@ -143,7 +237,7 @@ be applied to arbitrary versions.
 ## Step 1 — select the build inputs
 
 ```powershell
-$sourceApk = Get-Item (Read-Host "Full path to the verified source APK")
+$sourceApk = Get-Item $baseline
 $planFile = Get-Item (Read-Host "Full path to the client build plan")
 $patchRoot = Get-Item (Read-Host "Full path to the plan's private payload folder")
 $outputFolder = Read-Host "Full path for build output"
