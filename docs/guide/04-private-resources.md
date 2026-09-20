@@ -4,47 +4,41 @@ GitHub contains the source code and this guide. It does not contain the base
 APK, game assets, content bundles or tested Apktool package needed by later
 chapters.
 
-## Request the kit
+## Obtain the kit
 
-Direct-message Discord user `kuan.026`. Do not ask for the kit in a public
-GitHub issue, Discussion, server channel or group chat. Accept the download
-only from that exact Discord account.
+Obtain the private resource kit and its expected SHA-256 value from the project
+owner through a private channel. Do not request or post private resources in a
+public GitHub issue, Discussion, server channel or group chat.
 
-The message you receive should identify a kit version and include a SHA-256
-manifest. If it does not include both, ask for them before downloading.
-
-## Create the destination folder
-
-Open PowerShell:
-
-```powershell
-New-Item -ItemType Directory -Force C:\Akaine\resources | Out-Null
-```
-
-Download the archive into `C:\Akaine\resources`. Do not put it inside the Git
-repository at `C:\Akaine\akaine`.
+Download the archive anywhere outside the Git repository.
 
 ## Verify the downloaded archive
 
-The owner will provide an expected SHA-256 value. Run this command, replacing
-the filename:
+The provider will give you an expected SHA-256 value. Run:
 
 ```powershell
-Get-FileHash -Algorithm SHA256 "C:\Akaine\resources\akaine-kit-VERSION.zip"
+$kitArchive = Get-Item (Read-Host "Full path to the downloaded kit archive")
+Get-FileHash -Algorithm SHA256 $kitArchive.FullName
 ```
 
-Compare the complete 64-character hash with the owner's message. Letter case
+Compare the complete 64-character hash with the expected value. Letter case
 does not matter; every character must otherwise match. If it differs, delete
-the file and contact `kuan.026`. Do not extract or run it.
+the file and ask the provider for a verified replacement. Do not extract or
+run it.
 
 ## Extract and verify the contents
 
-After the archive hash matches, extract it into a versioned folder:
+After the archive hash matches, choose where to extract it:
 
 ```powershell
+$kitRoot = Read-Host "Full path for the extracted kit"
+$kitRoot = [IO.Path]::GetFullPath($kitRoot)
+
 Expand-Archive `
-  -LiteralPath "C:\Akaine\resources\akaine-kit-VERSION.zip" `
-  -DestinationPath "C:\Akaine\resources\akaine-kit-VERSION"
+  -LiteralPath $kitArchive.FullName `
+  -DestinationPath $kitRoot
+
+[Environment]::SetEnvironmentVariable("AKAINE_KIT_ROOT", $kitRoot, "User")
 ```
 
 The kit will include a manifest and a verification script. Run the command
@@ -55,18 +49,15 @@ Do not proceed if the verification reports a missing or mismatched file.
 
 ## Configure Apktool
 
-The verified kit places Apktool at:
-
-```text
-C:\Akaine\resources\akaine-kit-VERSION\tools\apktool.jar
-```
-
-Set the environment variable using the actual versioned folder name:
+Set the environment variable from the extracted kit location:
 
 ```powershell
+$kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
+$apktool = Join-Path $kitRoot "tools\apktool.jar"
+
 [Environment]::SetEnvironmentVariable(
     "APKTOOL_JAR",
-    "C:\Akaine\resources\akaine-kit-VERSION\tools\apktool.jar",
+    $apktool,
     "User"
 )
 ```
@@ -74,7 +65,8 @@ Set the environment variable using the actual versioned folder name:
 Close and reopen PowerShell, then run the strict Android check:
 
 ```powershell
-Set-Location C:\Akaine\akaine
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+Set-Location $repoRoot
 python scripts\doctor.py --android
 ```
 
@@ -85,16 +77,16 @@ missing tool, return to the matching installation step instead of continuing.
 
 - Do not commit it to Git or GitHub.
 - Do not upload it to a public file host.
-- Do not send it to another person; tell them to contact `kuan.026`.
+- Do not redistribute it unless you have permission from every relevant owner.
 - Do not store production credentials or player databases in the same folder.
 - Access to the kit does not grant permission to redistribute its contents.
 
 ## How to know this chapter is complete
 
-- The archive hash matches the value sent by `kuan.026`.
+- The archive hash matches the expected value from the provider.
 - The extracted manifest verification passes.
 - The kit is outside the Git repository.
-- `C:\Akaine\resources\akaine-kit-VERSION` contains the verified files.
+- `AKAINE_KIT_ROOT` points to the extracted and verified kit.
 
 The later client and content chapters will tell you which verified kit files to
 use. Do not guess their purpose or run scripts that are not named by the guide.
