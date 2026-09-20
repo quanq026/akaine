@@ -30,3 +30,10 @@ Do not literally register `example.com`; it is reserved for documentation.
 At the end of Part 1 you should have a protected cloud account, a Lightsail
 server with a fixed IP address, a domain managed by Cloudflare, and a local
 computer with all required tools installed.
+
+## Part 2 — Android client
+
+6. [Build, sign and test the Android client](06-build-android-client.md).
+
+This chapter produces and tests an Android client from the verified private
+inputs.
