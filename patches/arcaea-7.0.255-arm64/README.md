@@ -119,8 +119,25 @@ $nativeFolder = Join-Path $decoded "lib\arm64-v8a"
 Copy-Item $loader (Join-Path $nativeFolder "libakfcloader.so")
 ```
 
-The loader resolves Android's BoringSSL API dynamically. The current release
-also ships a compatible `libcrypto.so` to avoid Android linker-namespace
-differences. A fully independent build must compile that library from a pinned
-BoringSSL source revision or prove the target device exposes every required
-symbol; do not copy a private release binary into a public kit.
+The loader resolves BoringSSL dynamically. Build the pinned public source
+instead of copying `libcrypto.so` from a private release:
+
+```powershell
+$cryptoWork = Read-Host "Full work folder for the BoringSSL build"
+$cryptoWork = [IO.Path]::GetFullPath($cryptoWork)
+$crypto = Join-Path (Split-Path $decoded -Parent) "libcrypto.so"
+
+python scripts\build_boringssl_android.py `
+  --work $cryptoWork `
+  --output $crypto
+
+Copy-Item $crypto (Join-Path $nativeFolder "libcrypto.so")
+```
+
+The script checks out BoringSSL commit
+`b75f405cde1cc3c9fb811be155eecabe38f379bb`, cross-compiles a shared arm64
+library for Android API 24, strips it and verifies every symbol used by the
+loader. The verified local build was 2,413,216 bytes with SHA-256
+`e70fa31f2f7ea5876e85c170a55f545017f473c3704d6953e99952000186671e`.
+Compiler and platform changes can alter the byte hash; the pinned revision and
+required-symbol check are the compatibility contract.

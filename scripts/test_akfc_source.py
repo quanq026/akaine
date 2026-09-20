@@ -19,6 +19,7 @@ from core.akfc import (  # noqa: E402
     wrap_dek,
 )
 import generate_akfc_key_header  # noqa: E402
+import build_boringssl_android  # noqa: E402
 
 
 class AKFCSourceTests(unittest.TestCase):
@@ -64,6 +65,11 @@ class AKFCSourceTests(unittest.TestCase):
         self.assertIn("Java_low_moe_AkfcLoader_installHooks", source)
         self.assertIn("Java_low_moe_AkfcLoader_wipeDecrypted", source)
         self.assertIn("#define LOGI(...) ((void)0)", source)
+
+    def test_boringssl_build_is_pinned_and_checks_loader_symbols(self):
+        self.assertEqual(len(build_boringssl_android.REVISION), 40)
+        self.assertIn("EVP_AEAD_CTX_open", build_boringssl_android.REQUIRED_SYMBOLS)
+        self.assertIn("EVP_PKEY_decrypt", build_boringssl_android.REQUIRED_SYMBOLS)
 
 
 if __name__ == "__main__":
