@@ -1,0 +1,18 @@
+button.fancy {
+  cursor: pointer;
+  border: none;
+  color: var(--text-color);
+  padding: 1rem;
+  background-color: var(--bg);
+  background-image: linear-gradient(135deg, var(--primary), var(--primary-assist) 30%, white 60%);
+  background-size: 400%;
+  border-radius: 0.5rem;
+  background-position: 100%;
+  transition: background-position var(--animate), color var(--animate);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+button.fancy:is(:hover, :focus, :focus-within) {
+  background-position: 0;
+  color: var(--bg);
+}

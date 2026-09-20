@@ -1,0 +1,21 @@
+{
+	"private": true,
+	"scripts": {
+		"postinstall": "patch-package",
+		"start": "wmr",
+		"build": "wmr build --sourcemap",
+		"serve": "wmr serve"
+	},
+	"eslintConfig": {
+		"extends": "preact"
+	},
+	"dependencies": {
+		"canvg": "^4.0.1",
+		"preact": "^10.19.2",
+		"preact-iso": "^2.3.2"
+	},
+	"devDependencies": {
+		"patch-package": "^8.0.0",
+		"wmr": "^3.8.0"
+	}
+}

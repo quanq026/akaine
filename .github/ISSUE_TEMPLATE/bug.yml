@@ -1,0 +1,35 @@
+name: Bug report
+description: Report a reproducible defect without secrets or player data
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Redact tokens, player data, signed URLs and credentials.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Suspected layer
+      options: [Server, Discord bot, APK/client, Bundle/content, CDN/R2, CI/docs, Unknown]
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized evidence

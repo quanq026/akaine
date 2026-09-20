@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            server/requirements.txt
+            requirements-dev.txt
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python scripts/doctor.py --ci
+      - run: python scripts/ci_public_repo_check.py
+      - run: python -m compileall -q server scripts
+      - name: Run reproducible server and bot tests
+        working-directory: server
+        run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tools.test_discord_bot
+
+  b30-web-tool:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server/tools/arcaea-toolbelt-aol-b30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test protected asset Worker
+        working-directory: .
+        run: node --test cloudflare/protected-assets/worker.test.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: server/tools/arcaea-toolbelt-aol-b30/package-lock.json
+      - run: npm ci
+      - run: npm run build

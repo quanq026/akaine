@@ -1,0 +1,88 @@
+{
+  "idx": 280,
+  "id": "testify1",
+  "title_localized": {
+    "en": "Testify"
+  },
+  "artist": "void (Mournfinale) feat. \u661f\u718a\u5357\u5deb",
+  "search_title": {
+    "ja": [
+      "\u3066\u3059\u3066\u3043\u3075\u3041\u3044"
+    ],
+    "ko": [
+      "\ud14c\uc2a4\ud2f0\ud30c\uc774"
+    ]
+  },
+  "search_artist": {
+    "en": [
+      "hoshikuma minami"
+    ],
+    "ja": [
+      "\u307c\u3044\u3069",
+      "\u3094\u3049\u3044\u3069",
+      "\u307b\u3057\u304f\u307e\u307f\u306a\u307f"
+    ],
+    "ko": [
+      "\ubcf4\uc774\ub4dc",
+      "\ud638\uc2dc\ucfe0\ub9c8 \ubbf8\ub098\ubbf8"
+    ]
+  },
+  "bpm": "178",
+  "bpm_base": 178,
+  "set": "finale",
+  "purchase": "finale",
+  "audioPreview": 66067,
+  "audioPreviewEnd": 86629,
+  "side": 2,
+  "bg": "testify",
+  "remote_dl": true,
+  "world_unlock": false,
+  "byd_local_unlock": true,
+  "songlist_hidden": true,
+  "date": 1657152009,
+  "version": "4.0",
+  "difficulties": [
+    {
+      "ratingClass": 0,
+      "jacketDesigner": "\u30b7\u30a8\u30e9",
+      "chartDesigner": "Eternal\u00a6PAST",
+      "rating": 7,
+      "ratingPlus": true,
+      "hidden_until": "song"
+    },
+    {
+      "ratingClass": 1,
+      "jacketDesigner": "\u30b7\u30a8\u30e9",
+      "chartDesigner": "Adverse\u00a6PRESENT",
+      "rating": 9,
+      "hidden_until": "song"
+    },
+    {
+      "ratingClass": 2,
+      "jacketDesigner": "\u30b7\u30a8\u30e9",
+      "chartDesigner": "Black\u00a6FUTURE",
+      "rating": 10,
+      "ratingPlus": true,
+      "hidden_until": "song"
+    },
+    {
+      "ratingClass": 3,
+      "jacketDesigner": "\u30b7\u30a8\u30e9",
+      "chartDesigner": "Silent\u00a6END",
+      "rating": 12,
+      "legacy11": true,
+      "world_unlock": false,
+      "hidden_until": "song"
+    }
+  ],
+  "additional_files": [
+    {
+      "file_name": "video.mp4",
+      "requirement": "required"
+    },
+    {
+      "file_name": "video_audio.ogg",
+      "requirement": "required"
+    }
+  ]
+}
