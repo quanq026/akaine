@@ -11,18 +11,29 @@ machine is ready.
   APKs and keeping an emulator.
 - Permissions: a Windows administrator account is needed for installers.
 
-## Step 1 — create a workspace
+## Step 1 — choose where to keep the files
 
-Open PowerShell and run:
+Choose two folders on any drive with enough free space: one for the public Git
+repository and one different folder for private resources. They must not be
+nested inside each other.
+
+Open PowerShell and paste the full paths when prompted:
 
 ```powershell
-New-Item -ItemType Directory -Force C:\Akaine | Out-Null
-Set-Location C:\Akaine
+$repoRoot = Read-Host "Full path for the Akaine source folder"
+$privateRoot = Read-Host "Full path for the private resource folder"
+
+$repoRoot = [IO.Path]::GetFullPath($repoRoot)
+$privateRoot = [IO.Path]::GetFullPath($privateRoot)
+
+New-Item -ItemType Directory -Force $privateRoot | Out-Null
+[Environment]::SetEnvironmentVariable("AKAINE_REPO_ROOT", $repoRoot, "User")
+[Environment]::SetEnvironmentVariable("AKAINE_PRIVATE_ROOT", $privateRoot, "User")
 ```
 
-The guide stores source in `C:\Akaine\akaine` and private resources in
-`C:\Akaine\resources`. Keeping them separate prevents an accidental Git commit
-from including private files.
+These variables let later chapters use your chosen locations without assuming
+a drive letter or folder name. Keeping the folders separate prevents an
+accidental Git commit from including private files.
 
 ## Step 2 — install Git, Python and Java
 
@@ -66,17 +77,14 @@ aliases for `python.exe` and `python3.exe`. Reopen PowerShell and try again.
    - Android SDK Command-line Tools (latest);
    - Android Emulator, if you will not use a physical phone.
 6. Select **Apply**, accept the licenses, and wait for installation.
-7. Copy the **Android SDK Location** shown at the top. The normal location is:
+7. Copy the **Android SDK Location** shown at the top.
 
-```text
-C:\Users\YOUR_NAME\AppData\Local\Android\Sdk
-```
-
-Set the environment variables using the actual path displayed by Android
-Studio:
+Set the environment variables using that path. The following command asks for
+it instead of assuming where Android Studio installed the SDK:
 
 ```powershell
-$sdk = "$env:LOCALAPPDATA\Android\Sdk"
+$sdk = Read-Host "Android SDK Location shown by Android Studio"
+$sdk = [IO.Path]::GetFullPath($sdk)
 [Environment]::SetEnvironmentVariable("ANDROID_HOME", $sdk, "User")
 [Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", $sdk, "User")
 [Environment]::SetEnvironmentVariable(
@@ -95,9 +103,9 @@ adb version
 ## Step 4 — clone the Akaine source
 
 ```powershell
-Set-Location C:\Akaine
-git clone https://github.com/quanq026/akaine.git
-Set-Location C:\Akaine\akaine
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+git clone https://github.com/quanq026/akaine.git $repoRoot
+Set-Location $repoRoot
 ```
 
 You should now see `README.md`, `server`, `scripts` and `docs`:
@@ -106,21 +114,24 @@ You should now see `README.md`, `server`, `scripts` and `docs`:
 Get-ChildItem
 ```
 
-## Step 5 — create the private resource folder
+## Step 5 — confirm the folders are separate
 
 ```powershell
-New-Item -ItemType Directory -Force C:\Akaine\resources | Out-Null
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+$privateRoot = [Environment]::GetEnvironmentVariable("AKAINE_PRIVATE_ROOT", "User")
+Get-Item $repoRoot, $privateRoot
 ```
 
-Do not create this folder inside `C:\Akaine\akaine`. When the private resource
-kit is supplied, it will be extracted into `C:\Akaine\resources`.
+Both paths must exist and must be different. The private folder must not be
+inside the repository.
 
 ## Step 6 — run the core readiness check
 
 Close and reopen PowerShell, then run:
 
 ```powershell
-Set-Location C:\Akaine\akaine
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+Set-Location $repoRoot
 python scripts\doctor.py
 ```
 
@@ -148,9 +159,11 @@ strict check.
 
 ## Step 7 — prepare the Python environment
 
-From `C:\Akaine\akaine`:
+From the repository folder:
 
 ```powershell
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+Set-Location $repoRoot
 python -m venv .venv
 .\.venv\Scripts\python -m pip install --upgrade pip
 .\.venv\Scripts\python -m pip install -r requirements-dev.txt
@@ -168,8 +181,8 @@ command normally prints nothing when compilation succeeds.
 
 ## How to know this chapter is complete
 
-- Source exists at `C:\Akaine\akaine`.
-- Private files have a separate `C:\Akaine\resources` folder.
+- The source and private-resource folders exist at the locations you chose.
+- The private-resource folder is outside the Git repository.
 - `doctor.py` reports all available tools accurately.
 - Git, Python 3.12, Java 17 and adb print versions.
 - The Python environment installs successfully.
@@ -177,10 +190,10 @@ command normally prints nothing when compilation succeeds.
 
 ## How to undo this chapter
 
-1. Delete `C:\Akaine\akaine\.venv` to remove Python packages.
-2. Delete `C:\Akaine\akaine` if you no longer want the source checkout.
-3. Keep or securely delete `C:\Akaine\resources` depending on your permission
-   to retain the private kit.
+1. Delete the `.venv` folder inside your repository to remove Python packages.
+2. Delete the repository folder if you no longer want the source checkout.
+3. Keep or securely delete your private-resource folder depending on your
+   permission to retain the kit.
 4. Uninstall Android Studio, Git, Python or Java from Windows Settings if
    you no longer need them.
 

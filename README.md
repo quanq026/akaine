@@ -28,7 +28,7 @@ Set aside one uninterrupted afternoon for the first setup. You need:
 - an Android phone or a computer capable of running an Android emulator;
 - a payment card accepted by AWS and your domain registrar;
 - an email address you control and can protect with two-factor authentication;
-- the private Akaine resource kit supplied by `kuan.026` on Discord.
+- the private Akaine resource kit and its expected SHA-256 value.
 
 For a new setup, the first six months can be almost free. New AWS customers can
 receive up to USD 200 in credits for up to six months, which can cover the
@@ -60,9 +60,8 @@ previous chapter's checks have passed.
 ## Private resources
 
 The APK input, game assets and content bundles are distributed separately.
-Direct-message Discord user `kuan.026` when the guide asks for the resource
-kit. Never download a mirror posted by another account. The kit includes a
-manifest so you can verify every file before using it.
+Obtain them privately from the project owner or another authorized provider.
+The kit includes a manifest so you can verify every file before using it.
 
 ## License and ownership
 

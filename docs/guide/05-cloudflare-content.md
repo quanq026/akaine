@@ -124,7 +124,8 @@ https://ACCOUNT_ID.r2.cloudflarestorage.com
 In PowerShell, replace the three example values:
 
 ```powershell
-$kit = "C:\Akaine\resources\akaine-kit-VERSION\r2"
+$kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
+$kit = Join-Path $kitRoot "r2"
 $bucket = "akaine-assets-example"
 $endpoint = "https://ACCOUNT_ID.r2.cloudflarestorage.com"
 
@@ -169,9 +170,12 @@ $rng.GetBytes($bytes)
 $rng.Dispose()
 $assetSecret = [Convert]::ToBase64String($bytes)
 
-New-Item -ItemType Directory -Force C:\Akaine\resources\secrets | Out-Null
+$secretFile = Read-Host "Full path for the signing-secret file"
+$secretFile = [IO.Path]::GetFullPath($secretFile)
+$secretFolder = Split-Path -Parent $secretFile
+New-Item -ItemType Directory -Force $secretFolder | Out-Null
 Set-Content `
-  -LiteralPath C:\Akaine\resources\secrets\asset-signing-secret.txt `
+  -LiteralPath $secretFile `
   -Value $assetSecret `
   -NoNewline
 ```
@@ -189,8 +193,9 @@ the server environment.
 5. On your computer, copy the public Worker source to the clipboard:
 
 ```powershell
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Get-Content `
-  -LiteralPath C:\Akaine\akaine\cloudflare\protected-assets\worker.mjs `
+  -LiteralPath (Join-Path $repoRoot "cloudflare\protected-assets\worker.mjs") `
   -Raw | Set-Clipboard
 ```
 
@@ -208,11 +213,8 @@ Open the Worker → **Settings** → **Bindings** and add:
 | Text variable | `ASSET_MANIFEST_KEY` | `private/asset-manifest.json` |
 
 Then open **Variables and Secrets**, add an encrypted secret named
-`ASSET_SIGNING_SECRET`, and paste the value from:
-
-```text
-C:\Akaine\resources\secrets\asset-signing-secret.txt
-```
+`ASSET_SIGNING_SECRET`, and paste the value from the secret file created in
+Step 7.
 
 Save and deploy the Worker settings.
 

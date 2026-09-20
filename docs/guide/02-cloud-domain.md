@@ -160,10 +160,8 @@ SERVER_IP=____________________________
 
 1. In Lightsail, open **Account** → **SSH keys**.
 2. Under the Singapore region, download the default private key.
-3. Create `C:\Akaine\keys` on your Windows computer.
-4. Move the downloaded `.pem` file into that folder and rename it
-   `lightsail-singapore.pem`.
-5. Never upload this file to GitHub, Discord or cloud storage without strong
+3. Move the downloaded `.pem` file to a private folder of your choice.
+4. Never upload this file to GitHub, Discord or cloud storage without strong
    encryption.
 
 ## Step 8 — configure the Lightsail firewall
@@ -188,7 +186,8 @@ this rule before attempting SSH again.
 Open PowerShell and replace `YOUR_SERVER_IP`:
 
 ```powershell
-ssh -i "C:\Akaine\keys\lightsail-singapore.pem" ubuntu@YOUR_SERVER_IP
+$sshKey = Get-Item (Read-Host "Full path to the downloaded SSH private key")
+ssh -i $sshKey.FullName ubuntu@YOUR_SERVER_IP
 ```
 
 The first connection asks whether you trust the server fingerprint. Confirm
