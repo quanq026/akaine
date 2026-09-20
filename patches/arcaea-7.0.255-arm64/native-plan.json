@@ -1,6 +1,5 @@
 {
   "schema": "akaine.client-build.v1",
-  "source_sha256": "746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e",
   "source_entries": {
     "lib/arm64-v8a/libcocos2dcpp.so": "3eaca4e6dabb3395f276f8915698d57675757d0df0970e716b23a3dc201c79be",
     "lib/arm64-v8a/libfmodProvider.so": "db07590708c1e2b7ed3a17800a8839392d5a7a8322cd102d5b35bda05b251bfb"
