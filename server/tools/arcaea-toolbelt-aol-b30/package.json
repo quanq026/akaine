@@ -11,8 +11,8 @@
 	},
 	"dependencies": {
 		"canvg": "^4.0.1",
-		"preact": "^10.19.2",
-		"preact-iso": "^2.3.2"
+		"preact": "^10.29.8",
+		"preact-iso": "^2.12.2"
 	},
 	"devDependencies": {
 		"patch-package": "^8.0.0",
