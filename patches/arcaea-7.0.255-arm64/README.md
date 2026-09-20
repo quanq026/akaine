@@ -73,7 +73,54 @@ The version-locked source patch:
 The script requires exact source strings and match counts. It stops rather than
 guessing if a different version or already-patched source tree is supplied.
 
-The remaining unpublished component is the native implementation loaded as
-`libakfcloader.so`. Until its source reconstruction is complete, the fully
-public pipeline ends at this managed-source stage; the old verified binary is
-used only for private parity testing and is not stored in GitHub.
+## Build the AKFC loader from source
+
+Install **NDK (Side by side)** from Android Studio's SDK Manager. Select an NDK
+folder and save it for the current terminal:
+
+```powershell
+$env:ANDROID_NDK_ROOT = Read-Host "Full path to the installed Android NDK"
+$keyFolder = Read-Host "Private folder for this server's AKFC keys"
+$keyFolder = [IO.Path]::GetFullPath($keyFolder)
+$privateKey = Join-Path $keyFolder "akfc-private.pem"
+$publicKey = Join-Path $keyFolder "akfc-public.pem"
+$keyHeader = Join-Path $keyFolder "embedded_key.h"
+
+python scripts\generate_akfc_keypair.py `
+  --private-key $privateKey `
+  --public-key $publicKey
+
+python scripts\generate_akfc_key_header.py `
+  --private-key $privateKey `
+  --output $keyHeader
+
+$loader = Join-Path (Split-Path $decoded -Parent) "libakfcloader.so"
+python scripts\build_akfc_loader.py `
+  --source patches\arcaea-7.0.255-arm64\native\akfc_loader.cpp `
+  --key-header $keyHeader `
+  --output $loader
+```
+
+The source hooks the game library's `fopen`, `open`, `__open_2`, `stat`,
+`lstat` and `fstatat` imports. It recognizes AKFC chart containers, unwraps the
+per-file AES key with the operator's RSA key, authenticates AES-256-GCM using
+the song/file identity, exposes the plaintext size to the game and wipes
+temporary plaintext during shutdown.
+
+The public source keeps the production hardening used by the release: logging
+macros are compiled out and the test-only `decryptFile` JNI export is absent.
+The private RSA key is generated locally and is never committed. The matching
+public key is used by the server-side `server/core/akfc.py` encryption code.
+
+Copy the compiled loader into the decoded APK before rebuilding:
+
+```powershell
+$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
+Copy-Item $loader (Join-Path $nativeFolder "libakfcloader.so")
+```
+
+The loader resolves Android's BoringSSL API dynamically. The current release
+also ships a compatible `libcrypto.so` to avoid Android linker-namespace
+differences. A fully independent build must compile that library from a pinned
+BoringSSL source revision or prove the target device exposes every required
+symbol; do not copy a private release binary into a public kit.
