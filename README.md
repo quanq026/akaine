@@ -1,6 +1,6 @@
 # Akaine
 
-Akaine is an English setup guide and public source repository for an
+Akaine is a setup guide and public source repository for an
 Akaine-compatible 7.0 server. It starts from an empty Windows computer and a
 new cloud account, so you do not need previous Linux, Cloudflare or Android
 build experience.
@@ -61,6 +61,11 @@ previous chapter's checks have passed.
 The APK input, game assets and content bundles are distributed separately.
 Obtain them privately from the project owner or another authorized provider.
 The kit includes a manifest so you can verify every file before using it.
+
+## Credits
+
+Thanks to [Lost-MSth/Arcaea-server](https://github.com/Lost-MSth/Arcaea-server),
+which helped inform Akaine's server work.
 
 ## License and ownership
 
