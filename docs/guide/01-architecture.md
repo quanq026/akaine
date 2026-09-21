@@ -8,10 +8,11 @@ appear throughout the setup instructions.
 
 ### 1. Android client
 
-This is the game application installed on a phone or emulator. It displays the
-menus, plays music and charts, and sends login or score requests to your
-server. The client must be configured to use your domain instead of somebody
-else's server.
+This is the game application installed on a phone or emulator. This guide uses
+the arm64 build of Arcaea `7.0.255` (`1209852`) throughout. The client displays
+the menus, plays music and charts, and sends login or score requests to your
+server. It must be configured to use your domain instead of somebody else's
+server.
 
 ### 2. Game server
 

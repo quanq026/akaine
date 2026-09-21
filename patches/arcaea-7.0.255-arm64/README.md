@@ -1,6 +1,6 @@
 # Arcaea 7.0.255 arm64 native patch
 
-This directory contains the guarded native stage used by the AkaineXD 7.0
+This directory contains the guarded native stage used by the AkaineXD 7.0.255
 client. It applies directly to the standalone APK produced by merging the
 verified APKPure arm64 XAPK described in chapter 6.
 

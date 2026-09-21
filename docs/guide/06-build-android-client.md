@@ -1,7 +1,7 @@
-# Build the Android client
+# Build the Arcaea 7.0.255 Android client
 
 Build an installable Akaine client from the verified Arcaea 7.0.255 XAPK. The
-process mirrors the current 7.0 release pipeline: verify the input, merge its
+process mirrors the 7.0.255 release pipeline: verify the input, merge its
 splits, patch the managed and native code, align and sign the APK, then install
 it and collect logs.
 
@@ -11,7 +11,7 @@ verification code and version-locked native and Smali patches.
 
 ## What "matches the release" means
 
-The current reference client has this contract:
+The 7.0.255 reference client has this contract:
 
 - application label: `AkaineXD`;
 - package: `akai.arc.lmao`;
@@ -155,7 +155,7 @@ is the verified upstream XAPK.
 
 ## What the native release patch does
 
-The 7.0 native patch is version-specific. Every operation checks the original
+The 7.0.255 native patch is version-specific. Every operation checks the original
 bytes before writing because offsets from another client version are unsafe.
 
 The accepted release contains these behavior changes:
@@ -386,7 +386,7 @@ $badging = & $aapt dump badging $signedApk
 $badging | Select-String "package:|application-label:|launchable-activity:"
 ```
 
-For the current reference contract it must show `akai.arc.lmao`, `AkaineXD`, version
+For the 7.0.255 contract it must show `akai.arc.lmao`, `AkaineXD`, version
 `7.0.255`, version code `1209852` and `low.moe.AppActivity`.
 
 Also record the artifact identity:

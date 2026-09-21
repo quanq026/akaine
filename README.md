@@ -1,9 +1,13 @@
-# Akaine
+# Akaine 7.0.255
 
-Akaine is a setup guide and public source repository for an
-Akaine-compatible 7.0 server. It starts from an empty Windows computer and a
+Akaine is a setup guide and public source repository for a server and Android
+client based on Arcaea 7.0.255. It starts from an empty Windows computer and a
 new cloud account, so you do not need previous Linux, Cloudflare or Android
 build experience.
+
+The guide and public client patches target only version `7.0.255` with version
+code `1209852`. Older and newer Arcaea releases use different files and native
+offsets, so they are outside this repository's instructions.
 
 The repository contains the guide, server and build tools. The APK input and
 game content are supplied separately when the guide needs them.
