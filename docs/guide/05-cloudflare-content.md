@@ -1,10 +1,10 @@
 # Store and deliver bundles, songs and protected charts
 
-This chapter creates the R2 bucket behind `assets.your-domain`, uploads the
-verified resource kit, protects private chart files with a Worker, and caches
-large public files at Cloudflare's edge.
+Set up the R2 bucket behind `assets.your-domain`, upload the verified resource
+kit, and protect private charts with a Worker. The cache rules in this chapter
+keep repeat bundle and song downloads at Cloudflare's edge.
 
-At the end:
+After completing the checks:
 
 - public bundles and song resources load from `assets.your-domain`;
 - repeated downloads are served from Cloudflare cache;
@@ -13,7 +13,7 @@ At the end:
 
 ## Time and cost
 
-Allow 45–90 minutes plus upload time. Cloudflare Workers, cache rules and Smart
+Allow 45 to 90 minutes plus upload time. Cloudflare Workers, cache rules and Smart
 Tiered Cache fit within the Free plan at small-project usage. Leave Argo Smart
 Routing and Cache Reserve disabled; they are paid features and are not needed
 for this setup.
@@ -32,7 +32,7 @@ quietly increase the bill.
 - the `MY_DOMAIN` value and a short bucket name containing lowercase letters,
   numbers and hyphens.
 
-This chapter uses these examples:
+The commands use these examples:
 
 ```text
 MY_DOMAIN=example.com
@@ -40,7 +40,7 @@ ASSET_HOST=assets.example.com
 R2_BUCKET=akaine-assets-example
 ```
 
-## Step 1 — install the upload tool
+## Step 1: install the upload tool
 
 Open PowerShell as your normal Windows user:
 
@@ -57,7 +57,7 @@ aws --version
 The command must print an AWS CLI version instead of “not recognized”. AWS CLI
 also works with R2 because R2 provides an S3-compatible upload API.
 
-## Step 2 — create the R2 bucket
+## Step 2: create the R2 bucket
 
 1. Open the Cloudflare dashboard.
 2. In the left menu, open **R2 Object Storage**.
@@ -72,7 +72,7 @@ Do not enable the `r2.dev` development URL. The guide uses a native R2 Custom
 Domain, which supports normal Cloudflare caching and avoids the development
 endpoint's variable rate limit.
 
-## Step 3 — create a temporary upload credential
+## Step 3: create a temporary upload credential
 
 1. In **R2 Object Storage**, select **Manage R2 API Tokens**.
 2. Select **Create API token**.
@@ -95,7 +95,7 @@ Enter the R2 Access Key ID and Secret Access Key. For the default region enter
 Never paste the secret into a GitHub issue, Discord message, screenshot or
 command that will be saved in shell history.
 
-## Step 4 — inspect the resource layout before upload
+## Step 4: inspect the resource layout before upload
 
 The verified kit contains an `r2` folder with this shape:
 
@@ -113,7 +113,7 @@ only filenames the Worker may return for that song. Do not upload a private
 file that is absent from the manifest, and do not add a filename to the
 manifest unless the corresponding object exists.
 
-## Step 5 — upload the resource kit
+## Step 5: upload the resource kit
 
 Copy the endpoint from Cloudflare's token page. It looks like:
 
@@ -146,7 +146,7 @@ You should see `bundle/`, `songs/` and `private/`. If the upload fails, do not
 make the bucket public to work around it. Recheck the endpoint, bucket name and
 token scope.
 
-## Step 6 — connect the native R2 Custom Domain
+## Step 6: connect the native R2 Custom Domain
 
 1. Open **R2 Object Storage** and select your bucket.
 2. Open **Settings**.
@@ -158,7 +158,7 @@ token scope.
 Cloudflare creates the required DNS connection. Do not manually create a CNAME
 from your asset hostname to an `r2.dev` hostname.
 
-## Step 7 — create one signing secret
+## Step 7: create one signing secret
 
 The Worker and game server must use the exact same random secret. Generate it
 in PowerShell:
@@ -184,7 +184,7 @@ Store a second copy in your password manager. Do not print the variable or
 include the file in Git. A later server chapter will load this same value into
 the server environment.
 
-## Step 8 — create the protected-assets Worker
+## Step 8: create the protected-assets Worker
 
 1. In Cloudflare, open **Workers & Pages**.
 2. Select **Create** → **Worker**.
@@ -203,7 +203,7 @@ Get-Content `
 
 The public Worker source contains no signing secret and no game asset manifest.
 
-## Step 9 — add Worker bindings
+## Step 9: add Worker bindings
 
 Open the Worker → **Settings** → **Bindings** and add:
 
@@ -218,7 +218,7 @@ Step 7.
 
 Save and deploy the Worker settings.
 
-## Step 10 — attach the protected routes
+## Step 10: attach the protected routes
 
 Open the Worker → **Settings** → **Domains & Routes** → **Add** → **Route**.
 Choose your Cloudflare zone and add both routes:
@@ -236,7 +236,7 @@ For performance, the Worker may keep a complete protected file up to 32 MB in
 its internal cache for one day. It still verifies the signature before every
 cache lookup. Range requests and larger files read directly from R2.
 
-## Step 11 — test the private boundary
+## Step 11: test the private boundary
 
 Replace the domain and use any song/file name:
 
@@ -250,7 +250,7 @@ storage paths are disabled. The second is blocked because it has no server
 signature. A `200` response means the private boundary is not working; remove
 public access and recheck the Worker routes before continuing.
 
-## Step 12 — create the bundle cache rule
+## Step 12: create the bundle cache rule
 
 Open your Cloudflare domain → **Rules** → **Cache Rules** → **Create rule**.
 
@@ -270,7 +270,7 @@ Configure:
 Save and deploy the rule. Bundle filenames must include a new version when
 their content changes. Never overwrite a cached bundle with different bytes.
 
-## Step 13 — create the public song cache rule
+## Step 13: create the public song cache rule
 
 Create a second Cache Rule named `Akaine public songs` with:
 
@@ -286,7 +286,7 @@ Configure:
 
 This rule does not match `/private/` or `/protected/`.
 
-## Step 14 — enable Smart Tiered Cache
+## Step 14: enable Smart Tiered Cache
 
 Open the domain → **Caching** → **Tiered Cache** and enable **Smart Tiered
 Topology**. This lets one upper-tier Cloudflare location fetch from R2 instead
@@ -297,7 +297,7 @@ Leave these optional paid products disabled:
 - Cache Reserve;
 - Argo Smart Routing.
 
-## Step 15 — verify public caching
+## Step 15: verify public caching
 
 Find the bundle manifest filename in the kit's `README.txt`, then run the same
 request twice:
@@ -334,7 +334,7 @@ server is running, API responses should show `CF-Cache-Status: DYNAMIC`.
 - Update `private/asset-manifest.json` together with private objects. A file not
   declared in the manifest remains inaccessible.
 
-## Step 16 — revoke the temporary upload credential
+## Step 16: revoke the temporary upload credential
 
 After the initial upload and cache tests pass:
 
@@ -348,7 +348,7 @@ Create a new short-lived bucket-scoped token when you intentionally publish an
 update. Revoke any token immediately if it appears in a screenshot, terminal
 log or repository.
 
-## How to know this chapter is complete
+## Check your work
 
 - The R2 bucket contains `bundle/`, `songs/` and `private/`.
 - `assets.your-domain` is an Active R2 Custom Domain.

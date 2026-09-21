@@ -1,17 +1,16 @@
 # Prepare your Windows computer
 
-This chapter installs the tools used by the rest of the guide. It supports
-Windows 10 and Windows 11. At the end, one command will tell you whether the
-machine is ready.
+Install the tools below on Windows 10 or Windows 11. The final commands check
+the installation before you continue.
 
 ## Time, storage and permissions
 
-- Time: 30–60 minutes, mostly downloads.
+- Time: 30 to 60 minutes, mostly downloads.
 - Free disk space: at least 30 GB; 60 GB is more comfortable when rebuilding
   APKs and keeping an emulator.
 - Permissions: a Windows administrator account is needed for installers.
 
-## Step 1 — choose where to keep the files
+## Step 1: choose where to keep the files
 
 Choose two folders on any drive with enough free space: one for the public Git
 repository and one different folder for private resources. They must not be
@@ -35,7 +34,7 @@ These variables let later chapters use your chosen locations without assuming
 a drive letter or folder name. Keeping the folders separate prevents an
 accidental Git commit from including private files.
 
-## Step 2 — install Git, Python and Java
+## Step 2: install Git, Python and Java
 
 Windows includes `winget` on current Windows 10/11 installations. Run these
 commands in PowerShell:
@@ -63,7 +62,7 @@ If `python` opens the Microsoft Store, open **Settings** → **Apps** →
 **Advanced app settings** → **App execution aliases**, then disable the Store
 aliases for `python.exe` and `python3.exe`. Reopen PowerShell and try again.
 
-## Step 3 — install Android Studio and SDK tools
+## Step 3: install Android Studio and SDK tools
 
 1. Download and install Android Studio from the official Android developer
    website. Keep the standard installation options.
@@ -100,7 +99,7 @@ Close and reopen PowerShell, then run:
 adb version
 ```
 
-## Step 4 — clone the Akaine source
+## Step 4: clone the Akaine source
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
@@ -114,7 +113,7 @@ You should now see `README.md`, `server`, `scripts` and `docs`:
 Get-ChildItem
 ```
 
-## Step 5 — confirm the folders are separate
+## Step 5: confirm the folders are separate
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
@@ -125,7 +124,7 @@ Get-Item $repoRoot, $privateRoot
 Both paths must exist and must be different. The private folder must not be
 inside the repository.
 
-## Step 6 — run the core readiness check
+## Step 6: run the core readiness check
 
 Close and reopen PowerShell, then run:
 
@@ -157,7 +156,7 @@ If `zipalign` or `apksigner` is missing, return to Android Studio's SDK Manager
 and install Android SDK Build-Tools. The next chapter adds Apktool and runs the
 strict check.
 
-## Step 7 — prepare the Python environment
+## Step 7: prepare the Python environment
 
 From the repository folder:
 
@@ -179,7 +178,7 @@ Verify the public source checks:
 The first command should end with `Public repository check passed`. The second
 command normally prints nothing when compilation succeeds.
 
-## How to know this chapter is complete
+## Check your work
 
 - The source and private-resource folders exist at the locations you chose.
 - The private-resource folder is outside the Git repository.
@@ -188,7 +187,7 @@ command normally prints nothing when compilation succeeds.
 - The Python environment installs successfully.
 - Public source check and Python compilation pass.
 
-## How to undo this chapter
+## Remove the local setup
 
 1. Delete the `.venv` folder inside your repository to remove Python packages.
 2. Delete the repository folder if you no longer want the source checkout.

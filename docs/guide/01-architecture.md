@@ -1,11 +1,8 @@
 # How Akaine works
 
-Before buying anything, it helps to understand what you are building. Akaine
-is not one program. It is a small group of services that cooperate with an
-Android client.
-
-You do not need to memorize this chapter. Its purpose is to make the names in
-later chapters feel familiar.
+Akaine consists of an Android client, a Python server, a database and a content
+store. This chapter explains how those pieces communicate. The same names
+appear throughout the setup instructions.
 
 ## The five main parts
 
@@ -18,37 +15,36 @@ else's server.
 
 ### 2. Game server
 
-The game server is a Python application running on a Linux computer in the
-cloud. It handles accounts, login, owned songs, partners, saves, scores, world
-mode and the URLs used to download content.
+The game server is a Python application on a Linux computer in the cloud. It
+handles accounts, login, owned songs, partners, saves, scores, World Mode and
+content-download URLs.
 
-The guide uses an Amazon Lightsail virtual server. A virtual server is simply
-a Linux computer rented by the month. You connect to it remotely using SSH.
+This guide uses Amazon Lightsail, which provides a Linux computer billed by the
+month. You administer it remotely over SSH.
 
 ### 3. Database
 
-The server stores accounts, scores and player progress in SQLite database
-files. SQLite keeps the database in files on the server rather than requiring
-a separate database company or service.
+The server stores accounts, scores and player progress in SQLite files on the
+same machine. No separate database service is required.
 
 The database is private. It must never be uploaded to GitHub or shared with a
 resource kit because it may contain player information.
 
 ### 4. Cloudflare and R2
 
-Cloudflare has two jobs in this setup:
+Cloudflare provides two services here:
 
 - **DNS** connects names such as `api.example.com` to your server's IP address.
 - **R2 object storage** stores large files such as bundles and song resources
   without placing them in Git.
 
-Cloudflare can also proxy HTTPS traffic and cache public files close to users.
+It also handles HTTPS proxying and caches public files near players.
 
 ### 5. Discord bot
 
-Lygus Bot is an optional companion service. It can create or link accounts,
-show profiles and recent plays, and generate B30 images. It runs beside the
-game server and uses the same game database.
+Lygus Bot is optional. It creates and links accounts, displays profiles and
+recent plays, and renders B30 images. It runs on the server and reads the same
+game database.
 
 ## What happens when a player logs in
 
@@ -77,10 +73,10 @@ nginx -> Python game server -> SQLite database
 
 ## What happens when a song is downloaded
 
-The game server does not need to send every large file itself. It returns a
-download URL. The client downloads the file from the asset host, which is
-backed by Cloudflare R2. Protected chart files use short-lived signed URLs so a
-random visitor cannot simply list and download the entire private store.
+For large files, the game server returns a download URL instead of transferring
+the file itself. The client then downloads from the R2-backed asset host.
+Protected charts use short-lived signed URLs, so unauthenticated visitors cannot
+list or download the private store.
 
 ```text
 Client asks game server for a song
@@ -92,27 +88,25 @@ Client downloads approved files from assets.example.com / R2
 
 ## Link Play is different
 
-Normal API requests use HTTPS. Link Play also needs direct TCP and UDP traffic
-for real-time rooms. The free Cloudflare proxy does not carry these arbitrary
-game ports, so `link.example.com` points directly to the Lightsail fixed IP and
-is marked **DNS only** in Cloudflare.
+Normal API requests use HTTPS. Link Play uses direct TCP and UDP connections
+for real-time rooms. Cloudflare's free HTTP proxy does not carry those game
+ports, so `link.example.com` points directly to the Lightsail fixed IP and uses
+the **DNS only** setting.
 
 ## Where the files come from
 
-GitHub provides the server source, Discord bot, build tools and this guide.
-The private resource kit supplies the larger client and content files that are
-not part of the source repository.
+GitHub contains the server, Discord bot, build tools and documentation. The
+private resource kit contains files that cannot be stored in the public source
+repository.
 
-During setup, you will create your own AWS, Cloudflare and Discord credentials.
-Those credentials belong only to your installation. Your player database,
-server logs and release signing key also stay on systems you control; they are
-never shared as part of the guide or resource kit.
+You create your own AWS, Cloudflare and Discord credentials during setup. Keep
+them with your player database, logs and signing key on systems you control.
+None of those files belongs in GitHub or a shared resource kit.
 
-## Before you continue
+## Before continuing
 
-Keep this picture in mind: the SQLite database on Lightsail stores player
-scores, Cloudflare DNS connects your domain to the server, and R2 holds the
-large song and bundle files. Link Play points directly to Lightsail because its
-TCP and UDP traffic does not travel through the normal free HTTPS proxy.
+The SQLite database on Lightsail stores player data. Cloudflare connects the
+domain to the server, and R2 stores bundles and song files. Link Play connects
+directly to Lightsail for its TCP and UDP traffic.
 
 Next: [Create the cloud server and connect a domain](02-cloud-domain.md).

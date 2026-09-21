@@ -1,17 +1,15 @@
 # Build the Android client
 
-This chapter turns a verified APK and a private patch set into an installable
-Akaine client. It follows the same artifact pipeline used by the current 7.0
-release: verify the input, apply only declared APK-member replacements, remove
-the obsolete signature, align the archive, sign it, inspect the result, install
-it and collect crash evidence.
+Build an installable Akaine client from the verified Arcaea 7.0.255 XAPK. The
+process mirrors the current 7.0 release pipeline: verify the input, merge its
+splits, patch the managed and native code, align and sign the APK, then install
+it and collect logs.
 
-The public repository does not contain the commercial APK or signing keys. You
-download the original application yourself. GitHub contains the build process,
-verification logic and, as each native/Smali patch is consolidated, its
-version-locked patch source.
+Download the original application yourself; the commercial APK and signing
+keys are not stored in this repository. GitHub contains the build process,
+verification code and version-locked native and Smali patches.
 
-## What “matches the release” means
+## What "matches the release" means
 
 The current reference client has this contract:
 
@@ -33,7 +31,7 @@ That hash identifies the published artifact; it is not the expected hash of a
 client signed with your own key. A different signing key necessarily produces
 different APK bytes.
 
-Functional equivalence and byte identity are different:
+Two builds can behave the same without having the same APK hash:
 
 - the same verified input, patch payloads and configuration reproduce the same
   application behavior;
@@ -46,7 +44,8 @@ Never copy another operator's signing key. Generate and protect your own.
 ## Download the exact upstream XAPK
 
 The target is Arcaea `7.0.255` (`1209852`), package `moe.low.arc`, Android
-`arm64-v8a`. APKPure distributes this version as an XAPK rather than one APK.
+`arm64-v8a`. APKPure distributes this version as an XAPK containing five APK
+modules.
 Select the arm64 variant, not the armeabi-v7a variant.
 
 At the time this pipeline was verified, the arm64 XAPK had:
@@ -156,8 +155,8 @@ is the verified upstream XAPK.
 
 ## What the native release patch does
 
-The 7.0 native patch is version-specific. It is guarded by the exact source
-hash because offsets from another client version are unsafe.
+The 7.0 native patch is version-specific. Every operation checks the original
+bytes before writing because offsets from another client version are unsafe.
 
 The accepted release contains these behavior changes:
 
@@ -179,7 +178,7 @@ The accepted release contains these behavior changes:
 6. **AKFC runtime.** The APK contains the loader, crypto library and matching
    managed integration. This is one feature unit, not three optional patches.
 
-The guarded byte operations for items 1–5 and the FMOD error-18 repair are
+The guarded byte operations for items 1 through 5 and the FMOD error-18 repair are
 published in
 `patches/arcaea-7.0.255-arm64/native-plan.json`. They are generated from the
 verified APKPure baseline and can be reproduced without a pre-patched native
@@ -195,7 +194,7 @@ The same README now includes the AKFC loader C++ source build. Each operator
 generates a different 3072-bit RSA key pair locally; the private key is embedded
 only into that operator's loader and the public key is used to encrypt charts.
 
-## Step 1 — choose build locations
+## Step 1: choose build locations
 
 ```powershell
 $outputFolder = Read-Host "Full path for build output"
@@ -209,7 +208,7 @@ $alignedApk = Join-Path $outputFolder "AkaineXD-aligned.apk"
 $signedApk = Join-Path $outputFolder "AkaineXD-release.apk"
 ```
 
-## Step 2 — decode the merged baseline
+## Step 2: decode the merged baseline
 
 ```powershell
 $apktool = Get-Item (Read-Host "Full path to apktool_2.12.1.jar")
@@ -223,7 +222,7 @@ java -Xmx6g -jar $apktool.FullName decode -f `
 The Apktool jar must be 25,926,183 bytes with SHA-256
 `66cf4524a4a45a7f56567d08b2c9b6ec237bcdd78cee69fd4a59c8a0243aeafa`.
 
-## Step 3 — patch the managed sources
+## Step 3: patch the managed sources
 
 ```powershell
 Set-Location $repoRoot
@@ -235,7 +234,7 @@ python scripts\patch_android_client_sources.py `
 This changes only exact version-locked source strings and adds the public Smali
 bridge. Any missing or duplicate match stops the build.
 
-## Step 4 — generate this server's AKFC key
+## Step 4: generate this server's AKFC key
 
 ```powershell
 $keyFolder = Read-Host "Private folder for this server's AKFC keys"
@@ -256,7 +255,7 @@ python scripts\generate_akfc_key_header.py `
 Keep the private key and generated header outside Git. The server uses the
 public key when encrypting AFF containers.
 
-## Step 5 — build AKFC native dependencies
+## Step 5: build AKFC native dependencies
 
 Install **NDK (Side by side)** and **CMake** from Android Studio's SDK Tools,
 then select the NDK folder:
@@ -283,7 +282,7 @@ Copy-Item $crypto (Join-Path $nativeFolder "libcrypto.so")
 
 The BoringSSL builder pins its Git revision and verifies all loader symbols.
 
-## Step 6 — rebuild and apply guarded native patches
+## Step 6: rebuild and apply guarded native patches
 
 ```powershell
 java -Xmx6g -jar $apktool.FullName build `
@@ -303,7 +302,7 @@ The receipt must list all 16 native labels. The plan guards the exact original
 `libcocos2dcpp.so` and `libfmodProvider.so` hashes even though Apktool changes
 the surrounding ZIP container.
 
-## Step 7 — find Android Build-Tools
+## Step 7: find Android Build-Tools
 
 Use the newest installed Build-Tools folder instead of assuming a version or
 drive:
@@ -322,7 +321,7 @@ Get-Item $zipalign, $apksigner, $aapt
 
 All three files must exist.
 
-## Step 8 — align the APK
+## Step 8: align the APK
 
 Native libraries require page alignment. The release pipeline uses 16 KiB page
 alignment and 4-byte ZIP alignment:
@@ -334,7 +333,7 @@ alignment and 4-byte ZIP alignment:
 
 The second command must finish with `Verification successful`.
 
-## Step 9 — create your signing identity once
+## Step 9: create your signing identity once
 
 Choose a private keystore location and alias. If you already created a key for
 this package, reuse it; creating a new key makes install-over updates
@@ -363,7 +362,7 @@ the resource kit, a screenshot or a shell script.
 Back up this keystore securely. Losing it means future APKs cannot update the
 installed application without uninstalling and deleting its local data.
 
-## Step 10 — sign and verify
+## Step 10: sign and verify
 
 ```powershell
 & $apksigner sign `
@@ -380,7 +379,7 @@ The verification must report v2 and v3 signatures as verified. Record the
 signer certificate SHA-256; every later build for the same package must report
 the same value.
 
-## Step 11 — inspect package and version
+## Step 11: inspect package and version
 
 ```powershell
 $badging = & $aapt dump badging $signedApk
@@ -397,7 +396,7 @@ Get-Item $signedApk | Select-Object Name, Length
 Get-FileHash -Algorithm SHA256 $signedApk
 ```
 
-## Step 12 — choose fresh install or install-over
+## Step 12: choose fresh install or install-over
 
 Connect the Android device or emulator and run:
 
@@ -424,7 +423,7 @@ adb install -r -d $signedApk
 automatically: uninstalling deletes local application data. Either sign with
 the original key or make an explicit backup-and-fresh-install decision.
 
-## Step 13 — launch with a clean log
+## Step 13: launch with a clean log
 
 ```powershell
 $package = "akai.arc.lmao"
@@ -437,8 +436,8 @@ Start-Sleep -Seconds 10
 adb shell pidof $package
 ```
 
-A PID proves that the process is still alive, not that the client is fully
-working. Save the complete log before reproducing a problem:
+A PID only shows that the process is alive. Save the complete log before
+reproducing a problem:
 
 ```powershell
 $logFile = Join-Path $outputFolder "client-logcat.txt"
@@ -450,7 +449,7 @@ Select-String -Path $logFile -Pattern `
   "ClassNotFoundException","FMOD"
 ```
 
-## Step 14 — test the release contract
+## Step 14: test the release contract
 
 Test in this order so a failure identifies the responsible layer:
 
@@ -492,7 +491,7 @@ removed while a song `set` or child `pack_parent` still references it.
 Keep a small receipt for every candidate:
 
 - source APK SHA-256;
-- private plan SHA-256;
+- native patch plan SHA-256;
 - output APK SHA-256 and size;
 - package, label, version name and version code;
 - signer certificate SHA-256;
@@ -509,7 +508,7 @@ Keep the previous signed APK until the new candidate passes this checklist.
 Rollback means reinstalling that known-good APK with the same signer; it does
 not mean deleting application data or restoring an unrelated database.
 
-## What this chapter does not publish
+## Files that stay private
 
 GitHub intentionally does not contain:
 

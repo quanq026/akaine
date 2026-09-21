@@ -1,16 +1,16 @@
 # Akaine
 
-A step-by-step English guide for setting up your own Akaine-compatible 7.0
-server. It is written for readers who have never rented a server, configured a
-domain, used Cloudflare, or built an Android application before.
+Akaine is an English setup guide and public source repository for an
+Akaine-compatible 7.0 server. It starts from an empty Windows computer and a
+new cloud account, so you do not need previous Linux, Cloudflare or Android
+build experience.
 
-The guide and its source code are kept together here. Client files and game
-content are supplied separately through the private resource kit when the
-walkthrough reaches that step.
+The repository contains the guide, server and build tools. The APK input and
+game content are supplied separately when the guide needs them.
 
 ## What you will build
 
-By the end of the guide you will have:
+Following the chapters gives you:
 
 - a Linux server running on Amazon Lightsail;
 - a domain protected by Cloudflare;
@@ -22,7 +22,7 @@ By the end of the guide you will have:
 
 ## Before you start
 
-Set aside one uninterrupted afternoon for the first setup. You need:
+The first setup usually takes an uninterrupted afternoon. You need:
 
 - a Windows 10 or Windows 11 computer with at least 30 GB free;
 - an Android phone or a computer capable of running an Android emulator;
@@ -30,21 +30,19 @@ Set aside one uninterrupted afternoon for the first setup. You need:
 - an email address you control and can protect with two-factor authentication;
 - the private Akaine resource kit and its expected SHA-256 value.
 
-For a new setup, the first six months can be almost free. New AWS customers can
-receive up to USD 200 in credits for up to six months, which can cover the
-Lightsail server used by this guide. Eligible Vietnamese citizens aged 18–23
-can register one `.id.vn` domain free for two years through participating `.vn`
-registrars such as iNET. If you are not eligible, promotional domains can start
-at roughly 40,000 VND, although the renewal price may be higher.
+New AWS customers may receive up to USD 200 in credits for six months, enough
+to cover the Lightsail server during the initial setup period. Vietnamese
+citizens aged 18 to 23 may also qualify for one free `.id.vn` domain for two
+years through participating `.vn` registrars such as iNET. Promotional domains
+can start at roughly 40,000 VND, but check the renewal price before buying.
 
 Cloudflare DNS, CDN and SSL use the Free plan. R2 includes 10 GB of Standard
-storage each month, and extra storage costs USD 0.015 per GB-month. For this
-project, the R2 bill will normally remain below USD 1 per month unless you store
-many duplicate releases or receive unusually heavy traffic.
+storage each month, and extra storage costs USD 0.015 per GB-month. For a small
+installation, the R2 bill is usually below USD 1 per month unless you keep many
+duplicate releases or serve unusually heavy traffic.
 
-When the AWS credits expire, you can keep the same Lightsail server as a paid
-service, move to a cheaper VPS, or migrate to another provider after you are
-more comfortable managing Linux.
+When the AWS credits expire, you can pay for the same Lightsail server or move
+the installation to another VPS provider.
 
 ## Start the guide
 
