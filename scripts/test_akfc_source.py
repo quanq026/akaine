@@ -19,6 +19,7 @@ from core.akfc import (  # noqa: E402
     wrap_dek,
 )
 import generate_akfc_key_header  # noqa: E402
+import build_akfc_loader  # noqa: E402
 import build_boringssl_android  # noqa: E402
 
 
@@ -66,10 +67,19 @@ class AKFCSourceTests(unittest.TestCase):
         self.assertIn("Java_low_moe_AkfcLoader_wipeDecrypted", source)
         self.assertIn("#define LOGI(...) ((void)0)", source)
 
-    def test_boringssl_build_is_pinned_and_checks_loader_symbols(self):
+    def test_loader_uses_prefixed_static_crypto(self):
+        guide = (ROOT / "docs/guide/06-build-android-client.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("--crypto", guide)
+        self.assertIn("build_boringssl_android.py", guide)
+        self.assertNotIn("Copy-Item $crypto", guide)
         self.assertEqual(len(build_boringssl_android.REVISION), 40)
-        self.assertIn("EVP_AEAD_CTX_open", build_boringssl_android.REQUIRED_SYMBOLS)
-        self.assertIn("EVP_PKEY_decrypt", build_boringssl_android.REQUIRED_SYMBOLS)
+        source = (
+            ROOT / "patches/arcaea-7.0.255-arm64/native/akfc_loader.cpp"
+        ).read_text(encoding="utf-8")
+        self.assertIn("p_EVP_AEAD_CTX_open = akfc_EVP_AEAD_CTX_open", source)
+        self.assertNotIn('dlopen("libcrypto.so"', source)
 
 
 if __name__ == "__main__":

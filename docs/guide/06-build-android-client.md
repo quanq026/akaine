@@ -145,8 +145,8 @@ repository:
 - `AkfcLoader.smali` is the managed JNI bridge;
 - `akfc_loader.cpp` implements protected-chart loading;
 - the key scripts generate a different RSA-3072 identity for each operator;
-- `build_boringssl_android.py` builds the loader's crypto dependency from a
-  pinned public revision;
+- `build_boringssl_android.py` creates a symbol-prefixed static crypto archive
+  that is linked only into the AKFC loader;
 - `native-plan.json` applies guarded before/after byte operations to the two
   original native libraries.
 
@@ -175,8 +175,8 @@ The accepted release contains these behavior changes:
    allowlisted path so Axium Divergence becomes selectable.
 5. **Aether Crest ETR guard.** A missing special-condition list skips its
    enumeration; the normal non-null path is unchanged.
-6. **AKFC runtime.** The APK contains the loader, crypto library and matching
-   managed integration. This is one feature unit, not three optional patches.
+6. **AKFC runtime.** The APK contains a self-contained loader with private,
+   symbol-prefixed crypto and matching managed integration.
 
 The guarded byte operations for items 1 through 5 and the FMOD error-18 repair are
 published in
@@ -255,32 +255,34 @@ python scripts\generate_akfc_key_header.py `
 Keep the private key and generated header outside Git. The server uses the
 public key when encrypting AFF containers.
 
-## Step 5: build AKFC native dependencies
+## Step 5: build the AKFC loader
 
-Install **NDK (Side by side)** and **CMake** from Android Studio's SDK Tools,
-then select the NDK folder:
+Install **NDK (Side by side)** from Android Studio's SDK Tools, then select the
+NDK folder:
 
 ```powershell
 $env:ANDROID_NDK_ROOT = Read-Host "Full path to the installed Android NDK"
 $loader = Join-Path $outputFolder "libakfcloader.so"
-$crypto = Join-Path $outputFolder "libcrypto.so"
+$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
 $cryptoWork = Join-Path $outputFolder "boringssl-work"
-
-python scripts\build_akfc_loader.py `
-  --source patches\arcaea-7.0.255-arm64\native\akfc_loader.cpp `
-  --key-header $keyHeader `
-  --output $loader
+$crypto = Join-Path $outputFolder "libakfc-crypto.a"
 
 python scripts\build_boringssl_android.py `
   --work $cryptoWork `
   --output $crypto
 
-$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
+python scripts\build_akfc_loader.py `
+  --source patches\arcaea-7.0.255-arm64\native\akfc_loader.cpp `
+  --key-header $keyHeader `
+  --crypto $crypto `
+  --output $loader
+
 Copy-Item $loader (Join-Path $nativeFolder "libakfcloader.so")
-Copy-Item $crypto (Join-Path $nativeFolder "libcrypto.so")
 ```
 
-The BoringSSL builder pins its Git revision and verifies all loader symbols.
+The BoringSSL symbols receive an `akfc_` prefix before they are linked into the
+loader. The build does not add or replace a process-wide `libcrypto.so`, so the
+AKFC runtime cannot alter unrelated client encryption or saved login state.
 
 ## Step 6: rebuild and apply guarded native patches
 
@@ -479,7 +481,7 @@ Do not call the build release-ready after only reaching the title screen.
 | Music Play opens but one group is black | bundle selector assets | jacket and preview entries, not a global unlock flag |
 | BYD tile is absent or cannot be selected | native registry gate | exact song ID and difficulty class in the verified allowlist |
 | Aether Crest ETR crashes | native special-condition list | null guard is present in the selected patch plan |
-| Protected chart downloads but will not start | AKFC runtime | loader, crypto library and DEX integration all come from one patch set |
+| Protected chart downloads but will not start | AKFC runtime | loader, prefixed static crypto and DEX integration match the 7.0.255 patch set |
 | Download icon never clears | server metadata/object set | declared files, hashes and hidden shell charts match delivery |
 | Works once, fails after restart | incomplete persisted content | collect logcat from cold start and inspect downloaded bundle state |
 

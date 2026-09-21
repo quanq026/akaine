@@ -3,7 +3,7 @@
 // Hooks fopen() in libcocos2dcpp.so via PLT/GOT patching.
 // If a .aff file with AKFC magic is opened, decrypts to temp file.
 //
-// Uses system arm64 libcrypto.so via dlsym (no headers needed).
+// Uses symbol-prefixed BoringSSL linked into this library.
 // Build: aarch64-linux-android24-clang++ -shared -fPIC -o libakfcloader.so \
 //        akfc_loader.cpp -llog -ldl
 #include <jni.h>
@@ -102,62 +102,44 @@ static int (*p_EVP_AEAD_CTX_open)(EVP_AEAD_CTX*, uint8_t*, size_t*, size_t, cons
 
 static void* g_libcrypto = nullptr;
 
+extern "C" {
+const EVP_MD* akfc_EVP_sha256(void); const EVP_MD* akfc_EVP_sha1(void);
+const EVP_CIPHER* akfc_EVP_aes_256_gcm(void);
+EVP_CIPHER_CTX* akfc_EVP_CIPHER_CTX_new(void); void akfc_EVP_CIPHER_CTX_free(EVP_CIPHER_CTX*);
+int akfc_EVP_DecryptInit_ex(EVP_CIPHER_CTX*, const EVP_CIPHER*, ENGINE*, const unsigned char*, const unsigned char*);
+int akfc_EVP_DecryptUpdate(EVP_CIPHER_CTX*, unsigned char*, int*, const unsigned char*, int);
+int akfc_EVP_DecryptFinal_ex(EVP_CIPHER_CTX*, unsigned char*, int*);
+int akfc_EVP_CIPHER_CTX_ctrl(EVP_CIPHER_CTX*, int, int, void*);
+EVP_PKEY* akfc_d2i_AutoPrivateKey(EVP_PKEY*, const unsigned char**, long);
+void akfc_EVP_PKEY_free(EVP_PKEY*); EVP_PKEY_CTX* akfc_EVP_PKEY_CTX_new(EVP_PKEY*, ENGINE*);
+void akfc_EVP_PKEY_CTX_free(EVP_PKEY_CTX*); int akfc_EVP_PKEY_decrypt_init(EVP_PKEY_CTX*);
+int akfc_EVP_PKEY_decrypt(EVP_PKEY_CTX*, unsigned char*, size_t*, const unsigned char*, size_t);
+int akfc_EVP_PKEY_CTX_set_rsa_padding(EVP_PKEY_CTX*, int);
+int akfc_EVP_PKEY_CTX_set_rsa_oaep_md(EVP_PKEY_CTX*, const EVP_MD*);
+int akfc_EVP_PKEY_CTX_set_rsa_mgf1_md(EVP_PKEY_CTX*, const EVP_MD*);
+const EVP_AEAD* akfc_EVP_aead_aes_256_gcm(void);
+EVP_AEAD_CTX* akfc_EVP_AEAD_CTX_new(const EVP_AEAD*, const uint8_t*, size_t, size_t);
+void akfc_EVP_AEAD_CTX_free(EVP_AEAD_CTX*);
+int akfc_EVP_AEAD_CTX_open(EVP_AEAD_CTX*, uint8_t*, size_t*, size_t, const uint8_t*, size_t, const uint8_t*, size_t, const uint8_t*, size_t);
+}
+
 static bool load_crypto() {
     if (g_libcrypto) return true;
-
-    g_libcrypto = dlopen("libcrypto.so", RTLD_NOW);
-    if (!g_libcrypto) {
-        // Try arm64 path for ndk_translation
-        g_libcrypto = dlopen("/system/lib64/arm64/libcrypto.so", RTLD_NOW);
-    }
-    if (!g_libcrypto) {
-        LOGE("Cannot load libcrypto.so: %s", dlerror());
-        return false;
-    }
-
-    #define LOAD_SYM(name) p_##name = (decltype(p_##name))dlsym(g_libcrypto, #name); \
-        if (!p_##name) { LOGE("Cannot find %s: %s", #name, dlerror()); return false; }
-
-    LOAD_SYM(EVP_sha256);
-    LOAD_SYM(EVP_sha1);
-    LOAD_SYM(EVP_aes_256_gcm);
-    LOAD_SYM(EVP_CIPHER_CTX_new);
-    LOAD_SYM(EVP_CIPHER_CTX_free);
-    LOAD_SYM(EVP_DecryptInit_ex);
-    LOAD_SYM(EVP_DecryptUpdate);
-    LOAD_SYM(EVP_DecryptFinal_ex);
-    LOAD_SYM(EVP_CIPHER_CTX_ctrl);
-    LOAD_SYM(d2i_AutoPrivateKey);
-    LOAD_SYM(EVP_PKEY_free);
-    LOAD_SYM(EVP_PKEY_CTX_new);
-    LOAD_SYM(EVP_PKEY_CTX_free);
-    LOAD_SYM(EVP_PKEY_decrypt_init);
-    LOAD_SYM(EVP_PKEY_decrypt);
-
-    // These may be macros or inline in some BoringSSL versions
-    // Try to load them; if they fail, we'll use alternative approach
-    p_EVP_PKEY_CTX_set_rsa_padding = (decltype(p_EVP_PKEY_CTX_set_rsa_padding))dlsym(g_libcrypto, "EVP_PKEY_CTX_set_rsa_padding");
-    p_EVP_PKEY_CTX_set_rsa_oaep_md = (decltype(p_EVP_PKEY_CTX_set_rsa_oaep_md))dlsym(g_libcrypto, "EVP_PKEY_CTX_set_rsa_oaep_md");
-    p_EVP_PKEY_CTX_set_rsa_mgf1_md = (decltype(p_EVP_PKEY_CTX_set_rsa_mgf1_md))dlsym(g_libcrypto, "EVP_PKEY_CTX_set_rsa_mgf1_md");
-
-    if (!p_EVP_PKEY_CTX_set_rsa_padding) {
-        // BoringSSL uses EVP_PKEY_CTX_ctrl for RSA padding
-        LOGW("EVP_PKEY_CTX_set_rsa_padding not found, will use ctrl");
-    }
-
-    // Load EVP_AEAD functions (BoringSSL native API)
-    p_EVP_aead_aes_256_gcm = (decltype(p_EVP_aead_aes_256_gcm))dlsym(g_libcrypto, "EVP_aead_aes_256_gcm");
-    p_EVP_AEAD_CTX_new = (decltype(p_EVP_AEAD_CTX_new))dlsym(g_libcrypto, "EVP_AEAD_CTX_new");
-    p_EVP_AEAD_CTX_free = (decltype(p_EVP_AEAD_CTX_free))dlsym(g_libcrypto, "EVP_AEAD_CTX_free");
-    p_EVP_AEAD_CTX_open = (decltype(p_EVP_AEAD_CTX_open))dlsym(g_libcrypto, "EVP_AEAD_CTX_open");
-
-    if (p_EVP_aead_aes_256_gcm && p_EVP_AEAD_CTX_new && p_EVP_AEAD_CTX_open) {
-        LOGI("EVP_AEAD API available (BoringSSL native)");
-    } else {
-        LOGW("EVP_AEAD API not available, will use EVP_CIPHER API");
-    }
-
-    LOGI("libcrypto.so loaded successfully");
+    g_libcrypto = (void*)1;
+    p_EVP_sha256 = akfc_EVP_sha256; p_EVP_sha1 = akfc_EVP_sha1;
+    p_EVP_aes_256_gcm = akfc_EVP_aes_256_gcm;
+    p_EVP_CIPHER_CTX_new = akfc_EVP_CIPHER_CTX_new; p_EVP_CIPHER_CTX_free = akfc_EVP_CIPHER_CTX_free;
+    p_EVP_DecryptInit_ex = akfc_EVP_DecryptInit_ex; p_EVP_DecryptUpdate = akfc_EVP_DecryptUpdate;
+    p_EVP_DecryptFinal_ex = akfc_EVP_DecryptFinal_ex; p_EVP_CIPHER_CTX_ctrl = akfc_EVP_CIPHER_CTX_ctrl;
+    p_d2i_AutoPrivateKey = akfc_d2i_AutoPrivateKey; p_EVP_PKEY_free = akfc_EVP_PKEY_free;
+    p_EVP_PKEY_CTX_new = akfc_EVP_PKEY_CTX_new; p_EVP_PKEY_CTX_free = akfc_EVP_PKEY_CTX_free;
+    p_EVP_PKEY_decrypt_init = akfc_EVP_PKEY_decrypt_init; p_EVP_PKEY_decrypt = akfc_EVP_PKEY_decrypt;
+    p_EVP_PKEY_CTX_set_rsa_padding = akfc_EVP_PKEY_CTX_set_rsa_padding;
+    p_EVP_PKEY_CTX_set_rsa_oaep_md = akfc_EVP_PKEY_CTX_set_rsa_oaep_md;
+    p_EVP_PKEY_CTX_set_rsa_mgf1_md = akfc_EVP_PKEY_CTX_set_rsa_mgf1_md;
+    p_EVP_aead_aes_256_gcm = akfc_EVP_aead_aes_256_gcm;
+    p_EVP_AEAD_CTX_new = akfc_EVP_AEAD_CTX_new; p_EVP_AEAD_CTX_free = akfc_EVP_AEAD_CTX_free;
+    p_EVP_AEAD_CTX_open = akfc_EVP_AEAD_CTX_open;
     return true;
 }
 
@@ -170,7 +152,7 @@ static int set_oaep_padding(EVP_PKEY_CTX* ctx) {
     // EVP_PKEY_CTRL_RSA_PADDING = 0x100 + 2 = 0x102
     // This is a fallback and may not work on all versions
     typedef int (*ctrl_fn)(EVP_PKEY_CTX*, int, int, void*);
-    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "EVP_PKEY_CTX_ctrl");
+    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "akfc_EVP_PKEY_CTX_ctrl");
     if (p_ctrl) {
         return p_ctrl(ctx, 0x102, RSA_PKCS1_OAEP_PADDING, nullptr);
     }
@@ -182,7 +164,7 @@ static int set_oaep_md(EVP_PKEY_CTX* ctx, const EVP_MD* md) {
         return p_EVP_PKEY_CTX_set_rsa_oaep_md(ctx, md);
     }
     typedef int (*ctrl_fn)(EVP_PKEY_CTX*, int, int, void*);
-    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "EVP_PKEY_CTX_ctrl");
+    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "akfc_EVP_PKEY_CTX_ctrl");
     if (p_ctrl) {
         // EVP_PKEY_CTRL_RSA_OAEP_MD = 0x100 + 6 = 0x106
         return p_ctrl(ctx, 0x106, 0, (void*)md);
@@ -195,7 +177,7 @@ static int set_mgf1_md(EVP_PKEY_CTX* ctx, const EVP_MD* md) {
         return p_EVP_PKEY_CTX_set_rsa_mgf1_md(ctx, md);
     }
     typedef int (*ctrl_fn)(EVP_PKEY_CTX*, int, int, void*);
-    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "EVP_PKEY_CTX_ctrl");
+    static ctrl_fn p_ctrl = (ctrl_fn)dlsym(g_libcrypto, "akfc_EVP_PKEY_CTX_ctrl");
     if (p_ctrl) {
         // EVP_PKEY_CTRL_RSA_MGF1_MD = 0x100 + 7 = 0x107
         return p_ctrl(ctx, 0x107, 0, (void*)md);
