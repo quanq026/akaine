@@ -33,6 +33,18 @@ class AndroidClientBuilderTests(unittest.TestCase):
         }
         self.assertIn("production-shared-api-base", labels)
 
+    def test_guide_explains_every_native_operation(self):
+        root = Path(__file__).resolve().parents[1]
+        plan = build_android_client.load_plan(
+            root / "patches/arcaea-7.0.255-arm64/native-plan.json"
+        )
+        guide = (root / "docs/guide/06-build-android-client.md").read_text(
+            encoding="utf-8"
+        )
+        for row in plan["binary_patches"]:
+            for operation in row["operations"]:
+                self.assertIn(f"`{operation['label']}`", guide)
+
     def test_replaces_payload_and_removes_old_v1_signature(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
