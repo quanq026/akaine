@@ -33,10 +33,11 @@ python scripts\build_android_client.py `
   --output $output
 ```
 
-The receipt must list all 16 labels from `production-routes` through
-`fmod-18-read-contract`. This stage deliberately leaves the ELF build-id note
-unchanged, so the functional native output is not byte-identical to the old
-release binary even though every executable patch range matches.
+The receipt must list all 17 labels from `production-routes` through
+`fmod-18-read-contract`, including `production-shared-api-base`. The patched
+`libcocos2dcpp.so` SHA-256 is
+`5a7926c2c7e772cb4cd73a554b3053036373ae4500e8da05b0206d6b45d19334`,
+which matches the runtime-verified release native library.
 
 Do not sign this intermediate APK yet. The managed package/Smali and AKFC
 loader stages must be applied before alignment and signing.

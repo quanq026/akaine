@@ -137,8 +137,20 @@ Do not continue unless the strict tool check passes.
 
 ## Understand the public patch set
 
-The complete transformation is assembled from public source in this
-repository:
+An APK is a ZIP archive containing several kinds of program data. This build
+changes three layers:
+
+| Layer | Files in this build | What the layer controls |
+| --- | --- | --- |
+| Android wrapper | `AndroidManifest.xml`, resources and `classes.dex` | Package name, app label, Android components and the Java/Smali bridge that starts AKFC |
+| Game code | `libcocos2dcpp.so` | Server routes and the native conditions used by Divine, BYD, Dread Area and Aether Crest |
+| Audio file bridge | `libfmodProvider.so` | The result returned to FMOD after a file read |
+
+The content bundle is separate from these layers. It supplies catalogues,
+layouts, jackets and previews after the client connects. An APK patch can make
+a selector accept a song, but it cannot create a missing jacket or audio file.
+
+The transformation is assembled from source in this repository:
 
 - `patch_android_client_sources.py` changes the decoded manifest, label,
   package references and AKFC lifecycle calls;
@@ -153,33 +165,63 @@ repository:
 No patched `.dex` or `.so` is downloaded from Akaine. The only non-source input
 is the verified upstream XAPK.
 
+Three terms appear throughout this chapter. Managed code is the Android and
+Java side compiled into `classes.dex`; Apktool represents it as readable Smali
+assembly. Native code is arm64 machine code stored in `.so` libraries. A hook
+redirects one known function or call site to replacement logic. It does not
+mean a remote server hook or a modification to every function in the game.
+
+### How a guarded binary patch works
+
+`native-plan.json` is a list of small byte replacements. Each operation has
+four useful fields:
+
+- `offset` is the byte position inside the native library;
+- `before` is the exact byte sequence expected in the untouched 7.0.255 file;
+- `after` is the same-length replacement;
+- `label` gives the replacement a readable name for the build receipt.
+
+The builder first checks the SHA-256 of the original library. It then checks
+the `before` bytes at every offset, applies the replacements and checks the
+final SHA-256. If any check fails, the build stops without producing a patched
+APK. This prevents an offset intended for 7.0.255 from being written into a
+different release where the same position could contain unrelated code.
+
+The hexadecimal text is machine input, not a step that you should edit by
+hand. Change a native operation only after analysing the target library and
+updating its source hash, guarded bytes and output hash together.
+
 ## What the native release patch does
 
 The 7.0.255 native patch is version-specific. Every operation checks the original
 bytes before writing because offsets from another client version are unsafe.
 
-The accepted release contains these behavior changes:
+The labels in the plan are grouped below by the player-facing problem they
+solve.
 
-1. **Production routing.** The shared encrypted API base and literal auth,
-   aggregate and bundle routes point to production. Replacement strings must
-   fit their original native storage; shorter values are NUL-padded. A longer
-   hostname must use a shorter DNS name or a server-side route instead of
-   overflowing the binary.
-2. **Divine visibility and preview.** The relevant reveal cells are enabled
-   without globally unlocking unrelated state. Preview resources remain a
-   bundle concern; the APK patch only fixes the client-side selection logic.
-3. **Final Verdict BYD registry.** The allowlist contains `pentiment`,
-   `arcanaeden`, `worldender`, `testify`, `infinitestrife`, `last` and
-   `lasteternity`.
-4. **Axium Crisis BYD registry.** `axiumcrisis` class 3 follows the same safe
-   allowlisted path so Axium Divergence becomes selectable.
-5. **Aether Crest ETR guard.** A missing special-condition list skips its
-   enumeration; the normal non-null path is unchanged.
-6. **AKFC runtime.** The APK contains a self-contained loader with private,
-   symbol-prefixed crypto and matching managed integration.
+The login route returns the access token. The aggregate route combines several
+startup API calls into one request. The content-bundle route tells the client
+which downloadable resource update it needs. Other calls, including Cloud
+Sync, are built from the shared API base.
 
-The guarded byte operations for items 1 through 5 and the FMOD error-18 repair are
-published in
+| Plan labels | What changes | What happens when it is missing |
+| --- | --- | --- |
+| `production-routes`, `route-helper`, `route-hook-a`, `route-hook-b`, `route-hook-c`, `route-hook-d` | Store the production login, aggregate and content-bundle URLs, then redirect the native call sites that construct those requests through the route helper. The helper matters because adding unused URL text alone would not change a request. | Login or bundle requests still go to an official, staging or obsolete endpoint. |
+| `production-shared-api-base` | Replaces the encrypted base URL used by direct API requests such as `/user/me/save`. This route is separate from the visible login and aggregate URL strings. | Login may appear to succeed, but opening Network or Cloud Sync returns error `-4`, the client says another device logged in, and the saved session is unusable after restart. |
+| `byd-allowlist`, `byd-registry-hook` | Adds the exact class-3 song IDs accepted by the native active-state registry and sends the registry check through that allowlist. It covers `pentiment`, `arcanaeden`, `worldender`, `testify`, `infinitestrife`, `last`, `lasteternity` and `axiumcrisis`. | The BYD tile can be absent or visible but not selectable even when the chart and server entitlement exist. The allowlist affects only the named songs. |
+| `divine-gate`, `divine-cell-a`, `divine-cell-b` | Enables the known Divine reveal path and its selector cells. | The songs can exist in the bundle while their selector presentation remains black or incomplete. Jackets and previews must still exist in the bundle. |
+| `aether-guard-cave`, `aether-guard-hook` | Adds a null check before the client enumerates Aether Crest's special-condition list. The ordinary non-null path continues unchanged. | Opening or starting Aether Crest ETR can dereference a missing list and crash. |
+| `dread-area` | Repairs the known Dread Area pre-start condition path. | The song reaches selection but can fail immediately before gameplay begins. |
+| `crash-logger` | Keeps the native crash-logger branch used by the accepted release disabled. It does not unlock content or hide Java errors from logcat. | The client follows a different native crash-reporting path from the verified release. |
+| `fmod-18-read-contract` | Changes `libfmodProvider.so` so its file-read result matches the contract expected by FMOD. | Music playback can return FMOD error 18 or crash when a song starts even though the audio file exists. |
+
+The route operations deserve special attention. Arcaea does not build every
+request from one plain-text hostname. Login, aggregate and bundle have visible
+route strings, while other endpoints use an encrypted shared base. Both layers
+must point to the same server. This is why a client can log in successfully and
+still fail Cloud Sync if `production-shared-api-base` is omitted.
+
+The guarded byte operations listed above are published in
 `patches/arcaea-7.0.255-arm64/native-plan.json`. They are generated from the
 verified APKPure baseline and can be reproduced without a pre-patched native
 library. See the README beside that plan for the exact command and receipt
@@ -187,12 +229,12 @@ checks.
 
 The package rename and managed AKFC bridge are also public in
 `scripts/patch_android_client_sources.py` and the `smali` folder beside the
-native plan. Their README pins the Apktool version and gives the exact decode
-and patch commands.
+native plan. The next section explains those edits before applying them.
 
-The same README now includes the AKFC loader C++ source build. Each operator
-generates a different 3072-bit RSA key pair locally; the private key is embedded
-only into that operator's loader and the public key is used to encrypt charts.
+The AKFC loader C++ source and its build commands are also included. Each
+operator generates a different 3072-bit RSA key pair locally; the private key
+is embedded only into that operator's loader and the public key is used to
+encrypt charts.
 
 ## Step 1: choose build locations
 
@@ -224,6 +266,21 @@ The Apktool jar must be 25,926,183 bytes with SHA-256
 
 ## Step 3: patch the managed sources
 
+This script edits readable files produced by Apktool. Its changes are small,
+but they must agree with each other:
+
+| File | Change | Reason |
+| --- | --- | --- |
+| `AndroidManifest.xml` | Rename `moe.low.arc` to `akai.arc.lmao`, including seven component authorities and the login callback host/scheme. | Android treats the package as the app's identity. Provider authorities and callback declarations must follow the new identity or sharing and login callbacks can target the wrong app. The new package can also be installed separately from the official client. |
+| `res/values/strings.xml` | Change the launcher label from Arcaea to AkaineXD. | This is the name Android displays. It does not change networking or gameplay. |
+| `BuildConfig.smali` | Set `APPLICATION_ID` to `akai.arc.lmao`. | Code that reads its build identity must agree with the manifest package. |
+| `AppActivity.smali` | Update the share provider authority, call `AkfcLoader.init()` after native libraries load and call `wipeDecrypted()` during activity destruction. | The loader cannot hook `libcocos2dcpp.so` before that library exists, and decrypted chart data must be removed when the activity ends. |
+| `AkfcLoader.smali` | Add the Java-to-native bridge for the two loader functions. | Java cannot call the C++ loader exports without a JNI bridge. |
+
+Every replacement includes an expected match count. A count of zero usually
+means the input is the wrong version. A larger count means the script cannot
+prove which occurrence is safe. Either case stops the build.
+
 ```powershell
 Set-Location $repoRoot
 python scripts\patch_android_client_sources.py `
@@ -235,6 +292,21 @@ This changes only exact version-locked source strings and adds the public Smali
 bridge. Any missing or duplicate match stops the build.
 
 ## Step 4: generate this server's AKFC key
+
+AKFC protects a chart in two layers. The chart is encrypted with a random AES
+key, then that AES key is wrapped with the operator's RSA public key. The APK
+contains the matching private key in obfuscated generated C data so it can
+unwrap the AES key during play. A client built with a different private key
+cannot read those protected charts.
+
+Generate one key pair for the server/client pair and keep it for later builds.
+Rotating it requires re-encrypting the protected charts that use the old public
+key.
+
+The private key is part of the installed APK, so a determined person can
+eventually recover it. AKFC raises the effort needed to copy distributed chart
+files; it is not hardware-backed DRM and should not be treated as permanent
+secrecy.
 
 ```powershell
 $keyFolder = Read-Host "Private folder for this server's AKFC keys"
@@ -284,7 +356,26 @@ The BoringSSL symbols receive an `akfc_` prefix before they are linked into the
 loader. The build does not add or replace a process-wide `libcrypto.so`, so the
 AKFC runtime cannot alter unrelated client encryption or saved login state.
 
+At runtime the loader does this only for files that look like chart downloads
+and begin with the `AKFC` magic bytes:
+
+1. intercept the native file-open or file-size request;
+2. wait briefly if a `.tmp` download has not reached its declared size;
+3. authenticate the container identity and unwrap its AES key;
+4. decrypt the AFF into the app's private storage and report the plaintext size
+   expected by the chart reader;
+5. wipe tracked plaintext files when the Android activity is destroyed.
+
+Ordinary assets pass through the original file functions. The magic-byte check
+is important: an `.aff` filename alone is not enough to trigger decryption.
+
 ## Step 6: rebuild and apply guarded native patches
+
+Apktool compiles the managed edits back into `classes.dex`, the binary manifest
+and Android resources. `build_android_client.py` then opens that rebuilt APK
+and changes only the guarded native members. Rebuilding first matters because
+the final archive must contain both the Android/JNI bridge and the native code
+that the bridge calls.
 
 ```powershell
 java -Xmx6g -jar $apktool.FullName build `
