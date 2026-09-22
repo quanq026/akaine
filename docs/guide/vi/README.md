@@ -1,0 +1,41 @@
+# Thiết lập Akaine 7.0.255 từ đầu
+
+[English](../README.md) | Tiếng Việt
+
+Bộ hướng dẫn này giúp bạn build server Akaine và client Android cho Arcaea `7.0.255`
+(`1209852`) từ đầu. Các chương dùng chung một bộ tên ví dụ và phải được làm theo thứ tự,
+vì mỗi chương sau dựa trên kết quả kiểm tra của chương trước. Không dùng hash hoặc APK
+patch trong hướng dẫn cho phiên bản client khác.
+
+## Ví dụ được sử dụng trong hướng dẫn
+
+Thay thế các ví dụ này bằng các giá trị của riêng bạn khi được hướng dẫn:
+
+| Mục | Ví dụ |
+| --- | --- |
+| Tên miền | `example.com` |
+| API trò chơi | `api.example.com` |
+| Link Play host | `link.example.com` |
+| Asset host | `assets.example.com` |
+| Lightsail instance | `akaine-server` |
+| Lightsail region | Singapore (`ap-southeast-1`) |
+
+Đừng đăng ký `example.com`; tên này được dành riêng cho tài liệu ví dụ.
+
+## Phần 1: nền tảng
+
+1. [Hiểu cách hoạt động của Akaine](01-architecture.md).
+2. [Tạo AWS, Lightsail, Cloudflare và DNS](02-cloud-domain.md).
+3. [Chuẩn bị máy tính Windows](03-workstation.md).
+4. [Nhận và xác minh bộ tài nguyên riêng](04-private-resources.md).
+5. [Cấu hình R2, protected download và cache](05-cloudflare-content.md).
+
+Kết thúc phần 1, bạn sẽ có các tài khoản cloud đã được bảo vệ, server Lightsail với IP
+cố định, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
+
+## Phần 2: Client Android
+
+6. [Build, ký và kiểm tra client Android](06-build-android-client.md).
+
+Chương 6 build và kiểm thử client Android từ XAPK upstream đã xác minh cùng source patch
+trong repository này.
