@@ -39,18 +39,38 @@ ASSET_HOST=assets.example.com
 R2_BUCKET=akaine-assets-example
 ```
 
+## Cách làm theo chương này
+
+Các bước dashboard được thực hiện trong Cloudflare. Code block được chạy trong Windows
+PowerShell. Giữ một cửa sổ PowerShell trong lúc upload vì các biến như `$bucket` và
+`$endpoint` chỉ tồn tại trong cửa sổ đó. Secret chỉ được nhập vào `aws configure`, ô
+Worker secret được mã hóa hoặc private secret file; không paste nó vào command trong
+guide.
+
+Có ba access path khác nhau:
+
+| Path | Quyền truy cập mong đợi |
+| --- | --- |
+| `/bundle/` và `/songs/` | Public và cache được |
+| `/private/` | Luôn bị chặn khỏi public HTTP |
+| `/protected/songs/` | Worker route; request không có chữ ký bị chặn, request có chữ ký hợp lệ từ server được phép |
+
+Không tiếp tục nếu private test bất ngờ trả `200`.
+
 ## Bước 1: cài đặt công cụ tải lên
 
 Mở PowerShell với tư cách người dùng Windows bình thường của bạn:
 
 ```powershell
 winget install --exact --id Amazon.AWSCLI
+if ($LASTEXITCODE -ne 0) { throw "AWS CLI installation failed." }
 ```
 
 Đóng và mở lại PowerShell, sau đó xác minh:
 
 ```powershell
 aws --version
+if ($LASTEXITCODE -ne 0) { throw "AWS CLI is not available after reopening PowerShell." }
 ```
 
 Lệnh phải in phiên bản AWS CLI thay vì "không được nhận dạng". AWS CLI cũng hoạt động
@@ -90,6 +110,11 @@ aws configure --profile akaine-r2
 Nhập ID khóa truy cập R2 và Khóa truy cập bí mật. Đối với vùng mặc định, hãy nhập
 `auto`; đối với định dạng đầu ra, hãy nhập `json`.
 
+Bốn prompt lần lượt là Access Key ID, Secret Access Key, region và output format.
+Profile name tách bucket credential này khỏi AWS profile thông thường. Command lưu
+secret trong Windows user profile, vì vậy credential chỉ là tạm thời và sẽ bị thu hồi ở
+bước 16.
+
 Không dán secret vào GitHub Issue, tin nhắn Discord, screenshot hoặc
 lệnh sẽ được lưu trong lịch sử shell.
 
@@ -118,18 +143,29 @@ Sao chép endpoint từ trang token của Cloudflare. Giá trị có dạng:
 https://ACCOUNT_ID.r2.cloudflarestorage.com
 ```
 
-Trong PowerShell, thay thế ba giá trị mẫu:
+Trong PowerShell, nhập bucket và endpoint khi được hỏi:
 
 ```powershell
 $kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
 $kit = Join-Path $kitRoot "r2"
-$bucket = "akaine-assets-example"
-$endpoint = "https://ACCOUNT_ID.r2.cloudflarestorage.com"
+$bucket = Read-Host "R2 bucket name"
+$endpoint = Read-Host "R2 S3 endpoint beginning with https://"
+
+Get-Item (Join-Path $kit "bundle"), (Join-Path $kit "songs"), (Join-Path $kit "private")
+if ($endpoint -notmatch '^https://[0-9a-f]+\.r2\.cloudflarestorage\.com/?$') {
+  throw "The value is not an R2 S3 endpoint. Copy it from the token page."
+}
 
 aws s3 sync $kit "s3://$bucket" `
   --endpoint-url $endpoint `
   --profile akaine-r2
+if ($LASTEXITCODE -ne 0) { throw "R2 upload failed." }
 ```
+
+`Get-Item` chứng minh ba source folder tồn tại trước upload. `aws s3 sync` copy file mới
+và file thay đổi nhưng không xóa remote object vì command không dùng `--delete`.
+Endpoint là địa chỉ S3 API trong token page, không phải `assets.your-domain` và không
+phải URL `r2.dev`.
 
 Liệt kê các đối tượng cấp cao nhất đã tải lên:
 
@@ -137,6 +173,7 @@ Liệt kê các đối tượng cấp cao nhất đã tải lên:
 aws s3 ls "s3://$bucket" `
   --endpoint-url $endpoint `
   --profile akaine-r2
+if ($LASTEXITCODE -ne 0) { throw "R2 listing failed after upload." }
 ```
 
 Bạn sẽ thấy `bundle/`, `songs/` và `private/`. Nếu upload thất bại, đừng chuyển bucket
@@ -168,13 +205,24 @@ $assetSecret = [Convert]::ToBase64String($bytes)
 
 $secretFile = Read-Host "Full path for the signing-secret file"
 $secretFile = [IO.Path]::GetFullPath($secretFile)
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+$repoPrefix = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\') + '\'
+if ($secretFile.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+  throw "Store the signing secret outside the Git repository."
+}
 $secretFolder = Split-Path -Parent $secretFile
 New-Item -ItemType Directory -Force $secretFolder | Out-Null
 Set-Content `
   -LiteralPath $secretFile `
   -Value $assetSecret `
   -NoNewline
+
+Get-Item $secretFile | Select-Object FullName, Length
 ```
+
+Random-number generator tạo 32 byte không đoán được, còn Base64 chuyển chúng thành text
+mà Worker và server configuration đều nhận. Path check giữ file ngoài Git. Output cuối
+phải hiện file không rỗng mà không in nội dung của nó.
 
 Lưu trữ bản sao thứ hai trong trình quản lý mật khẩu của bạn. Không in biến hoặc đưa file
 vào Git. Chương server sau này sẽ tải cùng giá trị này vào môi trường server.
@@ -192,6 +240,10 @@ $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Get-Content `
   -LiteralPath (Join-Path $repoRoot "cloudflare\protected-assets\worker.mjs") `
   -Raw | Set-Clipboard
+
+if (-not (Get-Clipboard -Raw)) {
+  throw "Worker source was not copied to the clipboard."
+}
 ```
 
 6. Thay thế mã khởi động bằng nội dung bảng nhớ tạm và chọn **Triển khai**.
@@ -228,15 +280,24 @@ các URL được game server của bạn ký, kiểm tra danh sách cho phép, 
 
 Để đảm bảo hiệu suất, Worker có thể giữ một file được bảo vệ hoàn chỉnh có dung lượng lên
 tối đa 32 MB trong cache trong một ngày. Worker vẫn kiểm tra chữ ký trước mỗi cache
-lookup. Range request và file lớn hơn được đọc trực tiếp từ R2.
+lookup. Range request và file lớn hơn được đọc trực tiếp từ R2. Protected allowlist
+được tải lại từ R2 sau tối đa 60 giây, vì vậy fan-chart row mới không cần redeploy
+Worker.
 
 ## Bước 11: kiểm tra private boundary
 
 Thay thế tên miền và sử dụng bất kỳ tên bài hát/file nào:
 
 ```powershell
-curl.exe -i "https://assets.example.com/private/songs/test/2.aff"
-curl.exe -i "https://assets.example.com/protected/songs/test/2.aff"
+$assetHost = Read-Host "Asset hostname without https://"
+$privateStatus = curl.exe -sS -o NUL -w "%{http_code}" "https://$assetHost/private/songs/test/2.aff"
+$protectedStatus = curl.exe -sS -o NUL -w "%{http_code}" "https://$assetHost/protected/songs/test/2.aff"
+
+if ($privateStatus -ne "403" -or $protectedStatus -ne "403") {
+  throw "Private boundary failed: private=$privateStatus protected=$protectedStatus"
+}
+
+"Private boundary passed: private=$privateStatus protected=$protectedStatus"
 ```
 
 Cả hai yêu cầu đều phải trả về `403`. Cái đầu tiên bị chặn vì đường dẫn lưu trữ riêng tư

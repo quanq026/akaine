@@ -26,8 +26,11 @@ jobs:
       - run: python scripts/ci_public_repo_check.py
       - run: python -m compileall -q server scripts
       - run: python scripts/test_build_android_client.py
+      - run: python scripts/test_build_content_bundle.py
+      - run: python scripts/test_encrypt_akfc_aff.py
       - run: python scripts/test_patch_android_client_sources.py
       - run: python scripts/test_akfc_source.py
+      - run: python scripts/test_vietnamese_guide.py
       - name: Run reproducible server and bot tests
         working-directory: server
         run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tools.test_discord_bot

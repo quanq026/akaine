@@ -47,6 +47,34 @@ Lygus Bot is optional. It creates and links accounts, displays profiles and
 recent plays, and renders B30 images. It runs on the server and reads the same
 game database.
 
+## Names used throughout the guide
+
+The example domain `example.com` is never used as a real address. Replace it
+with the domain you registered. The guide gives each service a separate name:
+
+| Name | Example | Purpose | Cloudflare mode |
+| --- | --- | --- | --- |
+| Game API | `api.example.com` | Login, account, score, save and content-bundle responses | Proxied after HTTPS is configured |
+| Link Play | `link.example.com` | Real-time TCP/UDP rooms | DNS only |
+| Asset host | `assets.example.com` | Public bundles and songs plus signed protected downloads | Native R2 Custom Domain and Worker routes |
+
+These names can point into the same project while using different delivery
+paths. Do not replace every hostname with one address simply because login
+works. The Android client has separate routes for different API families, and
+Link Play cannot use the normal Cloudflare HTTP proxy.
+
+Other repeated terms:
+
+| Term | Meaning |
+| --- | --- |
+| App version | Android client version. This repository supports `7.0.255`. |
+| Content version | Version of the downloadable bundle. It changes without changing the APK. |
+| Bundle | Manifest plus partition files containing catalogues and selector resources. |
+| Remote song | A song whose playable files are requested after the bundle is installed. |
+| Staging | Isolated test deployment used before production. |
+| Production | Deployment used by normal players. |
+| Artifact | A concrete output such as an APK, manifest or bundle part, identified by its hash. |
+
 ## What happens when a player logs in
 
 1. The Android client sends an HTTPS request to `api.example.com`.
@@ -93,6 +121,25 @@ Normal API requests use HTTPS. Link Play uses direct TCP and UDP connections
 for real-time rooms. Cloudflare's free HTTP proxy does not carry those game
 ports, so `link.example.com` points directly to the Lightsail fixed IP and uses
 the **DNS only** setting.
+
+## Identify the failing part before changing anything
+
+The same screen can depend on several parts of the system. Use the observed
+boundary to choose the first place to inspect:
+
+| Observation | First check |
+| --- | --- |
+| Domain does not resolve | Cloudflare DNS record and nameserver status |
+| Browser reaches nginx but API returns an error | Python service log and server configuration |
+| Login works but another API action fails | The client route used by that exact action |
+| Bundle will not download | Content-bundle API response, CDN URL and manifest/part hashes |
+| Song appears but download icon remains | Server metadata, protected allowlist and R2 objects |
+| Song downloads but crashes at play | Requested AFF/OGG, AKFC loader and logcat |
+| Score saves but rating is wrong | Database chart constant and rating calculation |
+
+Do not use success in one row as proof for another. For example, working DNS
+does not prove the game server is ready, and a successful bundle download does
+not prove its catalogue is safe to load.
 
 ## Where the files come from
 

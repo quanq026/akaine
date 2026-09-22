@@ -73,3 +73,11 @@ kiểm thử trên staging rồi đưa đúng bộ byte bất biến đó lên p
 Chương 8 giải thích những sự cố đã tạo nên các bước kiểm tra trong guide: API đi sai
 route, bundle boot loop, selector gate, download contract, false positive từ emulator,
 chẩn đoán CDN và rollback release.
+
+## Phần 5: mở rộng catalogue
+
+9. [Thêm fan chart và đặt nó vào một pack](09-add-fan-chart.md).
+
+Chương 9 giải thích cách một fan chart đi qua pack/song catalogue, selector asset, AKFC
+encryption, protected R2 delivery, server metadata, chart constant, staging và runtime
+check cuối.

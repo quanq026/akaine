@@ -40,18 +40,38 @@ ASSET_HOST=assets.example.com
 R2_BUCKET=akaine-assets-example
 ```
 
+## How to work through this chapter
+
+Dashboard steps happen in Cloudflare. Command blocks happen in Windows
+PowerShell. Keep one PowerShell window open while uploading because variables
+such as `$bucket` and `$endpoint` exist only in that window. A secret value is
+entered only into `aws configure`, the encrypted Worker secret field or the
+private secret file; it must not be pasted into a command shown in this guide.
+
+There are three different access paths:
+
+| Path | Expected access |
+| --- | --- |
+| `/bundle/` and `/songs/` | Public and cacheable |
+| `/private/` | Always blocked from public HTTP |
+| `/protected/songs/` | Worker route; unsigned requests blocked, valid server-signed requests allowed |
+
+Do not continue if a private test unexpectedly returns `200`.
+
 ## Step 1: install the upload tool
 
 Open PowerShell as your normal Windows user:
 
 ```powershell
 winget install --exact --id Amazon.AWSCLI
+if ($LASTEXITCODE -ne 0) { throw "AWS CLI installation failed." }
 ```
 
 Close and reopen PowerShell, then verify:
 
 ```powershell
 aws --version
+if ($LASTEXITCODE -ne 0) { throw "AWS CLI is not available after reopening PowerShell." }
 ```
 
 The command must print an AWS CLI version instead of “not recognized”. AWS CLI
@@ -92,6 +112,11 @@ aws configure --profile akaine-r2
 Enter the R2 Access Key ID and Secret Access Key. For the default region enter
 `auto`; for output format enter `json`.
 
+The four prompts are Access Key ID, Secret Access Key, region and output
+format. The profile name isolates this bucket credential from any normal AWS
+profile. This command stores the secret in your Windows user profile, so the
+credential is temporary and revoked in step 16.
+
 Never paste the secret into a GitHub issue, Discord message, screenshot or
 command that will be saved in shell history.
 
@@ -121,18 +146,29 @@ Copy the endpoint from Cloudflare's token page. It looks like:
 https://ACCOUNT_ID.r2.cloudflarestorage.com
 ```
 
-In PowerShell, replace the three example values:
+In PowerShell, enter the bucket and endpoint when prompted:
 
 ```powershell
 $kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
 $kit = Join-Path $kitRoot "r2"
-$bucket = "akaine-assets-example"
-$endpoint = "https://ACCOUNT_ID.r2.cloudflarestorage.com"
+$bucket = Read-Host "R2 bucket name"
+$endpoint = Read-Host "R2 S3 endpoint beginning with https://"
+
+Get-Item (Join-Path $kit "bundle"), (Join-Path $kit "songs"), (Join-Path $kit "private")
+if ($endpoint -notmatch '^https://[0-9a-f]+\.r2\.cloudflarestorage\.com/?$') {
+  throw "The value is not an R2 S3 endpoint. Copy it from the token page."
+}
 
 aws s3 sync $kit "s3://$bucket" `
   --endpoint-url $endpoint `
   --profile akaine-r2
+if ($LASTEXITCODE -ne 0) { throw "R2 upload failed." }
 ```
+
+`Get-Item` proves the three source folders exist before upload. `aws s3 sync`
+copies new and changed files but does not delete remote objects because the
+command does not use `--delete`. The endpoint is the S3 API address from the
+token page, not `assets.your-domain` and not an `r2.dev` URL.
 
 List the uploaded top-level objects:
 
@@ -140,6 +176,7 @@ List the uploaded top-level objects:
 aws s3 ls "s3://$bucket" `
   --endpoint-url $endpoint `
   --profile akaine-r2
+if ($LASTEXITCODE -ne 0) { throw "R2 listing failed after upload." }
 ```
 
 You should see `bundle/`, `songs/` and `private/`. If the upload fails, do not
@@ -172,13 +209,25 @@ $assetSecret = [Convert]::ToBase64String($bytes)
 
 $secretFile = Read-Host "Full path for the signing-secret file"
 $secretFile = [IO.Path]::GetFullPath($secretFile)
+$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
+$repoPrefix = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\') + '\'
+if ($secretFile.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+  throw "Store the signing secret outside the Git repository."
+}
 $secretFolder = Split-Path -Parent $secretFile
 New-Item -ItemType Directory -Force $secretFolder | Out-Null
 Set-Content `
   -LiteralPath $secretFile `
   -Value $assetSecret `
   -NoNewline
+
+Get-Item $secretFile | Select-Object FullName, Length
 ```
+
+The random-number generator creates 32 unpredictable bytes and Base64 converts
+them into text accepted by both the Worker and server configuration. The path
+check keeps the file outside Git. The final output should show a non-empty file
+without printing its contents.
 
 Store a second copy in your password manager. Do not print the variable or
 include the file in Git. A later server chapter will load this same value into
@@ -197,6 +246,10 @@ $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Get-Content `
   -LiteralPath (Join-Path $repoRoot "cloudflare\protected-assets\worker.mjs") `
   -Raw | Set-Clipboard
+
+if (-not (Get-Clipboard -Raw)) {
+  throw "Worker source was not copied to the clipboard."
+}
 ```
 
 6. Replace the starter code with the clipboard contents and select **Deploy**.
@@ -234,15 +287,24 @@ reads the approved object from R2.
 
 For performance, the Worker may keep a complete protected file up to 32 MB in
 its internal cache for one day. It still verifies the signature before every
-cache lookup. Range requests and larger files read directly from R2.
+cache lookup. Range requests and larger files read directly from R2. The
+protected allowlist is reloaded from R2 after at most 60 seconds, so a newly
+published fan-chart row does not require a Worker redeploy.
 
 ## Step 11: test the private boundary
 
 Replace the domain and use any song/file name:
 
 ```powershell
-curl.exe -i "https://assets.example.com/private/songs/test/2.aff"
-curl.exe -i "https://assets.example.com/protected/songs/test/2.aff"
+$assetHost = Read-Host "Asset hostname without https://"
+$privateStatus = curl.exe -sS -o NUL -w "%{http_code}" "https://$assetHost/private/songs/test/2.aff"
+$protectedStatus = curl.exe -sS -o NUL -w "%{http_code}" "https://$assetHost/protected/songs/test/2.aff"
+
+if ($privateStatus -ne "403" -or $protectedStatus -ne "403") {
+  throw "Private boundary failed: private=$privateStatus protected=$protectedStatus"
+}
+
+"Private boundary passed: private=$privateStatus protected=$protectedStatus"
 ```
 
 Both requests must return `403`. The first is blocked because direct private

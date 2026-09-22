@@ -16,6 +16,7 @@ FILES = (
     "06-build-android-client.md",
     "07-build-release-content-bundle.md",
     "08-lessons-and-failures.md",
+    "09-add-fan-chart.md",
 )
 
 
@@ -42,6 +43,17 @@ class VietnameseGuideTests(unittest.TestCase):
         for name in FILES:
             text = (VI / name).read_text(encoding="utf-8")
             self.assertIn("[English](../", text, name)
+
+    def test_local_markdown_links_resolve(self):
+        files = list(GUIDE.rglob("*.md")) + [ROOT / "README.md", ROOT / "README.vi.md"]
+        for path in files:
+            text = path.read_text(encoding="utf-8")
+            for target in re.findall(r"\[[^]]+\]\(([^)]+)\)", text):
+                if "://" in target or target.startswith("#"):
+                    continue
+                local = target.split("#", 1)[0]
+                if local:
+                    self.assertTrue((path.parent / local).resolve().exists(), f"{path}: {target}")
 
 
 if __name__ == "__main__":

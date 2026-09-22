@@ -38,6 +38,23 @@ plan expires; an expired free-plan account can become inaccessible.
 - a password manager;
 - an AWS account eligible for credits or a payment method for later paid use.
 
+## How to work through this chapter
+
+Steps 1 through 8 and step 10 happen in a web browser. Steps 9 and 11 happen
+in Windows PowerShell. Keep a private setup note in your password manager with
+only these non-secret values:
+
+```text
+MY_DOMAIN=
+SERVER_IP=
+LIGHTSAIL_REGION=
+LIGHTSAIL_INSTANCE=akaine-server
+```
+
+Do not put passwords, recovery codes, the SSH private key or AWS credentials in
+that note. Finish each numbered step before moving to the next one. A page that
+says `Pending`, `Creating` or `Verifying` has not passed its gate yet.
+
 ## Step 1: create and secure the Cloudflare account
 
 1. Open `dash.cloudflare.com` in your browser.
@@ -82,6 +99,10 @@ Write your real domain here before continuing:
 ```text
 MY_DOMAIN=____________________________
 ```
+
+Save the chosen domain in your private setup note. Later chapters use
+`your-domain` and `example.com` as placeholders; neither should appear in a
+real DNS record or APK.
 
 ## Step 3: connect the domain to Cloudflare
 
@@ -140,6 +161,10 @@ automation credentials will be handled separately.
 
 Wait until the instance status becomes **Running**.
 
+Open the instance once and confirm its blueprint says Ubuntu 24.04 LTS and its
+region is the one you selected. If either is wrong, replace the new empty
+instance now rather than adapting every later command to an unintended image.
+
 ## Step 6: create a fixed IP address
 
 The default public IPv4 can change after a stop/start. DNS must point to an
@@ -155,6 +180,10 @@ address that stays the same.
 ```text
 SERVER_IP=____________________________
 ```
+
+Record the address exactly as four decimal numbers separated by dots. The
+static IP page must show that it is attached to `akaine-server`; an unattached
+static IP does not protect the instance address from changing.
 
 ## Step 7: download your SSH key
 
@@ -183,12 +212,23 @@ this rule before attempting SSH again.
 
 ## Step 9: test SSH from Windows
 
-Open PowerShell and replace `YOUR_SERVER_IP`:
+Open PowerShell. The commands ask for the key and static IP:
 
 ```powershell
 $sshKey = Get-Item (Read-Host "Full path to the downloaded SSH private key")
-ssh -i $sshKey.FullName ubuntu@YOUR_SERVER_IP
+$serverIp = Read-Host "Lightsail static IPv4 address"
+
+if ($serverIp -notmatch '^(?:\d{1,3}\.){3}\d{1,3}$') {
+  throw "The server address is not an IPv4 value."
+}
+
+ssh -i $sshKey.FullName "ubuntu@$serverIp"
 ```
+
+`Get-Item` checks that the key file exists. `$serverIp` keeps the address in
+the current PowerShell window, and the simple format check catches a hostname,
+URL or blank input before SSH runs. `-i` tells SSH which private key proves
+that you are allowed to administer this instance.
 
 The first connection asks whether you trust the server fingerprint. Confirm
 only if the IP is the static IP you just created. A successful connection ends
@@ -223,15 +263,33 @@ the resource kit is prepared.
 
 ## Step 11: verify DNS from Windows
 
-Close and reopen PowerShell, then replace the example domain:
+Close and reopen PowerShell. Enter the real domain and static IP when asked:
 
 ```powershell
-nslookup api.example.com 1.1.1.1
-nslookup link.example.com 1.1.1.1
+$domain = Read-Host "Your registered domain without https://"
+$serverIp = Read-Host "Lightsail static IPv4 address"
+
+$apiAnswer = nslookup "api.$domain" 1.1.1.1 2>&1 | Out-String
+$linkAnswer = nslookup "link.$domain" 1.1.1.1 2>&1 | Out-String
+
+if ($apiAnswer -notmatch [regex]::Escape($serverIp)) {
+  throw "api.$domain does not resolve to the static IP."
+}
+if ($linkAnswer -notmatch [regex]::Escape($serverIp)) {
+  throw "link.$domain does not resolve to the static IP."
+}
+
+$apiAnswer
+$linkAnswer
 ```
 
 Both commands should show the Lightsail static IP. DNS changes often appear in
 minutes, but cached records can take longer.
+
+The commands query Cloudflare's `1.1.1.1` resolver instead of trusting a stale
+answer cached by Windows or the router. The two `if` blocks are stop gates. If
+one fails, inspect that exact DNS record and wait for propagation; do not create
+duplicate records as a retry.
 
 ## Check your work
 

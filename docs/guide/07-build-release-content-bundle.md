@@ -8,6 +8,13 @@ staging to production. It uses `scripts/build_content_bundle.py`; the older
 Complete chapters 1 through 6 first. You also need a staging server that uses
 the same server source and configuration shape as production.
 
+Use one PowerShell window for the local build and upload sections. If you close
+it, no artifact is lost; return to "Prepare a known-good source" and rerun only
+the variable-setting block before continuing. Do not rerun the builder against
+an existing output directory. A completed candidate is immutable, while a
+failed candidate should use a new empty output path after its error is
+understood.
+
 ## Understand the three names
 
 The application version is `7.0.255`. It identifies the Android client and
@@ -84,6 +91,11 @@ build.
 
 The overlay uses paths relative to the bundle root. A file with the same path
 replaces the source file; a new path is appended to the final partition.
+
+The overlay is additive and replacement-only. Omitting a source path from the
+overlay does not remove it from the bundle. To remove a song from the selector,
+edit the catalogue coherently; do not expect deleting a local overlay file to
+delete bytes already present in the source full root.
 
 ```text
 overlay/

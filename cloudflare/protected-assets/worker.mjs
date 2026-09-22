@@ -1,6 +1,8 @@
 const encoder = new TextEncoder();
 let manifestCache;
+let manifestCacheExpiresAt = 0;
 const PRIVATE_CACHE_MAX_BYTES = 32 * 1024 * 1024;
+const MANIFEST_CACHE_TTL_MS = 60 * 1000;
 
 function hex(bytes) {
   return [...bytes].map((value) => value.toString(16).padStart(2, "0")).join("");
@@ -37,8 +39,8 @@ function parseSongPath(pathname, prefix) {
   }
 }
 
-async function loadManifest(env) {
-  if (manifestCache) return manifestCache;
+async function loadManifest(env, nowMs = Date.now()) {
+  if (manifestCache && nowMs < manifestCacheExpiresAt) return manifestCache;
   const key = env.ASSET_MANIFEST_KEY || "private/asset-manifest.json";
   const object = await env.AKAINE_ASSETS.get(key);
   if (!object) throw new Error(`Asset manifest not found: ${key}`);
@@ -47,6 +49,7 @@ async function loadManifest(env) {
     throw new Error("Asset manifest must be a song-to-files object");
   }
   manifestCache = parsed;
+  manifestCacheExpiresAt = nowMs + MANIFEST_CACHE_TTL_MS;
   return parsed;
 }
 

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import worker, { hmacHex, verifySignedRequest } from "./worker.mjs";
+import worker, { hmacHex, loadManifest, verifySignedRequest } from "./worker.mjs";
 
 const secret = "test-only-secret";
 const manifest = { demo_song: ["2.aff", "base.ogg"] };
@@ -56,4 +56,23 @@ test("blocks an unsigned protected request before reading R2 content", async () 
     { waitUntil() {} },
   );
   assert.equal(response.status, 403);
+});
+
+test("refreshes the protected allowlist after its cache TTL", async () => {
+  let value = { old_song: ["2.aff"] };
+  const changingEnv = {
+    AKAINE_ASSETS: {
+      async get() {
+        return { async json() { return value; } };
+      },
+    },
+  };
+  const start = Date.now() + 120_000;
+  const first = await loadManifest(changingEnv, start);
+  assert.deepEqual(first, { old_song: ["2.aff"] });
+  value = { new_song: ["2.aff"] };
+  const cached = await loadManifest(changingEnv, start + 30_000);
+  assert.deepEqual(cached, { old_song: ["2.aff"] });
+  const refreshed = await loadManifest(changingEnv, start + 60_001);
+  assert.deepEqual(refreshed, { new_song: ["2.aff"] });
 });
