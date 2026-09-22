@@ -58,6 +58,8 @@ the installation to another VPS provider.
 4. [Get and verify the private resource kit](docs/guide/04-private-resources.md).
 5. [Configure R2, protected downloads and caching](docs/guide/05-cloudflare-content.md).
 6. [Build, sign and test the Android client](docs/guide/06-build-android-client.md).
+7. [Build, verify and release a 7.0.255 content bundle](docs/guide/07-build-release-content-bundle.md).
+8. [Learn from the failures encountered while building Akaine](docs/guide/08-lessons-and-failures.md).
 
 Start with chapter one and continue in order. Every later chapter assumes the
 previous chapter's checks have passed.

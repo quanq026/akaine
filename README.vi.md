@@ -59,6 +59,8 @@ hệ thống sang nhà cung cấp VPS khác.
 4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
 5. [Cấu hình R2, protected download và cache](docs/guide/vi/05-cloudflare-content.md).
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
+7. [Build, xác minh và phát hành content bundle 7.0.255](docs/guide/vi/07-build-release-content-bundle.md).
+8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
 
 Hãy đọc từ chương một và làm theo đúng thứ tự. Mỗi chương phía sau giả định
 rằng bạn đã hoàn thành các bước kiểm tra của chương trước.

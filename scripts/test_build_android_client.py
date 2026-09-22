@@ -45,6 +45,24 @@ class AndroidClientBuilderTests(unittest.TestCase):
             for operation in row["operations"]:
                 self.assertIn(f"`{operation['label']}`", guide)
 
+    def test_beginner_guide_uses_verified_tools_and_stop_gates(self):
+        root = Path(__file__).resolve().parents[1]
+        guide = (root / "docs/guide/06-build-android-client.md").read_text(
+            encoding="utf-8"
+        )
+        for required in (
+            '$python = Join-Path $repoRoot ".venv\\Scripts\\python.exe"',
+            '& $python scripts\\doctor.py --android',
+            'XAPK size or SHA-256 does not match',
+            'Merged baseline does not match',
+            'Apktool decode failed',
+            'Native patch receipt does not contain the full release plan',
+            'Aligned APK verification failed',
+            'APK signature verification failed',
+            '$serial = Read-Host "Device serial shown in the first column above"',
+        ):
+            self.assertIn(required, guide)
+
     def test_replaces_payload_and_removes_old_v1_signature(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
