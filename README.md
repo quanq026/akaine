@@ -1,9 +1,11 @@
 # Akaine 7.0.255
 
+English | [Tiếng Việt](README.vi.md)
+
 Akaine is a setup guide and public source repository for a server and Android
-client based on Arcaea 7.0.255. It starts from an empty Windows computer and a
-new cloud account, so you do not need previous Linux, Cloudflare or Android
-build experience.
+client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
+and a new cloud account. You do not need previous experience with Linux,
+Cloudflare or Android builds.
 
 The guide and public client patches target only version `7.0.255` with version
 code `1209852`. Older and newer Arcaea releases use different files and native
@@ -14,25 +16,25 @@ game content are supplied separately when the guide needs them.
 
 ## What you will build
 
-Following the chapters gives you:
+By the end of the guide, you will have:
 
-- a Linux server running on Amazon Lightsail;
-- a domain protected by Cloudflare;
-- a private-server API reachable over HTTPS;
-- a private resource store for bundles and song files;
-- an Android client configured for your domain;
-- a Discord bot for accounts and score tools;
-- a backup and recovery routine.
+- a Linux server running on Amazon Lightsail
+- a domain protected by Cloudflare
+- a private-server API reachable over HTTPS
+- a private resource store for bundles and song files
+- an Android client configured for your domain
+- a Discord bot for accounts and score tools
+- a backup and recovery routine
 
 ## Before you start
 
-The first setup usually takes an uninterrupted afternoon. You need:
+Set aside an uninterrupted afternoon for the first setup. You need:
 
-- a Windows 10 or Windows 11 computer with at least 30 GB free;
-- an Android phone or a computer capable of running an Android emulator;
-- a payment card accepted by AWS and your domain registrar;
-- an email address you control and can protect with two-factor authentication;
-- the private Akaine resource kit and its expected SHA-256 value.
+- a Windows 10 or Windows 11 computer with at least 30 GB free
+- an Android phone or a computer capable of running an Android emulator
+- a payment card accepted by AWS and your domain registrar
+- an email address you control and can protect with two-factor authentication
+- the private Akaine resource kit and its expected SHA-256 value
 
 New AWS customers may receive up to USD 200 in credits for six months, enough
 to cover the Lightsail server during the initial setup period. Vietnamese
@@ -68,8 +70,9 @@ The kit includes a manifest so you can verify every file before using it.
 
 ## Credits
 
-Thanks to [Lost-MSth/Arcaea-server](https://github.com/Lost-MSth/Arcaea-server),
-which helped inform Akaine's server work.
+Akaine credits
+[Lost-MSth/Arcaea-server](https://github.com/Lost-MSth/Arcaea-server) as an
+upstream reference for its server work.
 
 ## License and ownership
 
