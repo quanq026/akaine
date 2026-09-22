@@ -11,7 +11,7 @@ an unverified offset.
 
 Covered behavior:
 
-- production auth, aggregate and content-bundle routes;
+- production shared API base plus auth, aggregate and content-bundle routes;
 - Divine reveal/cell handling;
 - Final Verdict and Axium Crisis BYD registry handling;
 - Dread Area pre-start handling;

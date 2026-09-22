@@ -300,7 +300,8 @@ python scripts\build_android_client.py `
 Get-Content "$unsignedApk.receipt.json"
 ```
 
-The receipt must list all 16 native labels. The plan guards the exact original
+The receipt must list all 17 native labels, including
+`production-shared-api-base`. The plan guards the exact original
 `libcocos2dcpp.so` and `libfmodProvider.so` hashes even though Apktool changes
 the surrounding ZIP container.
 

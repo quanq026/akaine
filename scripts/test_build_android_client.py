@@ -24,8 +24,14 @@ class AndroidClientBuilderTests(unittest.TestCase):
         self.assertEqual(len(plan["binary_patches"]), 2)
         self.assertEqual(
             sum(len(row["operations"]) for row in plan["binary_patches"]),
-            16,
+            17,
         )
+        labels = {
+            operation["label"]
+            for row in plan["binary_patches"]
+            for operation in row["operations"]
+        }
+        self.assertIn("production-shared-api-base", labels)
 
     def test_replaces_payload_and_removes_old_v1_signature(self):
         with tempfile.TemporaryDirectory() as directory:
