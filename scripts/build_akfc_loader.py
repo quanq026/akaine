@@ -8,10 +8,12 @@ import subprocess
 from pathlib import Path
 
 
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--key-header", type=Path, required=True)
+    parser.add_argument("--crypto", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     ndk_root = os.environ.get("ANDROID_NDK_ROOT")
@@ -19,16 +21,18 @@ def main() -> int:
         raise RuntimeError("ANDROID_NDK_ROOT is required")
     toolchain = Path(ndk_root) / "toolchains" / "llvm" / "prebuilt" / "windows-x86_64" / "bin"
     compiler = toolchain / "aarch64-linux-android24-clang++.cmd"
-    if not compiler.is_file():
-        raise FileNotFoundError(compiler)
+    for path in (compiler, args.crypto):
+        if not path.is_file():
+            raise FileNotFoundError(path)
     if args.key_header.name != "embedded_key.h":
         raise ValueError("key header must be named embedded_key.h")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     command = [
         str(compiler), "-std=c++17", "-O2", "-shared", "-fPIC",
         "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-static-libstdc++",
-        "-Wl,--strip-all", "-Wl,--exclude-libs,ALL",
-        f"-I{args.key_header.parent}", str(args.source), "-llog", "-ldl",
+        "-Wl,--strip-all", f"-I{args.key_header.parent}",
+        str(args.crypto),
+        str(args.source), "-llog", "-ldl",
         "-o", str(args.output),
     ]
     subprocess.run(command, check=True)

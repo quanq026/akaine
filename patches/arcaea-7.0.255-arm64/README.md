@@ -1,6 +1,6 @@
 # Arcaea 7.0.255 arm64 native patch
 
-This directory contains the guarded native stage used by the AkaineXD 7.0
+This directory contains the guarded native stage used by the AkaineXD 7.0.255
 client. It applies directly to the standalone APK produced by merging the
 verified APKPure arm64 XAPK described in chapter 6.
 
@@ -11,7 +11,7 @@ an unverified offset.
 
 Covered behavior:
 
-- production auth, aggregate and content-bundle routes;
+- production shared API base plus auth, aggregate and content-bundle routes;
 - Divine reveal/cell handling;
 - Final Verdict and Axium Crisis BYD registry handling;
 - Dread Area pre-start handling;
@@ -85,6 +85,9 @@ $keyFolder = [IO.Path]::GetFullPath($keyFolder)
 $privateKey = Join-Path $keyFolder "akfc-private.pem"
 $publicKey = Join-Path $keyFolder "akfc-public.pem"
 $keyHeader = Join-Path $keyFolder "embedded_key.h"
+$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
+$cryptoWork = Join-Path (Split-Path $decoded -Parent) "boringssl-work"
+$crypto = Join-Path (Split-Path $decoded -Parent) "libakfc-crypto.a"
 
 python scripts\generate_akfc_keypair.py `
   --private-key $privateKey `
@@ -94,10 +97,15 @@ python scripts\generate_akfc_key_header.py `
   --private-key $privateKey `
   --output $keyHeader
 
+python scripts\build_boringssl_android.py `
+  --work $cryptoWork `
+  --output $crypto
+
 $loader = Join-Path (Split-Path $decoded -Parent) "libakfcloader.so"
 python scripts\build_akfc_loader.py `
   --source patches\arcaea-7.0.255-arm64\native\akfc_loader.cpp `
   --key-header $keyHeader `
+  --crypto $crypto `
   --output $loader
 ```
 
@@ -115,29 +123,10 @@ public key is used by the server-side `server/core/akfc.py` encryption code.
 Copy the compiled loader into the decoded APK before rebuilding:
 
 ```powershell
-$nativeFolder = Join-Path $decoded "lib\arm64-v8a"
 Copy-Item $loader (Join-Path $nativeFolder "libakfcloader.so")
 ```
 
-The loader resolves BoringSSL dynamically. Build the pinned public source
-instead of copying `libcrypto.so` from a private release:
-
-```powershell
-$cryptoWork = Read-Host "Full work folder for the BoringSSL build"
-$cryptoWork = [IO.Path]::GetFullPath($cryptoWork)
-$crypto = Join-Path (Split-Path $decoded -Parent) "libcrypto.so"
-
-python scripts\build_boringssl_android.py `
-  --work $cryptoWork `
-  --output $crypto
-
-Copy-Item $crypto (Join-Path $nativeFolder "libcrypto.so")
-```
-
-The script checks out BoringSSL commit
-`b75f405cde1cc3c9fb811be155eecabe38f379bb`, cross-compiles a shared arm64
-library for Android API 24, strips it and verifies every symbol used by the
-loader. The verified local build was 2,413,216 bytes with SHA-256
-`e70fa31f2f7ea5876e85c170a55f545017f473c3704d6953e99952000186671e`.
-Compiler and platform changes can alter the byte hash; the pinned revision and
-required-symbol check are the compatibility contract.
+The BoringSSL build is static and its symbols are prefixed with `akfc_` before
+linking. Only `libakfcloader.so` is copied into the APK. Do not add or replace a
+process-wide `libcrypto.so`; that can change unrelated client behavior such as
+saved authentication state.

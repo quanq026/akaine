@@ -1,8 +1,8 @@
 # Get and verify the private resource kit
 
-GitHub contains the source code and this guide. It does not contain the base
-APK, game assets, content bundles or tested Apktool package needed by later
-chapters.
+GitHub contains the source code and this guide. Game assets and content bundles
+come from a separate resource kit. Chapter 6 downloads its upstream XAPK and
+build tools directly from their published sources.
 
 ## Obtain the kit
 
@@ -81,7 +81,7 @@ missing tool, return to the matching installation step instead of continuing.
 - Do not store production credentials or player databases in the same folder.
 - Access to the kit does not grant permission to redistribute its contents.
 
-## How to know this chapter is complete
+## Check your work
 
 - The archive hash matches the expected value from the provider.
 - The extracted manifest verification passes.

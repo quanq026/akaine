@@ -1,12 +1,12 @@
 # Create the cloud server and connect a domain
 
-This chapter creates the accounts and infrastructure that Akaine will use. At
-the end, you will be able to connect to a Linux server with a fixed public IP,
-and `api.your-domain` will resolve to that IP through Cloudflare.
+In this chapter you will create the cloud accounts, start a Linux server and
+connect it to your domain. When the checks pass, you can reach the server at
+its fixed public IP and resolve `api.your-domain` through Cloudflare.
 
 ## Time and cost
 
-Plan for 45–90 minutes, plus any account-verification waiting time.
+Plan for 45 to 90 minutes, plus any account-verification waiting time.
 
 If you are a new AWS customer, select the Free plan during registration when
 it is available to you. AWS currently gives new customers USD 100 in credits
@@ -15,7 +15,7 @@ lasting up to six months or until the credits are used. The Lightsail server
 in this guide has a list price of USD 12/month, so the credits can cover the
 initial learning period.
 
-Vietnamese citizens aged 18–23 can register one `.id.vn` domain free for two
+Vietnamese citizens aged 18 to 23 can register one `.id.vn` domain free for two
 years. iNET is one of the participating `.vn` registrars and verifies eligibility
 with eKYC. If you do not qualify, iNET and other registrars often offer cheap
 promotional domains starting around 40,000 VND; always check both the first-year
@@ -38,7 +38,7 @@ plan expires; an expired free-plan account can become inaccessible.
 - a password manager;
 - an AWS account eligible for credits or a payment method for later paid use.
 
-## Step 1 — create and secure the Cloudflare account
+## Step 1: create and secure the Cloudflare account
 
 1. Open `dash.cloudflare.com` in your browser.
 2. Select **Sign up**.
@@ -52,11 +52,11 @@ plan expires; an expired free-plan account can become inaccessible.
 Do not continue until you can sign out and sign back in using two-factor
 authentication.
 
-## Step 2 — register the domain
+## Step 2: register the domain
 
 ### Free `.id.vn` through iNET
 
-Use this option if you are a Vietnamese citizen aged 18–23 and have not already
+Use this option if you are a Vietnamese citizen aged 18 to 23 and have not already
 claimed the free `.id.vn` offer.
 
 1. Open iNET OnePortal and choose the free `.id.vn` registration service.
@@ -83,7 +83,7 @@ Write your real domain here before continuing:
 MY_DOMAIN=____________________________
 ```
 
-## Step 3 — connect the domain to Cloudflare
+## Step 3: connect the domain to Cloudflare
 
 1. In the Cloudflare dashboard, open **Websites** and select **Add a domain**.
 2. Enter the domain you registered and choose the Free plan.
@@ -96,13 +96,13 @@ MY_DOMAIN=____________________________
 If DNSSEC is already enabled at the registrar, disable it before changing
 nameservers. Enable DNSSEC again in Cloudflare only after the zone is active.
 
-### How to know it worked
+### Check the nameserver change
 
 Open the domain in Cloudflare. The Overview page must say **Active**, not
 “Pending nameserver update”. Do not create production records while the zone is
 pending.
 
-## Step 4 — create and secure the AWS account
+## Step 4: create and secure the AWS account
 
 1. Open `aws.amazon.com` and select **Create an AWS Account**.
 2. Complete email verification, contact information, payment verification and
@@ -121,7 +121,7 @@ pending.
 Never create an access key for the AWS root user. Browser administration and
 automation credentials will be handled separately.
 
-## Step 5 — create the Lightsail server
+## Step 5: create the Lightsail server
 
 1. In the AWS Console search bar, enter `Lightsail` and open it.
 2. Select **Create instance**.
@@ -140,7 +140,7 @@ automation credentials will be handled separately.
 
 Wait until the instance status becomes **Running**.
 
-## Step 6 — create a fixed IP address
+## Step 6: create a fixed IP address
 
 The default public IPv4 can change after a stop/start. DNS must point to an
 address that stays the same.
@@ -156,7 +156,7 @@ address that stays the same.
 SERVER_IP=____________________________
 ```
 
-## Step 7 — download your SSH key
+## Step 7: download your SSH key
 
 1. In Lightsail, open **Account** → **SSH keys**.
 2. Under the Singapore region, download the default private key.
@@ -164,7 +164,7 @@ SERVER_IP=____________________________
 4. Never upload this file to GitHub, Discord or cloud storage without strong
    encryption.
 
-## Step 8 — configure the Lightsail firewall
+## Step 8: configure the Lightsail firewall
 
 Open `akaine-server` → **Networking** → **IPv4 Firewall**. Remove broad SSH
 access and create these rules:
@@ -181,7 +181,7 @@ To find your current public IPv4, search `what is my IP` in your browser. If it
 shows `203.0.113.10`, enter `203.0.113.10/32`. When your home IP changes, update
 this rule before attempting SSH again.
 
-## Step 9 — test SSH from Windows
+## Step 9: test SSH from Windows
 
 Open PowerShell and replace `YOUR_SERVER_IP`:
 
@@ -204,7 +204,7 @@ If the connection times out, check that the SSH firewall rule contains your
 current public IP. Do not solve the problem by opening port 22 to the entire
 Internet.
 
-## Step 10 — create the first DNS records
+## Step 10: create the first DNS records
 
 Return to Cloudflare and open your domain → **DNS** → **Records**. Create:
 
@@ -221,7 +221,7 @@ server-install chapter will turn `api` orange after HTTPS is configured.
 Do not create `assets` yet. It will be attached directly to an R2 bucket after
 the resource kit is prepared.
 
-## Step 11 — verify DNS from Windows
+## Step 11: verify DNS from Windows
 
 Close and reopen PowerShell, then replace the example domain:
 
@@ -233,7 +233,7 @@ nslookup link.example.com 1.1.1.1
 Both commands should show the Lightsail static IP. DNS changes often appear in
 minutes, but cached records can take longer.
 
-## How to know this chapter is complete
+## Check your work
 
 - Cloudflare shows the domain as Active.
 - AWS MFA and Cloudflare two-factor authentication are enabled.
@@ -244,7 +244,7 @@ minutes, but cached records can take longer.
 - SSH succeeds only from your allowed IP.
 - `api.your-domain` and `link.your-domain` resolve to the static IP.
 
-## How to undo this chapter
+## Remove the cloud setup
 
 If you stop here and do not want ongoing server charges:
 
