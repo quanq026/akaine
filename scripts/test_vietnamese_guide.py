@@ -14,6 +14,8 @@ FILES = (
     "04-private-resources.md",
     "05-cloudflare-content.md",
     "06-build-android-client.md",
+    "07-build-release-content-bundle.md",
+    "08-lessons-and-failures.md",
 )
 
 
