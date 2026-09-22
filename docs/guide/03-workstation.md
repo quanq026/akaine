@@ -10,6 +10,13 @@ the installation before you continue.
   APKs and keeping an emulator.
 - Permissions: a Windows administrator account is needed for installers.
 
+## How to use the Windows commands
+
+Run every code block in Windows PowerShell, not Command Prompt and not the
+Linux server shell. A command that changes a user environment variable affects
+new programs; close and reopen PowerShell when the chapter says so. Paste one
+block at a time and stop on the first red error.
+
 ## Step 1: choose where to keep the files
 
 Choose two folders on any drive with enough free space: one for the public Git
@@ -25,14 +32,36 @@ $privateRoot = Read-Host "Full path for the private resource folder"
 $repoRoot = [IO.Path]::GetFullPath($repoRoot)
 $privateRoot = [IO.Path]::GetFullPath($privateRoot)
 
+if ($repoRoot -eq $privateRoot) {
+    throw "The public repository and private-resource folder must be different."
+}
+$repoPrefix = $repoRoot.TrimEnd('\') + '\'
+$privatePrefix = $privateRoot.TrimEnd('\') + '\'
+if ($repoPrefix.StartsWith($privatePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $privatePrefix.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Neither folder may be inside the other."
+}
+
+New-Item -ItemType Directory -Force (Split-Path -Parent $repoRoot) | Out-Null
 New-Item -ItemType Directory -Force $privateRoot | Out-Null
 [Environment]::SetEnvironmentVariable("AKAINE_REPO_ROOT", $repoRoot, "User")
 [Environment]::SetEnvironmentVariable("AKAINE_PRIVATE_ROOT", $privateRoot, "User")
+
+[pscustomobject]@{
+    PublicRepository = $repoRoot
+    PrivateResources = $privateRoot
+}
 ```
 
 These variables let later chapters use your chosen locations without assuming
 a drive letter or folder name. Keeping the folders separate prevents an
 accidental Git commit from including private files.
+
+`GetFullPath` turns each answer into an absolute path. The two checks reject
+the same folder and nested folders. `Split-Path -Parent` creates only the
+parent of the future clone location; `git clone` will create the repository
+folder itself in step 4. The final table is the checkpoint to copy into your
+private setup notes.
 
 ## Step 2: install Git, Python and Java
 
@@ -41,8 +70,11 @@ commands in PowerShell:
 
 ```powershell
 winget install --exact --id Git.Git
+if ($LASTEXITCODE -ne 0) { throw "Git installation failed." }
 winget install --exact --id Python.Python.3.12
+if ($LASTEXITCODE -ne 0) { throw "Python installation failed." }
 winget install --exact --id EclipseAdoptium.Temurin.17.JDK
+if ($LASTEXITCODE -ne 0) { throw "Java installation failed." }
 ```
 
 Close PowerShell completely and open it again so the new PATH entries load.
@@ -51,8 +83,11 @@ Check the installations:
 
 ```powershell
 git --version
+if ($LASTEXITCODE -ne 0) { throw "Git is not available in PATH." }
 python --version
+if ($LASTEXITCODE -ne 0) { throw "Python is not available in PATH." }
 java -version
+if ($LASTEXITCODE -ne 0) { throw "Java is not available in PATH." }
 ```
 
 Each command must print a version instead of “not recognized”. Python should
@@ -86,25 +121,36 @@ $sdk = Read-Host "Android SDK Location shown by Android Studio"
 $sdk = [IO.Path]::GetFullPath($sdk)
 [Environment]::SetEnvironmentVariable("ANDROID_HOME", $sdk, "User")
 [Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", $sdk, "User")
-[Environment]::SetEnvironmentVariable(
-    "Path",
-    [Environment]::GetEnvironmentVariable("Path", "User") + ";$sdk\platform-tools;$sdk\emulator",
-    "User"
-)
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$wanted = @("$sdk\platform-tools", "$sdk\emulator")
+$parts = @($userPath -split ';' | Where-Object { $_ })
+foreach ($path in $wanted) {
+    if ($parts -notcontains $path) { $parts += $path }
+}
+[Environment]::SetEnvironmentVariable("Path", ($parts -join ';'), "User")
+
+Get-Item (Join-Path $sdk "platform-tools\adb.exe")
 ```
 
 Close and reopen PowerShell, then run:
 
 ```powershell
 adb version
+if ($LASTEXITCODE -ne 0) { throw "adb is not available after reopening PowerShell." }
 ```
+
+The script saves the SDK location and adds Platform-Tools and Emulator to the
+user PATH only when absent, so rerunning it does not append duplicate entries.
+`Get-Item` must find `adb.exe` before you close the original window.
 
 ## Step 4: clone the Akaine source
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 git clone https://github.com/quanq026/akaine.git $repoRoot
+if ($LASTEXITCODE -ne 0) { throw "Repository clone failed." }
 Set-Location $repoRoot
+git remote get-url origin
 ```
 
 You should now see `README.md`, `server`, `scripts` and `docs`:
@@ -113,12 +159,24 @@ You should now see `README.md`, `server`, `scripts` and `docs`:
 Get-ChildItem
 ```
 
+The remote URL must be `https://github.com/quanq026/akaine.git`. The directory
+listing must include `README.md`, `server`, `scripts` and `docs`. If the target
+folder was already non-empty, do not delete it blindly; choose a new empty
+repository path or inspect what is already there.
+
 ## Step 5: confirm the folders are separate
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 $privateRoot = [Environment]::GetEnvironmentVariable("AKAINE_PRIVATE_ROOT", "User")
 Get-Item $repoRoot, $privateRoot
+
+$repoPrefix = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\') + '\'
+$privatePrefix = [IO.Path]::GetFullPath($privateRoot).TrimEnd('\') + '\'
+if ($repoPrefix.StartsWith($privatePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $privatePrefix.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "The public and private folders overlap."
+}
 ```
 
 Both paths must exist and must be different. The private folder must not be
@@ -132,6 +190,7 @@ Close and reopen PowerShell, then run:
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Set-Location $repoRoot
 python scripts\doctor.py
+if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 ```
 
 A prepared core workstation prints `OK` for `git` and `python`. The command
@@ -164,15 +223,20 @@ From the repository folder:
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Set-Location $repoRoot
 python -m venv .venv
+if ($LASTEXITCODE -ne 0) { throw "Virtual environment creation failed." }
 .\.venv\Scripts\python -m pip install --upgrade pip
+if ($LASTEXITCODE -ne 0) { throw "pip upgrade failed." }
 .\.venv\Scripts\python -m pip install -r requirements-dev.txt
+if ($LASTEXITCODE -ne 0) { throw "Python dependency installation failed." }
 ```
 
 Verify the public source checks:
 
 ```powershell
 .\.venv\Scripts\python scripts\ci_public_repo_check.py
+if ($LASTEXITCODE -ne 0) { throw "Public repository check failed." }
 .\.venv\Scripts\python -m compileall -q server scripts
+if ($LASTEXITCODE -ne 0) { throw "Python source compilation check failed." }
 ```
 
 The first command should end with `Public repository check passed`. The second

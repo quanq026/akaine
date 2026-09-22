@@ -10,6 +10,12 @@ cũ trong `server/tools` không tạo đúng định dạng release 7.0.255.
 Hãy hoàn thành chương 1 đến chương 6 trước. Bạn cũng cần một staging server dùng cùng
 source và cấu trúc cấu hình với production.
 
+Dùng một cửa sổ PowerShell cho phần local build và upload. Nếu đóng cửa sổ, artifact
+không mất; hãy quay lại "Chuẩn bị source đã biết là tốt" và chỉ chạy lại block đặt biến
+trước khi tiếp tục. Không chạy lại builder vào output directory đã tồn tại. Candidate
+hoàn chỉnh là bất biến; candidate lỗi phải dùng output path mới và rỗng sau khi đã hiểu
+nguyên nhân.
+
 ## Phân biệt ba loại tên
 
 Application version là `7.0.255`. Nó xác định Android client và không đổi khi bạn phát
@@ -85,6 +91,10 @@ manifest trong bộ tài nguyên riêng và so sánh trước mỗi lần build.
 
 Overlay sử dụng đường dẫn tương đối so với bundle root. File trùng đường dẫn sẽ thay
 thế file nguồn; đường dẫn mới được nối vào partition cuối.
+
+Overlay chỉ thêm hoặc thay thế. Bỏ một source path khỏi overlay không xóa nó khỏi
+bundle. Muốn bỏ bài khỏi selector, hãy sửa catalogue một cách thống nhất; đừng nghĩ rằng
+xóa local overlay file sẽ xóa byte đã có trong source full root.
 
 ```text
 overlay/

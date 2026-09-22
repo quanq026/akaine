@@ -12,6 +12,13 @@ tra quá trình cài đặt trước khi bạn tiếp tục.
   Android Emulator.
 - Quyền: cần tài khoản Windows có quyền administrator để chạy installer.
 
+## Cách dùng các command Windows
+
+Chạy mọi code block trong Windows PowerShell, không dùng Command Prompt và không dùng
+Linux server shell. Command thay user environment variable chỉ ảnh hưởng chương trình
+mở sau đó; hãy đóng và mở lại PowerShell khi chương yêu cầu. Mỗi lần paste một block và
+dừng ở lỗi màu đỏ đầu tiên.
+
 ## Bước 1: chọn nơi lưu file
 
 Chọn hai thư mục trên bất kỳ ổ đĩa nào có đủ dung lượng trống: một cho Git repository
@@ -27,14 +34,35 @@ $privateRoot = Read-Host "Full path for the private resource folder"
 $repoRoot = [IO.Path]::GetFullPath($repoRoot)
 $privateRoot = [IO.Path]::GetFullPath($privateRoot)
 
+if ($repoRoot -eq $privateRoot) {
+    throw "The public repository and private-resource folder must be different."
+}
+$repoPrefix = $repoRoot.TrimEnd('\') + '\'
+$privatePrefix = $privateRoot.TrimEnd('\') + '\'
+if ($repoPrefix.StartsWith($privatePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $privatePrefix.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Neither folder may be inside the other."
+}
+
+New-Item -ItemType Directory -Force (Split-Path -Parent $repoRoot) | Out-Null
 New-Item -ItemType Directory -Force $privateRoot | Out-Null
 [Environment]::SetEnvironmentVariable("AKAINE_REPO_ROOT", $repoRoot, "User")
 [Environment]::SetEnvironmentVariable("AKAINE_PRIVATE_ROOT", $privateRoot, "User")
+
+[pscustomobject]@{
+    PublicRepository = $repoRoot
+    PrivateResources = $privateRoot
+}
 ```
 
 Các biến này cho phép các chương sau sử dụng vị trí bạn đã chọn mà không cần nhập ký tự
 ổ đĩa hoặc tên thư mục. Việc tách biệt các thư mục sẽ ngăn chặn một commit Git vô tình
 bao gồm các file riêng tư.
+
+`GetFullPath` chuyển mỗi câu trả lời thành absolute path. Hai check từ chối cùng một
+folder và folder lồng nhau. `Split-Path -Parent` chỉ tạo parent của vị trí clone sau
+này; `git clone` sẽ tạo repository folder ở bước 4. Bảng cuối là checkpoint để copy vào
+ghi chú setup riêng.
 
 ## Bước 2: cài đặt Git, Python và Java
 
@@ -43,8 +71,11 @@ trong PowerShell:
 
 ```powershell
 winget install --exact --id Git.Git
+if ($LASTEXITCODE -ne 0) { throw "Git installation failed." }
 winget install --exact --id Python.Python.3.12
+if ($LASTEXITCODE -ne 0) { throw "Python installation failed." }
 winget install --exact --id EclipseAdoptium.Temurin.17.JDK
+if ($LASTEXITCODE -ne 0) { throw "Java installation failed." }
 ```
 
 Đóng hoàn toàn PowerShell và mở lại để tải các mục PATH mới.
@@ -53,8 +84,11 @@ Kiểm tra các cài đặt:
 
 ```powershell
 git --version
+if ($LASTEXITCODE -ne 0) { throw "Git is not available in PATH." }
 python --version
+if ($LASTEXITCODE -ne 0) { throw "Python is not available in PATH." }
 java -version
+if ($LASTEXITCODE -ne 0) { throw "Java is not available in PATH." }
 ```
 
 Mỗi lệnh phải in một phiên bản thay vì “không được nhận dạng”. Python phải bắt đầu bằng
@@ -88,25 +122,36 @@ $sdk = Read-Host "Android SDK Location shown by Android Studio"
 $sdk = [IO.Path]::GetFullPath($sdk)
 [Environment]::SetEnvironmentVariable("ANDROID_HOME", $sdk, "User")
 [Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", $sdk, "User")
-[Environment]::SetEnvironmentVariable(
-    "Path",
-    [Environment]::GetEnvironmentVariable("Path", "User") + ";$sdk\platform-tools;$sdk\emulator",
-    "User"
-)
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+$wanted = @("$sdk\platform-tools", "$sdk\emulator")
+$parts = @($userPath -split ';' | Where-Object { $_ })
+foreach ($path in $wanted) {
+    if ($parts -notcontains $path) { $parts += $path }
+}
+[Environment]::SetEnvironmentVariable("Path", ($parts -join ';'), "User")
+
+Get-Item (Join-Path $sdk "platform-tools\adb.exe")
 ```
 
 Đóng và mở lại PowerShell, sau đó chạy:
 
 ```powershell
 adb version
+if ($LASTEXITCODE -ne 0) { throw "adb is not available after reopening PowerShell." }
 ```
+
+Script lưu SDK location và chỉ thêm Platform-Tools cùng Emulator vào user PATH khi chưa
+có, nên chạy lại không tạo entry trùng. `Get-Item` phải tìm thấy `adb.exe` trước khi bạn
+đóng cửa sổ ban đầu.
 
 ## Bước 4: clone source Akaine
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 git clone https://github.com/quanq026/akaine.git $repoRoot
+if ($LASTEXITCODE -ne 0) { throw "Repository clone failed." }
 Set-Location $repoRoot
+git remote get-url origin
 ```
 
 Bây giờ bạn sẽ thấy `README.md`, `server`, `scripts` và `docs`:
@@ -115,12 +160,23 @@ Bây giờ bạn sẽ thấy `README.md`, `server`, `scripts` và `docs`:
 Get-ChildItem
 ```
 
+Remote URL phải là `https://github.com/quanq026/akaine.git`. Directory listing phải có
+`README.md`, `server`, `scripts` và `docs`. Nếu target folder đã có dữ liệu, không xóa
+mù; hãy chọn repository path mới và rỗng hoặc kiểm tra nội dung đang có.
+
 ## Bước 5: xác nhận các thư mục riêng biệt
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 $privateRoot = [Environment]::GetEnvironmentVariable("AKAINE_PRIVATE_ROOT", "User")
 Get-Item $repoRoot, $privateRoot
+
+$repoPrefix = [IO.Path]::GetFullPath($repoRoot).TrimEnd('\') + '\'
+$privatePrefix = [IO.Path]::GetFullPath($privateRoot).TrimEnd('\') + '\'
+if ($repoPrefix.StartsWith($privatePrefix, [StringComparison]::OrdinalIgnoreCase) -or
+    $privatePrefix.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+    throw "The public and private folders overlap."
+}
 ```
 
 Cả hai con đường phải tồn tại và phải khác nhau. Thư mục riêng không được nằm trong kho
@@ -134,6 +190,7 @@ lưu trữ.
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Set-Location $repoRoot
 python scripts\doctor.py
+if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 ```
 
 Máy trạm lõi đã được chuẩn bị sẵn in `OK` cho `git` và `python`. Lệnh này cũng báo cáo
@@ -166,15 +223,20 @@ Từ thư mục repository:
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
 Set-Location $repoRoot
 python -m venv .venv
+if ($LASTEXITCODE -ne 0) { throw "Virtual environment creation failed." }
 .\.venv\Scripts\python -m pip install --upgrade pip
+if ($LASTEXITCODE -ne 0) { throw "pip upgrade failed." }
 .\.venv\Scripts\python -m pip install -r requirements-dev.txt
+if ($LASTEXITCODE -ne 0) { throw "Python dependency installation failed." }
 ```
 
 Xác minh việc kiểm tra nguồn công khai:
 
 ```powershell
 .\.venv\Scripts\python scripts\ci_public_repo_check.py
+if ($LASTEXITCODE -ne 0) { throw "Public repository check failed." }
 .\.venv\Scripts\python -m compileall -q server scripts
+if ($LASTEXITCODE -ne 0) { throw "Python source compilation check failed." }
 ```
 
 Lệnh đầu tiên sẽ kết thúc bằng `Public repository check passed`. Lệnh thứ hai thường

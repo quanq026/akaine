@@ -61,6 +61,7 @@ hệ thống sang nhà cung cấp VPS khác.
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
 7. [Build, xác minh và phát hành content bundle 7.0.255](docs/guide/vi/07-build-release-content-bundle.md).
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
+9. [Thêm fan chart và đặt nó vào một pack](docs/guide/vi/09-add-fan-chart.md).
 
 Hãy đọc từ chương một và làm theo đúng thứ tự. Mỗi chương phía sau giả định
 rằng bạn đã hoàn thành các bước kiểm tra của chương trước.

@@ -39,6 +39,23 @@ phí hết hạn; tài khoản gói miễn phí đã hết hạn có thể khôn
 - tài khoản AWS đủ điều kiện nhận tín dụng hoặc phương thức thanh toán để sử dụng có trả
   phí sau này.
 
+## Cách làm theo chương này
+
+Bước 1 đến 8 và bước 10 được thực hiện trong trình duyệt. Bước 9 và 11 được thực hiện
+trong Windows PowerShell. Hãy giữ một ghi chú setup riêng trong password manager chỉ
+với các giá trị không bí mật sau:
+
+```text
+MY_DOMAIN=
+SERVER_IP=
+LIGHTSAIL_REGION=
+LIGHTSAIL_INSTANCE=akaine-server
+```
+
+Không đặt password, recovery code, SSH private key hoặc AWS credential vào ghi chú đó.
+Hoàn thành từng bước đánh số trước khi chuyển bước. Trang còn ghi `Pending`, `Creating`
+hoặc `Verifying` chưa vượt qua gate.
+
 ## Bước 1: tạo và bảo mật tài khoản Cloudflare
 
 1. Mở `dash.cloudflare.com` trong trình duyệt của bạn.
@@ -82,6 +99,10 @@ Viết tên miền thực của bạn vào đây trước khi tiếp tục:
 ```text
 MY_DOMAIN=____________________________
 ```
+
+Lưu domain đã chọn vào ghi chú setup riêng. Các chương sau dùng `your-domain` và
+`example.com` làm placeholder; không chuỗi nào trong số đó được xuất hiện trong DNS
+record hoặc APK thật.
 
 ## Bước 3: kết nối tên miền với Cloudflare
 
@@ -139,6 +160,10 @@ trình duyệt và tự động hóa sẽ được xử lý riêng.
 
 Đợi cho đến khi trạng thái phiên bản trở thành **Đang chạy**.
 
+Mở instance một lần và xác nhận blueprint là Ubuntu 24.04 LTS, region đúng với lựa chọn
+của bạn. Nếu một trong hai sai, hãy thay instance mới còn rỗng ngay lúc này thay vì sửa
+mọi command phía sau cho một image ngoài dự kiến.
+
 ## Bước 6: tạo địa chỉ IP cố định
 
 IPv4 công khai mặc định có thể thay đổi sau khi dừng/bắt đầu. DNS phải trỏ đến một địa
@@ -154,6 +179,10 @@ chỉ không thay đổi.
 ```text
 SERVER_IP=____________________________
 ```
+
+Ghi địa chỉ chính xác dưới dạng bốn số thập phân cách nhau bằng dấu chấm. Trang static
+IP phải cho thấy nó đã attach vào `akaine-server`; static IP chưa attach không bảo vệ
+địa chỉ instance khỏi thay đổi.
 
 ## Bước 7: tải xuống khóa SSH của bạn
 
@@ -182,12 +211,22 @@ thay đổi, hãy cập nhật quy tắc này trước khi thử lại SSH.
 
 ## Bước 9: kiểm tra SSH từ Windows
 
-Mở PowerShell và thay thế `YOUR_SERVER_IP`:
+Mở PowerShell. Command sẽ hỏi key và static IP:
 
 ```powershell
 $sshKey = Get-Item (Read-Host "Full path to the downloaded SSH private key")
-ssh -i $sshKey.FullName ubuntu@YOUR_SERVER_IP
+$serverIp = Read-Host "Lightsail static IPv4 address"
+
+if ($serverIp -notmatch '^(?:\d{1,3}\.){3}\d{1,3}$') {
+  throw "The server address is not an IPv4 value."
+}
+
+ssh -i $sshKey.FullName "ubuntu@$serverIp"
 ```
+
+`Get-Item` kiểm tra key file tồn tại. `$serverIp` giữ địa chỉ trong cửa sổ PowerShell
+hiện tại, còn format check đơn giản bắt hostname, URL hoặc input rỗng trước khi chạy
+SSH. `-i` cho SSH biết private key nào chứng minh bạn được phép quản trị instance.
 
 Kết nối đầu tiên hỏi bạn có tin cậy dấu vân tay của server hay không. Chỉ xác nhận nếu
 IP là IP tĩnh bạn vừa tạo. Kết nối thành công kết thúc tại dấu nhắc tương tự như:
@@ -221,15 +260,32 @@ chuẩn bị.
 
 ## Bước 11: xác minh DNS từ Windows
 
-Đóng và mở lại PowerShell, sau đó thay thế miền mẫu:
+Đóng và mở lại PowerShell. Nhập domain thật và static IP khi được hỏi:
 
 ```powershell
-nslookup api.example.com 1.1.1.1
-nslookup link.example.com 1.1.1.1
+$domain = Read-Host "Your registered domain without https://"
+$serverIp = Read-Host "Lightsail static IPv4 address"
+
+$apiAnswer = nslookup "api.$domain" 1.1.1.1 2>&1 | Out-String
+$linkAnswer = nslookup "link.$domain" 1.1.1.1 2>&1 | Out-String
+
+if ($apiAnswer -notmatch [regex]::Escape($serverIp)) {
+  throw "api.$domain does not resolve to the static IP."
+}
+if ($linkAnswer -notmatch [regex]::Escape($serverIp)) {
+  throw "link.$domain does not resolve to the static IP."
+}
+
+$apiAnswer
+$linkAnswer
 ```
 
 Cả hai lệnh sẽ hiển thị IP tĩnh Lightsail. Các thay đổi DNS thường xuất hiện sau vài
 phút nhưng các bản ghi được lưu vào cache có thể mất nhiều thời gian hơn.
+
+Command query resolver `1.1.1.1` của Cloudflare thay vì tin câu trả lời cũ trong cache
+Windows hoặc router. Hai block `if` là stop gate. Nếu một block lỗi, hãy kiểm tra đúng
+DNS record đó và chờ propagation; không tạo record trùng như một cách retry.
 
 ## Kiểm tra công việc của bạn
 

@@ -45,6 +45,33 @@ Cloudflare cũng proxy HTTPS và cache file công khai tại edge gần người
 Lygus Bot là thành phần tùy chọn. Bot tạo hoặc liên kết tài khoản, hiển thị profile,
 recent play và ảnh B30. Nó chạy trên server và đọc cùng cơ sở dữ liệu game.
 
+## Các tên được dùng trong toàn bộ guide
+
+Tên miền ví dụ `example.com` không bao giờ được dùng làm địa chỉ thật. Hãy thay nó bằng
+tên miền bạn đã đăng ký. Guide đặt tên riêng cho từng dịch vụ:
+
+| Tên | Ví dụ | Mục đích | Chế độ Cloudflare |
+| --- | --- | --- | --- |
+| Game API | `api.example.com` | Login, account, score, save và content-bundle response | Proxied sau khi cấu hình HTTPS |
+| Link Play | `link.example.com` | Phòng TCP/UDP thời gian thực | DNS only |
+| Asset host | `assets.example.com` | Public bundle, song và protected download có chữ ký | Native R2 Custom Domain cùng Worker route |
+
+Các tên này có thể thuộc cùng một dự án nhưng đi qua các đường truyền khác nhau. Không
+thay mọi hostname bằng một địa chỉ chỉ vì login hoạt động. Android client có route riêng
+cho từng nhóm API, còn Link Play không thể dùng Cloudflare HTTP proxy thông thường.
+
+Các thuật ngữ lặp lại khác:
+
+| Thuật ngữ | Ý nghĩa |
+| --- | --- |
+| App version | Phiên bản Android client. Repository này hỗ trợ `7.0.255`. |
+| Content version | Phiên bản downloadable bundle. Nó có thể đổi mà không đổi APK. |
+| Bundle | Manifest cùng các partition file chứa catalogue và selector resource. |
+| Remote song | Bài có playable file được request sau khi bundle đã cài. |
+| Staging | Deployment test cô lập, dùng trước production. |
+| Production | Deployment mà người chơi bình thường sử dụng. |
+| Artifact | Output cụ thể như APK, manifest hoặc bundle part, được nhận diện bằng hash. |
+
 ## Điều gì xảy ra khi người chơi đăng nhập
 
 1. Client Android gửi yêu cầu HTTPS tới `api.example.com`.
@@ -88,6 +115,25 @@ Client downloads approved files from assets.example.com / R2
 API thông thường dùng HTTPS. Link Play dùng kết nối TCP và UDP trực tiếp cho room thời
 gian thực. HTTP proxy miễn phí của Cloudflare không chuyển tiếp các game port này, nên
 `link.example.com` phải trỏ thẳng tới Lightsail static IP ở chế độ **DNS only**.
+
+## Xác định phần lỗi trước khi thay đổi
+
+Cùng một màn hình có thể phụ thuộc nhiều phần của hệ thống. Dùng boundary quan sát được
+để chọn nơi kiểm tra đầu tiên:
+
+| Quan sát | Kiểm tra đầu tiên |
+| --- | --- |
+| Domain không resolve | Cloudflare DNS record và trạng thái nameserver |
+| Browser tới được nginx nhưng API trả lỗi | Python service log và server configuration |
+| Login hoạt động nhưng API action khác lỗi | Client route của đúng action đó |
+| Bundle không tải được | Content-bundle API response, CDN URL và hash manifest/part |
+| Bài xuất hiện nhưng icon download còn mãi | Server metadata, protected allowlist và R2 object |
+| Bài tải xong nhưng crash lúc play | AFF/OGG được request, AKFC loader và logcat |
+| Score lưu nhưng rating sai | Database chart constant và phép tính rating |
+
+Không dùng thành công ở một dòng làm bằng chứng cho dòng khác. Ví dụ DNS hoạt động chưa
+chứng minh game server ready, còn bundle tải thành công chưa chứng minh catalogue an
+toàn khi load.
 
 ## Các tập tin đến từ đâu
 

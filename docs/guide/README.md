@@ -77,3 +77,11 @@ production.
 Chapter 8 explains incidents that shaped the checks used throughout the guide:
 misrouted API calls, bundle boot loops, selector gates, download contracts,
 emulator false positives, CDN diagnosis and release rollback.
+
+## Part 5: extend the catalogue
+
+9. [Add a fan chart and place it in a pack](09-add-fan-chart.md).
+
+Chapter 9 explains how one fan chart moves through pack/song catalogues,
+selector assets, AKFC encryption, protected R2 delivery, server metadata,
+chart constants, staging and final runtime checks.
