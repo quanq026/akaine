@@ -53,12 +53,12 @@ hệ thống sang nhà cung cấp VPS khác.
 
 ## Bắt đầu hướng dẫn
 
-1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/01-architecture.md).
-2. [Tạo cloud server và kết nối tên miền](docs/guide/02-cloud-domain.md).
-3. [Chuẩn bị máy Windows](docs/guide/03-workstation.md).
-4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/04-private-resources.md).
-5. [Cấu hình R2, protected download và cache](docs/guide/05-cloudflare-content.md).
-6. [Build, ký và kiểm thử client Android](docs/guide/06-build-android-client.md).
+1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).
+2. [Tạo cloud server và kết nối tên miền](docs/guide/vi/02-cloud-domain.md).
+3. [Chuẩn bị máy Windows](docs/guide/vi/03-workstation.md).
+4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
+5. [Cấu hình R2, protected download và cache](docs/guide/vi/05-cloudflare-content.md).
+6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
 
 Hãy đọc từ chương một và làm theo đúng thứ tự. Mỗi chương phía sau giả định
 rằng bạn đã hoàn thành các bước kiểm tra của chương trước.
