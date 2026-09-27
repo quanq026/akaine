@@ -1,10 +1,14 @@
 """Security regressions for a fresh public checkout."""
 
 import unittest
+import sqlite3
+import tempfile
+from pathlib import Path
 
 import main
 from core.config_manager import Config
 from core.error import NoAccess
+from core.init import DatabaseInit
 from server import auth
 
 
@@ -24,6 +28,18 @@ class SecurityDefaultsTests(unittest.TestCase):
         self.assertFalse(Config.INSECURE_LOCAL_OAUTH_COMPAT_ENABLED)
         with self.assertRaises(NoAccess):
             auth._ensure_local_oauth_user(None)
+
+    def test_fresh_database_does_not_seed_a_shared_admin_account(self):
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / 'new.db'
+            init_files = Path(__file__).resolve().parents[1] / 'database' / 'init'
+            DatabaseInit(str(database), str(init_files)).init()
+            connection = sqlite3.connect(database)
+            try:
+                self.assertEqual(connection.execute('select count(*) from user').fetchone()[0], 0)
+                self.assertGreater(connection.execute('select count(*) from character').fetchone()[0], 0)
+            finally:
+                connection.close()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,18 @@
+[Unit]
+Description=Akaine Discord bot
+After=network-online.target arcaea-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=akaine
+Group=akaine
+WorkingDirectory=/srv/akaine/repo/server
+EnvironmentFile=/srv/akaine/repo/server/.lygus.env
+ExecStart=/srv/akaine/repo/.venv/bin/python /srv/akaine/repo/server/tools/discord_bot.py
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

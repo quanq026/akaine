@@ -25,6 +25,13 @@ from .world import world_all
 bp = Blueprint('others', __name__)
 
 
+@bp.after_request
+def no_store_content_bundle(response):
+    if request.endpoint and request.endpoint.endswith('.game_content_bundle'):
+        response.headers['Cache-Control'] = 'private, no-store'
+    return response
+
+
 @bp.route('/game/info', methods=['GET'])  # 系统信息
 def game_info():
     return success_return(GameInfo().to_dict())

@@ -193,16 +193,10 @@ nội dung của bạn thành tên server `r2.dev`.
 
 ## Bước 7: tạo một signing secret
 
-Worker và game server phải dùng cùng một random signing secret. Tạo secret trong
-PowerShell:
+Worker và game server phải dùng cùng một signing secret. Chọn một private file trong
+PowerShell. Nếu chạy lại block, nó sẽ dùng lại file đó:
 
 ```powershell
-$bytes = New-Object byte[] 32
-$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
-$rng.GetBytes($bytes)
-$rng.Dispose()
-$assetSecret = [Convert]::ToBase64String($bytes)
-
 $secretFile = Read-Host "Full path for the signing-secret file"
 $secretFile = [IO.Path]::GetFullPath($secretFile)
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
@@ -212,17 +206,26 @@ if ($secretFile.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) 
 }
 $secretFolder = Split-Path -Parent $secretFile
 New-Item -ItemType Directory -Force $secretFolder | Out-Null
-Set-Content `
-  -LiteralPath $secretFile `
-  -Value $assetSecret `
-  -NoNewline
+if (Test-Path -LiteralPath $secretFile) {
+  $assetSecret = Get-Content -LiteralPath $secretFile -Raw
+  try { $secretBytes = [Convert]::FromBase64String($assetSecret) }
+  catch { throw "The existing signing-secret file is not valid Base64." }
+  if ($secretBytes.Length -ne 32) { throw "The existing signing secret is not 32 bytes." }
+} else {
+  $bytes = New-Object byte[] 32
+  $rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+  $rng.GetBytes($bytes)
+  $rng.Dispose()
+  $assetSecret = [Convert]::ToBase64String($bytes)
+  Set-Content -LiteralPath $secretFile -Value $assetSecret -NoNewline
+}
 
 Get-Item $secretFile | Select-Object FullName, Length
 ```
 
-Random-number generator tạo 32 byte không đoán được, còn Base64 chuyển chúng thành text
-mà Worker và server configuration đều nhận. Path check giữ file ngoài Git. Output cuối
-phải hiện file không rỗng mà không in nội dung của nó.
+Lần đầu block tạo 32 byte ngẫu nhiên và lưu dưới dạng Base64. Các lần sau kiểm tra và
+dùng lại cùng giá trị để signed download cũ vẫn hoạt động. Output cuối chỉ hiện file,
+không in nội dung của nó.
 
 Lưu trữ bản sao thứ hai trong trình quản lý mật khẩu của bạn. Không in biến hoặc đưa file
 vào Git. Chương server sau này sẽ tải cùng giá trị này vào môi trường server.
@@ -373,10 +376,10 @@ thay đổi quy tắc.
 
 ## Yêu cầu API không được sử dụng các Cache Rule này
 
-Tên server `api.your-domain` rất linh hoạt: phản hồi đăng nhập, tài khoản và điểm số
-không được cache. Không tạo “Cache Everything” rule cho server API.
-Chương server sẽ cấu hình `Cache-Control: private, no-store`; sau khi server chạy, phản
-hồi API sẽ hiển thị `CF-Cache-Status: DYNAMIC`.
+API `api.your-domain` có dữ liệu động: login, account và score response không được cache.
+Không tạo “Cache Everything” rule cho API host. Server trả
+`Cache-Control: private, no-store` cho quyết định content bundle. Sau khi deploy, xác
+nhận API response không có Cloudflare cache `HIT`.
 
 ## Cập nhật release sau
 
@@ -413,5 +416,5 @@ hồi token ngay nếu nó xuất hiện trong screenshot, terminal log hoặc r
 - Cache Reserve và Argo bị tắt.
 - Temporary upload token và local profile `akaine-r2` đã bị xóa.
 
-Chương tiếp theo cài game server và cấu hình cùng asset signing secret để server tạo
-được protected download URL hợp lệ.
+Tiếp theo: [Cài game server 7.0.255](05a-install-game-server.md). Chương đó kết nối
+Worker với cùng asset signing secret của server.

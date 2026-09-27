@@ -526,7 +526,8 @@ URL vẫn phải trả `403`; staging server sẽ tạo signed URL cho positive 
 
 ## Bước 11: cấu hình staging server cho pack
 
-Protected fan song cần cấu hình staging như sau:
+Trong `class Config` hiện có của staging `config.py`, cập nhật các thuộc tính sau. Ví dụ
+này dành cho bản cài mới có các list đang rỗng:
 
 ```python
 ASSET_SIGNING_ENABLED = True
@@ -534,14 +535,15 @@ ASSET_SIGNED_PREFIX = "https://assets.example.com/protected/songs/"
 ASSET_SIGNING_PROTECT_ALL_SONGS = False
 ASSET_SIGNING_SONG_IDS = ["my_fan_song"]
 
-CUSTOM_PACK_UMBRELLA = "my_fan_pack"
 CUSTOM_PACK_IDS = ["my_fan_pack"]
 CLIENT_VISIBLE_CUSTOM_PACK_IDS = ["my_fan_pack"]
 FREE_PACKS = ["my_fan_pack"]
 CLIENT_PACK_LIMIT = 62
 ```
 
-Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. `FREE_PACKS` là entitlement
+Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. Giữ nguyên
+`CUSTOM_PACK_UMBRELLA` (`akaine_fan_pack` trong public defaults); thay nó sẽ đổi quyền
+chung của các fan pack hiện có. `FREE_PACKS` là entitlement
 staging đơn giản nhất: mọi account nhận pack mà không cần tạo purchase row.
 
 Response 7.0.255 hiện tại còn có projection 62 entry rõ ràng trong

@@ -14,6 +14,10 @@ native offset khác, vì vậy không thể dùng chung các bước trong repos
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. APK đầu vào cùng
 game content sẽ được cung cấp riêng khi hướng dẫn cần đến chúng.
 
+Native patch 7.0.255 đi kèm dùng các Akaine API host đã phát hành. Client dùng domain
+khác còn cần native route change được kiểm chứng; public repository hiện chưa có command
+đổi host tổng quát. Chương server có bước kiểm tra HTTP độc lập cho domain của bạn.
+
 ## Bạn sẽ dựng được gì
 
 Sau khi hoàn thành các chương, bạn sẽ có:
@@ -57,7 +61,7 @@ hệ thống sang nhà cung cấp VPS khác.
 2. [Tạo cloud server và kết nối tên miền](docs/guide/vi/02-cloud-domain.md).
 3. [Chuẩn bị máy Windows](docs/guide/vi/03-workstation.md).
 4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
-5. [Cấu hình R2, protected download và cache](docs/guide/vi/05-cloudflare-content.md).
+5. [Cấu hình R2](docs/guide/vi/05-cloudflare-content.md), [cài game server](docs/guide/vi/05a-install-game-server.md), [chạy Discord bot tùy chọn](docs/guide/vi/05b-discord-bot.md) và [thiết lập backup](docs/guide/vi/05c-backup-recovery.md).
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
 7. [Build, xác minh và phát hành content bundle 7.0.255](docs/guide/vi/07-build-release-content-bundle.md).
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).

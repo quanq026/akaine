@@ -31,6 +31,13 @@ That hash identifies the published artifact; it is not the expected hash of a
 client signed with your own key. A different signing key necessarily produces
 different APK bytes.
 
+The included native plan embeds the published Akaine API hosts. It does not
+replace them with the domain you registered in chapter 2. To use your own
+server, a version-guarded native route plan must cover login, aggregate,
+content bundle and the encrypted shared API base, followed by the runtime
+checks in this chapter. The repository does not yet provide that host-change
+command; chapter 5a can verify your server independently meanwhile.
+
 Two builds can behave the same without having the same APK hash:
 
 - the same verified input, patch payloads and configuration reproduce the same
