@@ -108,11 +108,11 @@ test -f "/home/ubuntu/akaine-intake/$manifest_name"
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
-sudo -u akaine /srv/akaine/repo/.venv/bin/python - <<'PY'
-import json
+sudo -u akaine /srv/akaine/repo/.venv/bin/python - "$manifest_name" <<'PY'
+import json, sys
 from pathlib import Path
 root = Path('/srv/akaine/repo/server/database')
-manifest = next((root / 'bundle').glob('*.json'))
+manifest = root / 'bundle' / sys.argv[1]
 data = json.loads(manifest.read_text())
 assert data['applicationVersionNumber'] == '7.0.255'
 assert data['previousVersionNumber'] is None

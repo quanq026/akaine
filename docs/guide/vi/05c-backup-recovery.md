@@ -83,16 +83,27 @@ import sys, tarfile
 from pathlib import PurePosixPath
 
 with tarfile.open(sys.argv[1], 'r:gz') as archive:
-    names = set()
+    required_files = {'config.py', '.asset-signing.env'}
+    seen_files = set()
+    database_directory = False
     for entry in archive:
         path = PurePosixPath(entry.name)
+        normalized = path.as_posix()
         if (entry.name.startswith('/') or '..' in path.parts or
-                not (entry.isfile() or entry.isdir()) or
-                (path.parts[0] != 'database' and entry.name not in
-                 {'config.py', '.asset-signing.env', '.lygus.env'})):
+                not path.parts or not (entry.isfile() or entry.isdir())):
             raise SystemExit(f'Unexpected archive entry: {entry.name}')
-        names.add(entry.name)
-    if not {'database', 'config.py', '.asset-signing.env'} <= names:
+        if path.parts[0] == 'database':
+            if normalized == 'database':
+                if not entry.isdir():
+                    raise SystemExit('The database archive entry is not a directory')
+                database_directory = True
+        elif normalized in required_files | {'.lygus.env'}:
+            if not entry.isfile():
+                raise SystemExit(f'Expected a regular file: {entry.name}')
+            seen_files.add(normalized)
+        else:
+            raise SystemExit(f'Unexpected archive entry: {entry.name}')
+    if not database_directory or not required_files <= seen_files:
         raise SystemExit('Backup is missing a required entry')
 print('Backup entries verified')
 PY
