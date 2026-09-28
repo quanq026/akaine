@@ -89,5 +89,4 @@ nguồn tham khảo upstream cho phần server.
 Những phần mã nguồn thuộc Akaine được phát hành theo giấy phép MIT. Mã nguồn
 của bên thứ ba tiếp tục sử dụng giấy phép gốc của nó. Giấy phép MIT không cấp
 quyền phân phối lại game client thương mại, âm nhạc, chart, artwork hoặc tài
-sản khác thuộc sở hữu của bên thứ ba. Thông tin ghi công cho các thành phần
-bên thứ ba nằm trong [Third-party notices](THIRD_PARTY_NOTICES.md).
+sản khác thuộc sở hữu của bên thứ ba.

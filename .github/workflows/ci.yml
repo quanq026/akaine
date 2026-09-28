@@ -17,11 +17,9 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: |
-            server/requirements.txt
-            requirements-dev.txt
+          cache-dependency-path: server/requirements.txt
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -r server/requirements.txt
       - run: python scripts/doctor.py --ci
       - run: python scripts/ci_public_repo_check.py
       - run: python -m compileall -q server scripts

@@ -89,5 +89,4 @@ upstream reference for its server work.
 Akaine-owned source contributions are published under the MIT License.
 Third-party code keeps its original license. The MIT License does not grant
 permission to redistribute commercial game clients, music, charts, artwork or
-other material owned by someone else. Attribution for included third-party
-components is recorded in [Third-party notices](THIRD_PARTY_NOTICES.md).
+other material owned by someone else.
