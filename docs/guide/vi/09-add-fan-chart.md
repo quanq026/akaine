@@ -9,6 +9,8 @@ hiện lần import đầu tiên trên staging và chỉ dùng asset mà bạn c
 Hoàn thành chương 3 đến 7 trước. Bạn cần client 7.0.255 hoạt động, AKFC public key tương
 ứng, verified full-root bundle source, quyền upload R2, staging server và test account.
 
+![Hai pipeline fan chart hội tụ trong chương 09](../../images/guides/09-fan-chart-dual-pipeline.svg)
+
 ## Việc thêm fan chart thay đổi những gì
 
 Một fan chart được mô tả ở nhiều nơi. Mỗi nơi trả lời một câu hỏi khác nhau:

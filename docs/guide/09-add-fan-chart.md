@@ -9,6 +9,8 @@ Complete chapters 3 through 7 first. You need the working 7.0.255 client, its
 matching AKFC public key, the verified full-root bundle source, R2 upload
 access, a staging server and a test account.
 
+![Chapter 09 dual fan-chart pipeline](../images/guides/09-fan-chart-dual-pipeline.svg)
+
 ## What adding a fan chart changes
 
 A fan chart is represented in several places. Each one answers a different

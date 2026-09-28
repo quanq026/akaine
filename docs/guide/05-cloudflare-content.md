@@ -11,6 +11,8 @@ After completing the checks:
 - direct requests to the private R2 folder return `403`;
 - protected files require a short-lived signature from your game server.
 
+![Chapter 05 cloud runtime deployment topology](../images/guides/05-cloud-runtime-topology.svg)
+
 ## Time and cost
 
 Allow 45 to 90 minutes plus upload time. Cloudflare Workers, cache rules and Smart

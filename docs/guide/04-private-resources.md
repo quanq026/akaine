@@ -4,6 +4,8 @@ GitHub contains the source code and this guide. Game assets and content bundles
 come from a separate resource kit. Chapter 6 downloads its upstream XAPK and
 build tools directly from their published sources.
 
+![Chapter 04 private resource chain of trust](../images/guides/04-private-resources-chain-of-trust.svg)
+
 ## Obtain the kit
 
 Obtain the private resource kit and its expected SHA-256 value from the project

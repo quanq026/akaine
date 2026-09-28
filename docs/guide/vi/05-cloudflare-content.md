@@ -13,6 +13,8 @@ Sau khi hoàn tất việc kiểm tra:
 - yêu cầu trực tiếp đến thư mục R2 riêng tư trả về `403`;
 - các file được bảo vệ yêu cầu chữ ký ngắn hạn từ game server của bạn.
 
+![Topology triển khai cloud runtime của chương 05](../../images/guides/05-cloud-runtime-topology.svg)
+
 ## Thời gian và chi phí
 
 Dành 45 đến 90 phút, chưa tính thời gian upload. Cloudflare Workers, Cache Rules và

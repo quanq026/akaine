@@ -6,6 +6,8 @@ Chương này tạo các tài khoản cloud, khởi động Linux server và n�
 của bạn. Khi hoàn tất, server có một public IP cố định và `api.your-domain` phân giải
 qua Cloudflare.
 
+![Lộ trình chương 02 về cloud và tên miền](../../images/guides/02-cloud-domain-roadmap.svg)
+
 ## Thời gian và chi phí
 
 Lên kế hoạch từ 45 đến 90 phút, cộng với thời gian chờ xác minh tài khoản.
