@@ -273,8 +273,9 @@ manifest in the active bundle directory; the `.cb` files remain on R2. Set
 `BUNDLE_DOWNLOAD_LINK_PREFIX` to `https://<asset-host>/bundle/`, restart the
 staging service, and keep the backup path printed by your shell.
 
-In the staging `config.py`, use the new public asset prefix and allow an older
-7.0.255 content version to advance to the latest full root:
+Inside the existing `class Config` in staging `config.py`, set the public asset
+prefix and allow an older 7.0.255 content version to advance to the latest
+full root:
 
 ```python
 BUNDLE_DOWNLOAD_LINK_PREFIX = "https://assets.example.com/bundle/"
@@ -309,9 +310,9 @@ backup_dir="$server_root/backups/bundle-$stamp"
 
 test -f "/tmp/$alias.json"
 install -d "$server_root/backups" "$bundle_dir"
+test ! -e "$bundle_dir/$alias.json"
 cp -a "$bundle_dir" "$backup_dir"
 cp -a "$server_root/config.py" "$server_root/backups/config-$stamp.py"
-find "$bundle_dir" -maxdepth 1 -type f -name '*.json' -delete
 install -m 0644 "/tmp/$alias.json" "$bundle_dir/$alias.json"
 systemctl restart "$service_name"
 systemctl is-active --quiet "$service_name"
@@ -326,11 +327,14 @@ if ($LASTEXITCODE -ne 0) {
 
 The active server must parse `<alias>.json`, so its filename must stay aligned
 with the uploaded `<alias>_<index>.cb` files. Never rename only the manifest.
+Keep existing manifests: other app versions still need their own bundle routes.
+The new content version must be higher than the existing 7.0.255 versions so
+the parser selects it as the target.
 
 Test the API with an empty content version and with the target version:
 
 ```powershell
-$stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com/t"
+$stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com"
 
 function Get-BundleResult([string]$contentVersion) {
     Invoke-RestMethod `

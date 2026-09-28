@@ -537,7 +537,8 @@ the signed URLs used for the positive test.
 
 ## Step 11: configure the staging server for the pack
 
-For a protected fan song, staging configuration needs:
+Inside the existing `class Config` in staging `config.py`, update these
+attributes. This example is for a new installation whose lists are empty:
 
 ```python
 ASSET_SIGNING_ENABLED = True
@@ -545,7 +546,6 @@ ASSET_SIGNED_PREFIX = "https://assets.example.com/protected/songs/"
 ASSET_SIGNING_PROTECT_ALL_SONGS = False
 ASSET_SIGNING_SONG_IDS = ["my_fan_song"]
 
-CUSTOM_PACK_UMBRELLA = "my_fan_pack"
 CUSTOM_PACK_IDS = ["my_fan_pack"]
 CLIENT_VISIBLE_CUSTOM_PACK_IDS = ["my_fan_pack"]
 FREE_PACKS = ["my_fan_pack"]
@@ -553,6 +553,9 @@ CLIENT_PACK_LIMIT = 62
 ```
 
 Preserve existing entries when the lists already contain other songs or packs.
+Keep `CUSTOM_PACK_UMBRELLA` at its existing value (`akaine_fan_pack` in the
+public defaults). Changing it would alter the entitlement shared by existing
+fan packs.
 `FREE_PACKS` is the simplest staging entitlement: every account receives the
 pack without creating purchase rows.
 

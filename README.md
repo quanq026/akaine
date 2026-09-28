@@ -14,6 +14,11 @@ offsets, so they are outside this repository's instructions.
 The repository contains the guide, server and build tools. The APK input and
 game content are supplied separately when the guide needs them.
 
+The included 7.0.255 native patch uses the published Akaine API hosts. A
+client for a different domain also needs a verified native route change; the
+public repository does not yet provide a general host-change command. The
+server guide includes an independent HTTP check for your own domain.
+
 ## What you will build
 
 By the end of the guide, you will have:
@@ -56,7 +61,7 @@ the installation to another VPS provider.
 2. [Create the cloud server and connect a domain](docs/guide/02-cloud-domain.md).
 3. [Prepare your Windows computer](docs/guide/03-workstation.md).
 4. [Get and verify the private resource kit](docs/guide/04-private-resources.md).
-5. [Configure R2, protected downloads and caching](docs/guide/05-cloudflare-content.md).
+5. [Configure R2](docs/guide/05-cloudflare-content.md), [install the game server](docs/guide/05a-install-game-server.md), [run the optional Discord bot](docs/guide/05b-discord-bot.md), and [set up backups](docs/guide/05c-backup-recovery.md).
 6. [Build, sign and test the Android client](docs/guide/06-build-android-client.md).
 7. [Build, verify and release a 7.0.255 content bundle](docs/guide/07-build-release-content-bundle.md).
 8. [Learn from the failures encountered while building Akaine](docs/guide/08-lessons-and-failures.md).

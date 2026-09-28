@@ -50,10 +50,10 @@ is not evidence that the step succeeded.
 2. [Create AWS, Lightsail, Cloudflare and DNS](02-cloud-domain.md).
 3. [Prepare your Windows computer](03-workstation.md).
 4. [Get and verify the private resource kit](04-private-resources.md).
-5. [Configure R2, protected downloads and caching](05-cloudflare-content.md).
+5. [Configure R2](05-cloudflare-content.md), [install the game server](05a-install-game-server.md), [run the optional Discord bot](05b-discord-bot.md), and [set up backups](05c-backup-recovery.md).
 
-Part 1 leaves you with secured cloud accounts, a Lightsail server with a fixed
-IP address, Cloudflare DNS and the required tools on your Windows computer.
+Part 1 leaves you with secured cloud accounts, a running Lightsail API, R2
+content delivery, Cloudflare DNS and the required Windows tools.
 
 ## Part 2: Android client
 

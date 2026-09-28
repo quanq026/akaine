@@ -1,3 +1,6 @@
+"""Legacy upstream example. Chapter 5a uses config.7.0.255.example.py."""
+
+
 class Config():
     '''
     This is the example setting file.

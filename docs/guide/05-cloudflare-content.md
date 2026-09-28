@@ -197,16 +197,10 @@ from your asset hostname to an `r2.dev` hostname.
 
 ## Step 7: create one signing secret
 
-The Worker and game server must use the exact same random secret. Generate it
-in PowerShell:
+The Worker and game server must use the exact same random secret. Choose a
+private file in PowerShell. Running this block again reuses that file:
 
 ```powershell
-$bytes = New-Object byte[] 32
-$rng = [Security.Cryptography.RandomNumberGenerator]::Create()
-$rng.GetBytes($bytes)
-$rng.Dispose()
-$assetSecret = [Convert]::ToBase64String($bytes)
-
 $secretFile = Read-Host "Full path for the signing-secret file"
 $secretFile = [IO.Path]::GetFullPath($secretFile)
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
@@ -216,18 +210,26 @@ if ($secretFile.StartsWith($repoPrefix, [StringComparison]::OrdinalIgnoreCase)) 
 }
 $secretFolder = Split-Path -Parent $secretFile
 New-Item -ItemType Directory -Force $secretFolder | Out-Null
-Set-Content `
-  -LiteralPath $secretFile `
-  -Value $assetSecret `
-  -NoNewline
+if (Test-Path -LiteralPath $secretFile) {
+  $assetSecret = Get-Content -LiteralPath $secretFile -Raw
+  try { $secretBytes = [Convert]::FromBase64String($assetSecret) }
+  catch { throw "The existing signing-secret file is not valid Base64." }
+  if ($secretBytes.Length -ne 32) { throw "The existing signing secret is not 32 bytes." }
+} else {
+  $bytes = New-Object byte[] 32
+  $rng = [Security.Cryptography.RandomNumberGenerator]::Create()
+  $rng.GetBytes($bytes)
+  $rng.Dispose()
+  $assetSecret = [Convert]::ToBase64String($bytes)
+  Set-Content -LiteralPath $secretFile -Value $assetSecret -NoNewline
+}
 
 Get-Item $secretFile | Select-Object FullName, Length
 ```
 
-The random-number generator creates 32 unpredictable bytes and Base64 converts
-them into text accepted by both the Worker and server configuration. The path
-check keeps the file outside Git. The final output should show a non-empty file
-without printing its contents.
+The first run generates 32 random bytes and stores their Base64 form. Later
+runs validate and reuse the same value, so existing signed downloads keep
+working. The final output shows the file without printing its contents.
 
 Store a second copy in your password manager. Do not print the variable or
 include the file in Git. A later server chapter will load this same value into
@@ -383,8 +385,9 @@ time and repeat before changing the rules.
 
 The `api.your-domain` hostname is dynamic: login, account and score responses
 must never be cached. Do not create a “Cache Everything” rule for the API host.
-The server chapter will configure `Cache-Control: private, no-store`; after the
-server is running, API responses should show `CF-Cache-Status: DYNAMIC`.
+The server returns `Cache-Control: private, no-store` for content-bundle
+decisions. After deployment, verify that the API response does not show a
+Cloudflare cache `HIT`.
 
 ## Updating a release later
 
@@ -422,5 +425,5 @@ log or repository.
 - Cache Reserve and Argo are disabled.
 - The temporary upload token and local `akaine-r2` profile are removed.
 
-The next chapter will install the game server and give it the same asset
-signing secret, allowing it to create valid protected download URLs.
+Next: [Install the 7.0.255 game server](05a-install-game-server.md). That
+chapter connects this Worker to the game server's signing secret.

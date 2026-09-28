@@ -47,10 +47,10 @@ lại. File được tạo bởi command thất bại không chứng minh bướ
 2. [Tạo AWS, Lightsail, Cloudflare và DNS](02-cloud-domain.md).
 3. [Chuẩn bị máy tính Windows](03-workstation.md).
 4. [Nhận và xác minh bộ tài nguyên riêng](04-private-resources.md).
-5. [Cấu hình R2, protected download và cache](05-cloudflare-content.md).
+5. [Cấu hình R2](05-cloudflare-content.md), [cài game server](05a-install-game-server.md), [chạy Discord bot tùy chọn](05b-discord-bot.md) và [thiết lập backup](05c-backup-recovery.md).
 
-Kết thúc phần 1, bạn sẽ có các tài khoản cloud đã được bảo vệ, server Lightsail với IP
-cố định, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
+Kết thúc phần 1, bạn có tài khoản cloud đã bảo vệ, API Lightsail đang chạy, R2 phân
+phối content, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
 
 ## Phần 2: Client Android
 

@@ -3,7 +3,6 @@ import sys
 from importlib import import_module
 from json import load
 from shutil import copy, copy2
-from time import time
 from traceback import format_exc
 
 from core.bundle import BundleParser
@@ -14,7 +13,6 @@ from core.download import DownloadList
 from core.purchase import Purchase
 from core.sql import (Connect, DatabaseMigrator, LogDatabaseMigrator,
                       MemoryDatabase)
-from core.user import UserRegister
 from core.util import try_rename
 from core.world import MapParser
 
@@ -131,25 +129,6 @@ class DatabaseInit:
             self.c.executemany('''insert into role_power values(?,?)''', [
                                (i, j) for j in self.init_data.role_power[i]])
 
-    def admin_init(self) -> None:
-        '''初始化测试账号'''
-        x = UserRegister(self.c)
-        x.user_code = '123456789'
-        x.user_id = 2000000
-        x.name = 'admin'
-        x.email = 'admin@admin.com'
-        now = int(time() * 1000)
-
-        x._insert_user_char()
-
-        self.c.execute('''insert into user(user_id, name, password, join_date, user_code, rating_ptt,
-        character_id, is_skill_sealed, is_char_uncapped, is_char_uncapped_override, is_hide_rating, favorite_character, max_stamina_notification_enabled, current_map, ticket, prog_boost, email)
-        values(:user_id, :name, :password, :join_date, :user_code, 0, 0, 0, 0, 0, 0, -1, 0, '', :memories, 0, :email)
-        ''', {'user_code': x.user_code, 'user_id': x.user_id, 'join_date': now, 'name': x.name, 'password': '41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb', 'memories': 67, 'email': x.email})
-
-        self.c.execute(
-            '''insert into user_role values(?, "admin")''', (x.user_id,))
-
     def init(self) -> None:
         sys.path.append(os.path.join(sys.path[0], self.init_folder_path))
         self.init_data = import_module('arc_data').InitData
@@ -161,7 +140,6 @@ class DatabaseInit:
             self.item_init()
             self.course_init()
             self.role_power_init()
-            self.admin_init()
 
 
 class LogDatabaseInit:
@@ -309,6 +287,7 @@ class FileChecker:
                     self.logger.error(format_exc())
                     self.logger.warning(
                         f'Fail to update the file `{db_path}`.')
+                    return False
 
         return True
 

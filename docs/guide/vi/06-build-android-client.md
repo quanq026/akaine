@@ -31,6 +31,12 @@ APK tham chiếu SHA-256 là
 artifact đã phát hành; đây không phải hash mà client ký bằng khóa riêng của bạn phải
 có. Chỉ cần signing key khác thì byte của APK cũng khác.
 
+Native plan đi kèm nhúng sẵn các Akaine API host đã phát hành. Nó không tự thay chúng
+bằng domain bạn đăng ký ở chương 2. Muốn dùng server riêng, cần native route plan có
+guard theo phiên bản cho login, aggregate, content bundle và encrypted shared API base,
+rồi chạy các kiểm tra runtime trong chương này. Repository hiện chưa có command đổi host
+đó; trong lúc này chương 5a cho phép kiểm tra server độc lập.
+
 Hai bản build có thể hoạt động giống nhau mà không cần có cùng hash APK:
 
 - cùng đầu vào, patch và cấu hình có thể tái tạo cùng hành vi;

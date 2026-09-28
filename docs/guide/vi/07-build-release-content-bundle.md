@@ -267,8 +267,8 @@ bundle đang hoạt động; các file `.cb` vẫn nằm trên R2. Đặt
 `BUNDLE_DOWNLOAD_LINK_PREFIX` thành `https://<asset-host>/bundle/`, restart staging
 service và giữ lại đường dẫn backup mà shell đã in ra.
 
-Trong `config.py` của staging, dùng public asset prefix mới và cho phép content
-version 7.0.255 cũ tiến lên full root mới nhất:
+Trong `class Config` hiện có của staging `config.py`, dùng public asset prefix mới và
+cho phép content version 7.0.255 cũ tiến lên full root mới nhất:
 
 ```python
 BUNDLE_DOWNLOAD_LINK_PREFIX = "https://assets.example.com/bundle/"
@@ -302,9 +302,9 @@ backup_dir="$server_root/backups/bundle-$stamp"
 
 test -f "/tmp/$alias.json"
 install -d "$server_root/backups" "$bundle_dir"
+test ! -e "$bundle_dir/$alias.json"
 cp -a "$bundle_dir" "$backup_dir"
 cp -a "$server_root/config.py" "$server_root/backups/config-$stamp.py"
-find "$bundle_dir" -maxdepth 1 -type f -name '*.json' -delete
 install -m 0644 "/tmp/$alias.json" "$bundle_dir/$alias.json"
 systemctl restart "$service_name"
 systemctl is-active --quiet "$service_name"
@@ -319,11 +319,13 @@ if ($LASTEXITCODE -ne 0) {
 
 Server đang chạy phải parse `<alias>.json`, vì vậy tên file này phải khớp với các file
 `<alias>_<index>.cb` đã upload. Không được chỉ đổi tên manifest.
+Giữ các manifest cũ vì app version khác vẫn cần bundle route riêng. Content version mới
+phải cao hơn các bản 7.0.255 đang có để parser chọn nó làm target.
 
 Kiểm tra API bằng content version rỗng và target version:
 
 ```powershell
-$stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com/t"
+$stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com"
 
 function Get-BundleResult([string]$contentVersion) {
     Invoke-RestMethod `
