@@ -41,7 +41,7 @@ Vẫn trong Linux terminal. `set -e` dừng block ngay khi một command lỗi:
 set -e
 sudo -u akaine git clone https://github.com/quanq026/akaine.git /srv/akaine/repo
 sudo -u akaine python3 -m venv /srv/akaine/repo/.venv
-sudo -u akaine /srv/akaine/repo/.venv/bin/python -m pip install -r /srv/akaine/repo/requirements-dev.txt
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m pip install -r /srv/akaine/repo/server/requirements.txt
 sudo install -d -o akaine -g akaine /srv/akaine/repo/server/log
 sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/backup
 

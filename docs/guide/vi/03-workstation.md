@@ -226,7 +226,7 @@ python -m venv .venv
 if ($LASTEXITCODE -ne 0) { throw "Virtual environment creation failed." }
 .\.venv\Scripts\python -m pip install --upgrade pip
 if ($LASTEXITCODE -ne 0) { throw "pip upgrade failed." }
-.\.venv\Scripts\python -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python -m pip install -r server\requirements.txt
 if ($LASTEXITCODE -ne 0) { throw "Python dependency installation failed." }
 ```
 

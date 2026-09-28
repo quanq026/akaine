@@ -2,6 +2,8 @@
 
 [English](README.md) | Tiếng Việt
 
+![Tổng quan nền tảng Akaine 7.0.255](docs/images/akaine-platform-overview.svg)
+
 Akaine là bộ mã nguồn công khai kèm hướng dẫn dựng server và client Android
 dựa trên Arcaea 7.0.255. Hướng dẫn bắt đầu từ một máy Windows sạch và một tài
 khoản cloud mới. Bạn không cần biết trước về Linux, Cloudflare hay quy trình
@@ -87,5 +89,4 @@ nguồn tham khảo upstream cho phần server.
 Những phần mã nguồn thuộc Akaine được phát hành theo giấy phép MIT. Mã nguồn
 của bên thứ ba tiếp tục sử dụng giấy phép gốc của nó. Giấy phép MIT không cấp
 quyền phân phối lại game client thương mại, âm nhạc, chart, artwork hoặc tài
-sản khác thuộc sở hữu của bên thứ ba. Thông tin ghi công cho các thành phần
-bên thứ ba nằm trong [Third-party notices](THIRD_PARTY_NOTICES.md).
+sản khác thuộc sở hữu của bên thứ ba.

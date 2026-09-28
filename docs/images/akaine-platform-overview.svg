@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
+  <title id="title">Akaine self-hosted Arcaea 7.0.255 platform</title>
+  <desc id="desc">The patched Android client connects through Cloudflare to a Python game server on Amazon Lightsail. Cloudflare R2 stores bundles and song assets. SQLite stores player data. Discord and B30 tools use the same server data.</desc>
+  <defs>
+    <linearGradient id="client-bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#edf8ff"/><stop offset="1" stop-color="#f9fcff"/></linearGradient>
+    <linearGradient id="edge-bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f5f1ff"/><stop offset="1" stop-color="#fcfaff"/></linearGradient>
+    <linearGradient id="server-bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ecfbf5"/><stop offset="1" stop-color="#fbfffd"/></linearGradient>
+    <linearGradient id="community-bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff7e9"/><stop offset="1" stop-color="#fffdf9"/></linearGradient>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#245fd4"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#15956a"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d88612"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <filter id="soft-shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#13203b" flood-opacity="0.07"/></filter>
+    <style>
+      text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+      .brand { font-size: 64px; font-weight: 750; letter-spacing: -2.6px; }
+      .product { font-size: 23px; font-weight: 500; }
+      .tagline { font-size: 20px; fill: #526079; }
+      .summary { font-size: 16px; fill: #435069; }
+      .zone-title { font-size: 23px; font-weight: 700; }
+      .zone-sub { font-size: 13px; fill: #657086; }
+      .card-title { font-size: 18px; font-weight: 700; }
+      .card-sub { font-size: 14px; fill: #59667d; }
+      .item { font-size: 14px; fill: #3d4961; }
+      .label { font-size: 13px; font-weight: 700; fill: #245fd4; }
+      .label-green { font-size: 13px; font-weight: 700; fill: #15956a; }
+      .small { font-size: 12px; fill: #687388; }
+      .zone { stroke-width: 1.7; }
+      .card { fill: #ffffff; stroke: #cad3e1; stroke-width: 1.2; }
+      .rule { stroke: #d9dee7; stroke-width: 1; }
+      .api { fill: none; stroke: #245fd4; stroke-width: 2.2; marker-end: url(#arrow-blue); }
+      .assets { fill: none; stroke: #245fd4; stroke-width: 2.2; stroke-dasharray: 7 6; marker-end: url(#arrow-blue); }
+      .link { fill: none; stroke: #15956a; stroke-width: 2.2; stroke-dasharray: 8 6; marker-end: url(#arrow-green); }
+      .integration { fill: none; stroke: #d88612; stroke-width: 2.1; marker-end: url(#arrow-orange); }
+      .backup { fill: none; stroke: #778195; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-gray); }
+      .internal { fill: none; stroke: #15956a; stroke-width: 2; marker-end: url(#arrow-green); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect x="34" y="28" width="5" height="76" rx="2.5" fill="#ff596c"/>
+  <text x="57" y="75" class="brand">Akaine</text>
+  <text x="304" y="68" class="product">Self-hosted Arcaea 7.0.255 platform</text>
+  <text x="57" y="103" class="tagline">Play. Connect. Customize.</text>
+  <text x="1008" y="46" class="summary">A patched Android client, a Python game server, protected</text>
+  <text x="1008" y="69" class="summary">R2 content delivery, player data, Discord, and score tools—</text>
+  <text x="1008" y="92" class="summary">assembled into one system you control.</text>
+  <rect x="1008" y="108" width="112" height="25" rx="12.5" fill="#edf8ff" stroke="#78bfe8"/>
+  <text x="1064" y="125" text-anchor="middle" class="small">SELF-HOSTED</text>
+  <rect x="1132" y="108" width="150" height="25" rx="12.5" fill="#ecfbf5" stroke="#50bd96"/>
+  <text x="1207" y="125" text-anchor="middle" class="small">VERSION 7.0.255</text>
+  <rect x="1294" y="108" width="166" height="25" rx="12.5" fill="#f5f1ff" stroke="#9b82eb"/>
+  <text x="1377" y="125" text-anchor="middle" class="small">PROTECTED CONTENT</text>
+
+  <!-- Client zone -->
+  <rect x="42" y="145" width="285" height="600" rx="20" fill="url(#client-bg)" stroke="#78bfe8" class="zone"/>
+  <text x="66" y="180" class="zone-title">Android client</text>
+  <text x="66" y="201" class="zone-sub">The part players install and use</text>
+
+  <rect x="64" y="225" width="241" height="205" rx="15" class="card" filter="url(#soft-shadow)"/>
+  <g transform="translate(84 248)">
+    <rect x="0" y="0" width="38" height="58" rx="7" fill="#eef6ff" stroke="#318bd0" stroke-width="2"/>
+    <line x1="12" y1="48" x2="26" y2="48" stroke="#318bd0" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="137" y="266" class="card-title">AkaineXD</text>
+  <text x="137" y="288" class="card-sub">Patched arm64 client</text>
+  <text x="84" y="330" class="item">• Login and authentication</text>
+  <text x="84" y="356" class="item">• Cloud Sync and player profile</text>
+  <text x="84" y="382" class="item">• Play and upload scores</text>
+  <text x="84" y="408" class="item">• Download bundles and songs</text>
+
+  <rect x="64" y="453" width="241" height="128" rx="15" class="card"/>
+  <text x="84" y="484" class="card-title">Game content</text>
+  <text x="84" y="509" class="item">• Core resources in the APK</text>
+  <text x="84" y="535" class="item">• Selectors and previews in bundles</text>
+  <text x="84" y="561" class="item">• Playable assets delivered remotely</text>
+
+  <rect x="64" y="604" width="241" height="112" rx="15" class="card"/>
+  <text x="84" y="635" class="card-title">Link Play</text>
+  <text x="84" y="660" class="item">• Direct TCP / UDP rooms</text>
+  <text x="84" y="686" class="item">• DNS-only route to the server</text>
+
+  <!-- Cloudflare zone -->
+  <rect x="390" y="145" width="310" height="600" rx="20" fill="url(#edge-bg)" stroke="#9b82eb" class="zone"/>
+  <text x="414" y="180" class="zone-title">Cloudflare edge</text>
+  <text x="414" y="201" class="zone-sub">Domains, HTTPS, caching, and content access</text>
+
+  <rect x="414" y="225" width="262" height="110" rx="15" class="card"/>
+  <circle cx="451" cy="265" r="19" fill="#efe9ff"/>
+  <path d="M436 265h30M451 250c8 8 8 22 0 30M451 250c-8 8-8 22 0 30" fill="none" stroke="#7656dc" stroke-width="2"/>
+  <text x="484" y="258" class="card-title">DNS + HTTPS</text>
+  <text x="484" y="282" class="card-sub">Custom domain · TLS proxy</text>
+  <text x="436" y="315" class="small">api.example.com → nginx</text>
+
+  <rect x="414" y="357" width="262" height="148" rx="15" class="card"/>
+  <path d="M435 390l17-9 17 9v14c0 12-8 20-17 24-9-4-17-12-17-24z" fill="#efe9ff" stroke="#7656dc" stroke-width="1.8"/>
+  <path d="M444 403l6 6 11-13" fill="none" stroke="#7656dc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="484" y="392" class="card-title">Worker + CDN</text>
+  <text x="484" y="416" class="card-sub">Request control and edge cache</text>
+  <text x="436" y="455" class="item">• Public bundles and selector assets</text>
+  <text x="436" y="481" class="item">• Signed access to protected files</text>
+
+  <rect x="414" y="527" width="262" height="189" rx="15" fill="#fbfffd" stroke="#91d5bc" stroke-width="1.4"/>
+  <ellipse cx="452" cy="567" rx="22" ry="8" fill="#dff4eb" stroke="#23936d" stroke-width="1.8"/>
+  <path d="M430 567v36c0 5 10 9 22 9s22-4 22-9v-36M430 585c0 5 10 9 22 9s22-4 22-9" fill="none" stroke="#23936d" stroke-width="1.8"/>
+  <text x="492" y="570" class="card-title">Cloudflare R2</text>
+  <text x="492" y="594" class="card-sub">Large object storage</text>
+  <text x="436" y="635" class="item">• Bundle manifests and partitions</text>
+  <text x="436" y="661" class="item">• Songs, jackets, and previews</text>
+  <text x="436" y="687" class="item">• Private protected files</text>
+
+  <!-- Lightsail zone -->
+  <rect x="760" y="145" width="470" height="600" rx="20" fill="url(#server-bg)" stroke="#50bd96" class="zone"/>
+  <text x="784" y="180" class="zone-title">AWS Lightsail server</text>
+  <text x="784" y="201" class="zone-sub">A small Linux VPS running the application</text>
+
+  <rect x="784" y="225" width="422" height="96" rx="15" class="card"/>
+  <text x="806" y="257" class="card-title">nginx</text>
+  <text x="806" y="281" class="card-sub">HTTPS gateway · reverse proxy · routing</text>
+  <text x="806" y="305" class="small">Receives Cloudflare traffic and forwards it privately</text>
+
+  <rect x="784" y="349" width="264" height="339" rx="17" class="card" filter="url(#soft-shadow)"/>
+  <circle cx="823" cy="390" r="23" fill="#ddf5eb"/>
+  <path d="M812 382c0-6 5-10 11-10s11 4 11 10c6 0 10 4 10 9s-4 9-10 9h-22c-6 0-10-4-10-9s4-9 10-9z" fill="none" stroke="#168b64" stroke-width="2"/>
+  <text x="860" y="386" class="card-title">Python game server</text>
+  <text x="860" y="409" class="card-sub">Arcaea-compatible API</text>
+  <line x1="806" y1="436" x2="1026" y2="436" class="rule"/>
+  <text x="806" y="468" class="item">• Accounts and sessions</text>
+  <text x="806" y="496" class="item">• Saves and Cloud Sync</text>
+  <text x="806" y="524" class="item">• Scores, rating, and profiles</text>
+  <text x="806" y="552" class="item">• Song download authorization</text>
+  <text x="806" y="580" class="item">• Content bundle decisions</text>
+  <text x="806" y="608" class="item">• World Mode and game state</text>
+  <text x="806" y="652" class="small">Python · Flask · systemd</text>
+
+  <rect x="1070" y="349" width="136" height="206" rx="17" class="card"/>
+  <ellipse cx="1138" cy="393" rx="28" ry="10" fill="#e2f5ed" stroke="#168b64" stroke-width="2"/>
+  <path d="M1110 393v56c0 7 13 12 28 12s28-5 28-12v-56M1110 421c0 7 13 12 28 12s28-5 28-12" fill="none" stroke="#168b64" stroke-width="2"/>
+  <text x="1138" y="490" text-anchor="middle" class="card-title">SQLite</text>
+  <text x="1138" y="515" text-anchor="middle" class="card-sub">Player database</text>
+  <text x="1138" y="538" text-anchor="middle" class="small">users · scores · saves</text>
+
+  <rect x="1070" y="579" width="136" height="109" rx="17" class="card"/>
+  <text x="1138" y="614" text-anchor="middle" class="card-title">Backups</text>
+  <text x="1138" y="640" text-anchor="middle" class="card-sub">Database + config</text>
+  <text x="1138" y="663" text-anchor="middle" class="small">hash · restore check</text>
+
+  <path d="M995 321V349" class="internal"/>
+  <path d="M1048 479H1070" class="internal"/>
+  <path d="M1138 555V579" class="backup"/>
+
+  <!-- Community zone -->
+  <rect x="1260" y="145" width="298" height="600" rx="20" fill="url(#community-bg)" stroke="#efb04d" class="zone"/>
+  <text x="1284" y="180" class="zone-title">Discord &amp; tools</text>
+  <text x="1284" y="201" class="zone-sub">Optional community-facing integrations</text>
+
+  <rect x="1284" y="225" width="250" height="210" rx="15" class="card"/>
+  <circle cx="1325" cy="267" r="22" fill="#fff0d5"/>
+  <path d="M1313 272c8 6 16 6 24 0M1318 260h14M1315 254c7-5 17-5 24 0l3 18c-4 8-9 13-17 16-8-3-13-8-17-16z" fill="none" stroke="#d88612" stroke-width="2" stroke-linecap="round"/>
+  <text x="1360" y="260" class="card-title">Lygus Bot</text>
+  <text x="1360" y="283" class="card-sub">Discord accounts</text>
+  <text x="1360" y="303" class="card-sub">and score tools</text>
+  <text x="1306" y="344" class="item">• Create or link accounts</text>
+  <text x="1306" y="370" class="item">• Profiles and recent plays</text>
+  <text x="1306" y="396" class="item">• B30 commands and images</text>
+  <text x="1306" y="422" class="item">• Server notices</text>
+
+  <rect x="1284" y="459" width="250" height="150" rx="15" class="card"/>
+  <text x="1306" y="493" class="card-title">B30 web tools</text>
+  <text x="1306" y="520" class="item">• Search public player profiles</text>
+  <text x="1306" y="546" class="item">• Render scores and partners</text>
+  <text x="1306" y="572" class="item">• Read-only external API</text>
+
+  <rect x="1284" y="633" width="250" height="83" rx="15" class="card"/>
+  <text x="1306" y="667" class="card-title">Link Play rooms</text>
+  <text x="1306" y="693" class="card-sub">Real-time TCP / UDP sessions</text>
+
+  <!-- Cross-zone flows -->
+  <path d="M327 286H390" class="api"/>
+  <text x="343" y="274" class="label">API</text>
+  <path d="M327 442H390" class="assets"/>
+  <text x="337" y="430" class="label">ASSETS</text>
+  <path d="M700 279H760" class="api"/>
+  <text x="710" y="267" class="label">HTTPS</text>
+  <path d="M784 409C739 409 733 442 700 442" class="api"/>
+  <text x="706" y="430" class="label">SIGNED URLS</text>
+  <path d="M545 505V527" class="api"/>
+  <path d="M327 660H365V770H735V570H784" class="link"/>
+  <text x="426" y="786" class="label-green">TCP / UDP LINK PLAY — DIRECT TO LIGHTSAIL</text>
+  <path d="M1230 402H1260" class="integration"/>
+  <text x="1239" y="390" class="small">Bot API</text>
+  <path d="M1230 519H1260" class="integration"/>
+  <text x="1239" y="507" class="small">Read data</text>
+  <path d="M1230 671H1260" class="link"/>
+  <text x="1238" y="659" class="small">Rooms</text>
+</svg>

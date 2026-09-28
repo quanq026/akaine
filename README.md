@@ -2,6 +2,8 @@
 
 English | [Tiếng Việt](README.vi.md)
 
+![Akaine 7.0.255 platform overview](docs/images/akaine-platform-overview.svg)
+
 Akaine is a setup guide and public source repository for a server and Android
 client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
 and a new cloud account. You do not need previous experience with Linux,
@@ -87,5 +89,4 @@ upstream reference for its server work.
 Akaine-owned source contributions are published under the MIT License.
 Third-party code keeps its original license. The MIT License does not grant
 permission to redistribute commercial game clients, music, charts, artwork or
-other material owned by someone else. Attribution for included third-party
-components is recorded in [Third-party notices](THIRD_PARTY_NOTICES.md).
+other material owned by someone else.
