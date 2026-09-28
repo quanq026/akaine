@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Chapter 04: Establish a chain of trust for private resources</title>
+  <desc id="desc">The private resource archive is received separately from its hash, verified before extraction, checked by its manifest, and exposed to the build only through a verified Apktool path.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#526079"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#318bd0"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#23936d"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d88612"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7656dc"/></marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#17213a" flood-opacity="0.07"/></filter>
+    <style>
+text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+.chapter { font-size: 14px; font-weight: 700; letter-spacing: 1.8px; fill: #6f788a; }
+.title { font-size: 40px; font-weight: 750; letter-spacing: -1.1px; }
+.subtitle { font-size: 17px; fill: #59667d; }
+.section { font-size: 13px; font-weight: 750; letter-spacing: 1.25px; fill: #5d687d; }
+.h2 { font-size: 22px; font-weight: 720; }
+.h3 { font-size: 17px; font-weight: 700; }
+.body { font-size: 14px; fill: #46536a; }
+.small { font-size: 12px; fill: #657086; }
+.micro { font-size: 11px; fill: #657086; }
+.gate { font-size: 12px; font-weight: 700; fill: #167958; }
+.card { fill: #fff; stroke: #d1d8e4; stroke-width: 1.3; filter: url(#shadow); }
+.blue { fill: #f2f9ff; stroke: #78bfe8; stroke-width: 1.5; }
+.purple { fill: #f7f3ff; stroke: #9b82eb; stroke-width: 1.5; }
+.green { fill: #f1fbf7; stroke: #50bd96; stroke-width: 1.5; }
+.orange { fill: #fff8ec; stroke: #efb04d; stroke-width: 1.5; }
+.gray { fill: #f8f9fb; stroke: #d7dde7; stroke-width: 1.3; }
+.red { fill: #fff5f6; stroke: #ef8995; stroke-width: 1.5; }
+.line { fill: none; stroke: #526079; stroke-width: 2.2; marker-end: url(#arrow); }
+.dash { fill: none; stroke: #778195; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-gray); }
+.blue-line { fill: none; stroke: #318bd0; stroke-width: 2.3; marker-end: url(#arrow-blue); }
+.green-line { fill: none; stroke: #23936d; stroke-width: 2.3; marker-end: url(#arrow-green); }
+.orange-line { fill: none; stroke: #d88612; stroke-width: 2.3; marker-end: url(#arrow-orange); }
+.purple-line { fill: none; stroke: #7656dc; stroke-width: 2.3; marker-end: url(#arrow-purple); }
+.rule { stroke: #dde2ea; stroke-width: 1; }
+</style>
+  </defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
+  <text x="75" y="58" class="chapter">CHAPTER 04</text>
+  <text x="75" y="98" class="title">Establish a chain of trust for private resources</text>
+  <text x="75" y="128" class="subtitle">One archive travels through six evidence checkpoints before it is allowed into the build workflow</text>
+  <rect x="1248" y="49" width="150" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
+  <text x="1323.0" y="68" class="small" text-anchor="middle">CHAIN OF TRUST</text>
+  <rect x="1410" y="49" width="130" height="28" rx="14" fill="#fff5f6" stroke="#ef8995"/>
+  <text x="1475.0" y="68" class="small" text-anchor="middle">FAIL CLOSED</text>
+  <rect x="48" y="171" width="1504" height="600" rx="30" fill="#fbfaff" stroke="#9b82eb" stroke-width="2" stroke-dasharray="9 7"/>
+  <text x="74" y="201" class="section">PRIVATE BOUNDARY — OUTSIDE THE GIT REPOSITORY</text>
+  <rect x="78" y="300" width="205" height="220" rx="24" class="blue"/>
+  <text x="180" y="346" class="h2" text-anchor="middle">Authorized provider</text>
+  <text x="180" y="378" class="body" text-anchor="middle">private channel</text>
+  <circle cx="180" cy="440" r="34" fill="#e2f1fb" stroke="#318bd0" stroke-width="2"/>
+  <path d="M161 443c10 9 28 9 38 0M166 426c8-7 20-7 28 0" fill="none" stroke="#318bd0" stroke-width="2.2" stroke-linecap="round"/>
+  <rect x="335" y="235" width="230" height="120" rx="18" class="purple"/>
+  <text x="360" y="275" class="h3">Resource archive</text>
+  <text x="360" y="303" class="small">release-specific bytes</text>
+  <text x="360" y="325" class="small">stored outside Git</text>
+  <rect x="335" y="465" width="230" height="120" rx="18" class="orange"/>
+  <text x="360" y="505" class="h3">Expected SHA-256</text>
+  <text x="360" y="533" class="small">64 hex characters</text>
+  <text x="360" y="555" class="small">sent separately</text>
+  <path d="M283 382C305 330 312 295 335 295" class="purple-line"/>
+  <path d="M283 438C305 490 312 525 335 525" class="orange-line"/>
+  <polygon points="675,290 770,345 770,455 675,510 580,455 580,345" fill="#f1fbf7" stroke="#50bd96" stroke-width="2" filter="url(#shadow)"/>
+  <text x="675" y="374" class="h2" text-anchor="middle">HASH</text>
+  <text x="675" y="405" class="body" text-anchor="middle">actual = expected</text>
+  <text x="675" y="438" class="gate" text-anchor="middle">MATCH</text>
+  <path d="M565 295H610" class="purple-line"/>
+  <path d="M565 525H610V480" class="orange-line"/>
+  <rect x="835" y="235" width="285" height="350" rx="26" class="gray"/>
+  <text x="978" y="278" class="h2" text-anchor="middle">Empty extraction chamber</text>
+  <text x="978" y="307" class="body" text-anchor="middle">No leftovers from an older kit</text>
+  <path d="M892 360H1064V500H892z" fill="#fff" stroke="#778195" stroke-width="2"/>
+  <path d="M918 360v-29h120v29" fill="none" stroke="#778195" stroke-width="2"/>
+  <text x="978" y="407" class="h3" text-anchor="middle">Expand-Archive</text>
+  <text x="978" y="440" class="body" text-anchor="middle">then read README.txt</text>
+  <text x="978" y="475" class="gate" text-anchor="middle">run only the named verifier</text>
+  <path d="M770 400H835" class="green-line"/>
+  <rect x="1185" y="235" width="315" height="350" rx="26" class="green"/>
+  <text x="1342" y="278" class="h2" text-anchor="middle">Verified resource kit</text>
+  <path d="M1288 350h108v108h-108z" fill="#fff" stroke="#23936d" stroke-width="2"/>
+  <path d="M1310 350v-28c0-23 17-40 32-40s32 17 32 40v28" fill="none" stroke="#23936d" stroke-width="2"/>
+  <path d="M1323 406l14 14 29-34" fill="none" stroke="#23936d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1342" y="493" class="body" text-anchor="middle">Manifest, size, and hashes agree</text>
+  <text x="1342" y="522" class="gate" text-anchor="middle">AKAINE_KIT_ROOT recorded</text>
+  <path d="M1120 410H1185" class="green-line"/>
+  <rect x="1010" y="650" width="490" height="88" rx="20" class="blue"/>
+  <text x="1040" y="686" class="h3">Only one verified path crosses into the public workflow</text>
+  <text x="1040" y="715" class="body">APKTOOL_JAR → doctor.py --android → strict toolchain PASS</text>
+  <path d="M1342 585V650" class="blue-line"/>
+  <rect x="78" y="650" width="800" height="88" rx="20" class="red"/>
+  <text x="108" y="686" class="h3">Stop immediately</text>
+  <text x="108" y="715" class="body">Hash mismatch · undeclared file · failed verifier · archive from an untrusted source</text>
+  <text x="48" y="875" class="small">The resource kit is accepted because evidence agrees—not because its filename, screenshot, or provider looked familiar.</text>
+</svg>

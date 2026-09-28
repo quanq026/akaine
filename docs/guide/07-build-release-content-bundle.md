@@ -5,6 +5,8 @@ overlay, builds a new immutable release and promotes the same bytes through
 staging to production. It uses `scripts/build_content_bundle.py`; the older
 6.14 tools under `server/tools` do not produce the 7.0.255 release format.
 
+![Chapter 07 staging and production release lanes](../images/guides/07-content-bundle-release-lanes.svg)
+
 Complete chapters 1 through 6 first. You also need a staging server that uses
 the same server source and configuration shape as production.
 

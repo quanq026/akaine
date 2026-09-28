@@ -7,6 +7,8 @@ content overlay nhỏ, build release bất biến mới rồi đưa chính bộ 
 lên production. Quy trình dùng `scripts/build_content_bundle.py`; các công cụ 6.14
 cũ trong `server/tools` không tạo đúng định dạng release 7.0.255.
 
+![Hai lane staging và production của chương 07](../../images/guides/07-content-bundle-release-lanes.svg)
+
 Hãy hoàn thành chương 1 đến chương 6 trước. Bạn cũng cần một staging server dùng cùng
 source và cấu trúc cấu hình với production.
 

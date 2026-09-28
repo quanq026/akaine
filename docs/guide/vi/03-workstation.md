@@ -5,6 +5,8 @@
 Cài đặt các công cụ bên dưới trên Windows 10 hoặc Windows 11. Các lệnh cuối cùng sẽ kiểm
 tra quá trình cài đặt trước khi bạn tiếp tục.
 
+![Sơ đồ workstation Windows của chương 03](../../images/guides/03-workstation-blueprint.svg)
+
 ## Thời gian, lưu trữ và quyền
 
 - Thời gian: 30 đến 60 phút, chủ yếu là tải xuống.

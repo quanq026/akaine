@@ -3,6 +3,8 @@
 Install the tools below on Windows 10 or Windows 11. The final commands check
 the installation before you continue.
 
+![Chapter 03 Windows workstation blueprint](../images/guides/03-workstation-blueprint.svg)
+
 ## Time, storage and permissions
 
 - Time: 30 to 60 minutes, mostly downloads.

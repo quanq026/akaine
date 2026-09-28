@@ -6,6 +6,8 @@ GitHub chứa mã nguồn và hướng dẫn này. Nội dung trò chơi và con
 tài nguyên riêng biệt. Chương 6 tải xuống XAPK upstream và build các công cụ trực
 tiếp từ các nguồn đã xuất bản của họ.
 
+![Chuỗi tin cậy của tài nguyên riêng trong chương 04](../../images/guides/04-private-resources-chain-of-trust.svg)
+
 ## Nhận bộ tài nguyên
 
 Nhận bộ tài nguyên riêng và SHA-256 dự kiến từ chủ dự án qua kênh riêng. Không yêu cầu

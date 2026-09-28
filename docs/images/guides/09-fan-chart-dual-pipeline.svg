@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Chapter 09: Bring one fan chart into the playable system</title>
+  <desc id="desc">Untouched fan-chart source splits into a public selector bundle stream and a protected playable stream. Server entitlement, metadata, and chart constants join them before client download, gameplay, score, and restart proof.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#526079"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#318bd0"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#23936d"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d88612"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7656dc"/></marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#17213a" flood-opacity="0.07"/></filter>
+    <style>
+text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+.chapter { font-size: 14px; font-weight: 700; letter-spacing: 1.8px; fill: #6f788a; }
+.title { font-size: 40px; font-weight: 750; letter-spacing: -1.1px; }
+.subtitle { font-size: 17px; fill: #59667d; }
+.section { font-size: 13px; font-weight: 750; letter-spacing: 1.25px; fill: #5d687d; }
+.h2 { font-size: 22px; font-weight: 720; }
+.h3 { font-size: 17px; font-weight: 700; }
+.body { font-size: 14px; fill: #46536a; }
+.small { font-size: 12px; fill: #657086; }
+.micro { font-size: 11px; fill: #657086; }
+.gate { font-size: 12px; font-weight: 700; fill: #167958; }
+.card { fill: #fff; stroke: #d1d8e4; stroke-width: 1.3; filter: url(#shadow); }
+.blue { fill: #f2f9ff; stroke: #78bfe8; stroke-width: 1.5; }
+.purple { fill: #f7f3ff; stroke: #9b82eb; stroke-width: 1.5; }
+.green { fill: #f1fbf7; stroke: #50bd96; stroke-width: 1.5; }
+.orange { fill: #fff8ec; stroke: #efb04d; stroke-width: 1.5; }
+.gray { fill: #f8f9fb; stroke: #d7dde7; stroke-width: 1.3; }
+.red { fill: #fff5f6; stroke: #ef8995; stroke-width: 1.5; }
+.line { fill: none; stroke: #526079; stroke-width: 2.2; marker-end: url(#arrow); }
+.dash { fill: none; stroke: #778195; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-gray); }
+.blue-line { fill: none; stroke: #318bd0; stroke-width: 2.3; marker-end: url(#arrow-blue); }
+.green-line { fill: none; stroke: #23936d; stroke-width: 2.3; marker-end: url(#arrow-green); }
+.orange-line { fill: none; stroke: #d88612; stroke-width: 2.3; marker-end: url(#arrow-orange); }
+.purple-line { fill: none; stroke: #7656dc; stroke-width: 2.3; marker-end: url(#arrow-purple); }
+.rule { stroke: #dde2ea; stroke-width: 1; }
+</style>
+  </defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
+  <text x="75" y="58" class="chapter">CHAPTER 09</text>
+  <text x="75" y="98" class="title">Bring one fan chart into the playable system</text>
+  <text x="75" y="128" class="subtitle">Two asset pipelines and one server contract converge before the client is allowed to test the chart</text>
+  <rect x="1225" y="49" width="150" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
+  <text x="1300.0" y="68" class="small" text-anchor="middle">DUAL PIPELINE</text>
+  <rect x="1387" y="49" width="150" height="28" rx="14" fill="#fff8ec" stroke="#efb04d"/>
+  <text x="1462.0" y="68" class="small" text-anchor="middle">STAGING FIRST</text>
+  <rect x="55" y="310" width="260" height="265" rx="28" class="gray"/>
+  <text x="185" y="353" class="h2" text-anchor="middle">Untouched source</text>
+  <text x="88" y="394" class="body">AFF chart</text>
+  <text x="88" y="424" class="body">base.ogg audio</text>
+  <text x="88" y="454" class="body">square jacket</text>
+  <text x="88" y="484" class="body">author credits + hashes</text>
+  <text x="88" y="535" class="gate">Stable song ID + unused index</text>
+  <rect x="380" y="175" width="730" height="280" rx="28" fill="#f7f3ff" stroke="#9b82eb" stroke-width="1.8"/>
+  <text x="408" y="211" class="section">PUBLIC SELECTOR STREAM</text>
+  <rect x="415" y="245" width="195" height="145" rx="18" class="card"/>
+  <text x="512" y="284" class="h3" text-anchor="middle">Catalogues</text>
+  <text x="437" y="320" class="body">packlist + songlist</text>
+  <text x="437" y="346" class="body">only real difficulties</text>
+  <text x="437" y="371" class="gate">PASS</text>
+  <rect x="650" y="245" width="195" height="145" rx="18" class="card"/>
+  <text x="747" y="284" class="h3" text-anchor="middle">Visual assets</text>
+  <text x="672" y="320" class="body">large + small jackets</text>
+  <text x="672" y="346" class="body">normal + dl_ paths</text>
+  <text x="672" y="371" class="gate">PASS</text>
+  <rect x="885" y="245" width="195" height="145" rx="18" class="card"/>
+  <text x="982" y="284" class="h3" text-anchor="middle">Full-root bundle</text>
+  <text x="907" y="320" class="body">preview.ogg included</text>
+  <text x="907" y="346" class="body">playable bytes excluded</text>
+  <text x="907" y="371" class="gate">PASS</text>
+  <path d="M610 317H650" class="purple-line"/>
+  <path d="M845 317H885" class="purple-line"/>
+  <path d="M315 380C350 300 360 300 415 300" class="purple-line"/>
+  <rect x="380" y="500" width="730" height="280" rx="28" fill="#fff8ec" stroke="#efb04d" stroke-width="1.8"/>
+  <text x="408" y="536" class="section">PROTECTED PLAYABLE STREAM</text>
+  <rect x="415" y="570" width="195" height="145" rx="18" class="card"/>
+  <text x="512" y="609" class="h3" text-anchor="middle">Normalize audio</text>
+  <text x="437" y="645" class="body">44.1 kHz stereo Vorbis</text>
+  <text x="437" y="671" class="body">listen to the preview</text>
+  <text x="437" y="696" class="gate">PASS</text>
+  <rect x="650" y="570" width="195" height="145" rx="18" class="card"/>
+  <text x="747" y="609" class="h3" text-anchor="middle">Encrypt AFF</text>
+  <text x="672" y="645" class="body">release AKFC public key</text>
+  <text x="672" y="671" class="body">bind song ID + filename</text>
+  <text x="672" y="696" class="gate">PASS</text>
+  <rect x="885" y="570" width="195" height="145" rx="18" class="card"/>
+  <text x="982" y="609" class="h3" text-anchor="middle">Protected R2</text>
+  <text x="907" y="645" class="body">encrypted AFF + OGG first</text>
+  <text x="907" y="671" class="body">publish allowlist last</text>
+  <text x="907" y="696" class="gate">PASS</text>
+  <path d="M610 642H650" class="orange-line"/>
+  <path d="M845 642H885" class="orange-line"/>
+  <path d="M315 505C350 640 360 640 415 640" class="orange-line"/>
+  <rect x="1165" y="215" width="350" height="430" rx="28" class="green"/>
+  <text x="1340" y="258" class="h2" text-anchor="middle">Server contract</text>
+  <text x="1340" y="286" class="body" text-anchor="middle">all inventories agree before download</text>
+  <rect x="1195" y="325" width="290" height="62" rx="14" class="card"/>
+  <text x="1215" y="351" class="h3">song_metadata</text>
+  <text x="1215" y="374" class="small">files + plaintext MD5</text>
+  <rect x="1195" y="405" width="290" height="62" rx="14" class="card"/>
+  <text x="1215" y="431" class="h3">Entitlement</text>
+  <text x="1215" y="454" class="small">pack + 62-slot projection</text>
+  <rect x="1195" y="485" width="290" height="62" rx="14" class="card"/>
+  <text x="1215" y="511" class="h3">Chart constant</text>
+  <text x="1215" y="534" class="small">rating class has real value</text>
+  <rect x="1195" y="565" width="290" height="62" rx="14" class="card"/>
+  <text x="1215" y="591" class="h3">Signed delivery</text>
+  <text x="1215" y="614" class="small">Worker and server share secret</text>
+  <path d="M1080 317H1165" class="purple-line"/>
+  <path d="M1080 642H1135V565H1165" class="orange-line"/>
+  <text x="1165" y="690" class="section">STAGING CLIENT PROOF</text>
+  <line x1="1190" y1="748" x2="1500" y2="748" stroke="#d9dee7" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="1205" cy="748" r="22" fill="#f1fbf7" stroke="#23936d" stroke-width="2"/>
+  <path d="M1195 748l7 7 14-17" fill="none" stroke="#23936d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1205" y="795" class="h3" text-anchor="middle">Download</text>
+  <circle cx="1300" cy="748" r="22" fill="#f1fbf7" stroke="#23936d" stroke-width="2"/>
+  <path d="M1290 748l7 7 14-17" fill="none" stroke="#23936d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1300" y="795" class="h3" text-anchor="middle">Play</text>
+  <circle cx="1395" cy="748" r="22" fill="#f1fbf7" stroke="#23936d" stroke-width="2"/>
+  <path d="M1385 748l7 7 14-17" fill="none" stroke="#23936d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1395" y="795" class="h3" text-anchor="middle">Score</text>
+  <circle cx="1490" cy="748" r="22" fill="#f1fbf7" stroke="#23936d" stroke-width="2"/>
+  <path d="M1480 748l7 7 14-17" fill="none" stroke="#23936d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1490" y="795" class="h3" text-anchor="middle">Restart</text>
+  <path d="M1340 645V720" class="green-line"/>
+  <rect x="380" y="790" width="730" height="50" rx="18" class="green"/>
+  <text x="745" y="821" class="gate" text-anchor="middle">PROMOTE ONLY THE EXACT STAGING-TESTED BUNDLE, METADATA, ALLOWLIST, AND OBJECT BYTES</text>
+  <path d="M1490 770C1490 825 1180 825 1110 815" class="green-line"/>
+  <text x="48" y="875" class="small">Visibility is only the first boundary. Acceptance requires download, decryption, audio, gameplay, score, and cold restart.</text>
+</svg>

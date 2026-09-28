@@ -9,6 +9,8 @@ Download the original application yourself; the commercial APK and signing
 keys are not stored in this repository. GitHub contains the build process,
 verification code and version-locked native and Smali patches.
 
+![Chapter 06 Android client assembly line](../images/guides/06-android-client-assembly.svg)
+
 ## What "matches the release" means
 
 The 7.0.255 reference client has this contract:

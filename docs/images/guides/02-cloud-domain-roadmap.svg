@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Chapter 02 cloud and domain roadmap</title>
+  <desc id="desc">Eleven steps grouped into account and domain foundation, Lightsail server setup, and connection verification. The result is a fixed-IP Ubuntu server reachable by SSH with API and Link Play DNS records.</desc>
+  <defs>
+    <linearGradient id="foundation" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#edf8ff"/><stop offset="1" stop-color="#f7f3ff"/></linearGradient>
+    <linearGradient id="server" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff7e9"/><stop offset="1" stop-color="#effbf6"/></linearGradient>
+    <linearGradient id="verify" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#effbf6"/><stop offset="1" stop-color="#edf8ff"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#17213a" flood-opacity="0.07"/></filter>
+    <style>
+      text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+      .chapter { font-size: 14px; font-weight: 700; letter-spacing: 1.8px; fill: #6f788a; }
+      .title { font-size: 42px; font-weight: 750; letter-spacing: -1.2px; }
+      .subtitle { font-size: 18px; fill: #59667d; }
+      .badge { font-size: 12px; font-weight: 600; fill: #526079; }
+      .phase { font-size: 14px; font-weight: 750; letter-spacing: 1.4px; }
+      .phase-sub { font-size: 13px; fill: #657086; }
+      .step { font-size: 13px; font-weight: 750; fill: #ffffff; }
+      .card-title { font-size: 19px; font-weight: 700; }
+      .card-text { font-size: 13px; fill: #4d5a71; }
+      .gate { font-size: 12px; font-weight: 700; fill: #167958; }
+      .ready-title { font-size: 22px; font-weight: 750; fill: #126b4d; }
+      .ready-text { font-size: 13px; fill: #3f6256; }
+      .card { fill: #ffffff; stroke: #d1d8e4; stroke-width: 1.3; filter: url(#shadow); }
+      .flow { fill: none; stroke: #778195; stroke-width: 2; marker-end: url(#arrow); }
+      .rule { stroke: #e0e4eb; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
+  <text x="75" y="58" class="chapter">CHAPTER 02</text>
+  <text x="75" y="98" class="title">Create the cloud server and connect a domain</text>
+  <text x="75" y="128" class="subtitle">From empty accounts to a fixed-IP Ubuntu server with verified DNS and SSH access</text>
+
+  <rect x="1132" y="49" width="120" height="28" rx="14" fill="#edf8ff" stroke="#78bfe8"/>
+  <text x="1192" y="68" text-anchor="middle" class="badge">45–90 MIN</text>
+  <rect x="1264" y="49" width="126" height="28" rx="14" fill="#f5f1ff" stroke="#9b82eb"/>
+  <text x="1327" y="68" text-anchor="middle" class="badge">BROWSER FIRST</text>
+  <rect x="1402" y="49" width="145" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
+  <text x="1474" y="68" text-anchor="middle" class="badge">VERIFY EACH GATE</text>
+
+  <!-- Phase 1 -->
+  <rect x="48" y="168" width="1504" height="202" rx="22" fill="url(#foundation)" stroke="#b3b9e8" stroke-width="1.3"/>
+  <text x="72" y="199" class="phase">FOUNDATION</text>
+  <text x="196" y="199" class="phase-sub">Secure accounts, choose the domain, then delegate DNS</text>
+
+  <rect x="72" y="220" width="342" height="126" rx="16" class="card"/>
+  <circle cx="103" cy="249" r="18" fill="#467fd6"/><text x="103" y="254" text-anchor="middle" class="step">01</text>
+  <text x="134" y="250" class="card-title">Secure Cloudflare</text>
+  <text x="94" y="280" class="card-text">Create the project account · enable 2FA</text>
+  <text x="94" y="302" class="card-text">Save recovery codes outside the repository</text>
+  <text x="94" y="329" class="gate">PASS · sign out and back in with 2FA</text>
+
+  <rect x="446" y="220" width="342" height="126" rx="16" class="card"/>
+  <circle cx="477" cy="249" r="18" fill="#5d72d8"/><text x="477" y="254" text-anchor="middle" class="step">02</text>
+  <text x="508" y="250" class="card-title">Register the domain</text>
+  <text x="468" y="280" class="card-text">Choose free .id.vn or a suitable paid domain</text>
+  <text x="468" y="302" class="card-text">Record MY_DOMAIN and check renewal cost</text>
+  <text x="468" y="329" class="gate">PASS · registrar shows the domain as active</text>
+
+  <rect x="820" y="220" width="342" height="126" rx="16" class="card"/>
+  <circle cx="851" cy="249" r="18" fill="#7656dc"/><text x="851" y="254" text-anchor="middle" class="step">03</text>
+  <text x="882" y="250" class="card-title">Connect Cloudflare DNS</text>
+  <text x="842" y="280" class="card-text">Add the domain · select Free · replace nameservers</text>
+  <text x="842" y="302" class="card-text">Re-enable DNSSEC only after activation</text>
+  <text x="842" y="329" class="gate">PASS · Cloudflare zone status is Active</text>
+
+  <rect x="1194" y="220" width="334" height="126" rx="16" class="card"/>
+  <circle cx="1225" cy="249" r="18" fill="#8a63dc"/><text x="1225" y="254" text-anchor="middle" class="step">04</text>
+  <text x="1256" y="250" class="card-title">Secure AWS</text>
+  <text x="1216" y="280" class="card-text">Verify the account · enable root MFA</text>
+  <text x="1216" y="302" class="card-text">Record credits or create a USD 20 budget alert</text>
+  <text x="1216" y="329" class="gate">PASS · billing and expiry are understood</text>
+
+  <path d="M414 283H446" class="flow"/><path d="M788 283H820" class="flow"/><path d="M1162 283H1194" class="flow"/>
+
+  <!-- Phase 2 -->
+  <rect x="48" y="390" width="1504" height="202" rx="22" fill="url(#server)" stroke="#d9bd7f" stroke-width="1.3"/>
+  <text x="72" y="421" class="phase">LIGHTSAIL SERVER</text>
+  <text x="242" y="421" class="phase-sub">Create the machine, attach its permanent address, and restrict administration</text>
+
+  <rect x="72" y="442" width="342" height="126" rx="16" class="card"/>
+  <circle cx="103" cy="471" r="18" fill="#e09a27"/><text x="103" y="476" text-anchor="middle" class="step">05</text>
+  <text x="134" y="472" class="card-title">Create Lightsail</text>
+  <text x="94" y="502" class="card-text">Singapore · Ubuntu 24.04 · 2 GB · 2 vCPU</text>
+  <text x="94" y="524" class="card-text">60 GB SSD · instance name akaine-server</text>
+  <text x="94" y="551" class="gate">PASS · instance status is Running</text>
+
+  <rect x="446" y="442" width="342" height="126" rx="16" class="card"/>
+  <circle cx="477" cy="471" r="18" fill="#d58a16"/><text x="477" y="476" text-anchor="middle" class="step">06</text>
+  <text x="508" y="472" class="card-title">Attach a static IP</text>
+  <text x="468" y="502" class="card-text">Create it in the same region and attach it</text>
+  <text x="468" y="524" class="card-text">Record SERVER_IP exactly</text>
+  <text x="468" y="551" class="gate">PASS · static IP shows akaine-server attached</text>
+
+  <rect x="820" y="442" width="342" height="126" rx="16" class="card"/>
+  <circle cx="851" cy="471" r="18" fill="#43a981"/><text x="851" y="476" text-anchor="middle" class="step">07</text>
+  <text x="882" y="472" class="card-title">Store the SSH key</text>
+  <text x="842" y="502" class="card-text">Download the Singapore private key</text>
+  <text x="842" y="524" class="card-text">Keep the .pem file private and outside Git</text>
+  <text x="842" y="551" class="gate">PASS · the key exists in your private folder</text>
+
+  <rect x="1194" y="442" width="334" height="126" rx="16" class="card"/>
+  <circle cx="1225" cy="471" r="18" fill="#23936d"/><text x="1225" y="476" text-anchor="middle" class="step">08</text>
+  <text x="1256" y="472" class="card-title">Lock the firewall</text>
+  <text x="1216" y="502" class="card-text">SSH 22 → your current IP/32</text>
+  <text x="1216" y="524" class="card-text">80/443 public · Link Play ports optional</text>
+  <text x="1216" y="551" class="gate">PASS · SSH is not open to the whole Internet</text>
+
+  <path d="M414 505H446" class="flow"/><path d="M788 505H820" class="flow"/><path d="M1162 505H1194" class="flow"/>
+
+  <!-- Phase 3 -->
+  <rect x="48" y="612" width="1504" height="224" rx="22" fill="url(#verify)" stroke="#8ccdb5" stroke-width="1.3"/>
+  <text x="72" y="643" class="phase">CONNECT &amp; VERIFY</text>
+  <text x="246" y="643" class="phase-sub">Prove SSH first, publish only the required records, then test external DNS</text>
+
+  <rect x="72" y="664" width="342" height="146" rx="16" class="card"/>
+  <circle cx="103" cy="693" r="18" fill="#318bd0"/><text x="103" y="698" text-anchor="middle" class="step">09</text>
+  <text x="134" y="694" class="card-title">Test SSH from Windows</text>
+  <text x="94" y="724" class="card-text">PowerShell · ssh -i KEY ubuntu@SERVER_IP</text>
+  <text x="94" y="746" class="card-text">Trust the fingerprint only for the static IP</text>
+  <text x="94" y="780" class="gate">PASS · ubuntu@ip-…:$ prompt appears</text>
+
+  <rect x="446" y="664" width="342" height="146" rx="16" class="card"/>
+  <circle cx="477" cy="693" r="18" fill="#467fd6"/><text x="477" y="698" text-anchor="middle" class="step">10</text>
+  <text x="508" y="694" class="card-title">Create the first DNS records</text>
+  <text x="468" y="724" class="card-text">A api → static IP · DNS only</text>
+  <text x="468" y="746" class="card-text">A link → static IP · DNS only · no assets yet</text>
+  <text x="468" y="780" class="gate">PASS · exactly two records, both grey-cloud</text>
+
+  <rect x="820" y="664" width="342" height="146" rx="16" class="card"/>
+  <circle cx="851" cy="693" r="18" fill="#23936d"/><text x="851" y="698" text-anchor="middle" class="step">11</text>
+  <text x="882" y="694" class="card-title">Verify with 1.1.1.1</text>
+  <text x="842" y="724" class="card-text">Query api.your-domain and link.your-domain</text>
+  <text x="842" y="746" class="card-text">Wait for propagation; never add duplicate retries</text>
+  <text x="842" y="780" class="gate">PASS · both names return SERVER_IP</text>
+
+  <rect x="1194" y="664" width="334" height="146" rx="16" fill="#f8fffb" stroke="#50bd96" stroke-width="1.8" filter="url(#shadow)"/>
+  <text x="1218" y="696" class="ready-title">Ready for Chapter 03</text>
+  <line x1="1218" y1="711" x2="1504" y2="711" class="rule"/>
+  <text x="1218" y="738" class="ready-text">✓ Cloudflare zone Active</text>
+  <text x="1218" y="761" class="ready-text">✓ Lightsail Running + static IP</text>
+  <text x="1218" y="784" class="ready-text">✓ SSH and both DNS names verified</text>
+
+  <path d="M414 737H446" class="flow"/><path d="M788 737H820" class="flow"/><path d="M1162 737H1194" class="flow"/>
+
+  <path d="M1361 346V379H243V390" class="flow"/>
+  <path d="M1361 568V601H243V612" class="flow"/>
+
+  <text x="48" y="875" class="phase-sub">Stop on the first failed gate. Do not open SSH to everyone, duplicate DNS records, or create the assets hostname in this chapter.</text>
+</svg>

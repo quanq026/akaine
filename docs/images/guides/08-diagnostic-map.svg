@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Chapter 08: Diagnose the failing layer before changing the system</title>
+  <desc id="desc">Observed symptoms route to likely system layers. Evidence progresses from static inspection through HTTP proof to client runtime proof, while every diagnosis preserves the first failure and changes one variable.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#526079"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#318bd0"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#23936d"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d88612"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7656dc"/></marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#17213a" flood-opacity="0.07"/></filter>
+    <style>
+text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+.chapter { font-size: 14px; font-weight: 700; letter-spacing: 1.8px; fill: #6f788a; }
+.title { font-size: 40px; font-weight: 750; letter-spacing: -1.1px; }
+.subtitle { font-size: 17px; fill: #59667d; }
+.section { font-size: 13px; font-weight: 750; letter-spacing: 1.25px; fill: #5d687d; }
+.h2 { font-size: 22px; font-weight: 720; }
+.h3 { font-size: 17px; font-weight: 700; }
+.body { font-size: 14px; fill: #46536a; }
+.small { font-size: 12px; fill: #657086; }
+.micro { font-size: 11px; fill: #657086; }
+.gate { font-size: 12px; font-weight: 700; fill: #167958; }
+.card { fill: #fff; stroke: #d1d8e4; stroke-width: 1.3; filter: url(#shadow); }
+.blue { fill: #f2f9ff; stroke: #78bfe8; stroke-width: 1.5; }
+.purple { fill: #f7f3ff; stroke: #9b82eb; stroke-width: 1.5; }
+.green { fill: #f1fbf7; stroke: #50bd96; stroke-width: 1.5; }
+.orange { fill: #fff8ec; stroke: #efb04d; stroke-width: 1.5; }
+.gray { fill: #f8f9fb; stroke: #d7dde7; stroke-width: 1.3; }
+.red { fill: #fff5f6; stroke: #ef8995; stroke-width: 1.5; }
+.line { fill: none; stroke: #526079; stroke-width: 2.2; marker-end: url(#arrow); }
+.dash { fill: none; stroke: #778195; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-gray); }
+.blue-line { fill: none; stroke: #318bd0; stroke-width: 2.3; marker-end: url(#arrow-blue); }
+.green-line { fill: none; stroke: #23936d; stroke-width: 2.3; marker-end: url(#arrow-green); }
+.orange-line { fill: none; stroke: #d88612; stroke-width: 2.3; marker-end: url(#arrow-orange); }
+.purple-line { fill: none; stroke: #7656dc; stroke-width: 2.3; marker-end: url(#arrow-purple); }
+.rule { stroke: #dde2ea; stroke-width: 1; }
+</style>
+  </defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
+  <text x="75" y="58" class="chapter">CHAPTER 08</text>
+  <text x="75" y="98" class="title">Diagnose the failing layer before changing the system</text>
+  <text x="75" y="128" class="subtitle">A symptom-routing map with an evidence ladder and one-variable investigation loop</text>
+  <rect x="1238" y="49" width="160" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
+  <text x="1318.0" y="68" class="small" text-anchor="middle">DIAGNOSTIC MAP</text>
+  <rect x="1410" y="49" width="130" height="28" rx="14" fill="#fff5f6" stroke="#ef8995"/>
+  <text x="1475.0" y="68" class="small" text-anchor="middle">NO GUESSING</text>
+  <text x="70" y="187" class="section">EVIDENCE LADDER</text>
+  <rect x="70" y="220" width="220" height="76" rx="18" class="gray"/>
+  <text x="90" y="252" class="h3">1 · Static clue</text>
+  <text x="90" y="278" class="small">hash · manifest · code</text>
+  <path d="M290 258.0H320" class="line"/>
+  <rect x="320" y="205" width="220" height="91" rx="18" class="blue"/>
+  <text x="340" y="237" class="h3">2 · Service proof</text>
+  <text x="340" y="263" class="small">local HTTP · logs · DB</text>
+  <path d="M540 250.5H570" class="line"/>
+  <rect x="570" y="190" width="220" height="106" rx="18" class="purple"/>
+  <text x="590" y="222" class="h3">3 · Route proof</text>
+  <text x="590" y="248" class="small">public DNS · CDN · API</text>
+  <path d="M790 243.0H820" class="line"/>
+  <rect x="820" y="175" width="255" height="121" rx="18" class="green"/>
+  <text x="840" y="207" class="h3">4 · Runtime proof</text>
+  <text x="840" y="233" class="small">cold client · restart · play</text>
+  <rect x="1120" y="175" width="410" height="121" rx="20" class="red"/>
+  <text x="1146" y="211" class="h3">Capture the first failure before retrying</text>
+  <text x="1146" y="242" class="body">time · exact user action · response · logcat</text>
+  <text x="1146" y="267" class="body">Later success does not erase earlier evidence</text>
+  <circle cx="250" cy="520" r="118" fill="#f8f9fb" stroke="#526079" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="250" y="487" class="h2" text-anchor="middle">WHAT DID</text>
+  <text x="250" y="517" class="h2" text-anchor="middle">THE PLAYER</text>
+  <text x="250" y="547" class="h2" text-anchor="middle">OBSERVE?</text>
+  <text x="250" y="584" class="small" text-anchor="middle">Name behavior, not cause</text>
+  <rect x="520" y="350" width="410" height="130" rx="22" class="blue"/>
+  <text x="544" y="387" class="h3">Session or API action fails</text>
+  <text x="544" y="418" class="section">CLIENT ROUTING → SERVER</text>
+  <text x="544" y="447" class="small">login is only one route</text>
+  <text x="544" y="469" class="small">check aggregate, bundle, shared API base</text>
+  <rect x="1010" y="350" width="480" height="130" rx="22" class="purple"/>
+  <text x="1034" y="387" class="h3">100%, black card, missing or dead tile</text>
+  <text x="1034" y="418" class="section">BUNDLE → SELECTOR → REGISTRY</text>
+  <text x="1034" y="447" class="small">catalogue references · assets · active-state gate</text>
+  <text x="1034" y="469" class="small">restart proves persisted content</text>
+  <rect x="520" y="545" width="410" height="145" rx="22" class="orange"/>
+  <text x="544" y="582" class="h3">Download icon, FMOD, or gameplay failure</text>
+  <text x="544" y="613" class="section">METADATA → R2 → AKFC → AUDIO</text>
+  <text x="544" y="642" class="small">declared files · allowlist · object bytes · hashes</text>
+  <text x="544" y="664" class="small">use the exact requested filename and class</text>
+  <rect x="1010" y="545" width="480" height="145" rx="22" class="green"/>
+  <text x="1034" y="582" class="h3">Wrong score, PTT, character, or profile</text>
+  <text x="1034" y="613" class="section">DATABASE → VERSION PROJECTION</text>
+  <text x="1034" y="642" class="small">chart constant · canonical ID · app-version mapping</text>
+  <text x="1034" y="664" class="small">compare stored truth with serialized response</text>
+  <path d="M345 460C410 405 445 415 520 415" class="blue-line"/>
+  <path d="M350 490C560 300 900 300 1010 350" class="purple-line"/>
+  <path d="M350 550C420 600 455 615 520 615" class="orange-line"/>
+  <path d="M340 585C590 755 790 755 1010 615" class="green-line"/>
+  <rect x="520" y="735" width="970" height="92" rx="22" class="gray"/>
+  <text x="550" y="771" class="h3">Investigation loop</text>
+  <text x="716" y="771" class="body">first evidence</text>
+  <text x="874" y="771" class="h3">→</text>
+  <text x="915" y="771" class="body">known-good control</text>
+  <text x="1100" y="771" class="h3">→</text>
+  <text x="1140" y="771" class="body">change one variable</text>
+  <text x="716" y="804" class="gate">retest the same complete route; widen scope only when evidence demands it</text>
+  <path d="M250 638C250 805 380 805 520 781" class="dash"/>
+  <text x="48" y="875" class="small">Do not call a process death a crash without fatal evidence, or call a CDN HIT a successful client download without runtime proof.</text>
+</svg>

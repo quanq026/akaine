@@ -10,6 +10,8 @@ Bạn phải tự tải ứng dụng gốc. Repository không chứa APK thươn
 GitHub chỉ chứa quy trình build, mã kiểm tra và patch native/Smali dành riêng cho
 7.0.255.
 
+![Dây chuyền lắp ráp Android client của chương 06](../../images/guides/06-android-client-assembly.svg)
+
 ## "Khớp với release" nghĩa là gì
 
 Client tham chiếu 7.0.255 có các tiêu chí sau:

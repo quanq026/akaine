@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Chapter 05: Deploy the complete cloud runtime</title>
+  <desc id="desc">A workstation publishes immutable content to Cloudflare R2 and deploys the Python game server to Lightsail. The Worker and server share a signing secret; the bot and backups connect to the same runtime.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#526079"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#318bd0"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#23936d"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d88612"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7656dc"/></marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#17213a" flood-opacity="0.07"/></filter>
+    <style>
+text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
+.chapter { font-size: 14px; font-weight: 700; letter-spacing: 1.8px; fill: #6f788a; }
+.title { font-size: 40px; font-weight: 750; letter-spacing: -1.1px; }
+.subtitle { font-size: 17px; fill: #59667d; }
+.section { font-size: 13px; font-weight: 750; letter-spacing: 1.25px; fill: #5d687d; }
+.h2 { font-size: 22px; font-weight: 720; }
+.h3 { font-size: 17px; font-weight: 700; }
+.body { font-size: 14px; fill: #46536a; }
+.small { font-size: 12px; fill: #657086; }
+.micro { font-size: 11px; fill: #657086; }
+.gate { font-size: 12px; font-weight: 700; fill: #167958; }
+.card { fill: #fff; stroke: #d1d8e4; stroke-width: 1.3; filter: url(#shadow); }
+.blue { fill: #f2f9ff; stroke: #78bfe8; stroke-width: 1.5; }
+.purple { fill: #f7f3ff; stroke: #9b82eb; stroke-width: 1.5; }
+.green { fill: #f1fbf7; stroke: #50bd96; stroke-width: 1.5; }
+.orange { fill: #fff8ec; stroke: #efb04d; stroke-width: 1.5; }
+.gray { fill: #f8f9fb; stroke: #d7dde7; stroke-width: 1.3; }
+.red { fill: #fff5f6; stroke: #ef8995; stroke-width: 1.5; }
+.line { fill: none; stroke: #526079; stroke-width: 2.2; marker-end: url(#arrow); }
+.dash { fill: none; stroke: #778195; stroke-width: 2; stroke-dasharray: 7 6; marker-end: url(#arrow-gray); }
+.blue-line { fill: none; stroke: #318bd0; stroke-width: 2.3; marker-end: url(#arrow-blue); }
+.green-line { fill: none; stroke: #23936d; stroke-width: 2.3; marker-end: url(#arrow-green); }
+.orange-line { fill: none; stroke: #d88612; stroke-width: 2.3; marker-end: url(#arrow-orange); }
+.purple-line { fill: none; stroke: #7656dc; stroke-width: 2.3; marker-end: url(#arrow-purple); }
+.rule { stroke: #dde2ea; stroke-width: 1; }
+</style>
+  </defs>
+  <rect width="1600" height="900" fill="#fff"/>
+  <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
+  <text x="75" y="58" class="chapter">CHAPTER 05</text>
+  <text x="75" y="98" class="title">Deploy the complete cloud runtime</text>
+  <text x="75" y="128" class="subtitle">A topology of R2 content delivery, protected routes, the Lightsail API, Discord tools, and recovery</text>
+  <rect x="1240" y="49" width="190" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
+  <text x="1335.0" y="68" class="small" text-anchor="middle">DEPLOYMENT TOPOLOGY</text>
+  <rect x="1442" y="49" width="120" height="28" rx="14" fill="#f5f1ff" stroke="#9b82eb"/>
+  <text x="1502.0" y="68" class="small" text-anchor="middle">05 + 05a–05c</text>
+  <rect x="55" y="255" width="260" height="350" rx="28" class="gray"/>
+  <text x="185" y="303" class="h2" text-anchor="middle">Operator workstation</text>
+  <text x="185" y="332" class="body" text-anchor="middle">verified private inputs</text>
+  <rect x="82" y="375" width="206" height="80" rx="18" class="blue"/>
+  <text x="105" y="407" class="h3">Immutable release objects</text>
+  <text x="105" y="433" class="small">bundle · songs · allowlist</text>
+  <rect x="82" y="482" width="206" height="80" rx="18" class="orange"/>
+  <text x="105" y="514" class="h3">Temporary R2 credential</text>
+  <text x="105" y="540" class="small">revoked after upload</text>
+  <rect x="370" y="174" width="500" height="580" rx="30" fill="#faf8ff" stroke="#9b82eb" stroke-width="2"/>
+  <text x="400" y="211" class="section">CLOUDFLARE EDGE</text>
+  <rect x="402" y="240" width="210" height="165" rx="18" class="green"/>
+  <text x="507" y="278" class="h2" text-anchor="middle">Private R2 bucket</text>
+  <text x="425" y="313" class="body">Bundle manifests + parts</text>
+  <text x="425" y="339" class="body">Songs and selector assets</text>
+  <text x="425" y="365" class="body">Private protected namespace</text>
+  <rect x="630" y="240" width="208" height="165" rx="18" class="purple"/>
+  <text x="734" y="278" class="h2" text-anchor="middle">Protected Worker</text>
+  <text x="652" y="313" class="body">R2 binding + allowlist</text>
+  <text x="652" y="339" class="body">Signed URL verification</text>
+  <text x="652" y="365" class="body">Private path returns 403</text>
+  <rect x="402" y="445" width="436" height="115" rx="18" class="blue"/>
+  <text x="430" y="482" class="h3">Custom asset domain + cache rules</text>
+  <text x="430" y="511" class="body">Long TTL: immutable bundle/song objects</text>
+  <text x="430" y="537" class="gate">Never cache: login, scores, content-bundle decisions</text>
+  <path d="M612 323H630" class="green-line"/>
+  <rect x="402" y="600" width="436" height="90" rx="18" class="gray"/>
+  <text x="430" y="635" class="h3">DNS + HTTPS API proxy</text>
+  <text x="430" y="662" class="body">api.your-domain forwards dynamic requests to nginx</text>
+  <rect x="925" y="174" width="480" height="580" rx="30" fill="#f4fcf8" stroke="#50bd96" stroke-width="2"/>
+  <text x="955" y="211" class="section">AWS LIGHTSAIL</text>
+  <rect x="957" y="240" width="416" height="92" rx="18" class="orange"/>
+  <text x="985" y="277" class="h2">nginx + HTTPS</text>
+  <text x="985" y="305" class="body">Public gateway; Python remains on 127.0.0.1</text>
+  <rect x="957" y="365" width="255" height="250" rx="18" class="green"/>
+  <text x="1084" y="405" class="h2" text-anchor="middle">Python game server</text>
+  <text x="980" y="444" class="body">Accounts · sessions · saves</text>
+  <text x="980" y="474" class="body">Scores · game state</text>
+  <text x="980" y="504" class="body">Bundle and song authorization</text>
+  <text x="980" y="534" class="body">Signed protected URLs</text>
+  <text x="980" y="588" class="gate">systemd · fail closed · no-store API</text>
+  <rect x="1230" y="365" width="143" height="120" rx="18" class="blue"/>
+  <text x="1301" y="405" class="h3" text-anchor="middle">SQLite</text>
+  <text x="1301" y="435" class="small" text-anchor="middle">players</text>
+  <text x="1301" y="458" class="small" text-anchor="middle">scores · saves</text>
+  <rect x="1230" y="505" width="143" height="110" rx="18" class="orange"/>
+  <text x="1301" y="543" class="h3" text-anchor="middle">Lygus Bot</text>
+  <text x="1301" y="572" class="small" text-anchor="middle">accounts</text>
+  <text x="1301" y="594" class="small" text-anchor="middle">profiles · B30</text>
+  <path d="M1165 332V365" class="green-line"/>
+  <path d="M1212 465H1230" class="green-line"/>
+  <path d="M1212 555H1230" class="orange-line"/>
+  <path d="M315 414H402" class="blue-line"/>
+  <text x="331" y="399" class="small">UPLOAD</text>
+  <path d="M838 323C900 323 920 408 957 408" fill="none" stroke="#7656dc" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="849" y="310" class="small">shared signing contract</text>
+  <path d="M838 645C900 645 910 286 957 286" class="blue-line"/>
+  <text x="858" y="630" class="small">API</text>
+  <rect x="935" y="675" width="438" height="78" rx="18" class="gray"/>
+  <text x="960" y="706" class="h3">Off-server backup</text>
+  <text x="960" y="732" class="small">database + config + signing secret · hash + restore validation</text>
+  <path d="M1301 615V675" class="dash"/>
+  <rect x="370" y="790" width="1035" height="62" rx="18" class="green"/>
+  <text x="397" y="828" class="section">ACCEPTANCE</text>
+  <text x="515" y="828" class="body">public HTTPS health  →  bundle API once  →  bot online  →  backup copied off-server and verified</text>
+  <path d="M1165 754V790" class="green-line"/>
+  <text x="48" y="875" class="small">The temporary upload key disappears after release; immutable bytes, service configuration, and a tested recovery path remain.</text>
+</svg>

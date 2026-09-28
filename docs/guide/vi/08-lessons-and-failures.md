@@ -10,6 +10,8 @@ Những sai lầm tốn thời gian nhất thường đến từ việc sửa nh
 wrapper, native game code, content bundle, kho bài remote, server metadata, account data
 và nhiều lớp cache. Một tầng pass không chứng minh tầng tiếp theo cũng đúng.
 
+![Bản đồ chẩn đoán dựa trên bằng chứng của chương 08](../../images/guides/08-diagnostic-map.svg)
+
 ## Dùng đúng mức bằng chứng
 
 Hãy dùng mô tả hẹp và chính xác nhất khi báo cáo kết quả:

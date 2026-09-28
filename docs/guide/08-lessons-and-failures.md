@@ -10,6 +10,8 @@ Android wrapper, native game code, a content bundle, remote song storage,
 server metadata, account data and several caches. A successful check in one
 layer says little about the next one.
 
+![Chapter 08 evidence-based diagnostic map](../images/guides/08-diagnostic-map.svg)
+
 ## Use evidence levels carefully
 
 Use the narrowest accurate description when reporting a result:

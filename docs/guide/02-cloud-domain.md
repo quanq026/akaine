@@ -4,6 +4,8 @@ In this chapter you will create the cloud accounts, start a Linux server and
 connect it to your domain. When the checks pass, you can reach the server at
 its fixed public IP and resolve `api.your-domain` through Cloudflare.
 
+![Chapter 02 cloud and domain roadmap](../images/guides/02-cloud-domain-roadmap.svg)
+
 ## Time and cost
 
 Plan for 45 to 90 minutes, plus any account-verification waiting time.
