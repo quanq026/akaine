@@ -2,6 +2,8 @@
 
 English | [Tiếng Việt](README.vi.md)
 
+![Akaine 7.0.255 platform overview](docs/images/akaine-platform-overview.svg)
+
 Akaine is a setup guide and public source repository for a server and Android
 client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
 and a new cloud account. You do not need previous experience with Linux,
