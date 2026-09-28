@@ -2,7 +2,7 @@
 
 [English](README.md) | Tiếng Việt
 
-![Tổng quan nền tảng Akaine 7.0.255](docs/images/akaine-platform-overview.svg)
+![Akaine](docs/images/akaine-hero.png)
 
 Akaine là bộ mã nguồn công khai kèm hướng dẫn dựng server và client Android
 dựa trên Arcaea 7.0.255. Hướng dẫn bắt đầu từ một máy Windows sạch và một tài
@@ -31,6 +31,8 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 - client Android kết nối tới tên miền của bạn
 - Discord bot để quản lý tài khoản và công cụ score
 - quy trình sao lưu và khôi phục
+
+![Tổng quan nền tảng Akaine 7.0.255](docs/images/akaine-platform-overview.svg)
 
 ## Trước khi bắt đầu
 
