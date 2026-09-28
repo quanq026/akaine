@@ -2,7 +2,7 @@
 
 English | [Tiếng Việt](README.vi.md)
 
-![Akaine 7.0.255 platform overview](docs/images/akaine-platform-overview.svg)
+![Akaine](docs/images/akaine-hero.png)
 
 Akaine is a setup guide and public source repository for a server and Android
 client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
@@ -32,6 +32,8 @@ By the end of the guide, you will have:
 - an Android client configured for your domain
 - a Discord bot for accounts and score tools
 - a backup and recovery routine
+
+![Akaine 7.0.255 platform overview](docs/images/akaine-platform-overview.svg)
 
 ## Before you start
 
