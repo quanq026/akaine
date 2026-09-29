@@ -63,8 +63,12 @@ sudo systemctl is-active lygus-bot.service
 Service phải báo `active`. Mở Discord và xác nhận bot online. Slash command được sync
 khi bot khởi động; có thể cần chờ để chúng xuất hiện. Test `/help` và `/ranking`, sau
 đó tạo hoặc liên kết test account rồi chạy `/profile`. Mỗi trang ranking có năm player;
-chỉ Discord user đã mở ranking mới điều khiển được nút Previous/Next. Với account mới,
-dùng **Cloud Sync → Download** trong game.
+chỉ Discord user đã mở ranking mới điều khiển được nút Previous/Next.
+`/profile` và `/recent` nhận Akaine username hoặc Discord user ở option
+`discord_profile`. Nếu paste `<@mention>` vào option username, bot cũng nhận diện được.
+Kết quả profile và recent-play thành công được đăng công khai trong channel để mọi
+người cùng xem; profile private của người khác vẫn bị ẩn. Với account mới, dùng
+**Cloud Sync → Download** trong game.
 
 Nếu service không active, chỉ kiểm tra status và log gần đây:
 
