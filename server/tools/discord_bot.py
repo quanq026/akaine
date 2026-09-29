@@ -23,6 +23,7 @@ from discord_bot_core import (
     BotRepository,
     PermissionDenied,
     Profile,
+    RankingPage,
     RecentScore,
     ValidationError,
 )
@@ -33,6 +34,7 @@ BRAND_COLOR = discord.Color.from_rgb(204, 67, 116)
 SUCCESS_COLOR = discord.Color.from_rgb(73, 185, 124)
 ERROR_COLOR = discord.Color.from_rgb(218, 68, 83)
 ACCOUNT_SETUP_NOTE = "**7.0 setup:** In Akaine, use **Cloud Sync → Download** to receive current unlock and content data."
+RANKING_PAGE_SIZE = 5
 
 
 @dataclass(frozen=True)
@@ -107,6 +109,27 @@ def recent_embed(username: str, scores: list[RecentScore]) -> discord.Embed:
         )
         embed.add_field(name=f"{index}. {score.song_id}", value=value, inline=False)
     embed.set_footer(text="Newest first · up to 5 results")
+    return embed
+
+
+def ranking_embed(ranking: RankingPage) -> discord.Embed:
+    embed = discord.Embed(title="Akaine Ranking", color=BRAND_COLOR)
+    if not ranking.entries:
+        embed.description = "No players yet."
+    else:
+        medals = {1: "🥇", 2: "🥈", 3: "🥉"}
+        embed.description = "\n".join(
+            f"{medals.get(entry.rank, f'`#{entry.rank}`')} "
+            f"**{discord.utils.escape_markdown(entry.username)}** · "
+            f"Potential `{entry.ptt}`"
+            for entry in ranking.entries
+        )
+    embed.set_footer(
+        text=(
+            f"Page {ranking.page}/{ranking.page_count} · "
+            f"{ranking.total_players} players · {RANKING_PAGE_SIZE} per page"
+        )
+    )
     return embed
 
 
@@ -195,6 +218,56 @@ class OwnerView(discord.ui.View):
             return True
         await send_ephemeral(interaction, content="This panel belongs to another Discord user.")
         return False
+
+
+class RankingView(OwnerView):
+    def __init__(self, bot: LygusBot, owner_id: int, ranking: RankingPage) -> None:
+        super().__init__(owner_id)
+        self.bot = bot
+        self.ranking = ranking
+        for child in self.children:
+            if not isinstance(child, discord.ui.Button):
+                continue
+            if child.custom_id == "lygus-ranking-previous":
+                child.disabled = ranking.page <= 1
+            elif child.custom_id == "lygus-ranking-next":
+                child.disabled = ranking.page >= ranking.page_count
+
+    async def show_page(self, interaction: discord.Interaction, page: int) -> None:
+        ranking = await asyncio.to_thread(
+            self.bot.repository.get_ranking_page,
+            page,
+            RANKING_PAGE_SIZE,
+        )
+        replacement = RankingView(self.bot, interaction.user.id, ranking)
+        await interaction.response.edit_message(
+            embed=ranking_embed(ranking),
+            view=replacement,
+        )
+
+    @discord.ui.button(
+        label="Previous",
+        style=discord.ButtonStyle.secondary,
+        custom_id="lygus-ranking-previous",
+    )
+    async def previous_button(
+        self,
+        interaction: discord.Interaction,
+        _: discord.ui.Button,
+    ) -> None:
+        await self.show_page(interaction, self.ranking.page - 1)
+
+    @discord.ui.button(
+        label="Next",
+        style=discord.ButtonStyle.secondary,
+        custom_id="lygus-ranking-next",
+    )
+    async def next_button(
+        self,
+        interaction: discord.Interaction,
+        _: discord.ui.Button,
+    ) -> None:
+        await self.show_page(interaction, self.ranking.page + 1)
 
 
 class CreateAccountModal(discord.ui.Modal, title="Create Akaine account"):
@@ -674,6 +747,20 @@ def build_bot(settings: BotSettings) -> LygusBot:
         except Exception as error:
             await handle_interaction_error(interaction, error)
 
+    @bot.tree.command(name="ranking", description="View all players ranked by Potential")
+    async def ranking_command(interaction: discord.Interaction) -> None:
+        await interaction.response.defer(thinking=True)
+        try:
+            ranking = await asyncio.to_thread(
+                bot.repository.get_ranking_page,
+                1,
+                RANKING_PAGE_SIZE,
+            )
+            view = RankingView(bot, interaction.user.id, ranking)
+            await interaction.followup.send(embed=ranking_embed(ranking), view=view)
+        except Exception as error:
+            await handle_interaction_error(interaction, error)
+
     @bot.tree.command(name="help", description="Show Lygus Bot commands")
     async def help_command(interaction: discord.Interaction) -> None:
         embed = discord.Embed(
@@ -682,7 +769,11 @@ def build_bot(settings: BotSettings) -> LygusBot:
             color=BRAND_COLOR,
         )
         embed.add_field(name="Account", value="`/account` · `/create` · `/link`", inline=False)
-        embed.add_field(name="Scores", value="`/profile` · `/recent` · `/b30`", inline=False)
+        embed.add_field(
+            name="Scores",
+            value="`/profile` · `/recent` · `/b30` · `/ranking`",
+            inline=False,
+        )
         embed.set_footer(text="Account changes are private and use Discord modals.")
         await interaction.response.send_message(embed=embed, ephemeral=True)
 

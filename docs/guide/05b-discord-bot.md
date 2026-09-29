@@ -1,8 +1,9 @@
 # Run the Discord bot
 
-The bot is optional. It creates and links game accounts, shows recent scores
-and renders B30. Complete the game server installation in chapter 5a first;
-the bot reads the same SQLite database.
+The bot is optional. It creates and links game accounts, shows recent scores,
+renders B30 and lists all players in a paginated ranking. Complete the game
+server installation in chapter 5a first; the bot reads the same SQLite
+database.
 
 ## Create the Discord application
 
@@ -60,7 +61,9 @@ sudo systemctl is-active lygus-bot.service
 
 The service must say `active`. Open Discord and confirm the bot is online.
 Its slash commands are synchronized when it starts; they may take time to
-appear. Test `/help`, then create or link a test account and request `/profile`.
+appear. Test `/help` and `/ranking`, then create or link a test account and
+request `/profile`. Ranking pages contain five players and the Previous/Next
+buttons can only be controlled by the Discord user who opened the ranking.
 For a new account, follow the bot's note to use **Cloud Sync → Download** in
 the game.
 
