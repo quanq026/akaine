@@ -4,6 +4,7 @@ import asyncio
 import json
 import logging
 import os
+import re
 import subprocess
 import sys
 import uuid
@@ -35,6 +36,7 @@ SUCCESS_COLOR = discord.Color.from_rgb(73, 185, 124)
 ERROR_COLOR = discord.Color.from_rgb(218, 68, 83)
 ACCOUNT_SETUP_NOTE = "**7.0 setup:** In Akaine, use **Cloud Sync → Download** to receive current unlock and content data."
 RANKING_PAGE_SIZE = 5
+DISCORD_MENTION_PATTERN = re.compile(r"^<@!?(\d{15,20})>$")
 
 
 @dataclass(frozen=True)
@@ -644,6 +646,16 @@ async def resolve_target_user(
             raise AccountNotFound("That Discord user has no linked Akaine account.")
         return accounts[0].user_id, interaction.user.id == discord_profile.id
     if username:
+        mention = DISCORD_MENTION_PATTERN.fullmatch(username.strip())
+        if mention:
+            discord_id = int(mention.group(1))
+            accounts = await asyncio.to_thread(
+                bot.repository.list_accounts,
+                discord_id,
+            )
+            if not accounts:
+                raise AccountNotFound("That Discord user has no linked Akaine account.")
+            return accounts[0].user_id, interaction.user.id == discord_id
         user_id = await asyncio.to_thread(bot.repository.find_user_id, username)
         try:
             await asyncio.to_thread(bot.repository.get_owned_account, interaction.user.id, user_id)
@@ -686,37 +698,54 @@ def build_bot(settings: BotSettings) -> LygusBot:
         await interaction.response.send_modal(LinkAccountModal(bot))
 
     @bot.tree.command(name="profile", description="View an Akaine profile")
-    @app_commands.describe(username="Optional Akaine username")
+    @app_commands.describe(
+        username="Optional Akaine username or @mention",
+        discord_profile="Optional Discord user; uses their most recently linked account",
+    )
     async def profile_command(
         interaction: discord.Interaction,
         username: Optional[str] = None,
+        discord_profile: Optional[discord.User] = None,
     ) -> None:
-        await interaction.response.defer(ephemeral=True, thinking=True)
+        await interaction.response.defer(thinking=True)
         try:
-            user_id, is_owner = await resolve_target_user(bot, interaction, username)
+            user_id, is_owner = await resolve_target_user(
+                bot,
+                interaction,
+                username,
+                discord_profile,
+            )
             profile = await asyncio.to_thread(bot.repository.get_profile, user_id)
             if not profile.is_public and not is_owner:
                 raise PermissionDenied("This profile is private.")
-            await interaction.followup.send(embed=profile_embed(profile), ephemeral=True)
+            await interaction.followup.send(embed=profile_embed(profile))
         except Exception as error:
             await handle_interaction_error(interaction, error)
 
     @bot.tree.command(name="recent", description="View the five latest plays")
-    @app_commands.describe(username="Optional Akaine username")
+    @app_commands.describe(
+        username="Optional Akaine username or @mention",
+        discord_profile="Optional Discord user; uses their most recently linked account",
+    )
     async def recent_command(
         interaction: discord.Interaction,
         username: Optional[str] = None,
+        discord_profile: Optional[discord.User] = None,
     ) -> None:
-        await interaction.response.defer(ephemeral=True, thinking=True)
+        await interaction.response.defer(thinking=True)
         try:
-            user_id, is_owner = await resolve_target_user(bot, interaction, username)
+            user_id, is_owner = await resolve_target_user(
+                bot,
+                interaction,
+                username,
+                discord_profile,
+            )
             profile = await asyncio.to_thread(bot.repository.get_profile, user_id)
             if not profile.is_public and not is_owner:
                 raise PermissionDenied("This profile is private.")
             scores = await asyncio.to_thread(bot.repository.get_recent_scores, user_id, 5)
             await interaction.followup.send(
                 embed=recent_embed(profile.username, scores),
-                ephemeral=True,
             )
         except Exception as error:
             await handle_interaction_error(interaction, error)

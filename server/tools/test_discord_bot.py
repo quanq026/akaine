@@ -18,6 +18,7 @@ class _Response:
     def __init__(self, done: bool) -> None:
         self._done = done
         self.sent: list[dict] = []
+        self.deferred: list[dict] = []
 
     def is_done(self) -> bool:
         return self._done
@@ -26,6 +27,9 @@ class _Response:
         if "view" in kwargs and kwargs["view"] is None:
             raise AssertionError("Discord rejects an explicit view=None")
         self.sent.append(kwargs)
+
+    async def defer(self, **kwargs) -> None:
+        self.deferred.append(kwargs)
 
 
 class _Followup:
@@ -39,9 +43,10 @@ class _Followup:
 
 
 class _Interaction:
-    def __init__(self, done: bool) -> None:
+    def __init__(self, done: bool, user_id: int = 100) -> None:
         self.response = _Response(done)
         self.followup = _Followup()
+        self.user = _User(user_id)
 
 
 class SendEphemeralTests(unittest.IsolatedAsyncioTestCase):
@@ -71,8 +76,27 @@ class _User:
 
 class _Repository:
     def list_accounts(self, discord_id: int):
-        if discord_id == 200:
+        if discord_id in (200, 697075731842203728):
             return [type("Account", (), {"user_id": 97})()]
+        return []
+
+
+class _PublicRepository(_Repository):
+    def get_profile(self, user_id: int):
+        return discord_bot.Profile(
+            user_id=user_id,
+            username="TaggedPlayer",
+            user_code="123456789",
+            ptt="12.34",
+            character_id=0,
+            character_level=20,
+            joined_at=None,
+            best_score_count=1,
+            recent_play_count=1,
+            is_public=True,
+        )
+
+    def get_recent_scores(self, user_id: int, limit: int):
         return []
 
 
@@ -88,6 +112,19 @@ class ResolveTargetTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(user_id, 97)
         self.assertFalse(is_owner)
 
+    async def test_discord_mention_in_username_field_resolves_linked_account(self) -> None:
+        bot = type("Bot", (), {"repository": _Repository()})()
+        interaction = type("Interaction", (), {"user": _User(100)})()
+
+        for mention in ("<@697075731842203728>", "<@!697075731842203728>"):
+            with self.subTest(mention=mention):
+                user_id, is_owner = await discord_bot.resolve_target_user(
+                    bot, interaction, mention
+                )
+
+                self.assertEqual(user_id, 97)
+                self.assertFalse(is_owner)
+
     async def test_rejects_two_target_types(self) -> None:
         bot = type("Bot", (), {"repository": _Repository()})()
         interaction = type("Interaction", (), {"user": _User(100)})()
@@ -96,6 +133,37 @@ class ResolveTargetTests(unittest.IsolatedAsyncioTestCase):
             await discord_bot.resolve_target_user(
                 bot, interaction, "sample-player", _User(200)
             )
+
+
+class PublicLookupCommandTests(unittest.IsolatedAsyncioTestCase):
+    async def test_profile_and_recent_support_discord_user_and_send_publicly(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            settings = discord_bot.BotSettings(
+                root / "game.db",
+                root / "mapping.db",
+                root / "create.py",
+                root / "b30.py",
+                root,
+                root / "bot.log",
+            )
+            bot = discord_bot.build_bot(settings)
+            bot.repository = _PublicRepository()
+            try:
+                for command_name in ("profile", "recent"):
+                    interaction = _Interaction(done=False)
+                    command = bot.tree.get_command(command_name)
+
+                    await command.callback(interaction, None, _User(200))
+
+                    self.assertEqual(
+                        interaction.response.deferred,
+                        [{"thinking": True}],
+                    )
+                    self.assertEqual(len(interaction.followup.sent), 1)
+                    self.assertNotIn("ephemeral", interaction.followup.sent[0])
+            finally:
+                await bot.close()
 
 
 class CharacterAssetTests(unittest.TestCase):

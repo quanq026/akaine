@@ -64,6 +64,10 @@ Its slash commands are synchronized when it starts; they may take time to
 appear. Test `/help` and `/ranking`, then create or link a test account and
 request `/profile`. Ranking pages contain five players and the Previous/Next
 buttons can only be controlled by the Discord user who opened the ranking.
+`/profile` and `/recent` accept either an Akaine username or a Discord user in
+the `discord_profile` option. A pasted `<@mention>` in the username option is
+also recognized. Successful profile and recent-play results are posted to the
+channel for everyone to see; another player's private profile remains hidden.
 For a new account, follow the bot's note to use **Cloud Sync → Download** in
 the game.
 
