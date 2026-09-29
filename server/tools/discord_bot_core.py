@@ -92,6 +92,21 @@ class RecentScore:
     miss_count: int
 
 
+@dataclass(frozen=True)
+class RankingEntry:
+    rank: int
+    username: str
+    ptt: str
+
+
+@dataclass(frozen=True)
+class RankingPage:
+    entries: tuple[RankingEntry, ...]
+    page: int
+    page_count: int
+    total_players: int
+
+
 def validate_username(username: str) -> str:
     value = username.strip()
     if not USERNAME_PATTERN.fullmatch(value):
@@ -606,3 +621,45 @@ class BotRepository:
             )
             for row in rows
         ]
+
+    def get_ranking_page(self, page: int, page_size: int = 5) -> RankingPage:
+        bounded_size = max(1, min(int(page_size), 25))
+        connection = self._connect(self.game_db_path)
+        try:
+            total_players = int(
+                connection.execute("SELECT COUNT(*) FROM user").fetchone()[0]
+            )
+            page_count = max(1, (total_players + bounded_size - 1) // bounded_size)
+            current_page = max(1, min(int(page), page_count))
+            offset = (current_page - 1) * bounded_size
+            rows = connection.execute(
+                """
+                SELECT
+                    user_id, name,
+                    CASE
+                        WHEN COALESCE(is_hide_rating, 0) = 1 THEN -1
+                        ELSE COALESCE(rating_ptt, -1)
+                    END AS public_rating_ptt
+                FROM user
+                ORDER BY public_rating_ptt DESC, user_id ASC
+                LIMIT ? OFFSET ?
+                """,
+                (bounded_size, offset),
+            ).fetchall()
+        finally:
+            connection.close()
+
+        entries = tuple(
+            RankingEntry(
+                rank=offset + index,
+                username=str(row["name"]),
+                ptt=format_ptt(row["public_rating_ptt"]),
+            )
+            for index, row in enumerate(rows, 1)
+        )
+        return RankingPage(
+            entries=entries,
+            page=current_page,
+            page_count=page_count,
+            total_players=total_players,
+        )

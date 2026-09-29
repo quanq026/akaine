@@ -1,6 +1,7 @@
 """Regression tests for Discord interaction response helpers."""
 
 import asyncio
+import sqlite3
 import sys
 import tempfile
 import unittest
@@ -9,6 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import discord_bot  # noqa: E402
+import discord_bot_core  # noqa: E402
 import b30_generator  # noqa: E402
 
 
@@ -109,3 +111,85 @@ class CharacterAssetTests(unittest.TestCase):
                 b30_generator.CHAR_PATH = original
 
         self.assertEqual(actual, str(expected))
+
+
+class RankingTests(unittest.TestCase):
+    def test_ranking_is_stable_and_uses_five_players_per_page(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            game_db = root / "game.db"
+            mapping_db = root / "mapping.db"
+            connection = sqlite3.connect(game_db)
+            try:
+                connection.execute(
+                    "CREATE TABLE user ("
+                    "user_id INTEGER PRIMARY KEY, name TEXT, rating_ptt INTEGER, "
+                    "is_hide_rating INTEGER DEFAULT 0)"
+                )
+                connection.executemany(
+                    "INSERT INTO user VALUES (?,?,?,?)",
+                    [
+                        (1, "Alpha", 1200, 0),
+                        (2, "Bravo", 1300, 0),
+                        (3, "Charlie", 1300, 0),
+                        (4, "Hidden", 1500, 1),
+                        (5, "Unrated", -1, 0),
+                        (6, "Delta", 1000, 0),
+                        (7, "Echo", 900, 0),
+                    ],
+                )
+                connection.commit()
+            finally:
+                connection.close()
+
+            repository = discord_bot.BotRepository(game_db, mapping_db)
+            first = repository.get_ranking_page(1)
+            second = repository.get_ranking_page(2)
+
+        self.assertEqual(first.total_players, 7)
+        self.assertEqual(first.page_count, 2)
+        self.assertEqual(len(first.entries), 5)
+        self.assertEqual(
+            [entry.username for entry in first.entries],
+            ["Bravo", "Charlie", "Alpha", "Delta", "Echo"],
+        )
+        self.assertEqual([entry.rank for entry in first.entries], [1, 2, 3, 4, 5])
+        self.assertEqual([entry.username for entry in second.entries], ["Hidden", "Unrated"])
+        self.assertEqual([entry.ptt for entry in second.entries], ["Hidden", "Hidden"])
+
+    def test_ranking_embed_contains_only_public_display_fields(self) -> None:
+        page = discord_bot.RankingPage(
+            entries=(
+                discord_bot_core.RankingEntry(1, "PlayerOne", "12.34"),
+            ),
+            page=1,
+            page_count=1,
+            total_players=1,
+        )
+
+        embed = discord_bot.ranking_embed(page)
+
+        self.assertIn("PlayerOne", embed.description)
+        self.assertIn("12.34", embed.description)
+        self.assertIn("5 per page", embed.footer.text)
+
+
+class RankingViewTests(unittest.IsolatedAsyncioTestCase):
+    async def test_pagination_buttons_match_page_boundaries(self) -> None:
+        bot = type("Bot", (), {})()
+        first = discord_bot.RankingPage((), 1, 2, 6)
+        last = discord_bot.RankingPage((), 2, 2, 6)
+
+        first_view = discord_bot.RankingView(bot, 100, first)
+        last_view = discord_bot.RankingView(bot, 100, last)
+        first_buttons = {
+            child.custom_id: child.disabled for child in first_view.children
+        }
+        last_buttons = {
+            child.custom_id: child.disabled for child in last_view.children
+        }
+
+        self.assertTrue(first_buttons["lygus-ranking-previous"])
+        self.assertFalse(first_buttons["lygus-ranking-next"])
+        self.assertFalse(last_buttons["lygus-ranking-previous"])
+        self.assertTrue(last_buttons["lygus-ranking-next"])

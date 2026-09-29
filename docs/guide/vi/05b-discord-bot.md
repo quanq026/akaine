@@ -2,9 +2,9 @@
 
 [English](../05b-discord-bot.md) | Tiếng Việt
 
-Bot là thành phần tùy chọn. Nó tạo và liên kết game account, hiển thị recent score và
-render B30. Hãy hoàn thành cài game server ở chương 5a trước; bot đọc cùng SQLite
-database.
+Bot là thành phần tùy chọn. Nó tạo và liên kết game account, hiển thị recent score,
+render B30 và liệt kê toàn bộ player theo bảng xếp hạng phân trang. Hãy hoàn thành cài
+game server ở chương 5a trước; bot đọc cùng SQLite database.
 
 ## Tạo Discord application
 
@@ -61,8 +61,9 @@ sudo systemctl is-active lygus-bot.service
 ```
 
 Service phải báo `active`. Mở Discord và xác nhận bot online. Slash command được sync
-khi bot khởi động; có thể cần chờ để chúng xuất hiện. Test `/help`, sau đó tạo hoặc
-liên kết test account rồi chạy `/profile`. Với account mới, làm theo ghi chú của bot:
+khi bot khởi động; có thể cần chờ để chúng xuất hiện. Test `/help` và `/ranking`, sau
+đó tạo hoặc liên kết test account rồi chạy `/profile`. Mỗi trang ranking có năm player;
+chỉ Discord user đã mở ranking mới điều khiển được nút Previous/Next. Với account mới,
 dùng **Cloud Sync → Download** trong game.
 
 Nếu service không active, chỉ kiểm tra status và log gần đây:
