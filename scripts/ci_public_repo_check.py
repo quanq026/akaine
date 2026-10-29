@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_BYTES = 95 * 1024 * 1024
-FORBIDDEN_SUFFIXES = {".apk", ".apks", ".xapk", ".cb", ".aff", ".ogg", ".wav", ".pem", ".key", ".p12", ".pfx", ".jks", ".keystore", ".db", ".sqlite", ".sqlite3"}
+FORBIDDEN_SUFFIXES = {".apk", ".apks", ".xapk", ".cb", ".aff", ".ogg", ".wav", ".pem", ".key", ".p12", ".pfx", ".jks", ".keystore", ".db", ".sqlite", ".sqlite3", ".so", ".dex", ".class", ".jar", ".a", ".o", ".elf"}
 PRIVATE_KEY = re.compile(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----")
 AWS_ACCESS_KEY = re.compile(rb"AKIA[0-9A-Z]{16}")
 R2_ACCESS_KEY = re.compile(

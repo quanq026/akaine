@@ -13,16 +13,16 @@ Toàn bộ hướng dẫn và patch client công khai chỉ dành cho phiên b�
 version code `1209852`. Các phiên bản Arcaea cũ hơn hoặc mới hơn có file và
 native offset khác, vì vậy không thể dùng chung các bước trong repository này.
 
-Repository chứa hướng dẫn, mã nguồn server và công cụ build. APK đầu vào cùng
-game content sẽ được cung cấp riêng khi hướng dẫn cần đến chúng.
+Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
+từ APKPure; content và đầu vào chart key tương ứng được cung cấp riêng khi cần.
 
 ## Client hiện tại: V36
 
-[Chương 6](docs/guide/vi/06-build-android-client.md) build V36 từ public source
-và APK production V9 đã xác minh, được cung cấp riêng. Chương hướng dẫn chọn
-toolchain và đầu vào AKFC, build chưa ký, dùng signer của bạn và semantic CLI.
-Builder giữ nguyên media gốc; content `7.0.255.25` được phân phối riêng.
-APK, key và game content nằm ngoài Git.
+[Chương 6](docs/guide/vi/06-build-android-client.md) bắt đầu từ XAPK arm64
+7.0.255 gốc của APKPure. Sau khi thiết lập công cụ/key một lần, một lệnh sẽ
+merge, patch, build và ký V36. Không cần APK Akaine đã patch hoặc path map
+của người phát triển. Media gốc được giữ nguyên; content `7.0.255.25` được
+phân phối riêng. APK, key và game content nằm ngoài Git.
 
 Native patch 7.0.255 đi kèm dùng các Akaine API host đã phát hành. Client dùng domain
 khác còn cần native route change được kiểm chứng; public repository hiện chưa có command
@@ -36,7 +36,7 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 - một tên miền được Cloudflare bảo vệ
 - private-server API truy cập qua HTTPS
 - kho riêng để lưu bundle và file bài hát
-- client Android kết nối tới tên miền của bạn
+- client Android V36 được build từ gói APKPure gốc
 - Discord bot để quản lý tài khoản và công cụ score
 - quy trình sao lưu và khôi phục
 
@@ -84,9 +84,10 @@ rằng bạn đã hoàn thành các bước kiểm tra của chương trước.
 
 ## Tài nguyên riêng
 
-APK đầu vào, game asset và content bundle được phân phối riêng. Hãy nhận chúng
-qua kênh riêng từ chủ dự án hoặc một nguồn được ủy quyền. Bộ tài nguyên có
-manifest để bạn kiểm tra từng file trước khi sử dụng.
+Tải client chưa sửa từ link APKPure trong chương 6. Nhận content catalogue,
+đầu vào AKFC và game content tương ứng qua kênh riêng từ chủ dự án hoặc một
+nguồn được ủy quyền. Bộ tài nguyên riêng có manifest để kiểm tra từng file
+trước khi sử dụng.
 
 ## Ghi công
 

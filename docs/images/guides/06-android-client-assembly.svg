@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">Chapter 06: Assemble and prove the Android client</title>
-  <desc id="desc">The verified production V9 APK, native songlist and public V36 source are compiled and assembled, aligned and signed, then checked through the semantic CLI and runtime tests.</desc>
+  <desc id="desc">The original APKPure XAPK is verified and merged; one current build applies V36, compiles, aligns and signs, followed by semantic CLI and runtime checks.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#526079"/></marker>
     <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#778195"/></marker>
@@ -41,30 +41,30 @@ text { font-family: "Segoe UI", Inter, Arial, sans-serif; fill: #17213a; }
   <rect x="48" y="35" width="5" height="79" rx="2.5" fill="#ff596c"/>
   <text x="75" y="58" class="chapter">CHAPTER 06</text>
   <text x="75" y="98" class="title">Assemble and prove the Android client</text>
-  <text x="75" y="128" class="subtitle">Build V36 from one verified V9 APK and public source, then sign and test the resulting client</text>
+  <text x="75" y="128" class="subtitle">Build V36 from the original APKPure XAPK and public source, then sign and test the resulting client</text>
   <rect x="1228" y="49" width="180" height="28" rx="14" fill="#effbf6" stroke="#50bd96"/>
   <text x="1318.0" y="68" class="small" text-anchor="middle">APK ASSEMBLY LINE</text>
   <rect x="1420" y="49" width="130" height="28" rx="14" fill="#fff8ec" stroke="#efb04d"/>
   <text x="1485.0" y="68" class="small" text-anchor="middle">7.0.255 ONLY</text>
   <text x="64" y="187" class="section">LOCKED INPUTS</text>
   <rect x="55" y="215" width="250" height="145" rx="18" class="blue"/>
-  <text x="80" y="254" class="h2">Verified V9 APK</text>
+  <text x="80" y="254" class="h2">APKPure XAPK</text>
   <text x="80" y="286" class="body">exact size + SHA-256</text>
   <text x="80" y="312" class="body">matching native songlist</text>
   <text x="80" y="337" class="gate">Original bytes remain untouched</text>
   <rect x="55" y="420" width="250" height="145" rx="18" class="purple"/>
   <text x="80" y="459" class="h2">Public V36 source</text>
-  <text x="80" y="491" class="body">native and DEX changes</text>
+  <text x="80" y="491" class="body">one current patch set</text>
   <text x="80" y="517" class="body">AKFC loader + CLI bridge</text>
   <text x="80" y="542" class="gate">Human-readable and version-guarded</text>
   <rect x="365" y="275" width="220" height="175" rx="22" class="gray"/>
   <text x="475.0" y="318" class="h2" text-anchor="middle">Verify + extract</text>
-  <text x="389" y="357" class="body">check exact V9 APK</text>
+  <text x="389" y="357" class="body">verify and merge XAPK</text>
   <text x="389" y="384" class="body">derive native bindings</text>
   <text x="389" y="428" class="gate">PASS · baseline hash + members</text>
   <rect x="640" y="220" width="245" height="170" rx="22" class="gray"/>
   <text x="762.5" y="263" class="h2" text-anchor="middle">Managed rebuild</text>
-  <text x="664" y="302" class="body">preserve package + media</text>
+  <text x="664" y="302" class="body">update package; preserve media</text>
   <text x="664" y="329" class="body">pacing + partial cache</text>
   <text x="664" y="368" class="gate">PASS · exact replacement counts</text>
   <rect x="640" y="445" width="245" height="170" rx="22" class="gray"/>

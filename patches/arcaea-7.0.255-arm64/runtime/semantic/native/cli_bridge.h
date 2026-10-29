@@ -81,20 +81,18 @@ bool cli_dispatch_allowed() {
 }
 #include "cli_ui_native.h"
 overlay_cli::View pending_overlays;
-#include "../song-v9/cli_song_native.h"
+#include "../song/cli_song_native.h"
 #include "../play/play_controls.h"
-#include "../play/confirm/play_confirm.h"
-#include "../play/guide/play_guide.h"
 #include "../character/character_controls.h"
 #include "../controls/skill_controls.h"
 #include "../controls/settings_controls.h"
-#include "../settings-v12/settings_panel.h"
+#include "../settings/settings_panel.h"
 #include "../result/result_state.h"
 #include "../account/account_adapter.h"
 account_controls::SubmitCycle pending_login_submit;
 #include "../account/account_credentials.h"
 #include "../cloudsync/cli_cloudsync.h"
-#include "../filter-v12/filter_adapter.h"
+#include "../filter/filter_adapter.h"
 #include "../navigation/navigation_controls.h"
 #include "../update/bundle_controls.h"
 struct Snapshot {

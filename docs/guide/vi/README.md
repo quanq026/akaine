@@ -56,10 +56,10 @@ phối content, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
 
 6. [Build, ký và kiểm client Android V36](06-build-android-client.md).
 
-Chương 6 dùng APK production V9 đã xác minh, runtime source công khai và
-đường dẫn công cụ tường minh, rồi hướng dẫn ký bằng key của bạn, cài đặt
-và kiểm semantic CLI. APK, catalogue và đầu vào AKFC riêng tương ứng
-vẫn được cung cấp ngoài repository.
+Chương 6 bắt đầu từ XAPK APKPure gốc. Sau phần setup, một lệnh build sẽ merge
+các module gốc, áp dụng V36, biên dịch, căn chỉnh và ký. Sau đó là bước cài
+đặt và kiểm semantic CLI. Catalogue, chart key và content tương ứng vẫn
+được cung cấp ngoài repository.
 
 ## Phần 3: phát hành content
 

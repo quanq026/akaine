@@ -2202,7 +2202,7 @@
       ]
     },
     {
-      "path": "semantic/song-v9/cli_song_pins.h",
+      "path": "semantic/song/cli_song_pins.h",
       "template": [
         "#pragma once",
         "inline constexpr unsigned char CLI_SONG_HIGHLIGHT[] = {@@CLI_SONG_HIGHLIGHT@@};",
@@ -2714,7 +2714,7 @@
       ]
     },
     {
-      "path": "semantic/settings-v12/settings_panel_pins.h",
+      "path": "semantic/settings/settings_panel_pins.h",
       "template": [
         "#pragma once",
         "struct SettingsPanelPin { Address address; Size size; const unsigned char* bytes; };",
@@ -2877,7 +2877,7 @@
       ]
     },
     {
-      "path": "semantic/settings-v12/highfps_pins.h",
+      "path": "semantic/settings/highfps_pins.h",
       "template": [
         "#pragma once",
         "// Generated from the pinned staging core; keep outside public source.",
@@ -3473,7 +3473,7 @@
       ]
     },
     {
-      "path": "semantic/filter-v12/filter_pins.h",
+      "path": "semantic/filter/filter_pins.h",
       "template": [
         "#pragma once",
         "inline constexpr unsigned char FILTER_DIALOG_OPEN[] = {@@FILTER_DIALOG_OPEN@@};",
@@ -4156,5 +4156,268 @@
         }
       ]
     }
-  ]
+  ],
+  "owned_header": {
+    "path": "semantic/owned/owned_core_pins.h",
+    "template": [
+      "#pragma once",
+      "#include <cstddef>",
+      "#include <cstdint>",
+      "inline constexpr uintptr_t OWNED_RX_END = 0x1a7e6a4;",
+      "inline constexpr unsigned char owned_pin_0[] = {@@owned_pin_0@@};",
+      "inline constexpr unsigned char owned_pin_1[] = {@@owned_pin_1@@};",
+      "inline constexpr unsigned char owned_pin_2[] = {@@owned_pin_2@@};",
+      "inline constexpr unsigned char owned_pin_3[] = {@@owned_pin_3@@};",
+      "inline constexpr unsigned char owned_pin_4[] = {@@owned_pin_4@@};",
+      "inline constexpr unsigned char owned_pin_5[] = {@@owned_pin_5@@};",
+      "inline constexpr unsigned char owned_pin_6[] = {@@owned_pin_6@@};",
+      "inline constexpr unsigned char owned_pin_7[] = {@@owned_pin_7@@};",
+      "inline constexpr unsigned char owned_pin_8[] = {@@owned_pin_8@@};",
+      "inline constexpr unsigned char owned_pin_9[] = {@@owned_pin_9@@};",
+      "inline constexpr unsigned char reset_extra_pin_0[] = {@@reset_extra_pin_0@@};",
+      "inline constexpr unsigned char reset_extra_pin_1[] = {@@reset_extra_pin_1@@};",
+      "inline constexpr unsigned char reset_extra_pin_2[] = {@@reset_extra_pin_2@@};",
+      "inline constexpr unsigned char integrity_extra_pin_0[] = {@@integrity_extra_pin_0@@};",
+      "inline constexpr unsigned char integrity_extra_pin_1[] = {@@integrity_extra_pin_1@@};",
+      "inline constexpr unsigned char integrity_extra_pin_2[] = {@@integrity_extra_pin_2@@};",
+      "inline constexpr unsigned char runonce_extra_pin_0[] = {@@runonce_extra_pin_0@@};",
+      "inline constexpr unsigned char runonce_extra_pin_1[] = {@@runonce_extra_pin_1@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_0[] = {@@child_order_dependency_pin_0@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_1[] = {@@child_order_dependency_pin_1@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_2[] = {@@child_order_dependency_pin_2@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_3[] = {@@child_order_dependency_pin_3@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_4[] = {@@child_order_dependency_pin_4@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_5[] = {@@child_order_dependency_pin_5@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_6[] = {@@child_order_dependency_pin_6@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_7[] = {@@child_order_dependency_pin_7@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_8[] = {@@child_order_dependency_pin_8@@};",
+      "inline constexpr unsigned char child_order_dependency_pin_9[] = {@@child_order_dependency_pin_9@@};",
+      "inline constexpr unsigned char news_limit_pin_0[] = {@@news_limit_pin_0@@};",
+      "inline constexpr unsigned char news_limit_pin_1[] = {@@news_limit_pin_1@@};",
+      "inline constexpr unsigned char news_limit_pin_2[] = {@@news_limit_pin_2@@};",
+      "struct OwnedPin { uintptr_t address; const unsigned char* bytes; size_t size; };",
+      "inline constexpr OwnedPin OWNED_CORE_PINS[] = {",
+      "{0x19f69a4,news_limit_pin_0,sizeof(news_limit_pin_0)},",
+      "{0x19f69ac,news_limit_pin_1,sizeof(news_limit_pin_1)},",
+      "{0x1a7e5f0,news_limit_pin_2,sizeof(news_limit_pin_2)},",
+      "{0x9ada30,child_order_dependency_pin_0,sizeof(child_order_dependency_pin_0)},",
+      "{0xc4d284,child_order_dependency_pin_1,sizeof(child_order_dependency_pin_1)},",
+      "{0x1924a58,child_order_dependency_pin_2,sizeof(child_order_dependency_pin_2)},",
+      "{0x14e9988,child_order_dependency_pin_3,sizeof(child_order_dependency_pin_3)},",
+      "{0x10905a8,child_order_dependency_pin_4,sizeof(child_order_dependency_pin_4)},",
+      "{0x9fd76c,child_order_dependency_pin_5,sizeof(child_order_dependency_pin_5)},",
+      "{0xefd848,child_order_dependency_pin_6,sizeof(child_order_dependency_pin_6)},",
+      "{0x124c4a0,child_order_dependency_pin_7,sizeof(child_order_dependency_pin_7)},",
+      "{0x986f60,child_order_dependency_pin_8,sizeof(child_order_dependency_pin_8)},",
+      "{0x1a7e5a0,child_order_dependency_pin_9,sizeof(child_order_dependency_pin_9)},",
+      "{0x17c9f10,runonce_extra_pin_0,sizeof(runonce_extra_pin_0)},",
+      "{0x1a7e580,runonce_extra_pin_1,sizeof(runonce_extra_pin_1)},",
+      "{0x107d800,integrity_extra_pin_0,sizeof(integrity_extra_pin_0)},",
+      "{0x13e50dc,integrity_extra_pin_1,sizeof(integrity_extra_pin_1)},",
+      "{0x1a7e540,integrity_extra_pin_2,sizeof(integrity_extra_pin_2)},",
+      "{0x1a7e480,reset_extra_pin_0,sizeof(reset_extra_pin_0)},",
+      "{0x98,reset_extra_pin_1,sizeof(reset_extra_pin_1)},",
+      "{0x181a818,reset_extra_pin_2,sizeof(reset_extra_pin_2)},",
+      "{0x13f24c0,owned_pin_0,sizeof(owned_pin_0)},",
+      "{0x1783fcc,owned_pin_1,sizeof(owned_pin_1)},",
+      "{0x1716a5c,owned_pin_2,sizeof(owned_pin_2)},",
+      "{0xf2bed8,owned_pin_3,sizeof(owned_pin_3)},",
+      "{0x10a1b04,owned_pin_4,sizeof(owned_pin_4)},",
+      "{0x1a550dc,owned_pin_5,sizeof(owned_pin_5)},",
+      "{0x11aa1ac,owned_pin_6,sizeof(owned_pin_6)},",
+      "{0x1325c0c,owned_pin_7,sizeof(owned_pin_7)},",
+      "{0x1a7d4d0,owned_pin_8,sizeof(owned_pin_8)},",
+      "{0x238,owned_pin_9,sizeof(owned_pin_9)},",
+      "};"
+    ],
+    "pins": [
+      {
+        "symbol": "owned_pin_0",
+        "address": "0x13f24c0",
+        "bytes": 132,
+        "sha256": "329bef36668fa1458ab89bb7fe78c65ba28b1cc562b984b4c61305d4811ccd21"
+      },
+      {
+        "symbol": "owned_pin_1",
+        "address": "0x1783fcc",
+        "bytes": 1876,
+        "sha256": "d416d4edcbd62dc8bfeca5b87c89361f684f937cb1219a311e94aab0d1151864"
+      },
+      {
+        "symbol": "owned_pin_2",
+        "address": "0x1716a5c",
+        "bytes": 260,
+        "sha256": "41e61e04d0715b3c5be526afb804c9fe0dfa39e664639bea94e90a1ea6aaee4c"
+      },
+      {
+        "symbol": "owned_pin_3",
+        "address": "0xf2bed8",
+        "bytes": 196,
+        "sha256": "74eeb99699c88e65771fe5d0608664e3335f88d068758753a153aac65692836c"
+      },
+      {
+        "symbol": "owned_pin_4",
+        "address": "0x10a1b04",
+        "bytes": 808,
+        "sha256": "6480d0acbef2ca6d45ef2f4d2eb512590fb9ffc183e0df63e1cbbcbbad971ddf"
+      },
+      {
+        "symbol": "owned_pin_5",
+        "address": "0x1a550dc",
+        "bytes": 1336,
+        "sha256": "917357fa42a2bf4af6f61b977f8dabe334d8cf18adf195c5304843bb50567f85"
+      },
+      {
+        "symbol": "owned_pin_6",
+        "address": "0x11aa1ac",
+        "bytes": 3468,
+        "sha256": "801aa720213690591c65f6410fa52d04328d932ed0e71480d39a9fa3f23fd990"
+      },
+      {
+        "symbol": "owned_pin_7",
+        "address": "0x1325c0c",
+        "bytes": 364,
+        "sha256": "70879d2653a788786c4f7220dc6993027691da959ffc1d7dc3063f58eeadd8a0"
+      },
+      {
+        "symbol": "owned_pin_8",
+        "address": "0x1a7d4d0",
+        "bytes": 4012,
+        "sha256": "cfa75e6f1a42f26d917541975c435885e74defee50a83627f5cf72e6b02f337c"
+      },
+      {
+        "symbol": "owned_pin_9",
+        "address": "0x238",
+        "bytes": 188,
+        "sha256": "b6fff8b4903f584f8a63724492a7087330f6f0cdc5b3520e77601a5eb19853c9"
+      },
+      {
+        "symbol": "reset_extra_pin_0",
+        "address": "0x1a7e480",
+        "bytes": 192,
+        "sha256": "5b2dd72017a6b7c44503e492d6afcfbe0974c564d9fcc0c2a97bc05604f04f31"
+      },
+      {
+        "symbol": "reset_extra_pin_1",
+        "address": "0x98",
+        "bytes": 16,
+        "sha256": "d650afb2cb7171b29687b05d178bf142fabb13cf9f4bc105c95d62a136b99daf"
+      },
+      {
+        "symbol": "reset_extra_pin_2",
+        "address": "0x181a818",
+        "bytes": 4,
+        "sha256": "95c85b46bf051200456dd56eaea95b2174420ffae03bae01c667b3f9bb006451"
+      },
+      {
+        "symbol": "integrity_extra_pin_0",
+        "address": "0x107d800",
+        "bytes": 4,
+        "sha256": "44c40b773d7f6f8748be9952d5b79529ef3f2e0a8f00cb76028434c4ad9368be"
+      },
+      {
+        "symbol": "integrity_extra_pin_1",
+        "address": "0x13e50dc",
+        "bytes": 4,
+        "sha256": "b7817d9355c0a4a37f1af7c8519d90aabaaadfe2a55aec7a6fd26330bea2a546"
+      },
+      {
+        "symbol": "integrity_extra_pin_2",
+        "address": "0x1a7e540",
+        "bytes": 64,
+        "sha256": "3b47951f4d2c79d033d35f77e8b1fac178145b43de6a856a389d6c80e2ea5957"
+      },
+      {
+        "symbol": "runonce_extra_pin_0",
+        "address": "0x17c9f10",
+        "bytes": 4,
+        "sha256": "d57f2b5e1a41ac6994d0a95afe8f3fa0b0f4dc684c088a96fbdd4e7aea77308b"
+      },
+      {
+        "symbol": "runonce_extra_pin_1",
+        "address": "0x1a7e580",
+        "bytes": 28,
+        "sha256": "d545911c8e2f47548fe73eaa3ebeb7666847e78d13c07647278f63c7ca5bf121"
+      },
+      {
+        "symbol": "child_order_dependency_pin_0",
+        "address": "0x9ada30",
+        "bytes": 176,
+        "sha256": "e1e25e4154088b3ead2913b414b57158b2e26e6e7aa882be8d757944ccccde97"
+      },
+      {
+        "symbol": "child_order_dependency_pin_1",
+        "address": "0xc4d284",
+        "bytes": 156,
+        "sha256": "d3e926f3065d3e04d719bf4b90e06bd7b1d3767b301a447043b914d2e824a3b2"
+      },
+      {
+        "symbol": "child_order_dependency_pin_2",
+        "address": "0x1924a58",
+        "bytes": 8,
+        "sha256": "4fb8eb6a8077f0e6af4d4dfdc543f09de172dd8268bbdfdb4059a2af65413d51"
+      },
+      {
+        "symbol": "child_order_dependency_pin_3",
+        "address": "0x14e9988",
+        "bytes": 296,
+        "sha256": "202c6798894b7099784fcab189de79e5a839a60537b2ea1b8026436db51519ab"
+      },
+      {
+        "symbol": "child_order_dependency_pin_4",
+        "address": "0x10905a8",
+        "bytes": 352,
+        "sha256": "43b1583d78797966f7279bfebc9757c2e20d0ccde10c4424dcd41e5d96102b86"
+      },
+      {
+        "symbol": "child_order_dependency_pin_5",
+        "address": "0x9fd76c",
+        "bytes": 148,
+        "sha256": "615c3e36b1d8e518a4550cbc1e3deeabbb8f1c56135f4ec6afb03dca8e76a934"
+      },
+      {
+        "symbol": "child_order_dependency_pin_6",
+        "address": "0xefd848",
+        "bytes": 20,
+        "sha256": "f428cec90f8be6cacb856a9061cc4ca5237f52424027d2ac75e0fbf7bfa37626"
+      },
+      {
+        "symbol": "child_order_dependency_pin_7",
+        "address": "0x124c4a0",
+        "bytes": 16,
+        "sha256": "53fc3ec58b289b5c0466cb791f057a23bd55fcc47bae6ac0b0dcee1cd4581751"
+      },
+      {
+        "symbol": "child_order_dependency_pin_8",
+        "address": "0x986f60",
+        "bytes": 1276,
+        "sha256": "c612e8408e0a6633614165b5034a96c2be462d85a0c74dc9f5989e7f3dbf59d5"
+      },
+      {
+        "symbol": "child_order_dependency_pin_9",
+        "address": "0x1a7e5a0",
+        "bytes": 68,
+        "sha256": "5187759372d5ec26dd77caa6160f0e1465eafe72a8705b635adbdc815bf4362e"
+      },
+      {
+        "symbol": "news_limit_pin_0",
+        "address": "0x19f69a4",
+        "bytes": 4,
+        "sha256": "6500947e8fb2c1241b09d9e3306288c5873e2a58fee950a62e48eeabfc4486fc"
+      },
+      {
+        "symbol": "news_limit_pin_1",
+        "address": "0x19f69ac",
+        "bytes": 4,
+        "sha256": "e716369a10e7ec0e7f06de4a33b3061b944dd2266522e1cf1fe41db081976aae"
+      },
+      {
+        "symbol": "news_limit_pin_2",
+        "address": "0x1a7e5f0",
+        "bytes": 180,
+        "sha256": "255c74ff3d699de4fc9bf8fc8fcdba043ef73e50941fdc1a4279a1b061b1a841"
+      }
+    ],
+    "header_sha256": "09c41f25d4488fb0615cb7d0ff5d1a7e4b37c6d72ea95de85f1f1717f3854327"
+  }
 }

@@ -1,7 +1,328 @@
 #pragma once
-#include "official32/modern/modern_replay.h"
-#include "official32/finale/finale_replay.h"
-#include "official32/legacy/legacy_replay.h"
+// Official anomaly replay families and their shared dispatch contract.
+#include <cstdint>
+#include <cstring>
+
+namespace akaine_official {
+using Address = uintptr_t;
+enum class ModernId : uint8_t {
+  Arghena, Designant, AlterEgo, DreadArea, CataclysmCry, DeinosPhainein,
+  Ember, Sacrosanct, AstralQuant, UndyingMacula, Desive, LamentRain,
+  YourBestNightmare, None
+};
+inline constexpr const char* modern_ids[] = {
+  "arghena", "designant", "alterego", "dreadarea", "cataclysmcry",
+  "deinosphainein", "ember", "sacrosanct", "astralquant", "undyingmacula",
+  "desive", "lamentrain", "yourbestnightmare"
+};
+inline ModernId modernId(const char* sid) {
+  if (!sid) return ModernId::None;
+  for (unsigned i=0; i<13; ++i)
+    if (std::strcmp(sid, modern_ids[i])==0) return static_cast<ModernId>(i);
+  return ModernId::None;
+}
+
+// Root host resolves only hash-qualified native functions and validated context.
+template<class Host> Address createModernReplay(ModernId id, Address scene, Host& h) {
+  Address m=0;
+  switch (id) {
+    case ModernId::Arghena: m=h.template call<Address>(0x189f500); break;
+    case ModernId::Designant:
+      m=h.template call<Address>(0x1819588,h.song_id_string(scene),false); break;
+    case ModernId::AlterEgo: m=h.template call<Address>(0x133d938); break;
+    case ModernId::DreadArea: m=h.template call<Address>(0x968c44,true); break;
+    case ModernId::CataclysmCry: m=h.template call<Address>(0x819afc,true); break;
+    case ModernId::DeinosPhainein: m=h.template call<Address>(0x1508dac); break;
+    case ModernId::Ember: m=h.template call<Address>(0x13fe014,true); break;
+    case ModernId::Sacrosanct: m=h.makeNode(0x300,0x1a98730); break;
+    case ModernId::AstralQuant: m=h.makeNode(0x300,0x1ac7018); break;
+    case ModernId::UndyingMacula: m=h.makeNode(0x3a0,0x1aec6c8); break;
+    case ModernId::Desive: m=h.template call<Address>(0xfa0220); break;
+    case ModernId::LamentRain:
+      m=h.template call<Address>(0x14e56fc,true,h.template get<int32_t>(scene+0x320)); break;
+    case ModernId::YourBestNightmare: m=h.template call<Address>(0x17e79e0); break;
+    case ModernId::None: return 0;
+  }
+  if (!m) return 0;
+  h.template put<uint32_t>(m+0x2b8,0);
+  switch (id) {
+    case ModernId::Designant: h.template put<uint32_t>(m+0x2f8,2); break;
+    case ModernId::AlterEgo: h.template put<uint32_t>(m+0x330,2); break;
+    case ModernId::DeinosPhainein: h.template put<uint8_t>(m+0x2f4,1); break;
+    default: break;
+  }
+  return m;
+}
+
+template<class Host> void modernGaugePrefix(Address m, bool disable_gauge, Host& h) {
+  auto play=h.template get<Address>(m+0x2d0);
+  h.template call<void>(0xb9e0d0,play);
+  h.template call<void>(0x1856110,play,0.2f);
+  h.template call<void>(0xfa4320,play);
+  h.template call<void>(0x79b000,play);
+  if (disable_gauge) {
+    auto gauge=h.template call<Address>(0x98b33c,play);
+    auto fn=h.template get<Address>(h.template get<Address>(gauge)+0x150);
+    // The host call helper accepts ELF VAs; this method comes from a loaded vtable.
+    h.template call<void>(fn-h.base,gauge,false);
+    gauge=h.template call<Address>(0x98b33c,play);
+    h.template put<uint8_t>(gauge+0x3aa,1);
+  }
+}
+
+template<class Host> bool initModernReplay(ModernId id, Address m, Host& h) {
+  // Stock context binding (1866284) must precede this init wrapper.
+  h.template put<uint32_t>(m+0x2b8,0);
+  bool ok=true;
+  switch (id) {
+    case ModernId::Arghena: {
+      h.template call<void>(0x16bdad8,m);
+      h.template put<uint8_t>(m+0x326,0);
+      auto scene=h.template get<Address>(m+0x2a0);
+      auto video=h.template call<Address>(0x1929dc0,
+          h.template get<Address>(m+0x2c8),h.song_id_string(scene));
+      if (!video) return false;
+      h.template put<uint32_t>(m+0x2f4,1);
+      h.template put<Address>(m+0x2f8,video);
+      h.schedule(m,0x1ae9f10,m);
+      break;
+    }
+    case ModernId::Designant:
+      h.template put<uint32_t>(m+0x2f8,2);
+      ok=h.template call<bool>(0x17c4c18,m);
+      // Native event keeps session health/visuals; this blocks its mastery write.
+      h.template put<uint8_t>(m+0x329,1);
+      break;
+    case ModernId::AlterEgo:
+      h.template put<uint32_t>(m+0x330,2);
+      ok=h.template call<bool>(0x148f630,m); break;
+    case ModernId::DreadArea:
+      ok=h.template call<bool>(0xc29e9c,m); break;
+    case ModernId::CataclysmCry:
+      ok=h.template call<bool>(0xcacca4,m); break;
+    case ModernId::DeinosPhainein:
+      h.template put<uint8_t>(m+0x2f4,1);
+      ok=h.template call<bool>(0x1480774,m); break;
+    case ModernId::Ember: {
+      // Native init writes story state before visuals, so replay runs only visuals.
+      auto play=h.template get<Address>(m+0x2d0);
+      h.template call<void>(0xfa4320,play);
+      h.template call<void>(0x79b000,play);
+      h.template call<void>(0x1856110,play,0.2f);
+      h.template put<uint8_t>(m+0x2f4,1);
+      break;
+    }
+    case ModernId::Sacrosanct: modernGaugePrefix(m,false,h); break;
+    case ModernId::AstralQuant: modernGaugePrefix(m,true,h); break;
+    case ModernId::UndyingMacula:
+      // False builds all animated UI; true init also rewrites chart unlock progress.
+      h.template put<uint8_t>(m+0x2f4,0);
+      ok=h.template call<bool>(0xd411d4,m);
+      h.template put<uint8_t>(m+0x2f4,1);
+      break;
+    case ModernId::Desive: ok=h.template call<bool>(0x10a6b94,m); break;
+    case ModernId::LamentRain: ok=h.template call<bool>(0x16ce69c,m); break;
+    case ModernId::YourBestNightmare: ok=h.template call<bool>(0x187cc48,m); break;
+    case ModernId::None: return false;
+  }
+  h.template put<uint32_t>(m+0x2b8,0);
+  return ok;
+}
+
+// Replay-specific finish is separate from normal GameSession score persistence.
+template<class Host> uint64_t finishModernReplay(ModernId id, Address m,
+    Address callback, uint32_t failed, Host& h) {
+  h.template put<uint32_t>(m+0x2b8,0);
+  if (id==ModernId::LamentRain)
+    return h.template call<uint64_t>(0x150fd18,m,callback);
+  (void)failed;
+  return 0;
+}
+} // namespace akaine_official
+#include <cstdint>
+#include <cstring>
+
+namespace akaine_official {
+using FinaleAddress = uintptr_t;
+enum class FinaleId : uint8_t { InfiniteStrife, WorldEnder, Pentiment, ArcanaEden, Testify, Last, LastEternity, None };
+inline constexpr const char* finale_ids[] = {"infinitestrife","worldender","pentiment","arcanaeden","testify","last","lasteternity"};
+inline FinaleId finaleId(const char* song) {
+  if (!song) return FinaleId::None;
+  for (unsigned i=0;i<7;++i)
+    if (std::strcmp(song,finale_ids[i])==0) return static_cast<FinaleId>(i);
+  return FinaleId::None;
+}
+inline constexpr bool isFinaleMinor(FinaleId id) {
+  return static_cast<unsigned>(id)<4;
+}
+inline constexpr bool isLastEnding(FinaleId id) {
+  return id==FinaleId::Last || id==FinaleId::LastEternity;
+}
+inline constexpr bool finaleIntroEnabled(int song_index,int game_mode,bool permitted,bool setting_enabled) {
+  return song_index>=0 && song_index<=4 && game_mode==0 && permitted && setting_enabled;
+}
+
+// Creation is separate from stock context binding and virtual init.
+template<class Host> FinaleAddress createFinaleReplay(FinaleId id,Host& h) {
+  FinaleAddress modifier=0;
+  if (isFinaleMinor(id)) modifier=h.makeNode(0x300,0x1b7dee8);
+  else if (id==FinaleId::Testify) modifier=h.template call<FinaleAddress>(0x11e1d4c,uint32_t{2});
+  else if (isLastEnding(id)) modifier=h.template call<FinaleAddress>(0xfb6550,false);
+  if (modifier) h.template put<uint32_t>(modifier+0x2b8,0);
+  return modifier;
+}
+
+template<class Host> bool initFinaleReplay(FinaleId id,FinaleAddress modifier,Host& h) {
+  bool ok=false;
+  if (isFinaleMinor(id)) ok=h.template call<bool>(0xcf737c,modifier);
+  else if (isLastEnding(id)) {
+    // True init rewrites HP/drain; mode2 after false init changes only the ending.
+    h.template put<uint8_t>(modifier+0x2f4,0);
+    ok=h.template call<bool>(0xb8a498,modifier);
+    if (ok) h.template put<uint32_t>(modifier+0x2f8,2);
+  }
+  h.template put<uint32_t>(modifier+0x2b8,0);
+  return ok;
+}
+
+// Install every Last progress guard below before exposing this finish wrapper.
+template<class Host> uint64_t finishFinaleReplay(FinaleId id,FinaleAddress modifier,
+    FinaleAddress callback,uint32_t failed,Host& h) {
+  h.template put<uint32_t>(modifier+0x2b8,0);
+  if (isLastEnding(id)) return h.template call<uint64_t>(0x1247a84,modifier,callback,failed);
+  return 0;
+}
+
+struct LastProgressCall {
+  FinaleAddress site;
+  FinaleAddress original;
+  uint8_t modifier_register;
+};
+inline constexpr LastProgressCall last_progress_calls[] = {
+  {0x17efb70,0xea4644,19},
+  {0x17efb7c,0x1823f40,19},
+  {0x16afa94,0xc7bb48,23},
+  {0x16afaa0,0x8dd9c4,23},
+  {0x1716d74,0xc7bb48,23},
+  {0x1716d80,0x8dd9c4,23},
+};
+// Replay branches skip this entire store+persist block to resume0x1716d68.
+inline constexpr FinaleAddress last_reject_progress_block=0x1716ec0;
+inline constexpr FinaleAddress last_reject_progress_resume=0x1716d68;
+inline constexpr FinaleAddress last_reject_progress_store=0x1716ec8;
+inline constexpr FinaleAddress last_reject_progress_persist=0x1716ecc;
+static_assert(sizeof(last_progress_calls)/sizeof(last_progress_calls[0])==6);
+static_assert(finaleIntroEnabled(0,0,true,true) && finaleIntroEnabled(4,0,true,true));
+static_assert(!finaleIntroEnabled(-1,0,true,true) && !finaleIntroEnabled(5,0,true,true));
+static_assert(!finaleIntroEnabled(1,1,true,true) && !finaleIntroEnabled(1,0,false,true));
+static_assert(!finaleIntroEnabled(1,0,true,false));
+} // namespace akaine_official
+
+namespace official32::legacy {
+
+using Address = __UINTPTR_TYPE__;
+using UInt = __UINT32_TYPE__;
+using Int = __INT32_TYPE__;
+using Byte = unsigned char;
+
+enum class Profile { GrievousLady, FractureRay, Aegleseeker, Singularity, Arcahv,
+                     Tempestissimo, AxiumCrisis, EtherStrike, TempestPrerequisite };
+
+struct Contract {
+    Profile profile;
+    const char* song;
+    UInt size;
+    Address vtable;
+    Address creator;
+    Address nativeInit;
+    bool skipProgressFinish;
+};
+
+inline constexpr Contract contracts[] = {
+    {Profile::GrievousLady, "grievouslady", 0x300, 0x1a90bd0, 0, 0xab0000, false},
+    {Profile::FractureRay, "fractureray", 0x300, 0x1abe460, 0, 0xaf8694, false},
+    {Profile::Aegleseeker, "aegleseeker", 0x390, 0x1a89110, 0x961e14, 0x1135ab8, true},
+    {Profile::Singularity, "singularity", 0x310, 0x1b40738, 0x19f9bb8, 0xc71958, true},
+    {Profile::Arcahv, "arcahv", 0x300, 0x1b022d8, 0x1976684, 0x7bf690, true},
+    {Profile::Tempestissimo, "tempestissimo", 0x370, 0x1b37588, 0xaacbfc, 0x12d50e0, false},
+    {Profile::AxiumCrisis, "axiumcrisis", 0x300, 0x1ad6c70, 0, 0x101da2c, false},
+    {Profile::EtherStrike, "etherstrike", 0x320, 0x1aa2dd0, 0x150a148, 0x13b7dd4, false},
+    {Profile::TempestPrerequisite, "antagonism", 0x300, 0x1b0b1d8, 0, 0xda9b80, true},
+    {Profile::TempestPrerequisite, "dantalion", 0x300, 0x1b0b1d8, 0, 0xda9b80, true},
+    {Profile::TempestPrerequisite, "equilibrium", 0x300, 0x1b0b1d8, 0, 0xda9b80, true},
+    {Profile::TempestPrerequisite, "ifi", 0x300, 0x1b0b1d8, 0, 0xda9b80, true},
+};
+
+// Native creators autorelease. The factory owner retains once after assigning GameScene+0x308.
+template<class Host>
+Address createLegacyReplay(Profile profile, Host& host) {
+    Address modifier = 0;
+    switch (profile) {
+    case Profile::GrievousLady: modifier = host.makeNode(0x300, 0x1a90bd0); break;
+    case Profile::FractureRay: modifier = host.makeNode(0x300, 0x1abe460); break;
+    case Profile::Aegleseeker: modifier = host.template call<Address>(0x961e14); break;
+    case Profile::Singularity: modifier = host.template call<Address>(0x19f9bb8); break;
+    case Profile::Arcahv: modifier = host.template call<Address>(0x1976684, Int{1}); break;
+    case Profile::Tempestissimo: modifier = host.template call<Address>(0xaacbfc, Int{0}); break;
+    case Profile::AxiumCrisis:
+        modifier = host.makeNode(0x300, 0x1ad6c70);
+        if (modifier) host.template call<void>(0xe65708, modifier + 0x2f8);
+        break;
+    case Profile::EtherStrike: modifier = host.template call<Address>(0x150a148); break;
+    case Profile::TempestPrerequisite: modifier = host.makeNode(0x300, 0x1b0b1d8); break;
+    }
+    if (modifier) host.template put<Int>(modifier + 0x2b8, 0);
+    return modifier;
+}
+
+// Host calls use ELF VAs; the caller must register only normal, permitted replay actors.
+template<class Host>
+bool init(Profile profile, Address modifier, Host& host) {
+    switch (profile) {
+    case Profile::GrievousLady:
+        return (host.template call<UInt>(0xab0000, modifier) & 1) != 0;
+    case Profile::FractureRay:
+        return (host.template call<UInt>(0xaf8694, modifier) & 1) != 0;
+    case Profile::Aegleseeker: {
+        // Preset replay state also reaches native callback setup with another partner.
+        host.template put<Int>(modifier + 0x2f4, 2);
+        const auto result = host.template call<UInt>(0x1135ab8, modifier);
+        host.template put<Int>(modifier + 0x2f4, 2);
+        return (result & 1) != 0;
+    }
+    case Profile::Singularity:
+        // Native init includes a story write; its replay payload is local activation/layout.
+        host.template put<Byte>(modifier + 0x2f4, 1);
+        host.template call<void>(0xcaeda8,
+            host.template get<Address>(modifier + 0x2c8), Int{12});
+        return true;
+    case Profile::Arcahv:
+        return (host.template call<UInt>(0x7bf690, modifier) & 1) != 0;
+    case Profile::AxiumCrisis:
+        host.template put<Byte>(modifier + 0x2f4, 1);
+        return (host.template call<UInt>(0x101da2c, modifier) & 1) != 0;
+    case Profile::EtherStrike:
+        host.template put<Byte>(modifier + 0x2f4, 1);
+        return (host.template call<UInt>(0x13b7dd4, modifier) & 1) != 0;
+    case Profile::Tempestissimo:
+        return (host.template call<UInt>(0x12d50e0, modifier) & 1) != 0;
+    case Profile::TempestPrerequisite:
+        return (host.template call<UInt>(0xda9b80, modifier) & 1) != 0;
+    }
+    return false;
+}
+
+inline bool skipProgressFinish(Profile profile) {
+    return profile == Profile::Aegleseeker || profile == Profile::Singularity ||
+           profile == Profile::Arcahv || profile == Profile::TempestPrerequisite;
+}
+
+inline UInt initScope(Profile profile) {
+    return profile == Profile::AxiumCrisis ? 1 : profile == Profile::EtherStrike ? 2 :
+           profile == Profile::Tempestissimo ? 3 : 0;
+}
+
+} // namespace official32::legacy
 
 namespace akaine_official {
 enum class Family : uint8_t { Modern, Finale, Legacy };

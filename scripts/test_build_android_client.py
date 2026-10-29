@@ -6,6 +6,7 @@ import zipfile
 from pathlib import Path
 
 import build_android_client
+from unittest.mock import patch
 
 
 def digest(path: Path) -> str:
@@ -24,24 +25,25 @@ class AndroidClientBuilderTests(unittest.TestCase):
         self.assertEqual(len(plan["binary_patches"]), 2)
         self.assertEqual(
             sum(len(row["operations"]) for row in plan["binary_patches"]),
-            17,
+            61,
         )
         labels = {
             operation["label"]
             for row in plan["binary_patches"]
             for operation in row["operations"]
         }
-        self.assertIn("production-shared-api-base", labels)
+        self.assertTrue(any("production-shared-api-base" in label for label in labels))
 
     def test_guide_uses_current_v36_source_build(self):
         root = Path(__file__).resolve().parents[1]
         guide = (root / "docs/guide/06-build-android-client.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("scripts\\build_v36_client.py", guide)
-        self.assertIn("f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545", guide)
+        self.assertIn("scripts\\build_android_client.py", guide)
+        self.assertIn(build_android_client.XAPK[1], guide)
         self.assertIn("--songlist", guide)
         self.assertNotIn("production-checkpoint.md", guide)
+        self.assertNotIn("--base-apk", guide)
 
     def test_beginner_guide_uses_verified_tools_and_stop_gates(self):
         root = Path(__file__).resolve().parents[1]
@@ -50,10 +52,10 @@ class AndroidClientBuilderTests(unittest.TestCase):
         )
         for required in (
             '$python = Join-Path $repoRoot ".venv\\Scripts\\python.exe"',
-            '& $python scripts\\build_v36_client.py --help',
-            'Wrong base APK. Stop here.',
+            '& $python scripts\\build_android_client.py --help',
+            'Wrong APKPure package. Stop here;',
             'BUILD_RECEIPT.json',
-            'zipalign',
+            '--keystore',
             'APK signature verification failed',
             '$serial = Read-Host "Exact device serial shown above"',
         ):
@@ -71,6 +73,7 @@ class AndroidClientBuilderTests(unittest.TestCase):
                 apk.writestr("AndroidManifest.xml", b"manifest")
                 apk.writestr("lib/arm64-v8a/libcocos2dcpp.so", b"old-native")
                 apk.writestr("META-INF/OLD.SF", b"old-signature")
+                apk.writestr("stamp-cert-sha256", b"old-source-stamp")
             plan.write_text(json.dumps({
                 "schema": build_android_client.SCHEMA,
                 "source_sha256": digest(source),
@@ -88,9 +91,51 @@ class AndroidClientBuilderTests(unittest.TestCase):
             with zipfile.ZipFile(output) as apk:
                 self.assertEqual(apk.read("lib/arm64-v8a/libcocos2dcpp.so"), b"patched-native")
                 self.assertNotIn("META-INF/OLD.SF", apk.namelist())
+                self.assertNotIn("stamp-cert-sha256", apk.namelist())
                 self.assertIn("AndroidManifest.xml", apk.namelist())
             self.assertEqual(receipt["status"], "unsigned-built")
             self.assertEqual(receipt["expected"]["package"], "example.package")
+            self.assertIn("stamp-cert-sha256", receipt["removed_signature_metadata"])
+
+    def test_source_guard_rejects_a_change_after_compilation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'helper.py'
+            source.write_text('original')
+            hashes = {'helper.py': digest(source)}
+            with patch.object(build_android_client, 'ROOT', root):
+                build_android_client.verify_sources(hashes)
+                source.write_text('changed after native phase')
+                with self.assertRaisesRegex(ValueError, 'Source changed'):
+                    build_android_client.verify_sources(hashes)
+
+    def test_signing_uses_java_argv_and_stdin_for_paths_aliases_and_passwords(self):
+        import shutil
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'operator&build'
+            root.mkdir()
+            (root / 'lib').mkdir()
+            for name in ('zipalign.exe', 'java.exe', 'operator.p12', 'lib/apksigner.jar'):
+                (root / name).write_bytes(b'test-only')
+            with zipfile.ZipFile(root / 'unsigned.apk', 'w') as archive:
+                archive.writestr('assets/original.png', b'original')
+            def run(arguments):
+                if '-f' in arguments:
+                    shutil.copy2(root / 'unsigned.apk', root / 'aligned.apk')
+                return b''
+            def sign(arguments, **kwargs):
+                self.assertEqual(arguments[:3], [str(root / 'java.exe'), '-Dfile.encoding=UTF-8', '-jar'])
+                self.assertIn('owner&release', arguments)
+                self.assertNotIn('test-only-store', arguments)
+                self.assertEqual(kwargs['input'], 'test-only-store-việt\ntest-only-key\n'.encode())
+                shutil.copy2(root / 'aligned.apk', root / 'Akaine-V36.apk')
+                return SimpleNamespace(returncode=0)
+            with patch.object(build_android_client, 'run_tool', side_effect=run), \
+                 patch.object(build_android_client.subprocess, 'run', side_effect=sign), \
+                 patch.object(build_android_client.getpass, 'getpass', side_effect=['test-only-store-việt', 'test-only-key']):
+                result = build_android_client.sign_apk(root, root, root / 'operator.p12', 'owner&release', root / 'java.exe')
+            self.assertEqual(result.name, 'Akaine-V36.apk')
 
     def test_rejects_wrong_source_hash(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -1,8 +1,9 @@
 # Get and verify the private resource kit
 
-GitHub contains source code and this guide. Game content and the matching
-production V9 APK used to build V36 come from a separate resource kit. The
-client's NDK, Java and Android tools remain installed at paths you choose.
+GitHub contains source code and this guide. Download the original client
+from the APKPure link in chapter 6. The private resource kit supplies matching
+content, its native catalogue and AKFC inputs. The NDK, Java and Android tools
+remain installed at paths you choose; no prepatched Akaine APK is required.
 
 ![Chapter 04 private resource chain of trust](../images/guides/04-private-resources-chain-of-trust.svg)
 
@@ -95,8 +96,6 @@ Do not proceed if the verification reports a missing or mismatched file.
 
 Before chapter 6, identify these verified files in the kit instructions:
 
-- The production V9 APK from 2026-10-22, SHA-256
-  `f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545`.
 - The native `songlist` JSON matching the content catalogue. Server metadata
   is a different file and cannot replace it.
 - The private AKFC key header matching the protected charts. It remains
@@ -107,9 +106,11 @@ Before chapter 6, identify these verified files in the kit instructions:
   verification information. Java 17 and NDK `28.2.13676358` are selected in
   chapter 6.
 
-The kit does not need a developer's local path map, copied SDK directory,
-patched final `.so`/`.dex` payloads or another operator's Android keystore.
-Chapter 6 takes explicit input paths and builds its outputs from source.
+The original APKPure XAPK and APKEditor are obtained separately in chapter 6;
+that chapter includes their exact hashes. The kit does not need an Akaine APK,
+a developer's local path map, copied SDK directory, patched final `.so`/`.dex`
+payloads or another operator's Android keystore. Chapter 6 takes explicit
+input paths and builds from the original client and public source.
 Do not generate a new AKFC key when using an existing catalogue: that client
 would not decode the already encrypted charts.
 

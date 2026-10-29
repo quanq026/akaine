@@ -1,3 +1,6 @@
+// One authored V36 ARM64 gate translation unit. Fixed linked sections are hash checked.
+
+// semantic/owned/owned_gates.S
 // New RX extension only. All fallbacks keep original inline ownership bounded.
 .section .owned_gates,"ax",%progbits
 .p2align 4
@@ -279,3 +282,188 @@ owned_header_gate:
     RESTORE
     ldp x1, x2, [x20, #0x88]
     b native_header_continue
+
+// semantic/owned/reset_gate.S
+.section .reset_gate,"ax",%progbits
+.p2align 4
+.global reset_default_second_refresh_gate
+.type reset_default_second_refresh_gate,%function
+
+.macro SAVE_TEMP
+    sub sp, sp, #0x40
+    stp x8, x9, [sp, #0x00]
+    stp x10, x11, [sp, #0x10]
+    stp x12, x13, [sp, #0x20]
+    mrs x12, nzcv
+    str x12, [sp, #0x30]
+.endm
+.macro RESTORE_TEMP
+    ldr x12, [sp, #0x30]
+    msr nzcv, x12
+    ldp x8, x9, [sp, #0x00]
+    ldp x10, x11, [sp, #0x10]
+    ldp x12, x13, [sp, #0x20]
+    add sp, sp, #0x40
+.endm
+
+reset_default_second_refresh_gate:
+    SAVE_TEMP
+    ldr x8, [x29, #8]
+    adrp x9, reset_call_return
+    add x9, x9, :lo12:reset_call_return
+    cmp x8, x9
+    b.ne original_path
+    cmp w22, #1
+    b.ne original_path
+    cbnz w21, original_path
+    cbnz w23, original_path
+    ldr x8, [x19]
+    cbz x8, original_path
+    ldp w9, w10, [x8, #0x70]
+    cmp w9, #1
+    b.ne original_path
+    cbnz w10, original_path
+    ldr w9, [x8, #0xcc]
+    cbnz w9, original_path
+    ldrb w9, [x8, #0x78]
+    cbnz w9, original_path
+    ldrb w9, [x8, #0x80]
+    tbnz w9, #0, empty_long_query
+    lsr w9, w9, #1
+    cbnz w9, original_path
+    b persistence_tail
+empty_long_query:
+    ldr x9, [x8, #0x88]
+    cbnz x9, original_path
+persistence_tail:
+    RESTORE_TEMP
+    b native_persistence_tail
+original_path:
+    RESTORE_TEMP
+    cbnz x0, original_refresh
+    b native_persistence_tail
+original_refresh:
+    b native_refresh_continue
+.size reset_default_second_refresh_gate, .-reset_default_second_refresh_gate
+.section .note.GNU-stack,"",%progbits
+
+// integrity/download_success_size_gate.S
+.section .download_size_gate,"ax",%progbits
+.global download_success_size_gate
+.type download_success_size_gate,%function
+download_success_size_gate:
+    // x25 is the callback-id map task; global callback capture x24 may belong to another transfer.
+    ldr x8, [x25, #0x18]
+    cmp x8, #1
+    b.lt .Loriginal
+    bl native_fileutils_singleton
+    ldr x8, [x0]
+    ldr x8, [x8, #0x158]
+    add x1, sp, #0x18
+    blr x8
+    ldr x9, [x25, #0x18]
+    cmp x0, x9
+    b.eq .Loriginal
+    // Existing failure cleanup expects an empty digest string at SP+0x38.
+    stp xzr, xzr, [sp, #0x38]
+    str xzr, [sp, #0x48]
+    b native_download_digest_failure
+.Loriginal:
+    ldrb w8, [x24, #0x70]
+    b native_download_skiphash_dispatch
+.size download_success_size_gate, .-download_success_size_gate
+
+// integrity/download_run_once_gate.S
+.section .download_run_once_gate,"ax",%progbits
+.global download_run_once_gate
+.type download_run_once_gate,%function
+download_run_once_gate:
+    // Cached completion can reenter the queue before the initial launch loop resumes.
+    ldr x8, [x0, #0xe0]
+    cbnz x8, .Lalready_started
+    ldrb w8, [x0, #0xe8]
+    cbnz w8, .Lalready_started
+    sub sp, sp, #0xe0
+    b native_download_run_body
+.Lalready_started:
+    ret
+.size download_run_once_gate, .-download_run_once_gate
+
+// integrity/child_order_gate.S
+.section .child_order_gate,"ax",%progbits
+.p2align 4
+.global child_order_gate
+child_order_gate:
+    adrp x16, owned_mailbox
+    add x16, x16, :lo12:owned_mailbox
+    ldr x17, [x16]
+    cmp x17, #1
+    b.ne child_order_fallback
+    add x17, x16, #8
+    ldar x17, [x17]
+    cmp x17, #1
+    b.ne child_order_fallback
+    ldr x16, [x16, #80]
+    cbz x16, child_order_fallback
+    mov x3, x19
+    ldr x4, [sp, #0x18]
+    ldr x5, [sp, #0x30]
+    mov x6, x25
+    br x16
+child_order_fallback:
+    b native_child_sort
+.section .note.GNU-stack,"",%progbits
+
+// news/news_gates.S
+.section .news_gates,"ax",%progbits
+.p2align 4
+.global news_sort_gate
+news_sort_gate:
+    adrp x16, owned_mailbox
+    add x16, x16, :lo12:owned_mailbox
+    ldr x17, [x16]
+    eor x17, x17, #1
+    cbnz x17, .Lsort_original
+    add x17, x16, #8
+    ldar x17, [x17]
+    eor x17, x17, #1
+    cbnz x17, .Lsort_original
+    ldr x16, [x16, #88]
+    cbz x16, .Lsort_original
+    br x16
+.Lsort_original:
+    b native_news_sort
+.p2align 4
+.global news_end_gate
+news_end_gate:
+    ldr x27, [x20, #0x398]
+    adrp x16, owned_mailbox
+    add x16, x16, :lo12:owned_mailbox
+    ldr x17, [x16]
+    eor x17, x17, #1
+    cbnz x17, .Lend_resume
+    add x17, x16, #8
+    ldar x17, [x17]
+    eor x17, x17, #1
+    cbnz x17, .Lend_resume
+    ldr x17, [x16, #88]
+    cbz x17, .Lend_resume
+    ldr x17, [x16, #120]
+    mrs x16, tpidr_el0
+    eor x17, x17, x16
+    cbnz x17, .Lend_resume
+    adrp x16, owned_mailbox
+    add x16, x16, :lo12:owned_mailbox
+    ldr x17, [x16, #96]
+    eor x17, x17, x19
+    cbnz x17, .Lend_resume
+    ldr x17, [x16, #104]
+    eor x17, x17, x27
+    cbnz x17, .Lend_resume
+    add x16, x16, #112
+    ldar x17, [x16]
+    cbz x17, .Lend_resume
+    mov x27, x17
+.Lend_resume:
+    b native_news_resume
+.section .note.GNU-stack,"",%progbits
