@@ -4,6 +4,24 @@ English | [Tiếng Việt](README.vi.md)
 
 ![Akaine](docs/images/akaine-hero.png)
 
+<p align="center">
+  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/quanq026/akaine?style=flat&amp;label=Release&amp;color=A63B52"></a>
+  <a href="docs/guide/06-build-android-client.md"><img alt="Arcaea 7.0.255" src="https://img.shields.io/badge/Arcaea-7.0.255-547EA8?style=flat"></a>
+  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
+  <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python and C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
+  <br>
+  <a href="README.vi.md"><img alt="Documentation in English and Vietnamese" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
+  <a href="https://discord.gg/9BBXhX7DkN"><img alt="Join Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
+  <a href="https://github.com/quanq026/akaine/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/quanq026/akaine?style=flat&amp;color=D5A64E&amp;logo=github"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/quanq026/akaine?style=flat&amp;color=6B7280"></a>
+</p>
+
+<p align="center">
+  <strong><a href="https://github.com/quanq026/akaine/releases/latest">Download APK</a></strong> ·
+  <a href="docs/guide/README.md">Start the guide</a> ·
+  <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
+</p>
+
 Akaine is a setup guide and public source repository for a server and Android
 client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
 and a new cloud account. You do not need previous experience with Linux,
