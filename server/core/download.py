@@ -8,12 +8,14 @@ from json import loads
 from time import time
 from urllib.parse import quote, urlencode, urlsplit, urlunsplit
 
-from flask import url_for
+from flask import url_for, has_request_context, request
 
 from .config_manager import Config
 from .constant import Constant
 from .error import NoAccess
 from .limiter import ArcLimiter
+from .pack_contract import expand_pack_unlocks
+from .client_packs import reload_dynamic_pack_catalog
 from .user import User
 from .util import get_file_md5, md5
 
@@ -137,10 +139,16 @@ class SonglistParser:
         if user is None:
             return set()
 
-        r = set()
-        for i in user.packs:
-            if i in x.pack_info:
-                r.update(x.pack_info[i])
+        if has_request_context():
+            pack_ids = user.owned_pack_ids_for_client_profile(request.headers)
+        else:
+            pack_ids = user.owned_pack_ids
+        r = expand_pack_unlocks(
+            client_pack_ids=pack_ids,
+            pack_songs=x.pack_info,
+            umbrella_pack_id=Config.CUSTOM_PACK_UMBRELLA,
+            custom_pack_ids=Config.CUSTOM_PACK_IDS,
+        )
 
         if Constant.SINGLE_PACK_NAME in x.pack_info:
             r.update(x.pack_info[Constant.SINGLE_PACK_NAME]
@@ -320,6 +328,7 @@ class DownloadList(UserDownload):
     def initialize_cache(cls) -> None:
         '''初始化歌曲数据缓存，包括md5、文件目录遍历、解析songlist'''
         SonglistParser()
+        reload_dynamic_pack_catalog()
         if Config.SONG_FILE_HASH_PRE_CALCULATE:
             x = cls()
             x.url_flag = False

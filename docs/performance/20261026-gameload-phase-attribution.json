@@ -1,0 +1,58 @@
+{
+  "status": "GAME_SCENE_INIT_POST_EVICTION_DOMINATES_NO_PRODUCTFIX",
+  "baseV36_APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+  "QA_APK_sha256": "79086d5ffa8140fb45733819878cac931510befe479e3b86bf41db43a6ad81bf",
+  "scope": "GameSceneinitonly, native3validroots",
+  "records": [
+    {
+      "action": 0,
+      "native_roots": 1,
+      "sum_init_wall_ms": 2110.573421,
+      "sum_init_cpu_ms": 1692.412769,
+      "phase_wall_ms": {
+        "1": 143.457336,
+        "2": 1.445674,
+        "3": 1965.670411
+      },
+      "labels": [
+        "GameScene_init"
+      ]
+    },
+    {
+      "action": 1,
+      "native_roots": 1,
+      "sum_init_wall_ms": 1514.835816,
+      "sum_init_cpu_ms": 1404.627413,
+      "phase_wall_ms": {
+        "1": 146.377651,
+        "2": 1.463126,
+        "3": 1366.995039
+      },
+      "labels": [
+        "GameScene_init"
+      ]
+    },
+    {
+      "action": 2,
+      "native_roots": 1,
+      "sum_init_wall_ms": 1573.871774,
+      "sum_init_cpu_ms": 1446.967096,
+      "phase_wall_ms": {
+        "1": 144.975777,
+        "2": 1.405679,
+        "3": 1427.490318
+      },
+      "labels": [
+        "GameScene_init"
+      ]
+    }
+  ],
+  "numeric_review_sha256": "20d76cc4a8882a97f9c2c4f0b6bf226be8b827f67dacebc489ac69150c9cfaf0",
+  "decision": "DirectTexturepurge1.4msnotowner;postconstructor1367\u20131966msdominates. Oneboundedpostpartitionjustified; noaudio/AKFCchangeuntilownerknown.",
+  "limits": [
+    "QAonlyNoFDEemulator; noquality/catalognativebehaviorchange",
+    "Deferredlogcanperturbpresentation; notfinalacceptance",
+    "All3protectedDaybreakFTRsamechart, noofficial/secondchartcoverageyet",
+    "SeparatequietmarkerACK obtained,extraemulatorpaused"
+  ]
+}

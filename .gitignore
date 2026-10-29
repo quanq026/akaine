@@ -45,3 +45,22 @@ backups/
 venv/
 .idea/
 .vscode/
+
+# Private development inputs and generated outputs stay outside Git.
+/private/
+/.local/
+/build/
+/outputs/
+*.dpapi
+*.idsig
+*.apk
+*.apks
+*.cb
+*.ogg
+*.aff
+*.wav
+*.mp3
+*.so
+*.dex
+*.class
+*.jar

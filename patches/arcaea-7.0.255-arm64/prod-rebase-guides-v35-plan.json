@@ -1,0 +1,36 @@
+{
+  "schema": "akaine.client-build.v1",
+  "environment": "staging",
+  "not_for_production": true,
+  "source_sha256": "f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545",
+  "content_version": "7.0.255.20",
+  "replacements": [
+    {
+      "archive_path": "lib/arm64-v8a/libcocos2dcpp.so",
+      "file": "final/payload/lib/arm64-v8a/libcocos2dcpp.so",
+      "sha256": "299f271b3b0bb8a656ba02be6fd6327f90b1a0fe2fe11d1e670ae51ccfdae42d"
+    },
+    {
+      "archive_path": "lib/arm64-v8a/libakaineanomaly_monitor.so",
+      "file": "final/payload/lib/arm64-v8a/libakaineanomaly_monitor.so",
+      "sha256": "bea4279f6fb5318190ff0a46d085003c05a1e627e889ae773b0f8bd889310c4b"
+    },
+    {
+      "archive_path": "lib/arm64-v8a/libakfcloader.so",
+      "file": "final/payload/lib/arm64-v8a/libakfcloader.so",
+      "sha256": "81beea88f021c4620019be6f4fdd4be76aa25300e1b90ccd889d9e067d5d99f8"
+    },
+    {
+      "archive_path": "classes3.dex",
+      "file": "final/payload/classes3.dex",
+      "sha256": "20cdddd94102ef27c366379a5b11b3cb33cc8aa3e67cca502158373c62498761"
+    },
+    {
+      "archive_path": "classes4.dex",
+      "file": "final/payload/classes4.dex",
+      "sha256": "6c4b63c3168a25a98c476862bc84f8de53de31257439c1e7473acfb3315f0ba0"
+    }
+  ],
+  "binary_patches": [],
+  "expected": {}
+}

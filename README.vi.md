@@ -16,6 +16,17 @@ native offset khác, vì vậy không thể dùng chung các bước trong repos
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. APK đầu vào cùng
 game content sẽ được cung cấp riêng khi hướng dẫn cần đến chúng.
 
+## Checkpoint production hiện tại
+
+Public source hiện có checkpoint client production **V36** và hồ sơ content base
+độc lập **`7.0.255.25`**, giữ chất lượng tài nguyên gốc. Xem
+[checkpoint production](docs/production-checkpoint.vi.md) để biết đúng APK, quy
+trình build hiện tại, CLI production và phạm vi source server. Cách build từ
+XAPK ở chương 6 thuộc checkpoint client cũ; để tái tạo V36, dùng production
+source profile. APK đầu vào, key, content và bản đồ đường dẫn build riêng vẫn
+được giữ ngoài Git.
+
+
 Native patch 7.0.255 đi kèm dùng các Akaine API host đã phát hành. Client dùng domain
 khác còn cần native route change được kiểm chứng; public repository hiện chưa có command
 đổi host tổng quát. Chương server có bước kiểm tra HTTP độc lập cho domain của bạn.

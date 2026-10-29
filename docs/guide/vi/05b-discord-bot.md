@@ -50,6 +50,20 @@ PY
 
 Game server phải khởi động ít nhất một lần để database tồn tại.
 
+Các path setting được hỗ trợ là `LYGUS_SERVER_ROOT`, `LYGUS_GAME_DB`,
+`LYGUS_MAPPING_DB` và `LYGUS_LOG_PATH`. `LYGUS_B30_GENERATOR` là tùy chọn, mặc
+định trỏ tới `tools/b30_generator.py` dưới server root. Bot hiện không dùng
+`LYGUS_CREATE_CLI`; hãy bỏ setting cũ đó khỏi private environment file nếu còn.
+Không cần subprocess tạo account hay truyền password qua tham số dòng lệnh.
+
+Tạo account gọi trực tiếp helper `create_user_cli.provision_account` đã được
+chấp nhận. Game account và Discord mapping được tạo trong một transaction qua
+hai file SQLite được attach. Cả hai database phải dùng rollback journal mode
+(`delete`, `truncate` hoặc `persist`); mode không tương thích bị từ chối trước
+khi tạo. Nếu check này thất bại ở hệ thống đang có dữ liệu, hãy kiểm tra config
+và backup database trước khi đổi mode. Bot dùng chính sách grant nonconsumable
+cộng thêm dùng chung, không copy database người chơi production.
+
 ## Khởi động và kiểm tra
 
 ```bash

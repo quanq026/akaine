@@ -49,6 +49,21 @@ PY
 
 The game server must have started at least once so its database exists.
 
+The supported path settings are `LYGUS_SERVER_ROOT`, `LYGUS_GAME_DB`,
+`LYGUS_MAPPING_DB` and `LYGUS_LOG_PATH`; `LYGUS_B30_GENERATOR` is optional and
+defaults to `tools/b30_generator.py` below the server root. The current bot does
+not use `LYGUS_CREATE_CLI`; remove that obsolete setting from an older private
+environment file. No account-creation subprocess or password command-line
+argument is required.
+
+Account creation calls the accepted `create_user_cli.provision_account` helper
+directly. It creates the game account and Discord mapping in one transaction
+across the attached SQLite files. Both databases must use a rollback journal
+mode (`delete`, `truncate` or `persist`); incompatible modes are rejected before
+creation. If that check fails on an existing installation, inspect its database
+configuration and backup before changing modes. The bot applies the shared
+additive nonconsumable policy; it does not copy a production player database.
+
 ## Start and verify
 
 ```bash

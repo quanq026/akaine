@@ -341,6 +341,43 @@ class BotRepository:
             raise AccountNotFound("Account does not exist.")
         return int(row["user_id"])
 
+    def create_account(self, discord_id: str | int, username: str, password: str) -> Account:
+        from create_user_cli import provision_account
+
+        username = validate_username(username)
+        password = validate_password(password)
+        connection = self._connect(self.game_db_path)
+        try:
+            connection.execute("ATTACH DATABASE ? AS botdb", (str(self.mapping_db_path),))
+            # Attached-file commits require rollback journals for crash atomicity.
+            for database in ("main", "botdb"):
+                mode = connection.execute(f"PRAGMA {database}.journal_mode").fetchone()[0]
+                if mode not in ("delete", "truncate", "persist"):
+                    raise RuntimeError("Atomic account creation requires rollback-journal databases.")
+            connection.execute("BEGIN IMMEDIATE")
+            if connection.execute("SELECT 1 FROM user WHERE name = ?", (username,)).fetchone():
+                raise AccountConflict("Username already exists.")
+            payload = provision_account(connection.cursor(), username, password)
+            connection.execute(
+                "INSERT INTO botdb.user_mapping (discord_id, user_id, username, user_code) VALUES (?, ?, ?, ?)",
+                (str(discord_id), payload["user_id"], payload["username"], payload["user_code"]),
+            )
+            account_row = connection.execute(
+                "SELECT discord_id, user_id, username, user_code, created_at FROM botdb.user_mapping WHERE discord_id = ? AND user_id = ?",
+                (str(discord_id), payload["user_id"]),
+            ).fetchone()
+            account = self._account_from_row(account_row)
+            connection.commit()
+            return account
+        except sqlite3.IntegrityError as error:
+            connection.rollback()
+            raise AccountConflict("Account creation or linking conflicted; no account was created.") from error
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+
     def register_mapping(
         self,
         discord_id: str | int,

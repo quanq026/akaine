@@ -1,0 +1,107 @@
+{
+  "schema": "akaine.guide-cli-source-candidate.v1",
+  "status": "SOURCE_BUILD_AND_SIGNED_ARTIFACT_VERIFIED_IDENTICAL_TO_TESTED_GUIDE_QA",
+  "candidate": "staging-prod22-guides-v35-QA",
+  "production_root_APK_sha256": "f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545",
+  "source_lock_sha256": "657881faf1eb01656c31de1a41abf44c3ab9e6953d9b707e512a7ae2ecf4ce80",
+  "checkout_map_sha256": "317cba485ba10ba663f931be1f9837f241f9159f00cc50d6b11af0df507f707a",
+  "plan_sha256": "5264be3d0748863117eadb392ad86b2337832f4cb792430705a50ec978419c97",
+  "source_build_receipt_sha256": "f1f9d40a7df39b9fd83b797de4153fa557e6e40dff3cfb3d6be5108038dae632",
+  "payload_sha256": {
+    "lib/arm64-v8a/libcocos2dcpp.so": "299f271b3b0bb8a656ba02be6fd6327f90b1a0fe2fe11d1e670ae51ccfdae42d",
+    "lib/arm64-v8a/libakaineanomaly_monitor.so": "bea4279f6fb5318190ff0a46d085003c05a1e627e889ae773b0f8bd889310c4b",
+    "lib/arm64-v8a/libakfcloader.so": "81beea88f021c4620019be6f4fdd4be76aa25300e1b90ccd889d9e067d5d99f8",
+    "classes3.dex": "20cdddd94102ef27c366379a5b11b3cb33cc8aa3e67cca502158373c62498761",
+    "classes4.dex": "6c4b63c3168a25a98c476862bc84f8de53de31257439c1e7473acfb3315f0ba0"
+  },
+  "unsigned_apk_sha256": "c7980b83be6771bfba1014b383997eba2280b89cd1b55b5caf41dab0b7689dae",
+  "assetset_sha256": "eccacb215213b17e1be6df318bbe716b0154942742c4e42c5e52e693ded8c5ab",
+  "base_and_output_assets_match": true,
+  "original_V34_profiles_preserved": {
+    "prod-rebase-source-lock.json": "e718fa150d1723fd81d91feedbdaf2ee1a18fb136cde951421baeac8b3052e55",
+    "prod-rebase-checkout-sources.json": "aa4485bb2212368a61177dc0ca2d231686af4a0d14500f996b3bbef4ad858896",
+    "prod-rebase-plan.json": "623eab7ca1b4e7bbd4ce46f59dfa82503dc26fbea8790bf1d4fded1e5e011230"
+  },
+  "scope": {
+    "changed_existing_authored_roles": 5,
+    "new_guide_test_roles": 2,
+    "verified_release_input_roles": 1045,
+    "changed_payload_controls": [
+      "lib/arm64-v8a/libakaineanomaly_monitor.so"
+    ],
+    "production_source_build_tools_modified": false,
+    "menu_performance_patch": false,
+    "media_conversion": false,
+    "bundle_publication": false
+  },
+  "verification": {
+    "Windows_host_CLI_suite": {
+      "run": 146,
+      "passed": 145,
+      "skipped_native_fixture": 1
+    },
+    "separate_WSL_native_guide_fixture": "PASS",
+    "production_rebase_tests": {
+      "run": 12,
+      "passed": 11,
+      "skipped_host_native_fixture": 1
+    },
+    "tracked_repository_content_check": {
+      "status": "PASS",
+      "files": 446,
+      "untracked_sibling_profiles_not_in_tracked_scan": true
+    },
+    "sibling_profile_scope_and_V34_immutability": "PASS",
+    "git_diff_check": "PASS",
+    "input_hashes_rechecked_after_build": true,
+    "all_five_payloads_rebuilt_and_matched": true,
+    "opaque_key_header_read_copied_hashed_or_logged_by_driver": false,
+    "earlier_attempt": "Stopped before APK at loader identity mismatch; corrected only opaque header reference from verified V34 dependency record, then rebuilt into a fresh directory.",
+    "new_profile_docs_content_patterns": {
+      "status": "PASS",
+      "files": 5,
+      "checks": "Existing repository checker secret/artifact patterns and size limits"
+    },
+    "profile_self_review": {
+      "status": "PASS_SELF_REVIEW_NO_FINDINGS",
+      "independent": false,
+      "sha256": "665d3270b842b2a922cb8ce15b334d4c46b6053be888616cfc14237b44f72408"
+    }
+  },
+  "previous_guide_QA_runtime": {
+    "APK_sha256": "63fe18f40ddd19289532f435a0a221067a0f60cab1d2f1001b8cdc189221fdc0",
+    "monitor_matches_this_source_build": true,
+    "welcome_settings_main_hint_callbacks": 8,
+    "pack_hint_callbacks": 2,
+    "advanced_skip_callbacks": 1,
+    "simultaneous_PackHint_Advanced_overlap_reproduced": false,
+    "competing_guide_priority": "UNPROVED_FAIL_CLOSED",
+    "scope": "Prior tested APK and new production-root signed candidate have identical full SHA-256; callback evidence is bound to those same bytes."
+  },
+  "actions": {
+    "internal_unsigned_APK_assembly": true,
+    "signed": true,
+    "device_actions": false,
+    "server_actions": false,
+    "Git_commit_or_push": false
+  },
+  "remaining": [
+    "Physical-device validation for guide changes has not been run.",
+    "Simultaneous PackHint and Advanced Tutorial overlap remains unreproduced and fail-closed.",
+    "Menu/loading renderer optimization is tracked separately."
+  ],
+  "signed_candidate": {
+    "apk_sha256": "63fe18f40ddd19289532f435a0a221067a0f60cab1d2f1001b8cdc189221fdc0",
+    "bytes": 1209812557,
+    "payloads_verified": 5,
+    "preserved_production_members": 5413,
+    "asset_count": 4996,
+    "assetset_sha256": "eccacb215213b17e1be6df318bbe716b0154942742c4e42c5e52e693ded8c5ab",
+    "v2_signature_verified": true,
+    "signer_sha256": "d8001c4321e553ace0b748b592946b0aa4c7cbcae92afe3bd30dd4f5f33471b6",
+    "alignment16k_verified": true,
+    "same_full_APK_sha256_as_previously_runtime_tested_guide_QA": true,
+    "runtime_scope": "Prior identical APK exercised Welcome/Settings/MainMenu8callbacks, PackHint2callbacks, AdvancedTutorialSkip1callback; simultaneousPackHint+Advancednotreproduced",
+    "production_publication": false
+  }
+}

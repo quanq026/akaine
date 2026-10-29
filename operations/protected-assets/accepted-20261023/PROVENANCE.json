@@ -1,0 +1,90 @@
+{
+  "schema": "akaine.accepted-worker-reference.v1",
+  "status": "HISTORICAL_DEPLOYED_SOURCE_REFERENCE_NOT_A_DEPLOYMENT",
+  "historical_deployed_date": "2026-10-23",
+  "files": [
+    {
+      "file": "worker.accepted.mjs",
+      "historical_filename": "worker-aurora-candidate.js",
+      "bytes": 131620,
+      "sha256": "54748325983a7c1bfc7e1b3486446a2d279f4782f68ce54218aff3ebed9f7402",
+      "byte_identical_to_reviewed_historical_source": true
+    },
+    {
+      "file": "worker.before.mjs",
+      "historical_filename": "worker-rollback-before.js",
+      "bytes": 43626,
+      "sha256": "dd650b9e85973c6a35496b058e0d85b40de00017c063ff3c114d957d3b5f9d24",
+      "byte_identical_to_reviewed_historical_source": true
+    },
+    {
+      "file": "allowlist-additions.json",
+      "historical_filename": "AURORA_ALLOWLIST_ADDITIONS.json",
+      "bytes": 130891,
+      "sha256": "dd031ec5f92859d0b1d60afccda259b4cd45064c470ba8cf13dafe4c14fd841c",
+      "byte_identical_to_reviewed_historical_source": true
+    },
+    {
+      "file": "worker_catalog_patch.py",
+      "historical_filename": "worker_catalog_patch.py",
+      "bytes": 3081,
+      "sha256": "6451d84aead9ddd0eae4faffed2cd1f4890379644ff620a00adc1f4528bd0f6b",
+      "byte_identical_to_reviewed_historical_source": true
+    },
+    {
+      "file": "test_worker_catalog_patch.py",
+      "historical_filename": "test_worker_catalog_patch.py",
+      "bytes": 2550,
+      "sha256": "3cd40aad1cb38adc6708c53a87c7dcf133bce4252faaca8e4aaf68d838d2a8b5",
+      "byte_identical_to_reviewed_historical_source": true
+    }
+  ],
+  "historical_verified_content_scope": {
+    "old_song_ids": 458,
+    "old_filenames": 1998,
+    "added_song_ids": 1532,
+    "added_filenames": 6434,
+    "all_bytes_outside_single_static_manifest_literal_unchanged": true,
+    "no_broad_aurora_prefix_grant": true,
+    "five_binding_names_types_and_routes_unchanged": true
+  },
+  "environment_binding_names_only": [
+    "AKAINE_ASSETS",
+    "ASSET_AUDIT",
+    "ASSET_MANIFEST",
+    "ASSET_SIGNING_SECRET",
+    "ASSET_SONG_ID_PREFIXES"
+  ],
+  "secret_values_or_operator_config_included": false,
+  "content_scan": {
+    "private_keys": false,
+    "AWS_access_keys": false,
+    "hardcoded_credential_literals": false,
+    "bearer_tokens": false,
+    "machine_specific_secret_or_input_maps": false
+  },
+  "historical_evidence": [
+    {
+      "path": "work/aurora-stage-import-20261023/worker-audit/WORKER_POSTDEPLOY_INDEPENDENT_VERIFY.json",
+      "sha256": "e3694b4d8159289723f3ce13d3478a77a5a08c100f4e7c028fba4f378976f42d"
+    },
+    {
+      "path": "work/aurora-stage-import-20261023/worker-audit/WORKER_ROOT_REVIEW.json",
+      "sha256": "138afa09563033b6e53d31fc4152d1546539977c5333609238580d3fce4adedb"
+    }
+  ],
+  "generic_repo_worker_replaced": false,
+  "R2_Worker_routes_or_service_mutations_performed": false,
+  "deployable_without_live_preflight": false,
+  "focused_verification": {
+    "existing_synthetic_patch_tests": 4,
+    "existing_synthetic_patch_tests_status": "PASS",
+    "exact_real_source_patch_reproduction": "PASS",
+    "owned_real_source_rollback": "PASS",
+    "Node_syntax_checks": [
+      "worker.accepted.mjs:PASS",
+      "worker.before.mjs:PASS"
+    ],
+    "network_or_deployment_operations": false
+  }
+}

@@ -11,6 +11,18 @@ For a different domain, its native routes must also be patched and verified for
 that host. Running this chapter at `api.example.com` proves the server works;
 it does not make the published AkaineXD APK connect to `api.example.com`.
 
+## Production source checkpoint
+
+The public `server/` tree starts from the production25 source siblings used with
+the V36 client. [Its provenance and integration exceptions](../production-checkpoint.md)
+are recorded separately: the public account helper retains atomic bot
+provisioning, and five identity/secret defaults in `core/config_manager.py` are
+empty. Supply your own private configuration. Catalogue/media still come from
+the verified resource kit; this setup never copies the operator's production
+config, database or player records. The sample dynamic-pack and assetset-profile
+controls start disabled and need matching catalogue/client verification before
+use. The historical archive remains unchanged.
+
 ## 1. Prepare the Linux instance
 
 The commands in this section run in the Lightsail SSH terminal. Sign in as

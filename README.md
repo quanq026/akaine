@@ -16,6 +16,17 @@ offsets, so they are outside this repository's instructions.
 The repository contains the guide, server and build tools. The APK input and
 game content are supplied separately when the guide needs them.
 
+## Current production checkpoint
+
+The public source now includes the production **V36** client checkpoint and the
+original-quality **`7.0.255.25`** standalone content-base records. Start with
+[the production checkpoint](docs/production-checkpoint.md) for the exact APK
+identity, current source-build path, production CLI and server-source boundary.
+The fresh-XAPK instructions in chapter 6 describe an earlier client checkpoint;
+use the production source profile when reproducing V36. Private APK inputs,
+keys, content and local build maps remain separate from Git.
+
+
 The included 7.0.255 native patch uses the published Akaine API hosts. A
 client for a different domain also needs a verified native route change; the
 public repository does not yet provide a general host-change command. The

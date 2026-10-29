@@ -1,0 +1,657 @@
+{
+  "schema": "akaine.original25-online-receipt.v1",
+  "status": "BUNDLE_NATIVE_NETWORK_APPLY_RESTART_PASS_USER_SELECTED_BUNDLE_ONLY",
+  "local_date": "2026-10-26",
+  "scope": "staging only",
+  "before": {
+    "version": "7.0.255.20",
+    "CB_bytes": 1984651176,
+    "parts": 7,
+    "quality": "rejected lite media"
+  },
+  "after": {
+    "version": "7.0.255.25",
+    "alias": "7.0.255-staging-prod18-aurora-original-base25-20261026",
+    "previousVersionNumber": null,
+    "parts": 10,
+    "CB_bytes": 4532838207,
+    "manifest_bytes": 5450689,
+    "total_bytes": 4538288896,
+    "manifest_sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+    "logical_files": 20903,
+    "songs": 2543,
+    "packs": 63,
+    "quality": "original bytes; production18 +1532 accepted Aurora; remote per-song Download retained"
+  },
+  "CDN_full_GET": [
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+      "bytes": 503175292,
+      "sha256": "f8bebecbea56f5a37deb67513f610427b7081c7bd15c4220ca6726269c5aabd3",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+      "bytes": 501113447,
+      "sha256": "aa08e4e9f1e7237a4c725fe21bc8b2a7c52d29dc8a205273e22931624118c3f9",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+      "bytes": 501951040,
+      "sha256": "21193d74e00e373d629beeddf0b0ea260e2fab7a278aabb2eff4fc9c2f45841f",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+      "bytes": 503223701,
+      "sha256": "58522d4eabf152fabc4a208cdc930dd6096bcce7c6b84c101a167fea13449459",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+      "bytes": 502856017,
+      "sha256": "54d3df190ac74fe86e4d25178c0e16527bd0ab1820be67e17a5af646a5b9765d",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+      "bytes": 502582655,
+      "sha256": "eef78df461ac04ceed0e0236dab6dac2a805d389bb73db1d17bbbf20d5cc195b",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+      "bytes": 503293283,
+      "sha256": "a9ffcf4906839a7f37bb159071e3ca25ce01db2679b7f480d87a5e29d8c571f3",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+      "bytes": 503290173,
+      "sha256": "7d01672b8ebf310d9ca2c7736d43e3df641ebb92eda31bbfccc99943130f5682",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+      "bytes": 503217633,
+      "sha256": "732f61d0f75380fbfa960d3f36465462e3f623d09f119731a595d5983af2e10b",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+      "bytes": 8134966,
+      "sha256": "85eeec762cdcdd4e11822c91e4196e0047c3ec4ceb1275e541f22a7ece71284a",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026.json",
+      "bytes": 5450689,
+      "sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+      "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json",
+      "status": "PUBLIC_CDN_FULL_GET_VERIFIED"
+    }
+  ],
+  "audio": {
+    "new_original_objects": 50,
+    "signed_full_GET_verified": 50,
+    "files_lists_unchanged": true,
+    "metadata_hash_changes_per_file": {
+      "database/song_metadata.json": 50,
+      "database/remote70/song_metadata.json": 50
+    },
+    "unchanged_objects_reused": 6384,
+    "all6434_objects_retested_in_this_run": false
+  },
+  "Worker": {
+    "before_sha256": "54748325983a7c1bfc7e1b3486446a2d279f4782f68ce54218aff3ebed9f7402",
+    "after_sha256": "f617e04a99dae6c4654d1794591840209638a502e85ba8b67356121199bf13e2",
+    "existing_routes_and_bindings_unchanged": true,
+    "added_private_namespace_deny_route": {
+      "pattern": "cdn.akai.id.vn/private/candidates/aurora-full-base-20261025-original/*",
+      "script": "akaine-protected-assets",
+      "id": "1d9869d536494ecb9772091108e7862e",
+      "reason": "Deny unsigned CDN requests for new private original-audio namespace; existing routes unchanged"
+    },
+    "new_signed_prefix": "https://arcapi-v3.akai.id.vn/protected/songs/original25/",
+    "direct_candidate_URL_status_before_guard": 206,
+    "direct_candidate_URL_status_after_guard": 404,
+    "guard_scope": "50 raw original audio objects only; encrypted charts reused existing private/songs keys"
+  },
+  "activation": {
+    "status": "STAGING25_ACTIVE_API_MATRIX_PASS",
+    "backup": "/home/ec2-user/arcaea-server-test/database/backups/original25-online-20261026-retry2",
+    "before_hashes": {
+      "config.py": "02756606e370a91a92846970c78545df8b7683196804311afece750f4225741c",
+      "database/song_metadata.json": "b529c2e8beecf7ac64dfe0000a5916cb4371c31222cc71e2e200249efbb9bad0",
+      "database/remote70/song_metadata.json": "e47df179896b4ebfa73e51385709ff1fd435bd5bdcd20aef64e12abab27ea3d5"
+    },
+    "candidate_hashes": {
+      "config.py": "90da0ea49a08d59eff4c4eea057c8b4a16bf655b05be6b6da9b9eb50c7f6c353",
+      "database/song_metadata.json": "829a4c298f39094a7829ca4dbfd10c95521191a67343ee3fc32bc0508c6a0f78",
+      "database/remote70/song_metadata.json": "301f3be32d643f8d2a1b1f51b2d786b5b823593089c499d40c25493092060d90"
+    },
+    "manifest_sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+    "metadata_audio_hashes_changed": {
+      "database/song_metadata.json": 50,
+      "database/remote70/song_metadata.json": 50
+    },
+    "production_modified": false,
+    "DB_or_account_writes": false,
+    "api_matrix": {
+      "0.0.0": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.19": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.20": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.21": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.22": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.24": [
+        {
+          "appVersion": "7.0.255",
+          "bundleParts": [
+            {
+              "bundleSize": 503175292,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+              "size": 503175292,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb"
+            },
+            {
+              "bundleSize": 501113447,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+              "size": 501113447,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb"
+            },
+            {
+              "bundleSize": 501951040,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+              "size": 501951040,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb"
+            },
+            {
+              "bundleSize": 503223701,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+              "size": 503223701,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb"
+            },
+            {
+              "bundleSize": 502856017,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+              "size": 502856017,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb"
+            },
+            {
+              "bundleSize": 502582655,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+              "size": 502582655,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb"
+            },
+            {
+              "bundleSize": 503293283,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+              "size": 503293283,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb"
+            },
+            {
+              "bundleSize": 503290173,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+              "size": 503290173,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb"
+            },
+            {
+              "bundleSize": 503217633,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+              "size": 503217633,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb"
+            },
+            {
+              "bundleSize": 8134966,
+              "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+              "size": 8134966,
+              "url": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb"
+            }
+          ],
+          "bundleSize": 4532838207,
+          "bundleUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+          "contentBundleVersion": "7.0.255.25",
+          "jsonSize": 5450689,
+          "jsonUrl": "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-prod18-aurora-original-base25-20261026.json"
+        }
+      ],
+      "7.0.255.25": [],
+      "7.0.255.26": []
+    },
+    "stage_service": {
+      "MainPID": "4150741",
+      "ExecMainStartTimestampMonotonic": "6846063220293",
+      "WorkingDirectory": "/home/ec2-user/arcaea-server-test",
+      "ActiveState": "active"
+    },
+    "production_files_manifests_services_API_unchanged": true
+  },
+  "public_API": {
+    "status": 200,
+    "CF_Cache_Status": "DYNAMIC",
+    "Cache_Control": "private, no-store",
+    "normal_client_target": "7.0.255.25"
+  },
+  "production_modified": false,
+  "DB_account_scores_save_writes": false,
+  "native": {
+    "APK": "V36",
+    "APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+    "new_APK_built": false,
+    "serial": "emulator-5580",
+    "protected_serial_5556_touched": false,
+    "status": "BUNDLE_NETWORK_APPLY_AND_COLD_RESTART_PASS",
+    "initial_D_USB_AVD": "Streamed installs failed with blank adb error; diskstats512Bwrite1388ms; moved disposable userdata to C NVMe",
+    "V36_install_on_C_userdata": "PASS",
+    "native_4GiB_apply_restart_verified": true,
+    "normal_downloader_pending_bytes": 4538288896,
+    "downloaded_manifest_and_CB_bytes": 4538288896,
+    "native_manifest_sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+    "applied_logical_files": 20903,
+    "cold_restart": {
+      "bundle": "7.0.255.25",
+      "bridge_phase": "ready",
+      "pending_versions": [],
+      "pending_bytes": 0,
+      "dltemp_exists": false,
+      "redownload_observed": false
+    },
+    "capture_interruption": {
+      "error": "9804 network error after AVD pause",
+      "retry": "Native Retry retained completed parts and finished download; no APK patch"
+    },
+    "per_song_native": {
+      "status": "NOT_TESTED_USER_DECLINED_LOGIN_TERMS_AND_SELECTED_BUNDLE_ONLY",
+      "QA_account_created": false,
+      "credentials_read_or_saved": false,
+      "terms_accepted": false
+    },
+    "evidence": [
+      "01-native-download-confirm.png",
+      "02-native-download-over4GiB.png",
+      "03-native-applied25.png",
+      "04-native-restart25.png"
+    ]
+  },
+  "limits": [
+    "829 source IDs lack accepted data; no placeholder songs invented",
+    "No physical-device audio claim",
+    "No all-song gameplay or PTT acceptance",
+    "User explicitly declined login terms and stopped at bundle verification; native per-song Download/gameplay was not tested"
+  ],
+  "rollback": {
+    "stage_backup": "/home/ec2-user/arcaea-server-test/database/backups/original25-online-20261026-retry2",
+    "old_worker_sha256": "54748325983a7c1bfc7e1b3486446a2d279f4782f68ce54218aff3ebed9f7402",
+    "current_worker_sha256": "f617e04a99dae6c4654d1794591840209638a502e85ba8b67356121199bf13e2",
+    "consumed25_requires_forward_repair_version": true,
+    "keep_private_deny_route_until_candidate_objects_removed": true
+  },
+  "memory_snapshot": "timed out; no blind retry; explicit milestone memory saved",
+  "repository_server_milestone_commit": "a577119"
+}

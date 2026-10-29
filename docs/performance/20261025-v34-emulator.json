@@ -1,0 +1,328 @@
+{
+  "schema": "akaine.performance.observations.v1",
+  "status": "BOUNDED_EMULATOR_PERFORMANCE_OBSERVATIONS_INDEPENDENTLY_VERIFIED",
+  "date_local": "2026-10-25",
+  "apk_sha256": {
+    "V34": "2f4705230db06034d520b57ca0836bba424cbd7f9a6c6c79e42d92be06c23b4c",
+    "Prod V9 22/10": "f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545"
+  },
+  "controls": {
+    "same_song": "amega_daybreakfrontline",
+    "difficulty": 2,
+    "partner": 0,
+    "ReplayOff": true,
+    "note_speed": 1.0,
+    "offset_ms": 0,
+    "SFX": 0,
+    "audio_preset": 0,
+    "performance_mode": false,
+    "cores": 4,
+    "RAM_MiB": 4096,
+    "configured_data": "40G",
+    "display": "1280x720/120Hz",
+    "SDK": 35,
+    "ABI": "x86_64 with ARM64 translation",
+    "one_emulator_at_a_time": true,
+    "capture_nominal_seconds": 30,
+    "SurfaceFlinger_poll_interval_seconds": 0.25,
+    "CPU_sampler": "Simpleperf app task-clock/cpu-clock/context-switches/page-faults in each window",
+    "CLI_audio_recorder_screenshots_during_frame_window": false
+  },
+  "frame_windows": [
+    {
+      "label": "V34_HIGH30",
+      "target": "V34",
+      "highFPS": true,
+      "display_refresh_hz": 120.0000048000002,
+      "metrics": {
+        "interval_count": 3079,
+        "present_span_seconds": 29.7796894,
+        "average_fps": 103.39261631116945,
+        "median_interval_ms": 8.6003,
+        "p95_interval_ms": 17.0711,
+        "p99_interval_ms": 18.824,
+        "maximum_interval_ms": 30.0789,
+        "one_percent_low_fps": 46.57303583479612,
+        "one_percent_slowest_interval_count": 31,
+        "one_percent_slowest_mean_interval_ms": 21.471651612903226,
+        "percentile_method": "nearest rank: sorted[ceil(p*N)-1]",
+        "one_percent_low_definition": "1000 / mean(slowest ceil(1% * interval_count) interval milliseconds)"
+      },
+      "complete_rolling_coverage": true,
+      "raw_evidence_sha256": {
+        "CONTROL_AFTER.json": "78b7a1d0be68490f7bd7d8beb0a3f3d8718d1729a80d79e91f62d0f7d7f99968",
+        "CONTROL_BEFORE.json": "a914f2aced1d4940c0a11330b47d34a005933373a0cb18ae7a478de0fd22c1c3",
+        "cpu-stat.txt": "6d16653fd546d3a05356d7a33cbbf998be0abb76f61bbd1f7654ed26246a67f2",
+        "FRAME_STATS.json": "7a872f1b248b3daedabd63d552a8e72841e7b7a8cd9a5f8ae7e22cc9ebf60fbc",
+        "MEM_AFTER.txt": "e1a6a81523caf3485e30410d0f418a99f8ae77b4188306afab4cba39160b6ef3",
+        "MEM_BEFORE.txt": "955d65de472205bef4f32b6257b777f5520546aeaf9d9762010742481523d8e4",
+        "surface-latency.json": "f3171c32dfff4d64fa195fee1c8e6e1c440382c9f06427d791abd91b4f0a7eff"
+      },
+      "guest_task_clock_CPUs_used": 1.027428,
+      "memory_PSS_MiB": {
+        "MEM_BEFORE.txt": 441.5712890625,
+        "MEM_AFTER.txt": 425.86328125
+      }
+    },
+    {
+      "label": "V34_CAP60_30",
+      "target": "V34",
+      "highFPS": false,
+      "display_refresh_hz": 120.0000048000002,
+      "metrics": {
+        "interval_count": 1787,
+        "present_span_seconds": 29.7709279,
+        "average_fps": 60.02500177362628,
+        "median_interval_ms": 16.6668,
+        "p95_interval_ms": 18.2369,
+        "p99_interval_ms": 24.8251,
+        "maximum_interval_ms": 31.3119,
+        "one_percent_low_fps": 37.62260265640656,
+        "one_percent_slowest_interval_count": 18,
+        "one_percent_slowest_mean_interval_ms": 26.579766666666668,
+        "percentile_method": "nearest rank: sorted[ceil(p*N)-1]",
+        "one_percent_low_definition": "1000 / mean(slowest ceil(1% * interval_count) interval milliseconds)"
+      },
+      "complete_rolling_coverage": true,
+      "raw_evidence_sha256": {
+        "CONTROL_AFTER.json": "081f38ff9f9997354b02a9223f54d212557e71837322b62d5eac913f77f6fc26",
+        "CONTROL_BEFORE.json": "cfd78a7952b121ab0f1748804f7d1221174e70d62ffced88986d5cf0960eb165",
+        "cpu-stat.txt": "7151b92d9812fbc6b7cd873cb2bc69e3adbe033e4078df80e5a05178d83ea28f",
+        "FRAME_STATS.json": "2fd60e47d84e885038ee888d290e3ffeca1b57201d82d7752b59279b8fe9374f",
+        "MEM_AFTER.txt": "056ec4d70e9c0653e3d923a3ea2f45b1324c109405d3676b1e5e4a492119bf21",
+        "MEM_BEFORE.txt": "2055b89ea284767e9fc5bca5211f7700cf9d3aeb7fb36fc59bed465a0341d0a7",
+        "surface-latency.json": "ed508a0a8cd5cec4cd25f09fe7b523005913e418e106630feff6d80c6579a4ad"
+      },
+      "guest_task_clock_CPUs_used": 0.453708,
+      "memory_PSS_MiB": {
+        "MEM_BEFORE.txt": 431.9033203125,
+        "MEM_AFTER.txt": 431.3251953125
+      }
+    },
+    {
+      "label": "PROD_HIGH30",
+      "target": "Prod V9 22/10",
+      "highFPS": true,
+      "display_refresh_hz": 120.0000048000002,
+      "metrics": {
+        "interval_count": 2603,
+        "present_span_seconds": 29.8252568,
+        "average_fps": 87.27502389853689,
+        "median_interval_ms": 8.3061,
+        "p95_interval_ms": 9.9735,
+        "p99_interval_ms": 142.5216,
+        "maximum_interval_ms": 158.9083,
+        "one_percent_low_fps": 6.697395806939082,
+        "one_percent_slowest_interval_count": 27,
+        "one_percent_slowest_mean_interval_ms": 149.31176666666667,
+        "percentile_method": "nearest rank: sorted[ceil(p*N)-1]",
+        "one_percent_low_definition": "1000 / mean(slowest ceil(1% * interval_count) interval milliseconds)"
+      },
+      "complete_rolling_coverage": true,
+      "raw_evidence_sha256": {
+        "CONTROL_AFTER.json": "379f12ad495ddde610ce86ef8a0d9936b41d8ea37d18c9afca281e0ecbf58af9",
+        "CONTROL_BEFORE.json": "3799b69248b2d7c4b6e710767eef24c48f8ddb6becaff13d39ed1e60e2c1f16a",
+        "cpu-stat.txt": "7d6b5c3787097796b695897c30e97f020772e68d6aa1cffb683543c6b89ca762",
+        "FRAME_STATS.json": "fca4228d511c0a8c4fe82499b2b7a4cf1737f156de4d7d5db9fd9946829e29b6",
+        "MEM_AFTER.txt": "ef300a05ce9b4277506040aff61bf80c65e42178b53d7bc46fb7729519f88c0a",
+        "MEM_BEFORE.txt": "f27bf248348671412db4283ed06c58564d706d4ef8af4e913ed53f91c554b175",
+        "surface-latency.json": "1dc731a414aca068a38d6c21afac3fd1f1f092e800ba9651aeeb147f6e0ca374"
+      },
+      "guest_task_clock_CPUs_used": 0.877664,
+      "memory_PSS_MiB": {
+        "MEM_BEFORE.txt": 447.5263671875,
+        "MEM_AFTER.txt": 424.478515625
+      }
+    },
+    {
+      "label": "PROD_HIGH30_REPEAT",
+      "target": "Prod V9 22/10",
+      "highFPS": true,
+      "display_refresh_hz": 120.0000048000002,
+      "metrics": {
+        "interval_count": 2625,
+        "present_span_seconds": 29.8745908,
+        "average_fps": 87.86731231143759,
+        "median_interval_ms": 8.327,
+        "p95_interval_ms": 9.6021,
+        "p99_interval_ms": 143.0338,
+        "maximum_interval_ms": 158.9909,
+        "one_percent_low_fps": 6.72166147522047,
+        "one_percent_slowest_interval_count": 27,
+        "one_percent_slowest_mean_interval_ms": 148.77274074074074,
+        "percentile_method": "nearest rank: sorted[ceil(p*N)-1]",
+        "one_percent_low_definition": "1000 / mean(slowest ceil(1% * interval_count) interval milliseconds)"
+      },
+      "complete_rolling_coverage": true,
+      "raw_evidence_sha256": {
+        "CONTROL_AFTER.json": "400f8454cd8c8749f7e298ee91c0e2b9a41fdaafe4ba32b3a2709b34b8c71205",
+        "CONTROL_BEFORE.json": "8d01a62e4543d3caec4adc26d6f78f16028b6e3a635a9ab574d55754a8242fcc",
+        "cpu-stat.txt": "2e6f22203025b900a087bf6b8b4376081ee445f8ba8520e82edd1325a9a97173",
+        "FRAME_STATS.json": "d7ef391cb9236bbe3342749f3ce55da17ff21412ac3423bb53ea6d7cde6a5786",
+        "MEM_AFTER.txt": "5dfae8922f7134e38ac4c254d771a62bcb2e565f3887fac89150b8895363e2ca",
+        "MEM_BEFORE.txt": "7fa4634c22674b88bc95d92751fed7e797ac0b60ebd81963b45a7ad4a88e3ac5",
+        "surface-latency.json": "ce755c659c4608072bde4557ea20ae52f557bf57be54fc8167d117c2de1172d4"
+      },
+      "guest_task_clock_CPUs_used": 0.875747,
+      "memory_PSS_MiB": {
+        "MEM_BEFORE.txt": 452.2919921875,
+        "MEM_AFTER.txt": 428.1435546875
+      }
+    },
+    {
+      "label": "V34_HIGH30_REPEAT",
+      "target": "V34",
+      "highFPS": true,
+      "display_refresh_hz": 120.0000048000002,
+      "metrics": {
+        "interval_count": 3558,
+        "present_span_seconds": 29.822447875,
+        "average_fps": 119.30610172958514,
+        "median_interval_ms": 8.293896,
+        "p95_interval_ms": 9.806655,
+        "p99_interval_ms": 11.354763,
+        "maximum_interval_ms": 57.82228,
+        "one_percent_low_fps": 63.9963832088494,
+        "one_percent_slowest_interval_count": 36,
+        "one_percent_slowest_mean_interval_ms": 15.625883055555557,
+        "percentile_method": "nearest rank: sorted[ceil(p*N)-1]",
+        "one_percent_low_definition": "1000 / mean(slowest ceil(1% * interval_count) interval milliseconds)"
+      },
+      "complete_rolling_coverage": true,
+      "raw_evidence_sha256": {
+        "CONTROL_AFTER.json": "e8269a49cf7d5e1441bae3da4a1299eec054b88abd0ac99f154eb6bbea702685",
+        "CONTROL_BEFORE.json": "bc6c3ed1ead4fec12e81c9783013ddd10d0098fb9c4a09048223fa53527416ff",
+        "cpu-stat.txt": "8df251702bcf17c2e5d2bd01b7e2fc80871cd67bfa9cc3f22108292d1f4aae30",
+        "FRAME_STATS.json": "2c3a26a585e396f8d58e5917038e434aebde9aa2486e68e28ddf75287b64daf7",
+        "MEM_AFTER.txt": "855938e2f7b8186709b4833d0b22c80fc63040cadb19720674a0af2eed538197",
+        "MEM_BEFORE.txt": "5331f954ac4452fd7372bc4b49355541f2dcbab8452a69ef4bddbd54bdc8bad6",
+        "surface-latency.json": "cf7b4c895b9a973b3d47d0673e658a7ca2848be1bbd17fd15d93176068674b8e"
+      },
+      "guest_task_clock_CPUs_used": 0.806788,
+      "memory_PSS_MiB": {
+        "MEM_BEFORE.txt": 418.3525390625,
+        "MEM_AFTER.txt": 416.546875
+      }
+    }
+  ],
+  "menu": {
+    "base_pack_same64IDs": true,
+    "base_pack_ID_sha256": "1c1ea774ba95b0fa165d1adc7076933178ce10c72b256e2495368b578517e6e8",
+    "V34": [
+      {
+        "pack": "base",
+        "native_list_count": 64,
+        "cycles": 3,
+        "stats": {
+          "reverse": {
+            "samples": 6,
+            "median_ms": 1312.5,
+            "maximum_ms": 1438.0
+          },
+          "filter": {
+            "samples": 3,
+            "median_ms": 1437.0,
+            "maximum_ms": 1484.0
+          },
+          "filter reset": {
+            "samples": 3,
+            "median_ms": 1469.0,
+            "maximum_ms": 1485.0
+          }
+        }
+      },
+      {
+        "pack": "all",
+        "native_list_count": 2440,
+        "cycles": 3,
+        "stats": {
+          "reverse": {
+            "samples": 6,
+            "median_ms": 1422.0,
+            "maximum_ms": 1453.0
+          },
+          "filter": {
+            "samples": 3,
+            "median_ms": 1469.0,
+            "maximum_ms": 1469.0
+          },
+          "filter reset": {
+            "samples": 3,
+            "median_ms": 1453.0,
+            "maximum_ms": 1578.0
+          }
+        }
+      }
+    ],
+    "Prod": [
+      {
+        "pack": "base",
+        "native_list_count": 64,
+        "cycles": 3,
+        "stats": {
+          "reverse": {
+            "samples": 6,
+            "median_ms": 1203.0,
+            "maximum_ms": 1469.0
+          },
+          "filter": {
+            "samples": 3,
+            "median_ms": 1515.0,
+            "maximum_ms": 1563.0
+          },
+          "filter reset": {
+            "samples": 3,
+            "median_ms": 1484.0,
+            "maximum_ms": 1579.0
+          }
+        }
+      },
+      {
+        "pack": "all",
+        "native_list_count": 935,
+        "cycles": 3,
+        "stats": {
+          "reverse": {
+            "samples": 6,
+            "median_ms": 1461.0,
+            "maximum_ms": 1547.0
+          },
+          "filter": {
+            "samples": 3,
+            "median_ms": 1500.0,
+            "maximum_ms": 1500.0
+          },
+          "filter reset": {
+            "samples": 3,
+            "median_ms": 1500.0,
+            "maximum_ms": 1532.0
+          }
+        }
+      }
+    ],
+    "cycles_per_pack": 3,
+    "scope": "Host call through native confirmation includes ADB, locking, polling and snapshot reads. Not pure native execution time.",
+    "AllSongs_counts_differ": true,
+    "native_speedup_percent_established": false,
+    "superseded_control_batch": "Initial prod menu batch reused the old host Client deadline across operations; timeout is a host harness artifact, not a game latency sample. It was inspected/restored then replaced with fresh Client per operation."
+  },
+  "limits": [
+    "Single30s windows per condition, with one HighFPS repeat per APK. V34 varies103.39\u2013119.31FPS; do not claim fixed percentage speedup or stable120FPS.",
+    "Same chart/settings and3s post-Play warmup; precise musical/chart timestamp alignment was not recorded. Host background load was not isolated.",
+    "The periodic~0.5s old-prod stalls reproduced in two windows; their source is not established by these samples.",
+    "60FPS display-deadline proxy omitted:120Hzdisplay budget would falsely classify intentional60FPS intervals as jank.",
+    "Prod60cap was not measured: authenticV9 host lacks that native setter. No patched prod or coordinate control was used.",
+    "Menu timings includeADB/lock/polling/state snapshots. Common pack contents match but global catalog935vs2440 differs; no nativeReset speed percentage can be inferred.",
+    "BriefPSS/CPU measurements do not establish memory leak freedom, thermal stability, physical-deviceFPS/audio quality or all-song coverage.",
+    "No product patch, deployment, media quality change or synthetic note/score was made in this benchmark."
+  ],
+  "final_state": {
+    "screen": "main_menu",
+    "signed_in": true,
+    "highFPS": true,
+    "partner": 0,
+    "ReplayOff": true,
+    "visible_staging_emulator": true
+  },
+  "independent_peer_review_sha256": "70113e1db2207c5ab447102d1b4c03c58b29f6052dcdd4bba5ac4dbe917ad6f9"
+}

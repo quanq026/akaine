@@ -1,0 +1,147 @@
+{
+  "status": "OFFLINE_PROD18_AURORA_FULL_BASE_VERIFIED_ACTIVATION_BLOCKED",
+  "version": "7.0.255.25",
+  "alias": "7.0.255-staging-prod18-aurora-original-base25-20261026",
+  "previousVersionNumber": null,
+  "APK_omissions": 0,
+  "baseline_manifest_sha256": "804965179bbca3a7dbad8bc0424b568a9d5136b334ba2309164947e20396c53f",
+  "baseline_paths": 12947,
+  "preserved_baseline_paths": 12946,
+  "catalog_union_overlays": [
+    "songs/songlist"
+  ],
+  "added_paths": 7956,
+  "entries": 20903,
+  "parts": [
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_0.cb",
+      "bytes": 503175292,
+      "sha256": "f8bebecbea56f5a37deb67513f610427b7081c7bd15c4220ca6726269c5aabd3"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_1.cb",
+      "bytes": 501113447,
+      "sha256": "aa08e4e9f1e7237a4c725fe21bc8b2a7c52d29dc8a205273e22931624118c3f9"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_2.cb",
+      "bytes": 501951040,
+      "sha256": "21193d74e00e373d629beeddf0b0ea260e2fab7a278aabb2eff4fc9c2f45841f"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_3.cb",
+      "bytes": 503223701,
+      "sha256": "58522d4eabf152fabc4a208cdc930dd6096bcce7c6b84c101a167fea13449459"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_4.cb",
+      "bytes": 502856017,
+      "sha256": "54d3df190ac74fe86e4d25178c0e16527bd0ab1820be67e17a5af646a5b9765d"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_5.cb",
+      "bytes": 502582655,
+      "sha256": "eef78df461ac04ceed0e0236dab6dac2a805d389bb73db1d17bbbf20d5cc195b"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_6.cb",
+      "bytes": 503293283,
+      "sha256": "a9ffcf4906839a7f37bb159071e3ca25ce01db2679b7f480d87a5e29d8c571f3"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_7.cb",
+      "bytes": 503290173,
+      "sha256": "7d01672b8ebf310d9ca2c7736d43e3df641ebb92eda31bbfccc99943130f5682"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_8.cb",
+      "bytes": 503217633,
+      "sha256": "732f61d0f75380fbfa960d3f36465462e3f623d09f119731a595d5983af2e10b"
+    },
+    {
+      "file": "7.0.255-staging-prod18-aurora-original-base25-20261026_9.cb",
+      "bytes": 8134966,
+      "sha256": "85eeec762cdcdd4e11822c91e4196e0047c3ec4ceb1275e541f22a7ece71284a"
+    }
+  ],
+  "manifest": {
+    "file": "7.0.255-staging-prod18-aurora-original-base25-20261026.json",
+    "bytes": 5450689,
+    "sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891"
+  },
+  "CB_payload_bytes": 4532838207,
+  "total_bytes": 4538288896,
+  "all_original_media_copied_without_reencoding_resizing_or_upscaling": true,
+  "all_baseline_part_and_span_hashes_and_output_span_hashes_verified": true,
+  "catalog_detail_auth_digests_reused_exactly_no_keys_read": true,
+  "per_song_remote_download_mechanism_unchanged": true,
+  "recipe_sha256": "5ee2819329f74cb9f0007b252de9d98a9ac44d575c285ccfb453b15de024f5ad",
+  "review_sha256": "1257fa6d3d32919acfe72f5c49f558f5bd815563aa4cf69afc301ece312501b8",
+  "builder_sha256": "9e61ceef8c97cc7c2ef57bdd27c103108b70a6e77d0dfb75b63a6392b35c8d08",
+  "activation_blocked": true,
+  "activation_pending": [
+    "17_lossless_WAV_preview_native_compatibility",
+    "48_original_MP3_native_download_compatibility",
+    "aggregate_size_over_4GiB_native_and_API_proof",
+    "2_original_pre_remux_Ogg_native_download_compatibility"
+  ],
+  "source_modified": false,
+  "device_network_server_or_production_actions": false,
+  "schema": "akaine.prod18-aurora-original-offline-release.v1",
+  "built_local_date": "2026-10-26",
+  "catalog_songs": 2543,
+  "production_songs_retained": 1011,
+  "Aurora_accepted_songs": 1532,
+  "Aurora_real_charts": 4820,
+  "source_IDs_uncovered_by_prod_plus_import": 829,
+  "uploaded": false,
+  "activated": false,
+  "production_modified": false,
+  "heavy_media_committed_to_Git": false,
+  "remote_delivery": {
+    "status": "OFFLINE_ORIGINAL_BYTE_DELIVERY_LEDGER_VERIFIED_NOT_PUBLISHED",
+    "songs": 1532,
+    "objects": 6434,
+    "object_counts": {
+      "audio": 1532,
+      "chart": 4860,
+      "additional": 42
+    },
+    "real_charts": 4820,
+    "hidden_completion_shims": 40,
+    "candidate_total_object_bytes": 7384847914,
+    "changed_raw_objects": 50,
+    "replacement_actions": {
+      "mp3_to_vorbis_q5": 48,
+      "vorbis_audio_only_remux": 2
+    },
+    "metadata_files_lists_unchanged": true,
+    "metadata_hash_entries_changed": 50,
+    "chart_objects_reencrypted": false,
+    "all_1574_raw_objects_original_source_SHA256_identity_verified": true,
+    "all_4860_encrypted_chart_objects_SHA256_and_plaintext_source_MD5_SHA256_verified": true,
+    "uploads_performed": false,
+    "metadata_sha256": "a4580f1c3951602f72282b417cf028c4bb6c443005821b1cca0e180836da1eeb",
+    "object_ledger_sha256": "5290c25de8192d5ca4300562b8a6b326fa253e3e8eac34e4a91fa3928a98388a",
+    "compatibility_pending": [
+      "48_original_MP3",
+      "2_original_pre_remux_Ogg"
+    ]
+  },
+  "proof_sha256": {
+    "build_receipt": "323f8c36e5df8dbcca961f411197426e440fae03736bd25018136bee2672edd5",
+    "recipe_review": "1257fa6d3d32919acfe72f5c49f558f5bd815563aa4cf69afc301ece312501b8",
+    "source_catalog_audit": "816894c41d3e06ef9cf8a6873eb0691e63fcb2f650581f8be7de5544e1e71f9a",
+    "source_content_inventory": "49da982af07bc86b8f9d1f18808cb56a19301ea051b5cf37c6fb2ebf93bb7d56",
+    "source_content_index": "03dbb3b5f9b0f1f4242ab1985d86271206cc1bb2c239b3018af5e6b546501cb4",
+    "remote_receipt": "fdeb0ede14c58cb2b3b046bf7ad765c3a6fd7d95cf2dfc6dd2a47d3146fc1e6d",
+    "remote_peer_review": "d390d849d270895f6a14970bcc3ba4a5b4b8364cf643b970434f10131fd24283"
+  },
+  "postbuild_peer_review": {
+    "status": "PASS_INDEPENDENT_FULL_OUTPUT_BYTE_AND_STORAGE_IDENTITY_REVIEW_ACTIVATION_STILL_BLOCKED",
+    "sha256": "85c59577c5aebbd4c62115bf6d9e146cc59ab550bb01c1e5679ea3f84c9ecfc8",
+    "all_20903_output_spans_and10_whole_parts_independently_streamed": true,
+    "bytes_read": 4532838207,
+    "native_or_API_acceptance": false
+  }
+}

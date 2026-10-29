@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import hmac
 import time
 from os import urandom
 from random import randint
@@ -7,6 +8,8 @@ from json import dumps, loads
 
 from .character import UserCharacter, UserCharacterList
 from .config_manager import Config
+from .content_grants import grant_missing_content
+from .client_packs import pack_ids_for_dynamic_user
 from .constant import Constant
 from .error import (ArcError, DataExist, FriendError, InputError, NoAccess,
                     NoData, RateLimit, UserBan)
@@ -186,10 +189,7 @@ class UserRegister(User):
         character_id, is_skill_sealed, is_char_uncapped, is_char_uncapped_override, is_hide_rating, favorite_character, max_stamina_notification_enabled, current_map, ticket, prog_boost, email)
         values(:user_id, :name, :password, :join_date, :user_code, 0, 0, 0, 0, 0, 0, -1, 0, '', :memories, 0, :email)
         ''', {'user_code': self.user_code, 'user_id': self.user_id, 'join_date': now, 'name': self.name, 'password': self.hash_pwd, 'memories': Config.DEFAULT_MEMORIES, 'email': self.email})
-        self.c.execute('''insert or ignore into user_item(user_id, item_id, type, amount)
-                          select :user_id, item_id, type, 1 from item
-                          where type = 'course_banner' and is_available = 1''',
-                       {'user_id': self.user_id})
+        grant_missing_content(self.c, self.user_id)
         UserMissionList(self.c, self).ensure_bootstrap_missions()
 
 
@@ -297,7 +297,8 @@ class UserLogin(User):
             raise UserBan(
                 f'The account `{self.user_id}` has been banned.', 106)
 
-        if False and x[1] != self.hash_pwd:
+        if (not isinstance(self.password, str) or not isinstance(x[1], str)
+                or not hmac.compare_digest(x[1], self.hash_pwd)):
             raise NoAccess(f'Wrong password of user `{self.user_id}`', 104)
 
         self.token = base64.b64encode(hashlib.sha256(
@@ -429,14 +430,22 @@ class UserInfo(User):
             allowed_pack_ids=allowed_pack_ids,
         )
 
+    def owned_pack_ids_for_client_profile(self, headers):
+        packs = pack_ids_for_dynamic_user(self, headers, for_authorization=True)
+        return self.owned_pack_ids if packs is None else packs
+
+
+    def _get_positive_pack_ids(self):
+        """Dynamic profile reads actual positive grants without changing legacy cache."""
+        self.c.execute("SELECT item_id FROM user_item WHERE user_id=? AND type='pack' AND COALESCE(amount, 1)>0",
+                       (self.user_id,))
+        return [row[0] for row in self.c.fetchall()]
+
+
     @property
     def packs(self) -> list:
         if self.__packs is None:
-            self.__packs = list(self._get_userpack())
-            self.__packs.extend(
-                pack_id for pack_id in Config.FREE_PACKS
-                if pack_id not in self.__packs
-            )
+            self.__packs = self._build_client_pack_list()
 
         return self.__packs
 
@@ -586,7 +595,7 @@ class UserInfo(User):
         if app_version != CURRENT_CLIENT_VERSION:
             character_objects = [
                 character for character in character_objects
-                if character.character_id != 97
+                if character.character_id not in (97, 98)
             ]
         character_list = [character.character_id for character in character_objects]
         if self.favorite_character and self.favorite_character.character_id in character_list:
@@ -596,6 +605,13 @@ class UserInfo(User):
 
         if self.character.character_id not in character_list:
             self.character.character_id = 0
+
+        character_stats = []
+        for character in character_objects:
+            character_data = character.to_dict()
+            if character.character_id == 98:
+                character_data['base_character_id'] = 72
+            character_stats.append(character_data)
 
         friends = [dict(
             friend,
@@ -623,7 +639,7 @@ class UserInfo(User):
         return {
             "is_aprilfools": Config.IS_APRILFOOLS,
             "curr_available_maps": self.curr_available_maps_list,
-            "character_stats": [x.to_dict() for x in character_objects],
+            "character_stats": character_stats,
             "friends": friends,
             "settings": {
                 "favorite_character": favorite_character_id,

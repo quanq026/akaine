@@ -134,6 +134,16 @@ def validate_catalog(source: Path, rows: dict[str, dict], overlay: dict[str, Pat
     for pack in packs:
         parent = pack.get("pack_parent")
         require(not parent or parent in known_packs, f"pack-parent-missing:{pack['id']}:{parent}")
+    parents = {pack["id"]: pack.get("pack_parent") for pack in packs}
+    checked = set()
+    for pack_id in parents:
+        path = set()
+        current = pack_id
+        while current and current not in checked:
+            require(current not in path, f"pack-parent-cycle:{current}")
+            path.add(current)
+            current = parents[current]
+        checked.update(path)
 
 
 def copy_payload(source: Path, row: dict, replacement: Path | None, output, *digests) -> int:

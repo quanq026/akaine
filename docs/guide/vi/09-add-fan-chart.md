@@ -1,5 +1,8 @@
 # Thêm fan chart và đặt nó vào một pack
 
+> Quy trình staging hiện tại: đọc [native-chart-intake](../../native-chart-intake.md) trước. Giới hạn62 pack bên dưới thuộc client legacy; V19+ dynamic dùng capability/profile riêng đã kiểm.
+
+
 [English](../09-add-fan-chart.md) | Tiếng Việt
 
 Chương này đưa một fan chart từ source folder thành bài có thể tải, chơi và lưu score

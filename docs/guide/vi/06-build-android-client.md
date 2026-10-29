@@ -2,6 +2,13 @@
 
 [English](../06-build-android-client.md) | Tiếng Việt
 
+> **Quy trình XAPK lịch sử.** Chương này tái tạo checkpoint client cũ dùng content
+> `.8` được mô tả bên dưới. Production hiện tại là V36 với content `.25`; xem
+> [checkpoint production](../../production-checkpoint.vi.md) và
+> [build source V36](../../rebase/BUILD_PRODUCTION_V36.md). V36 dùng APK production
+> V9 đã xác minh làm đầu vào, thay vì baseline gộp từ XAPK upstream trong chương
+> này. Không trộn hash đầu vào hoặc patch profile của hai quy trình.
+
 Chương này build một client Akaine có thể cài đặt từ XAPK Arcaea 7.0.255 đã được xác
 minh. Quy trình gồm kiểm tra đầu vào, gộp các split, patch managed code và native code,
 align, ký APK, cài đặt rồi thu log kiểm thử.

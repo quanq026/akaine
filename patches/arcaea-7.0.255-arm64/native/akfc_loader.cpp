@@ -520,14 +520,9 @@ static std::string write_temp_file(const std::vector<uint8_t>& data, const char*
     // Frida/debugger, key is double-XOR obfuscated, symbols stripped.
     std::string path(original_path);
 
-    // Check cache — already decrypted?
+    // A new authenticated download can replace the same cached temporary path.
     pthread_mutex_lock(&g_memfdMutex);
-    auto it = g_memfdCache.find(path);
-    if (it != g_memfdCache.end()) {
-        pthread_mutex_unlock(&g_memfdMutex);
-        LOGI("Already decrypted: %s", path.c_str());
-        return path;
-    }
+    g_memfdCache.erase(path);
     pthread_mutex_unlock(&g_memfdMutex);
 
     FILE* f = real_fopen ? real_fopen(path.c_str(), "wb") : fopen(path.c_str(), "wb");
@@ -535,8 +530,12 @@ static std::string write_temp_file(const std::vector<uint8_t>& data, const char*
         LOGE("Failed to overwrite: %s", path.c_str());
         return "";
     }
-    fwrite(data.data(), 1, data.size(), f);
-    fclose(f);
+    const size_t written = fwrite(data.data(), 1, data.size(), f);
+    const int closed = fclose(f);
+    if (written != data.size() || closed != 0) {
+        remove(path.c_str());
+        return "";
+    }
     chmod(path.c_str(), 0666);
 
     // Track for wipe on exit
@@ -643,7 +642,7 @@ static FILE* hooked_fopen(const char* path, const char* mode) {
     if (!path || !mode) return real_fopen(path, mode);
 
     // Only intercept read modes
-    if (strcmp(mode, "rb") != 0 && strcmp(mode, "r") != 0 && strcmp(mode, "rb+") != 0) {
+    if (strcmp(mode, "rb") != 0 && strcmp(mode, "r") != 0 && strcmp(mode, "rb+") != 0 && strcmp(mode, "rbe") != 0) {
         return real_fopen(path, mode);
     }
 

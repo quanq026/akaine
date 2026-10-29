@@ -1,0 +1,7 @@
+# Preserve exact bytes required by source locks and patch preconditions.
+* -text
+# CRLF is preserved intentionally in pinned source and historical receipts.
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Locked historical headers retain their original final blank line.
+patches/arcaea-7.0.255-arm64/runtime/semantic/settings-v12/settings_panel.h whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol
+patches/arcaea-7.0.255-arm64/runtime/semantic/song-v9/cli_song_native.h whitespace=-blank-at-eof,blank-at-eol,space-before-tab,cr-at-eol

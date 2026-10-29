@@ -1,0 +1,218 @@
+{
+  "schema": "akaine.next-transition-targets.v1",
+  "status": "READ_ONLY_STATIC_TARGETS_NO_CAUSAL_FIX_PROVEN",
+  "date": "2026-10-26",
+  "scope": "Static next-target investigation only. Exact seven function identities independently rechecked against production and V34; no timing or source fix accepted.",
+  "input": {
+    "APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+    "member": "lib/arm64-v8a/libcocos2dcpp.so",
+    "member_bytes": 29233888,
+    "member_sha256": "ce5210a472e437b3710075cc4a3a1253485ae1ba48bc2a17405caef067c5b1cf",
+    "reviewed_V34_native_sha256": "299f271b3b0bb8a656ba02be6fd6327f90b1a0fe2fe11d1e670ae51ccfdae42d",
+    "authentic_production_native_sha256": "f2729d67166faa1fcee05601ea35d775548d3bfdc2f1a3d04777b082066b235d"
+  },
+  "prior_runtime_evidence": {
+    "canonical_report": "D:/AkaineBuilds/prod-rebase-20261025/source/docs/performance/20261026-news10-runtime.json",
+    "news10_result": "199 retained descriptors, 10 news PageView items; BackSongSelect-to-MainMenu actual-present gaps 2577.634/2733.646ms became 510.459/426.058ms; warm repeat 766.895/391.436ms.",
+    "remaining_stalls": "MainMenu-to-SongSelect approximately1.9-3.1s; PackOpen approximately1.6-2.4s; pregame approximately1.5-2.3s. These are presentation-gap observations, not constructor durations.",
+    "limits": "Same ASG emulator-5556, original-quality local base25. No physical-device timing claim."
+  },
+  "seven_unchanged_functions": [
+    {
+      "role": "SongSelectScene init",
+      "start": "0x161a8c4",
+      "end_exclusive": "0x161f24c",
+      "bytes": 18824,
+      "sha256": "9e13c3fa11885061532b76d106fa64693a31047de67adc4eaf70f0d90fb0a18b",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0x161e784"
+    },
+    {
+      "role": "GameScene init",
+      "start": "0xe2ea48",
+      "end_exclusive": "0xe2ff7c",
+      "bytes": 5428,
+      "sha256": "03c87c9e045e131921f882e386089bd7ab59207fb2d785145b2202257e29028c",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0xe2f948"
+    },
+    {
+      "role": "TextureCache removeUnusedTextures-style",
+      "start": "0xee7b40",
+      "end_exclusive": "0xee7c04",
+      "bytes": 196,
+      "sha256": "d640c9e700356267b61173483397cb44094cc4c83115b5e89340140be8960c7a",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0xee7bfc"
+    },
+    {
+      "role": "Registered PackOpen callback",
+      "start": "0x12ccb44",
+      "end_exclusive": "0x12ccbec",
+      "bytes": 168,
+      "sha256": "b113e39186aca1d671a076b43430599519e5e3feb9fa22abe6b80c65fd54a118",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0x12ccbb4"
+    },
+    {
+      "role": "PackOpen create/reuse and populate body",
+      "start": "0x19f859c",
+      "end_exclusive": "0x19f8914",
+      "bytes": 888,
+      "sha256": "3135c2794a2c153bc8563817d8f8fe769191cb247bcbab044b464c75ed7d09cc",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": null,
+      "normal_tail_dispatch": "0x19f88d8 BR x2; no RET in this body"
+    },
+    {
+      "role": "PackListLayer custom init",
+      "start": "0x1393564",
+      "end_exclusive": "0x1394bb4",
+      "bytes": 5712,
+      "sha256": "0d33d21a706066755751950b747dfea9e42cf02140ee4426e643e9bdc05a37f8",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0x1394950"
+    },
+    {
+      "role": "PackListLayer per-open update/populate",
+      "start": "0x1763524",
+      "end_exclusive": "0x17646bc",
+      "bytes": 4504,
+      "sha256": "8d827c7dbe470a21d2056c8d410a6beeb9830cfa5ddfbdbd6fb6104a659fb47b",
+      "identical_to_reviewed_V34": true,
+      "identical_to_authentic_production_native": true,
+      "normal_RET": "0x17645a4"
+    }
+  ],
+  "observations": [
+    {
+      "fact": "SongSelect and Game initialize through one shared synchronous TextureCache eviction routine.",
+      "callsites": [
+        {
+          "caller": "SongSelectScene init",
+          "sequence": [
+            "0x161a90c BL0xa4227c (Director singleton-style)",
+            "0x161a910 BL0xf19ec0 (Director+0xf8 TextureCache getter)",
+            "0x161a914 BL0xee7b40"
+          ]
+        },
+        {
+          "caller": "GameScene init",
+          "sequence": [
+            "0xe2ee24 BL0xa4227c",
+            "0xe2ee28 BL0xf19ec0",
+            "0xe2ee2c BL0xee7b40"
+          ]
+        }
+      ],
+      "operation_proof": [
+        "0xee7b60 loads cache+0x140 first map node;0xee7b68 selects map+0x130.",
+        "0xee7b78 loads node+0x28 texture;0xee7b80 calls0x10444e8 (LDRw0,[x0,#8];RET).",
+        "0xee7b84 compares refcount to1; others retain their cache entries.",
+        "0xee7b90 calls0xd6dc98 (decrement refcount; virtual destructor on zero).",
+        "0xee7ba4 calls map erase0xe9e550; frees map node/string storage and continues."
+      ],
+      "confidence": "Static observed instruction behavior; removeUnusedTextures name inferred from exact TextureCache owner and semantics."
+    },
+    {
+      "fact": "TextureCache already reuses live entries; eviction may create downstream misses, but cache churn cost is unmeasured.",
+      "existing_evidence": "work/menu-performance-20261026/RESOURCE_CACHE_LINKAGE_REVIEW.json:0x176b6c4 addImage-style path finds normalized file in TextureCache+0x130; hit at0x176b730 returns existing texture via0x176b808; miss creates Image/Texture.",
+      "not_proven": [
+        "Which textures become refcount1 at scene transitions.",
+        "How many removed textures are requested again.",
+        "Whether any expensive decode/upload follows this removal.",
+        "Whether direct eviction or downstream misses own a meaningful part of remaining stalls."
+      ]
+    },
+    {
+      "fact": "PackOpen already reuses PackListLayer within the SongSelect scene, while its update/populate path runs each open.",
+      "path": [
+        "Registered native PackOpen closure0x12ccb44, pinned in runtime/semantic/native/cli_ui_native.h:241-259.",
+        "0x12ccbd8 calls0x102c58c animation setup;0x12ccbe8 tail-branches0x19f859c.",
+        "0x19f85b0 loads scene+0x3a8;0x19f85b8 skips allocation/custom init if the PackListLayer pointer exists.",
+        "First open:0x19f86cc calls custom init0x1393564, which calls inherited trivial init0x16567ac at0x13935a4.",
+        "Every accepted open reaches0x19f8834 BL0x1763524 update/populate, regardless of whether layer construction was skipped.",
+        "0x19f88d8 tail-dispatches a virtual function, so the outer body has no normal RET."
+      ],
+      "meaning": "Caching the same PackListLayer again would duplicate existing ownership. Timing must separate first construction from per-open update before any reuse/invalidated-data change."
+    }
+  ],
+  "inference": {
+    "most_promising_shared_candidate": "TextureCache eviction0xee7b40 is an exact common operation of SongSelect and Game construction. It is a measurement target, not an established bottleneck.",
+    "priority": "Measure SongSelect init first: it owns the remaining repeatedly observed MainMenu-to-SongSelect destination construction and contains that shared eviction call.",
+    "no_source_fix_justified": true
+  },
+  "smallest_next_timing_probe": {
+    "target": "One finite QA-only strict four-point SongSelect init profile using existing sequential-point builder/GL-thread clock aggregate machinery.",
+    "points": [
+      {
+        "RVA": "0x161a8c4",
+        "role": "SongSelect init entry",
+        "original_bytes": "eb2bb86d",
+        "original_instruction": "stp d11, d10, [sp, #-0x80]!"
+      },
+      {
+        "RVA": "0x161a914",
+        "role": "Before shared TextureCache eviction call",
+        "original_bytes": "8b34e397",
+        "original_instruction": "bl #0xee7b40"
+      },
+      {
+        "RVA": "0x161a918",
+        "role": "After shared TextureCache eviction call",
+        "original_bytes": "20b741f9",
+        "original_instruction": "ldr x0, [x25, #0x368]"
+      },
+      {
+        "RVA": "0x161e784",
+        "role": "Normal SongSelect init return",
+        "original_bytes": "c0035fd6",
+        "original_instruction": "ret "
+      }
+    ],
+    "phases": [
+      "entry-to-before-eviction",
+      "eviction call only",
+      "post-eviction-to-normal-RET"
+    ],
+    "records": "At most one cold plus two warm normal roots after exact V36 runtime identity/readiness verification; unchanged native outputs, calls, quality, songs, and settings.",
+    "guards": [
+      "Only owning GL thread; bounded record quota; strict point order; reject incomplete/exceptional roots.",
+      "Reuse established v2 clock rules: per-phase nonnegative monotonic durations and exact conservation; outer CPU<=wall. Do not reject harmless interior CPU>wall clock-read skew or clamp CPU.",
+      "Flush fixed aggregates outside measured regions; no per-item timing/logging, locks, allocation or observer CLI inside the measured interval.",
+      "Match existing SurfaceFlinger actual-present plateau capture using native action order; never subtract host and Android clocks."
+    ],
+    "decision": [
+      "If SongSelect init is small versus presentation gap, move to transition/outgoing teardown ownership; do not optimize constructor code.",
+      "If direct eviction owns most init, inspect one exact removed texture/destructor before changing its lifetime.",
+      "If post-eviction phase dominates, partition the large constructor next; do not infer re-decode or global cache failure from the eviction call alone."
+    ],
+    "pack_followup_only_if_needed": "For PackOpen, use strict points0x19f859c,0x19f8834,0x19f8838,0x19f88d8 to separate pre/create, per-open update, and after-update; first-open and existing-layer cases must be labeled separately."
+  },
+  "unmeasured": [
+    "SongSelect/Game/PackOpen init CPU/wall durations on V36.",
+    "Outgoing scene destruction versus transition scheduling versus incoming construction.",
+    "Direct cache purge cost, eviction count, later reuse/miss/decode/upload costs.",
+    "PackList first construction versus per-open update cost.",
+    "Device-specific performance and public staging base20 quality gate."
+  ],
+  "preserved": [
+    "All2440 native eligible SongSelect entries; no SongSelect cap.",
+    "All original-quality image/audio bytes.",
+    "Native validation, lifecycle, auth, errors, and current ASG transport."
+  ],
+  "method_and_limits": [
+    "Local shipped APK member byte comparisons plus retained ELF .eh_frame_hdr bounds and installed Capstone5.0.7; no target code executed.",
+    "Seven exact selected bodies compared against reviewed V34 and authentic production native bytes; static reachability does not observe execution or duration.",
+    "Source instructions AGENTS.md/DEVELOPMENT.md and reverse-engineer-anything skill were read. REA session was inspected; no target/provider/database was opened.",
+    "No further scan or runtime experiment is performed after this report."
+  ],
+  "root_verified_seven_function_bytes": true,
+  "workspace_report_sha256": "a4af9744c3558fbf7e5bd0b8c996504f404a2f12df7d4e763259393cf103704a"
+}

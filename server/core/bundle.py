@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from functools import lru_cache
 from time import time
 
@@ -98,9 +99,17 @@ class BundleParser:
     next_versions: 'dict[str, list[str]]' = {}
     # {(bver, b prev version): ContentBundle} 正向索引
     version_tuple_bundles: 'dict[tuple[str, str], ContentBundle]' = {}
+    profile_bundles = {}
+    profile_edges = {}
+    profile_targets = {}
+    profile_anchors = {}
+
+    @staticmethod
+    def canonical_profile_version(value):
+        return isinstance(value, str) and re.fullmatch(r'(?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*)){3}', value) is not None
 
     def __init__(self) -> None:
-        if not self.bundles:
+        if not self.bundles and not self.profile_bundles:
             self.parse()
 
     def re_init(self) -> None:
@@ -108,10 +117,16 @@ class BundleParser:
         self.max_bundle_version.clear()
         self.next_versions.clear()
         self.version_tuple_bundles.clear()
+        self.profile_bundles.clear()
+        self.profile_edges.clear()
+        self.profile_targets.clear()
+        self.profile_anchors.clear()
         self.get_bundles.cache_clear()
         self.parse()
 
     def parse(self) -> None:
+        profiles = self.profile_manifest_specs()
+        found_profiles = set()
         for root, dirs, files in os.walk(Constant.CONTENT_BUNDLE_FOLDER_PATH):
             for file in files:
                 if not file.endswith('.json'):
@@ -166,6 +181,24 @@ class BundleParser:
                 else:
                     x.calculate_size()
 
+                if x.json_path in profiles:
+                    app, profile, target, anchors = profiles[x.json_path]
+                    if x.app_version != app:
+                        raise ValueError('Profile manifest application version differs')
+                    if (not self.canonical_profile_version(x.version)
+                            or data['previousVersionNumber'] is not None
+                            and not self.canonical_profile_version(data['previousVersionNumber'])):
+                        raise ValueError('Profile manifest version must have four canonical numeric components')
+                    key = (app, profile)
+                    edge = (*key, x.version, x.prev_version)
+                    if edge in self.profile_edges:
+                        raise ValueError('Duplicate profile bundle edge')
+                    self.profile_edges[edge] = x
+                    self.profile_bundles.setdefault(key, []).append(x)
+                    self.profile_targets[key] = target
+                    self.profile_anchors[key] = anchors
+                    found_profiles.add(x.json_path)
+                    continue
                 self.bundles.setdefault(x.app_version, []).append(x)
 
                 self.version_tuple_bundles[(x.version, x.prev_version)] = x
@@ -176,6 +209,92 @@ class BundleParser:
         for k, v in self.bundles.items():
             v.sort(key=lambda x: x.version_tuple)
             self.max_bundle_version[k] = v[-1].version
+        if found_profiles != set(profiles):
+            raise ValueError('Configured profile manifest is missing')
+        for key, rows in self.profile_bundles.items():
+            target = self.profile_targets[key]
+            versions = {row.version for row in rows}
+            if (*key, target, '0.0.0') not in self.profile_edges:
+                raise ValueError('Profile target requires a full root')
+            for row in rows:
+                previous = row.prev_version
+                if (ContentBundle.parse_version(row.version) > ContentBundle.parse_version(target)
+                        or previous != '0.0.0' and ContentBundle.parse_version(previous) >= row.version_tuple):
+                    raise ValueError('Non-forward or cyclic profile bundle edge')
+                if previous != '0.0.0' and previous not in versions and previous not in self.profile_anchors[key]:
+                    raise ValueError('Profile bundle dependency is missing')
+
+    @staticmethod
+    def profile_manifest_specs():
+        specs = {}
+        if (getattr(Config, 'BUNDLE_ASSETSET_PROFILES_ENABLED', False)
+                and (Config.BUNDLE_STRICT_MODE or getattr(Config, 'FRESH_INSTALL_ONLY_BUNDLE_VERSION', '')
+                     or getattr(Config, 'FRESH_INSTALL_DEVICE_BUNDLE_OVERRIDES', {}))):
+            raise ValueError('Asset profiles conflict with strict or fresh-install bundle controls')
+        devices = getattr(Config, 'BUNDLE_ASSETSET_PROFILE_DEVICES', [])
+        if devices is not None and (not isinstance(devices, (list, tuple))
+                or any(not isinstance(value, str) or not value or len(value) > 256
+                       or any(ord(char) < 32 or ord(char) > 126 for char in value) for value in devices)):
+            raise ValueError('Explicit profile device scope must be None or printable device IDs')
+        config = getattr(Config, 'BUNDLE_ASSETSET_PROFILES', {})
+        if not isinstance(config, dict):
+            raise ValueError('Bundle asset profile configuration must be an object')
+        for app, profiles in config.items():
+            if not isinstance(app, str) or not isinstance(profiles, dict) or 'full' not in profiles:
+                raise ValueError('Each configured application requires a full profile')
+            full = profiles['full']
+            if not isinstance(full, dict):
+                raise ValueError('Full profile must be an object')
+            full_target = full.get('target')
+            if not BundleParser.canonical_profile_version(full_target):
+                raise ValueError('Full profile version must have four numeric components')
+            for profile, value in profiles.items():
+                if profile != 'full' and not re.fullmatch('[0-9a-f]{64}', profile):
+                    raise ValueError('Asset profile must name an exact SHA256')
+                target = value['target']
+                if not BundleParser.canonical_profile_version(target):
+                    raise ValueError('Asset profile version must have four numeric components')
+                if ContentBundle.parse_version(target) <= (7, 0, 255, 20):
+                    raise ValueError('Asset profile target must be newer than full20')
+                if profile != 'full' and ContentBundle.parse_version(target) >= ContentBundle.parse_version(full_target):
+                    raise ValueError('Full recovery target must be newer than the thin profile')
+                anchors = tuple(value.get('migration_from', ()))
+                if any(not BundleParser.canonical_profile_version(version)
+                       for version in anchors):
+                    raise ValueError('Invalid profile migration anchor')
+                manifests = value['manifests']
+                if not isinstance(manifests, (list, tuple)) or not manifests:
+                    raise ValueError('Explicit profile manifest allowlist required')
+                for name in manifests:
+                    if (not isinstance(name, str) or not name.endswith('.json') or name.startswith('/')
+                            or '\\' in name or ':' in name or '..' in name.split('/') or name in specs):
+                        raise ValueError('Unsafe or duplicate profile manifest path')
+                    specs[name] = (app, profile, target, anchors)
+        return specs
+
+    @classmethod
+    def get_profile_bundles(cls, app_ver, b_ver, assetset):
+        profile = assetset if isinstance(assetset, str) and (app_ver, assetset) in cls.profile_bundles else 'full'
+        key = (app_ver, profile)
+        target = cls.profile_targets.get(key)
+        if target is None:
+            raise NoData('Configured bundle profile is unavailable', status=404)
+        current = b_ver or '0.0.0'
+        if ContentBundle.parse_version(current) >= ContentBundle.parse_version(target):
+            return []
+        queue = [(current, [])]
+        visited = {current}
+        for version, path in queue:
+            for row in cls.profile_bundles[key]:
+                if row.prev_version != version:
+                    continue
+                next_path = [*path, row]
+                if row.version == target:
+                    return next_path
+                if row.version not in visited:
+                    visited.add(row.version)
+                    queue.append((row.version, next_path))
+        return [cls.profile_edges[(*key, target, '0.0.0')]]
 
     @staticmethod
     def resolve_compat_app_version(app_ver: str) -> str:
@@ -190,10 +309,14 @@ class BundleParser:
     @staticmethod
     @lru_cache(maxsize=128)
     def get_bundles(
-            app_ver: str, b_ver: str, device_id: str = None
+            app_ver: str, b_ver: str, device_id: str = None, assetset: str = None
     ) -> 'list[ContentBundle]':
         app_ver = BundleParser.resolve_compat_app_version(app_ver)
-
+        devices = getattr(Config, 'BUNDLE_ASSETSET_PROFILE_DEVICES', [])
+        if (getattr(Config, 'BUNDLE_ASSETSET_PROFILES_ENABLED', False)
+                and (devices is None or isinstance(device_id, str) and device_id in devices)
+                and any(key[0] == app_ver for key in BundleParser.profile_bundles)):
+            return BundleParser.get_profile_bundles(app_ver, b_ver, assetset)
         overrides = getattr(
             Config, 'FRESH_INSTALL_DEVICE_BUNDLE_OVERRIDES', {})
         device_bundle_version = (
@@ -212,7 +335,6 @@ class BundleParser:
                     f'Fresh-install bundle is unavailable: {fresh_bundle_version}',
                     status=404)
             return [fresh_bundle]
-
         if Config.BUNDLE_STRICT_MODE:
             return BundleParser.bundles.get(app_ver, [])
 
@@ -265,15 +387,17 @@ class BundleDownload:
         self.client_app_version = None
         self.client_bundle_version = None
         self.device_id = None
+        self.assetset = None
 
-    def set_client_info(self, app_version: str, bundle_version: str, device_id: str = None) -> None:
+    def set_client_info(self, app_version: str, bundle_version: str, device_id: str = None, assetset: str = None) -> None:
         self.client_app_version = app_version
         self.client_bundle_version = bundle_version
         self.device_id = device_id
+        self.assetset = assetset if isinstance(assetset, str) and re.fullmatch('[0-9a-f]{64}', assetset) else None
 
     def get_bundle_list(self) -> list:
         bundles: 'list[ContentBundle]' = BundleParser.get_bundles(
-            self.client_app_version, self.client_bundle_version, self.device_id)
+            self.client_app_version, self.client_bundle_version, self.device_id, self.assetset)
 
         if not bundles:
             return []

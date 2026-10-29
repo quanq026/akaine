@@ -1,5 +1,8 @@
 # Add a fan chart and place it in a pack
 
+> Current staging workflow: read [native-chart-intake](../native-chart-intake.md) first. The62-pack advice below describes legacy clients; reviewed V19+ dynamic clients use their separate capability/profile.
+
+
 This chapter follows one fan chart from a source folder to a downloadable,
 playable and score-enabled song in Akaine 7.0.255. It also explains how to
 create a visible pack. Perform the first import on staging and use files you

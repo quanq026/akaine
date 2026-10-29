@@ -1,5 +1,12 @@
 # Build the Arcaea 7.0.255 Android client
 
+> **Historical fresh-XAPK workflow.** This chapter reproduces the earlier
+> content-`.8` client described below. Current production is V36 with content
+> `.25`; follow [the current production checkpoint](../production-checkpoint.md)
+> and [V36 source build](../rebase/BUILD_PRODUCTION_V36.md). V36 starts from the
+> verified production V9 APK, not the merged upstream baseline used here. Do not
+> mix these input hashes or patch profiles.
+
 Build an installable Akaine client from the verified Arcaea 7.0.255 XAPK. The
 process mirrors the 7.0.255 release pipeline: verify the input, merge its
 splits, patch the managed and native code, align and sign the APK, then install
