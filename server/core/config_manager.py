@@ -6,9 +6,10 @@ class Config:
     HOST = '0.0.0.0'
     PORT = 80
 
-    DEPLOY_MODE = 'waitress'
+    DEPLOY_MODE = 'flask_multithread'
     USE_PROXY_FIX = False
     USE_CORS = False
+    INSECURE_LOCAL_OAUTH_COMPAT_ENABLED = False
 
     SONG_FILE_HASH_PRE_CALCULATE = True
 
@@ -18,6 +19,17 @@ class Config:
     ALLOW_APPVERSION = []  # list[str]
 
     BUNDLE_STRICT_MODE = True
+    BUNDLE_ASSETSET_PROFILES_ENABLED = False
+    BUNDLE_ASSETSET_PROFILES = {}
+    BUNDLE_ASSETSET_PROFILE_DEVICES = []
+    DYNAMIC_PACKS_ENABLED = False
+    DYNAMIC_PACKS_NATIVE_ACCEPTED = False
+    DYNAMIC_PACKS_FULL_CATALOG = False
+    DYNAMIC_CLIENT_PACKLIST_PATH = './database/client_catalogs/7.0.255/packlist'
+    DYNAMIC_CLIENT_PACKLIST_SHA256 = ''
+    DYNAMIC_CLIENT_CATALOG_EPOCH = ''
+    DYNAMIC_CLIENT_HIDDEN_PACK_IDS = []
+    DYNAMIC_PACK_ENTITLEMENT_EXPANSIONS = {}
     # When set, only a client with no content bundle receives this root bundle.
     # Every non-empty client bundle version receives no content bundle result.
     FRESH_INSTALL_ONLY_BUNDLE_VERSION = ''
@@ -45,13 +57,6 @@ class Config:
     PASSWORD = ''
 
     SECRET_KEY = ''
-
-    # This shared-account compatibility endpoint is unsafe on public networks.
-    INSECURE_LOCAL_OAUTH_COMPAT_ENABLED = False
-    LOCAL_OAUTH_NAME = ''
-    LOCAL_OAUTH_PASSWORD = ''
-    LOCAL_OAUTH_EMAIL = ''
-    LOCAL_OAUTH_ITEMS = 0
 
     API_TOKEN = ''
 

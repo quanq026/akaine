@@ -1,0 +1,79 @@
+{
+  "status": "PACK_INIT_PARTITION_COMPLETE_POPULATION_AND_SIDEBAR_REGION_HOT",
+  "baseV36_APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+  "QA_APK_sha256": "04f96174eac7b004783a858c86c7b7a51c21d244d1f94f7ed9a6b0a47283db34",
+  "native_roots": 3,
+  "phase_names": {
+    "1": "initPreludeScrollStops",
+    "2": "rootAndCategoryContainers",
+    "3": "buttonMap",
+    "4": "ModSidebarScheduling",
+    "5": "catalogUIpopulation",
+    "6": "controlsFavoriteBindings",
+    "7": "remainingControlsCleanup"
+  },
+  "records": [
+    {
+      "action": 0,
+      "native_roots": 1,
+      "sum_init_wall_ms": 1580.575955,
+      "sum_init_cpu_ms": 1424.562144,
+      "phase_wall_ms": {
+        "1": 0.209315,
+        "2": 2.892358,
+        "3": 0.227893,
+        "4": 381.720463,
+        "5": 1160.003278,
+        "6": 24.795883,
+        "7": 10.726765
+      },
+      "labels": [
+        "PackListLayer_init"
+      ]
+    },
+    {
+      "action": 1,
+      "native_roots": 1,
+      "sum_init_wall_ms": 1334.868182,
+      "sum_init_cpu_ms": 1233.809628,
+      "phase_wall_ms": {
+        "1": 0.020976,
+        "2": 3.056814,
+        "3": 0.056617,
+        "4": 347.938594,
+        "5": 960.472073,
+        "6": 16.392334,
+        "7": 6.930774
+      },
+      "labels": [
+        "PackListLayer_init"
+      ]
+    },
+    {
+      "action": 2,
+      "native_roots": 1,
+      "sum_init_wall_ms": 1303.387853,
+      "sum_init_cpu_ms": 1213.551803,
+      "phase_wall_ms": {
+        "1": 0.021575,
+        "2": 3.366341,
+        "3": 0.018701,
+        "4": 333.904019,
+        "5": 943.875723,
+        "6": 14.397607,
+        "7": 7.803887
+      },
+      "labels": [
+        "PackListLayer_init"
+      ]
+    }
+  ],
+  "numeric_review_sha256": "85687091db81557259622d8309f5e519517aa8b4090e633b4896976b8748f990",
+  "decision": "Onepartitiondone. WarmcatalogUIpopulation960/944ms~72percent, scheduling+Modsidebarregion348/334ms~26percent. Needboundedstaticfinalsmallfixreassessment, notnativeupdatecachebypass.",
+  "limits": [
+    "Sidebarregion includes original1402a28; not alltimeattributedtoModcustomwork",
+    "All3firstopensdifferentSongSelectscenes; withinScene51msreusealreadyworks",
+    "No per-itempaths/cardcounts/measured sharedfileloadcost yet",
+    "QAonlyNoFDE, no productfix"
+  ]
+}

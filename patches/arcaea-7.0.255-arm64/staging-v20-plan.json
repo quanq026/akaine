@@ -1,0 +1,36 @@
+{
+  "schema": "akaine.client-build.v1",
+  "environment": "staging",
+  "package": "akai.arc.lmao",
+  "content_version": "7.0.255.20",
+  "not_for_production": true,
+  "source_sha256": "4d80a24b55bf54779454a294fc13397be92dddcbeb97818ed2b9c76097b842db",
+  "required_entries": [
+    "classes3.dex",
+    "classes4.dex",
+    "lib/arm64-v8a/libakaineanomaly_monitor.so",
+    "lib/arm64-v8a/libcocos2dcpp.so"
+  ],
+  "replacements": [
+    {
+      "archive_path": "lib/arm64-v8a/libcocos2dcpp.so",
+      "file": "v19-r5/payload/lib/arm64-v8a/libcocos2dcpp.so",
+      "sha256": "7f3811cbe0308b709c9dcd4c72b6ffe18ee23454973fcb852a966ca5cf0c36c8"
+    },
+    {
+      "archive_path": "lib/arm64-v8a/libakaineanomaly_monitor.so",
+      "file": "v19-r5/payload/lib/arm64-v8a/libakaineanomaly_monitor.so",
+      "sha256": "803355ee785dbc705d63c8f0b0111b86088d70dc09eda48378017ea90c386ca8"
+    },
+    {
+      "archive_path": "classes3.dex",
+      "file": "v19-r5/payload/classes3.dex",
+      "sha256": "a4376908eee34e5c9eb405f763342322f35cfbb2dd516e39c6344a14c8d43b88"
+    },
+    {
+      "archive_path": "classes4.dex",
+      "file": "v19-r5/payload/classes4.dex",
+      "sha256": "6c4b63c3168a25a98c476862bc84f8de53de31257439c1e7473acfb3315f0ba0"
+    }
+  ]
+}

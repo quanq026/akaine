@@ -1,0 +1,34 @@
+{
+  "schema": "akaine.physical-local-install.v1",
+  "status": "PHYSICAL_V34_AND_LOCAL_BUNDLE25_INSTALLED_IDENTITY_VERIFIED_USER_QUALITY_CONFIRMED",
+  "date_local": "2026-10-26",
+  "device": "Lenovo TB710FU",
+  "Android": 16,
+  "fresh_install": true,
+  "old_package_absent_before_install": true,
+  "APK_sha256": "2f4705230db06034d520b57ca0836bba424cbd7f9a6c6c79e42d92be06c23b4c",
+  "bundle": "7.0.255.25",
+  "meta_sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+  "catalog_songs": 2543,
+  "catalog_packs": 63,
+  "actual_mapped_native_hashes": {
+    "libcocos2dcpp.so": "299f271b3b0bb8a656ba02be6fd6327f90b1a0fe2fe11d1e670ae51ccfdae42d",
+    "libakaineanomaly_monitor.so": "2628c50fd07f0743bc50536e211e7e33e488bf01a1a06729ad3d4b02eea92539",
+    "libakfcloader.so": "81beea88f021c4620019be6f4fdd4be76aa25300e1b90ccd889d9e067d5d99f8",
+    "libfmod.so": "e3e288e245f5125cfffe9505bf07d32abc4deff7ce71b3ab575a0529bb1ba5e5",
+    "libfmodProvider.so": "67e46d97052311ac5bb9c4adca6c62746feea3649d68750c8bff061cc7755ec0"
+  },
+  "USB_every_file_verified": 20903,
+  "old_user_account_entered_by_agent": false,
+  "user_quality_feedback": {
+    "text": "This time sound and image quality have no problem.",
+    "reported_by": "user",
+    "scope": "Perceptual observation on the current physical installation; not exhaustive codec/song proof."
+  },
+  "physical_cli_status": "Initial bridge unavailable; subsequent fresh emulator reproduced USB-created files0777 being rejected by existing guard. Physical CLI cause not rechecked while user was using login. No physical permission change/restart performed.",
+  "local_cache_install_not_native_updater_proof": true,
+  "native_aggregate_download_over4GiB_proven": false,
+  "remote_original_delivery_metadata_online": false,
+  "production_or_R2_changes": false,
+  "raw_account_data_or_screenshots_committed": false
+}

@@ -1,0 +1,7 @@
+# Preserve the exact bytes bound by the release source lock.
+staging-v19-r5-*.json -text
+staging-v20-*.json -text
+runtime/** -text
+staging-loader-*.json -text
+native/akfc_loader.cpp -text
+staging-final-*.json -text

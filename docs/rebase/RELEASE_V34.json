@@ -1,0 +1,70 @@
+{
+  "schema": "akaine.rebase.acceptance.v1",
+  "status": "SOURCE_SIGNED_ARTIFACT_AND_BOUNDED_EMULATOR_ACCEPTANCE_VERIFIED",
+  "repository": "https://github.com/quanq026/akaine-development",
+  "build_source_commit": "abca317",
+  "baseline": "authentic production V9 2026-10-22",
+  "candidate": "V34 production-rooted staging rebase",
+  "artifact": {
+    "filename": "AkaineXD-7.0.255-staging-prod22-rebase-v34-20261025.apk",
+    "bytes": 1209808461,
+    "sha256": "2f4705230db06034d520b57ca0836bba424cbd7f9a6c6c79e42d92be06c23b4c"
+  },
+  "static_verification": {
+    "source_inputs_verified": 1043,
+    "rebuilt_payloads_verified": 5,
+    "preserved_nonpayload_production_members": 5413,
+    "unchanged_APK_assets": 4996,
+    "signer_certificate_sha256": "d8001c4321e553ace0b748b592946b0aa4c7cbcae92afe3bd30dd4f5f33471b6",
+    "v2_verified": true,
+    "alignment16k_verified": true,
+    "source_lock_sha256": "e718fa150d1723fd81d91feedbdaf2ee1a18fb136cde951421baeac8b3052e55",
+    "checkout_map_sha256": "aa4485bb2212368a61177dc0ca2d231686af4a0d14500f996b3bbef4ad858896"
+  },
+  "emulator_checks": {
+    "configured_data": "40G",
+    "SDK": 35,
+    "ABI": "x86_64 with ARM64 translation",
+    "cores": 4,
+    "RAM_MiB": 4096,
+    "only_one_emulator_running": true,
+    "actual_five_mapped_modules_match_signed_APK": true,
+    "account_management_logout_login_sync_download": true,
+    "Tempest_actual_gauge6": true,
+    "character_filter_replay_play20s_pause_resume_retry_quit": true,
+    "restart_preserves_login_and_bundle20": true,
+    "coordinate_or_OCR_control": false,
+    "automatic_notes_or_synthetic_score": false,
+    "microphone_recording": false,
+    "final_scene": "signed-in native Main Menu; visible staging emulator",
+    "recorded_playback_seconds": 19.264,
+    "recorder_wall_limit_seconds": 20,
+    "fresh_restart_pid_verified": 7621
+  },
+  "boundaries": [
+    "Only the tested emulator flows are accepted; this is not exhaustive song/partner coverage.",
+    "Physical speaker/Bluetooth quality, thermals, long-duration FPS and backend score persistence were not established.",
+    "Current staging bundle20 remains active; the rejected lossy media has not been restored by this APK rebase. Original media recovery remains offline.",
+    "No production service, bot, database migration, Worker deployment or bundle route was changed."
+  ],
+  "runtime_evidence_sha256": {
+    "RUNTIME_FIDELITY.json": "da311ab56b3498a515966e035722eb6d856dd3c0d0adfdc5de1c81fbc44cfd03",
+    "TEMPEST_FLOW_EVENTS.json": "dcaf106196b2795efc2391460e93799cc28985b6b8055b661efff616c676d578",
+    "TEMPEST_PASS.json": "45550065e3cc55c32a3857b1dfd3e6d21c1a4ac3b93fe9bc979543add3e43bea",
+    "MAIN_FLOW_EVENTS.json": "29f3913cfcd4446587e680c4a084ef3a93ceeb4d706a034fe033594565c5377c",
+    "MAIN_FLOW_PASS.json": "a36d9e70fb7fc86b4e5e730f4b77600f2ab4003606322d615f7db4816d9061ba",
+    "RESTART_PASS.json": "efb50d8a5a76da9023dd8d8bf65b43ed9690ca2c2262deb5caa01801741df7b3",
+    "STAGING_EMU40_DAYBREAK_20S.json": "6ac06f992078f66d08cce48182cc71c42c99dc7437816e9974feafb10347fcad",
+    "STAGING_EMU40_DAYBREAK_20S.wav": "79c601b7fc7378a61435737c50ced4f3c430625dbc543ad21a3d0b7e6e892549",
+    "V34_FINAL_MAINMENU.png": "ffcb935010a646d7deb126f50bc2b35a4d1dc7311c65d7bb4402e53dc636a3ca",
+    "RESTART_NATIVE_IDENTITY.json": "a26cf4446860ab0b8c24580296a7e8d2fcf7229a2b58434151ad9b14220ddadd"
+  },
+  "source_build_receipt_sha256": "2b8c01bbcc3f9e93480a94fce73a97715e6258f22f8360f4138359582e12e276",
+  "static_artifact_receipt_sha256": "12c9995934466ebd6d2c62b002714d0ded3b3a94bb17251b7c1939f498182430",
+  "signed_verification_sha256": "f402afbafbc98c1e43906889a5c99d5f76dd5bf66b839540839afa3c56621eb6",
+  "production_released": false,
+  "raw_account_data_committed": false,
+  "runtime_peer_review_sha256": "fb096675bcfbb2e38863567f857267d6b6bf173ccd634c45a37de2b475965868",
+  "profile_peer_review_sha256": "09dda98f5e5317124a25e28807aa7cb329b43cf8d97f3fa57549d7916ac00086",
+  "release_source_peer_review_sha256": "ce6a8766d6192e84557f5fd285fcda7fbb8cecb62a381e56ecf98f22c7caf847"
+}

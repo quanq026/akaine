@@ -1,0 +1,95 @@
+{
+  "status": "PREPARED_OFFLINE_INDEPENDENT_REVIEW_REQUIRED",
+  "operation_sha256": "242614281e6be341f39355f3a104a6536b9b3d3e83bee576c88333d347743631",
+  "runtime_sha256": "f01915936bde7a3bc84df30cb5fa0a8eb50287bfd4a7e14f946fdebded4a6d39",
+  "parameters_sha256": "f0a6a91da293e99387a0ecaf118c6f83a5cb814b2b814f22b721ed47032380ad",
+  "test_source_sha256": "3a68644a25cfd1d34b9d0e1253d9ee3127c1032321cf6fb814d049348ad19ff3",
+  "publication_expected": [
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_0.cb",
+      "bytes": 503175292,
+      "sha256": "f8bebecbea56f5a37deb67513f610427b7081c7bd15c4220ca6726269c5aabd3"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_1.cb",
+      "bytes": 501113447,
+      "sha256": "aa08e4e9f1e7237a4c725fe21bc8b2a7c52d29dc8a205273e22931624118c3f9"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_2.cb",
+      "bytes": 501951040,
+      "sha256": "21193d74e00e373d629beeddf0b0ea260e2fab7a278aabb2eff4fc9c2f45841f"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_3.cb",
+      "bytes": 503223701,
+      "sha256": "58522d4eabf152fabc4a208cdc930dd6096bcce7c6b84c101a167fea13449459"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_4.cb",
+      "bytes": 502856017,
+      "sha256": "54d3df190ac74fe86e4d25178c0e16527bd0ab1820be67e17a5af646a5b9765d"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_5.cb",
+      "bytes": 502582655,
+      "sha256": "eef78df461ac04ceed0e0236dab6dac2a805d389bb73db1d17bbbf20d5cc195b"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_6.cb",
+      "bytes": 503293283,
+      "sha256": "a9ffcf4906839a7f37bb159071e3ca25ce01db2679b7f480d87a5e29d8c571f3"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_7.cb",
+      "bytes": 503290173,
+      "sha256": "7d01672b8ebf310d9ca2c7736d43e3df641ebb92eda31bbfccc99943130f5682"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_8.cb",
+      "bytes": 503217633,
+      "sha256": "732f61d0f75380fbfa960d3f36465462e3f623d09f119731a595d5983af2e10b"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027_9.cb",
+      "bytes": 8134966,
+      "sha256": "85eeec762cdcdd4e11822c91e4196e0047c3ec4ceb1275e541f22a7ece71284a"
+    },
+    {
+      "key": "bundle/7.0.255-prod-original-base25-20261027.json",
+      "bytes": 5450689,
+      "sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891"
+    }
+  ],
+  "source_files": 12,
+  "all_candidate_targets_including_catalog_config_metadata": 17,
+  "new_chart_rows": 1532,
+  "stage_DB_copied": false,
+  "runtime_config_secrets_leave_server": false,
+  "schema": "akaine.production25.sanitized-plan.v1",
+  "historical_plan_sha256": "f6d1340f3b528a22d0ad32e14b14abf1bcfe7969aa38cfa66e8e0461f33a28b7",
+  "canonical_dependency_hashes": {
+    "server/core/bundle.py": "d3974e9bd5d3bb3b112b21abb46af0bb24f9cd66ef203a886089b501bd072966",
+    "server/core/client_packs.py": "54bcba56df608e88b95d70074e5a32eeb90540d2b81b9487e41de1345f0c4490",
+    "server/core/content_grants.py": "06ee547e81b54ed212331def6bc37ea1074873c38851a822896de1472516d607",
+    "server/core/pack_contract.py": "187e2e21024de639d6d532a30fde369c6abd7f3d623d1326f7b6b6b13bfbc68e",
+    "server/server/purchase.py": "78199caa6fe73672e1d99c1f7b7608111d5abcb901b9f921716645c69f480884",
+    "server/tools/check_dynamic_pack_catalog.py": "04e664e210c224ae0c5dabceb53a8501ce6b1e5a814d95c23181880777fea046",
+    "server/core/config_manager.py": "b0ab5131bfa8ca1ab4dc928007319076ce62aa338ca6e4ec8b2edda6c4ee7075",
+    "server/core/user.py": "ea9831d4c507ed4b42f8768937a3480751e9f3fbeafc5024e319580b4bf1946f",
+    "server/core/download.py": "a69ac83d39c626143b9a76b40352810db4dc8ee29f6ba1047588ddda17c5a110",
+    "server/server/others.py": "dfa432257b35ac3d1f0c7226ffe524f421a9bfa4fb9e7cfaa4f6a35462055592",
+    "server/server/user.py": "33594aac77b5287039f85503bfbc654f4ff28b10743ebc4bef5f88a195aa70ab",
+    "server/tools/create_user_cli.py": "c0582a779fe5e6f1067a2d84d636f80159017dd83f4c7cc19dac32e10fa76d5b",
+    "docs/rebase/NON_APK_LEDGER.json": "86619964b5d24737155dd4f94af3cbdd3d7509b660a22cbcd8c58130bc4b3539",
+    "docs/bundles/prod18-aurora-original25-online.json": "803aec4d387c1fcf14dc9f10220a00b18dc44e9e96c9d406c3029c14a5ccb85d"
+  },
+  "external_input_digests": {
+    "SELECTED_PRODUCTION_DATA.json": "cb14fff35d83807c26f9337c5324e6b0b53eed5960e5837b991aace1e215aabd",
+    "CONFIG_ADDITIONS.json": "4c98ffd2469a2ac97b57b2f03bb2c76de3c7a1a8bfc8aa6444c2456a3159b6ff",
+    "CANDIDATE_FILES.json": "c317c938288dc3d648c8d7eb4c124ebb4e577f4e5ff9c884374947452390b827",
+    "CANDIDATE_TESTS.json": "ea4ae710aae2bb2fa60849a0764704511bad6d3a02e56a80b319ab10bd8ac894",
+    "LIVE_PREFLIGHT.json": "1b48b905d9f11647f3130ac175dd7f1043f5ab2e51b89e5cf74cc9c6c63fc366"
+  },
+  "private_parameter_payload_included": false
+}

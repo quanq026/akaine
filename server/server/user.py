@@ -8,6 +8,7 @@ from core.operation import DeleteOneUser
 from core.save import SaveData
 from core.sql import Connect
 from core.user import User, UserLogin, UserOnline, UserRegister
+from core.client_packs import pack_ids_for_dynamic_user, uses_dynamic_packs
 
 from .auth import auth_required
 from .func import arc_try, header_check, success_return
@@ -77,9 +78,22 @@ CLIENT_UNLOCK_COMPLETE_BY_TYPE_7_0_255 = {
     '112': 999,
 }
 
+CLIENT_UNLOCK_MINIMUM_BY_KEY_7_0_255 = {
+    f'arghena|{difficulty}|110': 200000 for difficulty in range(3)
+}
+
 CLIENT_STORY_PROJECTION_7_0_255 = tuple(
     {'ma': 24, 'mi': index, 'c': True, 'r': True}
     for index in range(1, 11)
+) + (
+    {'ma': 15, 'mi': 6, 'c': True, 'r': True},
+    {'ma': 16, 'mi': 6, 'c': True, 'r': True},
+    {'ma': 20, 'mi': 7, 'c': True, 'r': True},
+    {'ma': 103, 'mi': 1, 'c': True, 'r': True},
+    {'ma': 101, 'mi': 8, 'c': True, 'r': True},
+    {'ma': 1, 'mi': 9, 'c': True, 'r': True},
+    {'ma': 2, 'mi': 9, 'c': True, 'r': True},
+    {'ma': 2, 'mi': 3, 'c': True, 'r': True},
 )
 
 
@@ -172,16 +186,24 @@ def apply_client_unlock_projection(save, app_version):
     for row in save.unlocklist_data:
         if isinstance(row, dict) and row.get('unlock_key') in projected:
             key = row['unlock_key']
-            row['complete'] = CLIENT_UNLOCK_COMPLETE_BY_TYPE_7_0_255[
-                key.rsplit('|', 1)[-1]
-            ]
+            minimum = CLIENT_UNLOCK_MINIMUM_BY_KEY_7_0_255.get(key)
+            if minimum is None:
+                row['complete'] = CLIENT_UNLOCK_COMPLETE_BY_TYPE_7_0_255[
+                    key.rsplit('|', 1)[-1]
+                ]
+            else:
+                complete = row.get('complete')
+                row['complete'] = (max(minimum, complete)
+                                   if isinstance(complete, int) else minimum)
             existing.add(key)
     for key in projected - existing:
         save.unlocklist_data.append({
             'unlock_key': key,
-            'complete': CLIENT_UNLOCK_COMPLETE_BY_TYPE_7_0_255[
-                key.rsplit('|', 1)[-1]
-            ],
+            'complete': CLIENT_UNLOCK_MINIMUM_BY_KEY_7_0_255.get(
+                key, CLIENT_UNLOCK_COMPLETE_BY_TYPE_7_0_255[
+                    key.rsplit('|', 1)[-1]
+                ],
+            ),
         })
 
 
@@ -233,12 +255,29 @@ def register():
         return success_return({'user_id': user.user_id, 'access_token': user.token})
 
 
+def apply_client_world_song_projection(result, app_version):
+    if app_version == CLIENT_PACK_PROJECTION_APP_VERSION and Config.WORLD_SONG_FULL_UNLOCK:
+        result['world_songs'] = result['world_songs'] + [
+            key for key in ('diein', 'diein4')
+            if key not in result['world_songs']
+        ]
+
+
 @bp.route('/me', methods=['GET'])  # 用户信息
 @auth_required(request)
 @arc_try
 def user_me(user_id):
     with Connect() as c:
         app_version = request.headers.get('AppVersion')
+        if uses_dynamic_packs(request.headers):
+            user = UserOnline(c, user_id)
+            result = user.to_dict(
+                client_pack_projection=client_pack_projection_for_app_version(app_version),
+                app_version=app_version,
+            )
+            result['packs'] = pack_ids_for_dynamic_user(user, request.headers)
+            apply_client_world_song_projection(result, app_version)
+            return success_return(result)
         result = UserOnline(c, user_id).to_dict(
             client_pack_projection=client_pack_projection_for_app_version(
                 app_version
@@ -247,6 +286,7 @@ def user_me(user_id):
         )
         if app_version == CLIENT_PACK_PROJECTION_APP_VERSION:
             result['packs'] = list(CLIENT_PACK_PROJECTION_7_0_255)
+        apply_client_world_song_projection(result, app_version)
         return success_return(result)
 
 

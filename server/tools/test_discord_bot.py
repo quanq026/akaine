@@ -142,7 +142,6 @@ class PublicLookupCommandTests(unittest.IsolatedAsyncioTestCase):
             settings = discord_bot.BotSettings(
                 root / "game.db",
                 root / "mapping.db",
-                root / "create.py",
                 root / "b30.py",
                 root,
                 root / "bot.log",

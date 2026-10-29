@@ -1,0 +1,63 @@
+{
+  "status": "V36_NEWS10_RUNTIME_BOUNDED_PASS_OTHER_SCENE_STALLS_REMAIN",
+  "apk_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+  "core_sha256": "ce5210a472e437b3710075cc4a3a1253485ae1ba48bc2a17405caef067c5b1cf",
+  "monitor_sha256": "ee84fc1267046add77d172a5e5c6c0e023d2fa4c65a4bd99692f834fc93abd05",
+  "emulator": {
+    "serial": "emulator-5556",
+    "transport": "asg",
+    "same_AVD": true,
+    "resolution": "1280x720",
+    "refresh_hz": 120,
+    "phone_untouched": true
+  },
+  "changed_behavior": "Build at most10 latest canonical-date news UI pages; stable native order for equal dates. No songs or media omitted.",
+  "native_counts": {
+    "retained_descriptors": 199,
+    "PageView_items": 10,
+    "date_descending": true,
+    "indicator_present": false
+  },
+  "baseline_mainmenu_back_present_gaps_ms": [
+    2577.634373,
+    2733.646453
+  ],
+  "news10_mainmenu_back_present_gaps_ms": [
+    510.458716,
+    426.058344
+  ],
+  "news10_warm_repeat_mainmenu_back_present_gaps_ms": [
+    766.894649,
+    391.436265
+  ],
+  "measurement": "Actual-present timestamp column2; rolling0.25s snapshots, prehistory trimmed, zero disjoint sample pairs. Direction is observed native action order and plateau acquisition windows; no subtraction of host and Android clocks.",
+  "all_catalog_songselect_count": 2440,
+  "preserved_settings": {
+    "partner_id": 0,
+    "difficulty": 2,
+    "anomaly_replay": false,
+    "filter_query": "",
+    "high_framerate_v2": true,
+    "performancemode_v2": false,
+    "audio_preset": 0
+  },
+  "flow": "Same45-second native back/MainMusic/PackOpen/PackClose/back/MainMusic/DaybreakFTRPlay, followed by nativePause/Quit; no note injection or synthetic score.",
+  "remaining_limits": [
+    "MainMusic to SongSelect still about1.9\u20133.1s frame gap in measured runs",
+    "PackOpen and gameplay loading still have approximately1.5\u20132.4s gaps",
+    "Mixed-scene45s averageFPS is not an idle/menu or gameplay FPS measure",
+    "No claim of physical-device speedup",
+    "Original-quality base25 remains local; public staging bundle20 quality gate is separate",
+    "Canonical date metadata contains placeholder/future values; equal-date chronology is not inferred"
+  ],
+  "evidence_sha256": {
+    "IDENTITY.json": "ea83b64be0dccf7a296294d7a1a984305821f17f96ba8266210a44007cfd446d",
+    "NEWS_NATIVE_COUNTS.json": "d794f82495e5dbe0b7f5941502f865b9c35af5cd93ab6f1c5ce1af20a2b91289",
+    "NAV_BEFORE_AFTER_RAW_AUDIT.json": "6c165a86c7f39cd3a85d1f4481497194e1fe9b07ea23ed2c9939c7cec34471ed",
+    "WARM_REPEAT/NAV_LOADING45/GAP_AUDIT.json": "5e1dedc83bc780eaa7889dc12ad3563b5cfb26accf3a7861da4dcaa29d69215f",
+    "RESTART_AFTER.json": "31b2496aee600f00f73d16ff0137afabce82704cd9b7434da83d7a4026f104c6",
+    "REVEAL_CATEGORY_QA.json": "d98f1b81a39079763b8c3053ce8058ab3fc1cd7839cba31fc34f62e901c3bc74"
+  },
+  "restart_account_settings_preserved": true,
+  "native_reveal_category_tests": "Testify/Arghena/DIE IN/Daybreak and Mod8/Variety7/Mod8 passed"
+}

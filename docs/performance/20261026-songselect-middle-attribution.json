@@ -1,0 +1,70 @@
+{
+  "status": "SONGSELECT_FINAL_UI_STATE_BLOCKS_HOT_NO_PRODUCTFIX_YET",
+  "baseV36_APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+  "QA_APK_sha256": "18ba98a35fa982087106cfe23aeee32a692cdb9b720417ce6f5c927614d4dd67",
+  "region": "post-evictionconstructoronly0x161a918..0x161e784",
+  "native_roots": 3,
+  "phase_names": {
+    "1": "early",
+    "2": "SongListFactory",
+    "3": "SongListAttachment",
+    "4": "SelectedSongFactory",
+    "5": "CSBbindingTopBar",
+    "6": "conditionalStateBlock",
+    "7": "remainingStateCleanup"
+  },
+  "records": [
+    {
+      "action": 0,
+      "native_roots": 1,
+      "sum_region_wall_ms": 3088.157196,
+      "sum_region_cpu_ms": 2525.404129,
+      "phase_wall_ms": {
+        "1": 156.223289,
+        "2": 266.24193,
+        "3": 0.225641,
+        "4": 343.390892,
+        "5": 136.884137,
+        "6": 641.692528,
+        "7": 1543.498779
+      }
+    },
+    {
+      "action": 1,
+      "native_roots": 1,
+      "sum_region_wall_ms": 2076.588383,
+      "sum_region_cpu_ms": 1904.576207,
+      "phase_wall_ms": {
+        "1": 158.030821,
+        "2": 193.900507,
+        "3": 0.05964,
+        "4": 236.322832,
+        "5": 111.631675,
+        "6": 463.896476,
+        "7": 912.746432
+      }
+    },
+    {
+      "action": 2,
+      "native_roots": 1,
+      "sum_region_wall_ms": 2190.853801,
+      "sum_region_cpu_ms": 1996.311434,
+      "phase_wall_ms": {
+        "1": 142.896151,
+        "2": 189.790533,
+        "3": 0.07338,
+        "4": 279.534553,
+        "5": 119.27723,
+        "6": 468.573115,
+        "7": 990.708839
+      }
+    }
+  ],
+  "numeric_review_sha256": "4980e4241da83722ad1675b5f255dc7823c0b4cccc2a0170e8eb8f2e245e02a2",
+  "decision": "Reassesscost aftercoarse+onepartition. WarmfinaltwoUI/stateblocks own~66percent; SongListFactory~9percent isnotprimarytarget. Boundedstaticlatecalleeauditbeforeanynewprobe/fix. IndependentPackOpen/Gamecoarseprepcontinues.",
+  "limits": [
+    "QAonlyNoFDE; no releasephoneuse",
+    "First3.09s colderthanwarm2.08/2.19s; finalcandidatepairedcomparisonneeded",
+    "No allsongcap orresourcequalitychange; no productfixyet"
+  ]
+}

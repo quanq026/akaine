@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import os
 import re
@@ -43,7 +42,6 @@ DISCORD_MENTION_PATTERN = re.compile(r"^<@!?(\d{15,20})>$")
 class BotSettings:
     game_db_path: Path
     mapping_db_path: Path
-    create_user_cli_path: Path
     b30_generator_path: Path
     server_cwd: Path
     log_path: Path
@@ -57,9 +55,6 @@ class BotSettings:
             ),
             mapping_db_path=Path(
                 os.environ.get("LYGUS_MAPPING_DB", root / "database" / "discord_bot.db")
-            ),
-            create_user_cli_path=Path(
-                os.environ.get("LYGUS_CREATE_CLI", root / "tools" / "create_user_cli.py")
             ),
             b30_generator_path=Path(
                 os.environ.get("LYGUS_B30_GENERATOR", root / "tools" / "b30_generator.py")
@@ -160,24 +155,6 @@ async def send_ephemeral(
         await interaction.followup.send(**kwargs)
     else:
         await interaction.response.send_message(**kwargs)
-
-
-def run_create_cli(settings: BotSettings, username: str, password: str) -> dict:
-    process = subprocess.run(
-        [sys.executable, str(settings.create_user_cli_path), username, password],
-        cwd=settings.server_cwd,
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
-    try:
-        payload = json.loads(process.stdout)
-    except json.JSONDecodeError as error:
-        raise RuntimeError("Account helper returned an invalid response.") from error
-    if process.returncode != 0 or payload.get("status") != "success":
-        raise RuntimeError(payload.get("message") or "Account creation failed.")
-    return payload
 
 
 def run_b30(settings: BotSettings, user_code: str, username: str) -> Path:
@@ -295,18 +272,11 @@ class CreateAccountModal(discord.ui.Modal, title="Create Akaine account"):
         username = str(self.username.value).strip()
         password = str(self.password.value)
         try:
-            payload = await asyncio.to_thread(
-                run_create_cli,
-                self.bot.settings,
+            account = await asyncio.to_thread(
+                self.bot.repository.create_account,
+                interaction.user.id,
                 username,
                 password,
-            )
-            account = await asyncio.to_thread(
-                self.bot.repository.register_mapping,
-                interaction.user.id,
-                int(payload["user_id"]),
-                str(payload["username"]),
-                str(payload["user_code"]),
             )
             embed = discord.Embed(
                 title="Account created",

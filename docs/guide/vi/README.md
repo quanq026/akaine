@@ -54,10 +54,12 @@ phối content, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
 
 ## Phần 2: Client Android
 
-6. [Build, ký và kiểm tra client Android](06-build-android-client.md).
+6. [Dùng checkpoint production V36 hiện tại](../../production-checkpoint.vi.md).
 
-Chương 6 build và kiểm thử client Android từ XAPK upstream đã xác minh cùng source patch
-trong repository này.
+Quy trình hiện tại dẫn tới đầu vào production V9 đã xác minh, source profile V36,
+bước ký/kiểm tra và CLI production. Vẫn cần bộ build input riêng.
+[Chương 6](06-build-android-client.md) giữ lại quy trình XAPK lịch sử cho checkpoint
+cũ; quy trình đó không tạo ra V36.
 
 ## Phần 3: phát hành content
 

@@ -1,0 +1,59 @@
+{
+  "status": "PACKOPEN_INITIAL_CREATION_HOT_REUSED_LAYER_UPDATE_SMALL",
+  "QA_APK_sha256": "578b0290f65d49fa66691e39ff549968f1e5648d8e6bdd51c5131d67660d2a0d",
+  "baseV36_APK_sha256": "f826119d5d6c89dc3591a2c32df32022578ff5e1879e2e2cbe9c15ff9ab3a372",
+  "same_SongSelect_scene": true,
+  "records": [
+    {
+      "action": 0,
+      "native_roots": 1,
+      "sum_before_tail_wall_ms": 1915.359958,
+      "sum_before_tail_cpu_ms": 1563.077981,
+      "phase_wall_ms": {
+        "1": 1860.456555,
+        "2": 54.122931,
+        "3": 0.780472
+      },
+      "labels": [
+        "first_create"
+      ]
+    },
+    {
+      "action": 1,
+      "native_roots": 1,
+      "sum_before_tail_wall_ms": 50.870001,
+      "sum_before_tail_cpu_ms": 39.886027,
+      "phase_wall_ms": {
+        "1": 18.382138,
+        "2": 32.248386,
+        "3": 0.239477
+      },
+      "labels": [
+        "reused"
+      ]
+    },
+    {
+      "action": 2,
+      "native_roots": 1,
+      "sum_before_tail_wall_ms": 51.859461,
+      "sum_before_tail_cpu_ms": 44.146372,
+      "phase_wall_ms": {
+        "1": 17.338696,
+        "2": 33.966381,
+        "3": 0.554384
+      },
+      "labels": [
+        "reused"
+      ]
+    }
+  ],
+  "numeric_review_sha256": "d4db416c04c1f29dfa3ccab66faffe73c1bcd71ab7e79eb672d89a350fd6efdf",
+  "decision": "Measurefirstcreation1393564onepartition; donotcachelayeragainordisablelightperopenupdate. Same-scene reusealready51ms.",
+  "limits": [
+    "Beforetail endpoint excludesvirtualdispatch/animation",
+    "QAonlyNoFDE,nophoneprod",
+    "Native3rootlabels validatedsafe8bytefirstcreate/reused snapshot",
+    "No productfixyet; preserve63packsandunboundedfuturecapacity",
+    "IndependentnormalbaselinesfirsteachnewScene notsamereuse"
+  ]
+}

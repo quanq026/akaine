@@ -1,0 +1,1514 @@
+{
+  "schema": "akaine.packopen-constructor-callmap.v1",
+  "status": "BOUNDED_STATIC_CALLMAP_ONE_FIRST_CREATION_PARTITION_PROPOSAL_ONLY",
+  "date": "2026-10-26",
+  "scope": "Source/static evidence only; no native compilation, target execution, package/sign/device/server/network action or canonical source edit during this callmap pass. Five selected callees including one bounded dispatch shim; no recursive expansion.",
+  "input": {
+    "core_sha256": "ce5210a472e437b3710075cc4a3a1253485ae1ba48bc2a17405caef067c5b1cf",
+    "core_bytes": 29233888,
+    "create_reuse_body": {
+      "start": "0x19f859c",
+      "end_exclusive": "0x19f8914",
+      "bytes": 888,
+      "sha256": "3135c2794a2c153bc8563817d8f8fe769191cb247bcbab044b464c75ed7d09cc"
+    },
+    "measured_pre_update_span": {
+      "start": "0x19f859c",
+      "end_exclusive": "0x19f8834",
+      "bytes": 664,
+      "sha256": "d7fbcaefd6ec24f18a697e8727d2d9b3642a97bc0510b2377e620ce76bf6de31"
+    },
+    "custom_init_FDE_body": {
+      "start": "0x1393564",
+      "end_exclusive": "0x1394bb4",
+      "bytes": 5712,
+      "sha256": "0d33d21a706066755751950b747dfea9e42cf02140ee4426e643e9bdc05a37f8"
+    },
+    "normal_custom_init_RET": "0x1394950",
+    "retained_static_catalog_sha256": "b600769bcf896f07ffc657c671df63acdf96d1b9e5584a78f04d389f403056c7"
+  },
+  "measurement_context": {
+    "source": "20261026-packopen-phase-attribution.json",
+    "source_sha256": "172491ac9fda31755520fca65d086424d9cfcb125f33485c0002ae6975fc3f11",
+    "authority": "Root-reviewed prior runtime evidence; not a new measurement by this static task",
+    "first_create_before_tail_wall_ms": 1915.359958,
+    "first_create_before_update_wall_ms": 1860.456555,
+    "same_scene_reused_before_tail_wall_ms": [
+      50.870001,
+      51.859461
+    ],
+    "attribution_limit": "The1860.456555ms pre-update phase includes allocation, custom init and remaining outer setup; the custom initializer duration is not yet separately measured.",
+    "catalog_fixture_packs": 63,
+    "fixture_not_future_capacity_limit": true
+  },
+  "outer_create_path": [
+    {
+      "span": "0x19f859c..0x19f85b8",
+      "meaning": "Read scene+0x3a8; nonzero branches past creation to0x19f8700",
+      "evidence": [
+        {
+          "RVA": "0x19f85b0",
+          "bytes": "08d441f9",
+          "instruction": "ldr x8, [x0, #0x3a8]"
+        },
+        {
+          "RVA": "0x19f85b4",
+          "bytes": "f30300aa",
+          "instruction": "mov x19, x0"
+        },
+        {
+          "RVA": "0x19f85b8",
+          "bytes": "480a00b5",
+          "instruction": "cbnz x8, #0x19f8700"
+        }
+      ]
+    },
+    {
+      "span": "0x19f85bc..0x19f86cc",
+      "meaning": "Allocate0x470, memset, base constructor0x16917cc, vectors/maps/vtables, then custom init. No per-pack fixed-cap inference.",
+      "calls": [
+        {
+          "RVA": "0x19f85d0",
+          "bytes": "fcd40194",
+          "instruction": "bl #0x1a6d9c0"
+        },
+        {
+          "RVA": "0x19f85e0",
+          "bytes": "54d50194",
+          "instruction": "bl #0x1a6db30"
+        },
+        {
+          "RVA": "0x19f85e8",
+          "bytes": "7964f297",
+          "instruction": "bl #0x16917cc"
+        },
+        {
+          "RVA": "0x19f8628",
+          "bytes": "38b4d197",
+          "instruction": "bl #0xe65708"
+        },
+        {
+          "RVA": "0x19f86cc",
+          "bytes": "a66be697",
+          "instruction": "bl #0x1393564"
+        }
+      ]
+    },
+    {
+      "span": "0x19f86d0..0x19f8700",
+      "meaning": "Custom-init success autoreleases; failure destroys and zeroes; scene+0x3a8 stored with native ownership.",
+      "evidence": [
+        {
+          "RVA": "0x19f86d0",
+          "bytes": "80000036",
+          "instruction": "tbz w0, #0, #0x19f86e0"
+        },
+        {
+          "RVA": "0x19f86d4",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x19f86d8",
+          "bytes": "04d0da97",
+          "instruction": "bl #0x10ac6e8"
+        },
+        {
+          "RVA": "0x19f86dc",
+          "bytes": "06000014",
+          "instruction": "b #0x19f86f4"
+        },
+        {
+          "RVA": "0x19f86e0",
+          "bytes": "880240f9",
+          "instruction": "ldr x8, [x20]"
+        },
+        {
+          "RVA": "0x19f86e4",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x19f86e8",
+          "bytes": "080540f9",
+          "instruction": "ldr x8, [x8, #8]"
+        },
+        {
+          "RVA": "0x19f86ec",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x19f86f0",
+          "bytes": "f4031faa",
+          "instruction": "mov x20, xzr"
+        },
+        {
+          "RVA": "0x19f86f4",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x19f86f8",
+          "bytes": "74d601f9",
+          "instruction": "str x20, [x19, #0x3a8]"
+        },
+        {
+          "RVA": "0x19f86fc",
+          "bytes": "d31dea97",
+          "instruction": "bl #0x147fe48"
+        }
+      ]
+    },
+    {
+      "span": "0x19f8700..0x19f8834",
+      "meaning": "Existing-layer path joins here; scene/UI/action setup precedes the separately measured inexpensive per-open update."
+    }
+  ],
+  "init_regions": [
+    {
+      "span": "0x1393564..0x13939a8",
+      "meaning": "Inherited0x16567ac init then flags and five dynamically appended float scroll stops; inherited failure skips to return cleanup.",
+      "inherited_callsite": {
+        "RVA": "0x13935a4",
+        "bytes": "820c0b94",
+        "instruction": "bl #0x16567ac"
+      }
+    },
+    {
+      "span": "0x13939a8..0x1393a14",
+      "meaning": "Root/container factory0x17ec490 and five get/create category-container calls0x13d91cc with keys2,4,5,6,7.",
+      "evidence": [
+        {
+          "RVA": "0x13939a8",
+          "bytes": "b88301d1",
+          "instruction": "sub x24, x29, #0x60"
+        },
+        {
+          "RVA": "0x13939ac",
+          "bytes": "b9621194",
+          "instruction": "bl #0x17ec490"
+        },
+        {
+          "RVA": "0x13939b0",
+          "bytes": "809601f9",
+          "instruction": "str x0, [x20, #0x328]"
+        },
+        {
+          "RVA": "0x13939b4",
+          "bytes": "080040f9",
+          "instruction": "ldr x8, [x0]"
+        },
+        {
+          "RVA": "0x13939b8",
+          "bytes": "21008052",
+          "instruction": "mov w1, #1"
+        },
+        {
+          "RVA": "0x13939bc",
+          "bytes": "084542f9",
+          "instruction": "ldr x8, [x8, #0x488]"
+        },
+        {
+          "RVA": "0x13939c0",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x13939c4",
+          "bytes": "880240f9",
+          "instruction": "ldr x8, [x20]"
+        },
+        {
+          "RVA": "0x13939c8",
+          "bytes": "819641f9",
+          "instruction": "ldr x1, [x20, #0x328]"
+        },
+        {
+          "RVA": "0x13939cc",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x13939d0",
+          "bytes": "08f540f9",
+          "instruction": "ldr x8, [x8, #0x1e8]"
+        },
+        {
+          "RVA": "0x13939d4",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x13939d8",
+          "bytes": "41008052",
+          "instruction": "mov w1, #2"
+        },
+        {
+          "RVA": "0x13939dc",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x13939e0",
+          "bytes": "fb150194",
+          "instruction": "bl #0x13d91cc"
+        },
+        {
+          "RVA": "0x13939e4",
+          "bytes": "81008052",
+          "instruction": "mov w1, #4"
+        },
+        {
+          "RVA": "0x13939e8",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x13939ec",
+          "bytes": "f8150194",
+          "instruction": "bl #0x13d91cc"
+        },
+        {
+          "RVA": "0x13939f0",
+          "bytes": "a1008052",
+          "instruction": "mov w1, #5"
+        },
+        {
+          "RVA": "0x13939f4",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x13939f8",
+          "bytes": "f5150194",
+          "instruction": "bl #0x13d91cc"
+        },
+        {
+          "RVA": "0x13939fc",
+          "bytes": "c1008052",
+          "instruction": "mov w1, #6"
+        },
+        {
+          "RVA": "0x1393a00",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x1393a04",
+          "bytes": "f2150194",
+          "instruction": "bl #0x13d91cc"
+        },
+        {
+          "RVA": "0x1393a08",
+          "bytes": "e1008052",
+          "instruction": "mov w1, #7"
+        },
+        {
+          "RVA": "0x1393a0c",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x1393a10",
+          "bytes": "ef150194",
+          "instruction": "bl #0x13d91cc"
+        }
+      ]
+    },
+    {
+      "span": "0x1393a14..0x1393df4",
+      "meaning": "Rebuild layer+0x3b8 button-name map; button1..button5 map to keys2,4,5,6,7; count+0x3c8. These five are category buttons, not a cap on pack cards."
+    },
+    {
+      "span": "0x1393df4..0x1393e08",
+      "meaning": "0x16a3d20 callback scheduling, then accepted Mod sidebar shim0x782e10. Frozen source adds category8/button6 and preserves original0x1402a28 setup. No individual timing claim.",
+      "evidence": [
+        {
+          "RVA": "0x1393df4",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x1393df8",
+          "bytes": "ca3f0c94",
+          "instruction": "bl #0x16a3d20"
+        },
+        {
+          "RVA": "0x1393dfc",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x1393e00",
+          "bytes": "04bccf97",
+          "instruction": "bl #0x782e10"
+        },
+        {
+          "RVA": "0x1393e04",
+          "bytes": "e00314aa",
+          "instruction": "mov x0, x20"
+        },
+        {
+          "RVA": "0x1393e08",
+          "bytes": "2c930d94",
+          "instruction": "bl #0x16f8ab8"
+        },
+        {
+          "RVA": "0x1393e0c",
+          "bytes": "604b1494",
+          "instruction": "bl #0x18a6b8c"
+        }
+      ]
+    },
+    {
+      "span": "0x1393e08..0x1393e0c",
+      "meaning": "One direct call0x16f8ab8, the only proposed isolated cost bucket."
+    },
+    {
+      "span": "0x1393e0c..0x1394950",
+      "meaning": "Remaining normal initialization, user flags, all-songs/favorite backing/controls, image/button factories, labels and callbacks; normal return preserves original success value."
+    }
+  ],
+  "five_selected_callees": [
+    {
+      "start": "0x17ec490",
+      "end_exclusive": "0x17ec51c",
+      "bytes": 140,
+      "sha256": "015546ff4485be6a8e751ca323df71b72be884916c63d0014366e8453709aef6",
+      "role": "Node/container factory stored at PackListLayer+0x328; concrete class name unresolved",
+      "evidence": [
+        {
+          "RVA": "0x17ec4a4",
+          "bytes": "00548052",
+          "instruction": "mov w0, #0x2a0"
+        },
+        {
+          "RVA": "0x17ec4a8",
+          "bytes": "26060a94",
+          "instruction": "bl #0x1a6dd40"
+        },
+        {
+          "RVA": "0x17ec4ac",
+          "bytes": "f30300aa",
+          "instruction": "mov x19, x0"
+        },
+        {
+          "RVA": "0x17ec4b0",
+          "bytes": "000200b4",
+          "instruction": "cbz x0, #0x17ec4f0"
+        },
+        {
+          "RVA": "0x17ec4b4",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x17ec4b8",
+          "bytes": "399fec97",
+          "instruction": "bl #0x131419c"
+        },
+        {
+          "RVA": "0x17ec4bc",
+          "bytes": "680240f9",
+          "instruction": "ldr x8, [x19]"
+        },
+        {
+          "RVA": "0x17ec4c0",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x17ec4c4",
+          "bytes": "086d42f9",
+          "instruction": "ldr x8, [x8, #0x4d8]"
+        },
+        {
+          "RVA": "0x17ec4c8",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x17ec4cc",
+          "bytes": "80000036",
+          "instruction": "tbz w0, #0, #0x17ec4dc"
+        }
+      ]
+    },
+    {
+      "start": "0x13d91cc",
+      "end_exclusive": "0x13d956c",
+      "bytes": 928,
+      "sha256": "7b76fead2ed58c9bccdc4710facc42fe2e135a6397b6235176bfa54dc775e89a",
+      "role": "Get/create category container keyed by integer; map at layer+0x3a8, count+0x3b0; five explicit initial categories 2,4,5,6,7",
+      "evidence": [
+        {
+          "RVA": "0x13d91f8",
+          "bytes": "f403012a",
+          "instruction": "mov w20, w1"
+        },
+        {
+          "RVA": "0x13d91fc",
+          "bytes": "f30300aa",
+          "instruction": "mov x19, x0"
+        },
+        {
+          "RVA": "0x13d9200",
+          "bytes": "18a00e91",
+          "instruction": "add x24, x0, #0x3a8"
+        },
+        {
+          "RVA": "0x13d9204",
+          "bytes": "e80f00f9",
+          "instruction": "str x8, [sp, #0x18]"
+        },
+        {
+          "RVA": "0x13d9208",
+          "bytes": "08d441f9",
+          "instruction": "ldr x8, [x0, #0x3a8]"
+        },
+        {
+          "RVA": "0x13d920c",
+          "bytes": "c80100b4",
+          "instruction": "cbz x8, #0x13d9244"
+        },
+        {
+          "RVA": "0x13d9210",
+          "bytes": "69a20e91",
+          "instruction": "add x9, x19, #0x3a8"
+        },
+        {
+          "RVA": "0x13d9214",
+          "bytes": "ea0308aa",
+          "instruction": "mov x10, x8"
+        },
+        {
+          "RVA": "0x13d9218",
+          "bytes": "4b2140b9",
+          "instruction": "ldr w11, [x10, #0x20]"
+        },
+        {
+          "RVA": "0x13d921c",
+          "bytes": "7f01146b",
+          "instruction": "cmp w11, w20"
+        },
+        {
+          "RVA": "0x13d9220",
+          "bytes": "eba79f1a",
+          "instruction": "cset w11, lt"
+        },
+        {
+          "RVA": "0x13d9224",
+          "bytes": "29b18a9a",
+          "instruction": "csel x9, x9, x10, lt"
+        },
+        {
+          "RVA": "0x13d9228",
+          "bytes": "4a596bf8",
+          "instruction": "ldr x10, [x10, w11, uxtw #3]"
+        },
+        {
+          "RVA": "0x13d922c",
+          "bytes": "6affffb5",
+          "instruction": "cbnz x10, #0x13d9218"
+        },
+        {
+          "RVA": "0x13d9230",
+          "bytes": "3f0118eb",
+          "instruction": "cmp x9, x24"
+        },
+        {
+          "RVA": "0x13d9234",
+          "bytes": "80000054",
+          "instruction": "b.eq #0x13d9244"
+        },
+        {
+          "RVA": "0x13d9238",
+          "bytes": "292140b9",
+          "instruction": "ldr w9, [x9, #0x20]"
+        },
+        {
+          "RVA": "0x13d923c",
+          "bytes": "3f01146b",
+          "instruction": "cmp w9, w20"
+        },
+        {
+          "RVA": "0x13d9240",
+          "bytes": "4d120054",
+          "instruction": "b.le #0x13d9488"
+        },
+        {
+          "RVA": "0x13d9244",
+          "bytes": "051bf197",
+          "instruction": "bl #0x101fe58"
+        },
+        {
+          "RVA": "0x13d9470",
+          "bytes": "08f8f997",
+          "instruction": "bl #0x1257490"
+        },
+        {
+          "RVA": "0x13d9474",
+          "bytes": "68da41f9",
+          "instruction": "ldr x8, [x19, #0x3b0]"
+        },
+        {
+          "RVA": "0x13d9478",
+          "bytes": "08050091",
+          "instruction": "add x8, x8, #1"
+        },
+        {
+          "RVA": "0x13d947c",
+          "bytes": "68da01f9",
+          "instruction": "str x8, [x19, #0x3b0]"
+        },
+        {
+          "RVA": "0x13d9480",
+          "bytes": "d51600f9",
+          "instruction": "str x21, [x22, #0x28]"
+        },
+        {
+          "RVA": "0x13d9484",
+          "bytes": "080340f9",
+          "instruction": "ldr x8, [x24]"
+        }
+      ]
+    },
+    {
+      "role": "Accepted Mod sidebar dispatch shim; bounded two-span inspection, no FDE body invented",
+      "spans": [
+        {
+          "start": "0x782e10",
+          "end_exclusive": "0x782e20",
+          "bytes": 16,
+          "sha256": "7d906cc82dd8f0ad611f324eed3c3205e00e20b35c489730fb60fb9f32ca4666"
+        },
+        {
+          "start": "0x782ff0",
+          "end_exclusive": "0x782ff4",
+          "bytes": 4,
+          "sha256": "288e9e82f317ae9d18fa84fa803713f3ba1a303136b5f42806bd13943d985060"
+        }
+      ],
+      "evidence": [
+        {
+          "RVA": "0x782e10",
+          "bytes": "08a400b0",
+          "instruction": "adrp x8, #0x1c03000"
+        },
+        {
+          "RVA": "0x782e14",
+          "bytes": "08ad40f9",
+          "instruction": "ldr x8, [x8, #0x158]"
+        },
+        {
+          "RVA": "0x782e18",
+          "bytes": "c80e00b4",
+          "instruction": "cbz x8, #0x782ff0"
+        },
+        {
+          "RVA": "0x782e1c",
+          "bytes": "00011fd6",
+          "instruction": "br x8"
+        },
+        {
+          "RVA": "0x782ff0",
+          "bytes": "8efe3114",
+          "instruction": "b #0x1402a28"
+        }
+      ],
+      "meaning": "Indirect callback at base+0x1c03158 or preserved fallback0x1402a28; callback bound by frozen mod_category_bridge.h"
+    },
+    {
+      "start": "0x16f8ab8",
+      "end_exclusive": "0x16fc3f0",
+      "bytes": 14648,
+      "sha256": "89479a723458dadda596525edc29069b019e4d6b842e36bd3b700392c05e031b",
+      "role": "Dynamic pack/catalog traversal and UI/card construction; dominant-cost hypothesis only",
+      "normal_RET": "0x16fbb98",
+      "selected_direct_call_inventory": {
+        "0x12c21b8": [
+          "0x16f8d74"
+        ],
+        "0xe131bc": [
+          "0x16f914c"
+        ],
+        "0x1678074": [
+          "0x16f92b4"
+        ],
+        "0x11e8cf4": [
+          "0x16f9b44",
+          "0x16fa4d8",
+          "0x16fb1f0"
+        ],
+        "0x95af50": [
+          "0x16f9dc0"
+        ],
+        "0x196c810": [
+          "0x16f9c94"
+        ],
+        "0xdc18fc": [
+          "0x16f97b8",
+          "0x16f9988",
+          "0x16fb2f4",
+          "0x16fb378"
+        ],
+        "0x1a1d2b4": [
+          "0x16fbb24"
+        ]
+      },
+      "evidence": [
+        {
+          "RVA": "0x16f8d50",
+          "bytes": "e82400b0",
+          "instruction": "adrp x8, #0x1b95000"
+        },
+        {
+          "RVA": "0x16f8d54",
+          "bytes": "08ad47f9",
+          "instruction": "ldr x8, [x8, #0xf58]"
+        },
+        {
+          "RVA": "0x16f8d58",
+          "bytes": "bfff35a9",
+          "instruction": "stp xzr, xzr, [x29, #-0xa8]"
+        },
+        {
+          "RVA": "0x16f8d5c",
+          "bytes": "bf8316f8",
+          "instruction": "stur xzr, [x29, #-0x98]"
+        },
+        {
+          "RVA": "0x16f8d60",
+          "bytes": "080140f9",
+          "instruction": "ldr x8, [x8]"
+        },
+        {
+          "RVA": "0x16f8d64",
+          "bytes": "001140f9",
+          "instruction": "ldr x0, [x8, #0x20]"
+        },
+        {
+          "RVA": "0x16f8d68",
+          "bytes": "a80303d1",
+          "instruction": "sub x8, x29, #0xc0"
+        },
+        {
+          "RVA": "0x16f8d6c",
+          "bytes": "22008052",
+          "instruction": "mov w2, #1"
+        },
+        {
+          "RVA": "0x16f8d70",
+          "bytes": "e1031f2a",
+          "instruction": "mov w1, wzr"
+        },
+        {
+          "RVA": "0x16f8d74",
+          "bytes": "1125ef97",
+          "instruction": "bl #0x12c21b8"
+        },
+        {
+          "RVA": "0x16f8d78",
+          "bytes": "a96374a9",
+          "instruction": "ldp x9, x24, [x29, #-0xc0]"
+        },
+        {
+          "RVA": "0x16f8d7c",
+          "bytes": "bfff32a9",
+          "instruction": "stp xzr, xzr, [x29, #-0xd8]"
+        },
+        {
+          "RVA": "0x16f8d80",
+          "bytes": "bf8313f8",
+          "instruction": "stur xzr, [x29, #-0xc8]"
+        },
+        {
+          "RVA": "0x16f8d84",
+          "bytes": "fbaf00f9",
+          "instruction": "str x27, [sp, #0x158]"
+        },
+        {
+          "RVA": "0x16f8d88",
+          "bytes": "3f0118eb",
+          "instruction": "cmp x9, x24"
+        },
+        {
+          "RVA": "0x16f8d8c",
+          "bytes": "c0130054",
+          "instruction": "b.eq #0x16f9004"
+        },
+        {
+          "RVA": "0x16f912c",
+          "bytes": "f68740f9",
+          "instruction": "ldr x22, [sp, #0x108]"
+        },
+        {
+          "RVA": "0x16f9130",
+          "bytes": "f16340f9",
+          "instruction": "ldr x17, [sp, #0xc0]"
+        },
+        {
+          "RVA": "0x16f9134",
+          "bytes": "f30741b9",
+          "instruction": "ldr w19, [sp, #0x104]"
+        },
+        {
+          "RVA": "0x16f9138",
+          "bytes": "d6220091",
+          "instruction": "add x22, x22, #8"
+        },
+        {
+          "RVA": "0x16f913c",
+          "bytes": "df0211eb",
+          "instruction": "cmp x22, x17"
+        },
+        {
+          "RVA": "0x16f9140",
+          "bytes": "a01a0154",
+          "instruction": "b.eq #0x16fb494"
+        },
+        {
+          "RVA": "0x16f9144",
+          "bytes": "d80240f9",
+          "instruction": "ldr x24, [x22]"
+        },
+        {
+          "RVA": "0x16f9148",
+          "bytes": "e00318aa",
+          "instruction": "mov x0, x24"
+        },
+        {
+          "RVA": "0x16f914c",
+          "bytes": "1c68dc97",
+          "instruction": "bl #0xe131bc"
+        },
+        {
+          "RVA": "0x16f9150",
+          "bytes": "fb03002a",
+          "instruction": "mov w27, w0"
+        },
+        {
+          "RVA": "0x16f9154",
+          "bytes": "1f00136b",
+          "instruction": "cmp w0, w19"
+        },
+        {
+          "RVA": "0x16f9158",
+          "bytes": "20040054",
+          "instruction": "b.eq #0x16f91dc"
+        },
+        {
+          "RVA": "0x16f92a4",
+          "bytes": "26008052",
+          "instruction": "mov w6, #1"
+        },
+        {
+          "RVA": "0x16f92a8",
+          "bytes": "27008052",
+          "instruction": "mov w7, #1"
+        },
+        {
+          "RVA": "0x16f92ac",
+          "bytes": "e00318aa",
+          "instruction": "mov x0, x24"
+        },
+        {
+          "RVA": "0x16f92b0",
+          "bytes": "e3031f2a",
+          "instruction": "mov w3, wzr"
+        },
+        {
+          "RVA": "0x16f92b4",
+          "bytes": "70fbfd97",
+          "instruction": "bl #0x1678074"
+        },
+        {
+          "RVA": "0x16f9ad8",
+          "bytes": "0073ffb0",
+          "instruction": "adrp x0, #0x55a000"
+        },
+        {
+          "RVA": "0x16f9adc",
+          "bytes": "a84302d1",
+          "instruction": "sub x8, x29, #0x90"
+        },
+        {
+          "RVA": "0x16f9ae0",
+          "bytes": "00700891",
+          "instruction": "add x0, x0, #0x21c"
+        },
+        {
+          "RVA": "0x16f9ae4",
+          "bytes": "21210091",
+          "instruction": "add x1, x9, #8"
+        },
+        {
+          "RVA": "0x16f9ae8",
+          "bytes": "4ad00d94",
+          "instruction": "bl #0x1a6dc10"
+        },
+        {
+          "RVA": "0x16f9aec",
+          "bytes": "8874fff0",
+          "instruction": "adrp x8, #0x58c000"
+        },
+        {
+          "RVA": "0x16f9af0",
+          "bytes": "8971ffd0",
+          "instruction": "adrp x9, #0x52b000"
+        },
+        {
+          "RVA": "0x16f9af4",
+          "bytes": "7f020072",
+          "instruction": "tst w19, #1"
+        },
+        {
+          "RVA": "0x16f9af8",
+          "bytes": "088d3e91",
+          "instruction": "add x8, x8, #0xfa3"
+        },
+        {
+          "RVA": "0x16f9afc",
+          "bytes": "29311191",
+          "instruction": "add x9, x9, #0x44c"
+        },
+        {
+          "RVA": "0x16f9b00",
+          "bytes": "2111889a",
+          "instruction": "csel x1, x9, x8, ne"
+        },
+        {
+          "RVA": "0x16f9b04",
+          "bytes": "a04302d1",
+          "instruction": "sub x0, x29, #0x90"
+        },
+        {
+          "RVA": "0x16f9b08",
+          "bytes": "06d00d94",
+          "instruction": "bl #0x1a6db20"
+        },
+        {
+          "RVA": "0x16f9b0c",
+          "bytes": "080840f9",
+          "instruction": "ldr x8, [x0, #0x10]"
+        },
+        {
+          "RVA": "0x16f9b10",
+          "bytes": "0000c03d",
+          "instruction": "ldr q0, [x0]"
+        },
+        {
+          "RVA": "0x16f9b14",
+          "bytes": "e86b01f9",
+          "instruction": "str x8, [sp, #0x2d0]"
+        },
+        {
+          "RVA": "0x16f9b18",
+          "bytes": "e0b3803d",
+          "instruction": "str q0, [sp, #0x2c0]"
+        },
+        {
+          "RVA": "0x16f9b1c",
+          "bytes": "1ffc00a9",
+          "instruction": "stp xzr, xzr, [x0, #8]"
+        },
+        {
+          "RVA": "0x16f9b20",
+          "bytes": "1f0000f9",
+          "instruction": "str xzr, [x0]"
+        },
+        {
+          "RVA": "0x16f9b24",
+          "bytes": "a8035738",
+          "instruction": "ldurb w8, [x29, #-0x90]"
+        },
+        {
+          "RVA": "0x16f9b28",
+          "bytes": "68000036",
+          "instruction": "tbz w8, #0, #0x16f9b34"
+        },
+        {
+          "RVA": "0x16f9b2c",
+          "bytes": "a00358f8",
+          "instruction": "ldur x0, [x29, #-0x80]"
+        },
+        {
+          "RVA": "0x16f9b30",
+          "bytes": "accf0d94",
+          "instruction": "bl #0x1a6d9e0"
+        },
+        {
+          "RVA": "0x16f9b34",
+          "bytes": "e0030b91",
+          "instruction": "add x0, sp, #0x2c0"
+        },
+        {
+          "RVA": "0x16f9b38",
+          "bytes": "e1030b91",
+          "instruction": "add x1, sp, #0x2c0"
+        },
+        {
+          "RVA": "0x16f9b3c",
+          "bytes": "e2030b91",
+          "instruction": "add x2, sp, #0x2c0"
+        },
+        {
+          "RVA": "0x16f9b40",
+          "bytes": "e3031f2a",
+          "instruction": "mov w3, wzr"
+        },
+        {
+          "RVA": "0x16f9b44",
+          "bytes": "6cbceb97",
+          "instruction": "bl #0x11e8cf4"
+        },
+        {
+          "RVA": "0x16f9d94",
+          "bytes": "4874ffb0",
+          "instruction": "adrp x8, #0x582000"
+        },
+        {
+          "RVA": "0x16f9d98",
+          "bytes": "08093b91",
+          "instruction": "add x8, x8, #0xec2"
+        },
+        {
+          "RVA": "0x16f9d9c",
+          "bytes": "000540ad",
+          "instruction": "ldp q0, q1, [x8]"
+        },
+        {
+          "RVA": "0x16f9da0",
+          "bytes": "02a1c13c",
+          "instruction": "ldur q2, [x8, #0x1a]"
+        },
+        {
+          "RVA": "0x16f9da4",
+          "bytes": "e31bc03d",
+          "instruction": "ldr q3, [sp, #0x60]"
+        },
+        {
+          "RVA": "0x16f9da8",
+          "bytes": "a00318f8",
+          "instruction": "stur x0, [x29, #-0x80]"
+        },
+        {
+          "RVA": "0x16f9dac",
+          "bytes": "000400ad",
+          "instruction": "stp q0, q1, [x0]"
+        },
+        {
+          "RVA": "0x16f9db0",
+          "bytes": "02a0813c",
+          "instruction": "stur q2, [x0, #0x1a]"
+        },
+        {
+          "RVA": "0x16f9db4",
+          "bytes": "a303973c",
+          "instruction": "stur q3, [x29, #-0x90]"
+        },
+        {
+          "RVA": "0x16f9db8",
+          "bytes": "1fa80039",
+          "instruction": "strb wzr, [x0, #0x2a]"
+        },
+        {
+          "RVA": "0x16f9dbc",
+          "bytes": "a04302d1",
+          "instruction": "sub x0, x29, #0x90"
+        },
+        {
+          "RVA": "0x16f9dc0",
+          "bytes": "6484c997",
+          "instruction": "bl #0x95af50"
+        },
+        {
+          "RVA": "0x16faf74",
+          "bytes": "e0a341f9",
+          "instruction": "ldr x0, [sp, #0x340]"
+        },
+        {
+          "RVA": "0x16faf78",
+          "bytes": "a00dffb4",
+          "instruction": "cbz x0, #0x16f912c"
+        },
+        {
+          "RVA": "0x16faf7c",
+          "bytes": "e0a701f9",
+          "instruction": "str x0, [sp, #0x348]"
+        },
+        {
+          "RVA": "0x16faf80",
+          "bytes": "98ca0d94",
+          "instruction": "bl #0x1a6d9e0"
+        },
+        {
+          "RVA": "0x16faf84",
+          "bytes": "6af8ff17",
+          "instruction": "b #0x16f912c"
+        },
+        {
+          "RVA": "0x16fa918",
+          "bytes": "60fa41f9",
+          "instruction": "ldr x0, [x19, #0x3f0]"
+        },
+        {
+          "RVA": "0x16fa91c",
+          "bytes": "dd72ed97",
+          "instruction": "bl #0x1257490"
+        },
+        {
+          "RVA": "0x16fa920",
+          "bytes": "68fe41f9",
+          "instruction": "ldr x8, [x19, #0x3f8]"
+        },
+        {
+          "RVA": "0x16fa924",
+          "bytes": "f7ab40f9",
+          "instruction": "ldr x23, [sp, #0x150]"
+        },
+        {
+          "RVA": "0x16fa928",
+          "bytes": "08050091",
+          "instruction": "add x8, x8, #1"
+        },
+        {
+          "RVA": "0x16fa92c",
+          "bytes": "68fe01f9",
+          "instruction": "str x8, [x19, #0x3f8]"
+        },
+        {
+          "RVA": "0x16fa930",
+          "bytes": "c82643a9",
+          "instruction": "ldp x8, x9, [x22, #0x30]"
+        },
+        {
+          "RVA": "0x16fa934",
+          "bytes": "1f0109eb",
+          "instruction": "cmp x8, x9"
+        },
+        {
+          "RVA": "0x16fa938",
+          "bytes": "80000054",
+          "instruction": "b.eq #0x16fa948"
+        },
+        {
+          "RVA": "0x16fa93c",
+          "bytes": "178500f8",
+          "instruction": "str x23, [x8], #8"
+        },
+        {
+          "RVA": "0x16fa940",
+          "bytes": "c81a00f9",
+          "instruction": "str x8, [x22, #0x30]"
+        },
+        {
+          "RVA": "0x16fa944",
+          "bytes": "27000014",
+          "instruction": "b #0x16fa9e0"
+        }
+      ]
+    },
+    {
+      "start": "0x11e8cf4",
+      "end_exclusive": "0x11e8db0",
+      "bytes": 188,
+      "sha256": "0da0531a03dc0dedd5b13fbf8d9eb8d453f53ecbf18d8bc547465a40839e2387",
+      "role": "Button-style node factory accepting normal/pressed/disabled resource strings; not itself established as a CSB loader",
+      "evidence": [
+        {
+          "RVA": "0x11e8d14",
+          "bytes": "f70300aa",
+          "instruction": "mov x23, x0"
+        },
+        {
+          "RVA": "0x11e8d18",
+          "bytes": "00b08052",
+          "instruction": "mov w0, #0x580"
+        },
+        {
+          "RVA": "0x11e8d1c",
+          "bytes": "f403032a",
+          "instruction": "mov w20, w3"
+        },
+        {
+          "RVA": "0x11e8d20",
+          "bytes": "f50302aa",
+          "instruction": "mov x21, x2"
+        },
+        {
+          "RVA": "0x11e8d24",
+          "bytes": "07142294",
+          "instruction": "bl #0x1a6dd40"
+        },
+        {
+          "RVA": "0x11e8d28",
+          "bytes": "f30300aa",
+          "instruction": "mov x19, x0"
+        },
+        {
+          "RVA": "0x11e8d2c",
+          "bytes": "800200b4",
+          "instruction": "cbz x0, #0x11e8d7c"
+        },
+        {
+          "RVA": "0x11e8d30",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x11e8d34",
+          "bytes": "d179f997",
+          "instruction": "bl #0x1047478"
+        },
+        {
+          "RVA": "0x11e8d38",
+          "bytes": "680240f9",
+          "instruction": "ldr x8, [x19]"
+        },
+        {
+          "RVA": "0x11e8d3c",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x11e8d40",
+          "bytes": "e10317aa",
+          "instruction": "mov x1, x23"
+        },
+        {
+          "RVA": "0x11e8d44",
+          "bytes": "e20316aa",
+          "instruction": "mov x2, x22"
+        },
+        {
+          "RVA": "0x11e8d48",
+          "bytes": "083543f9",
+          "instruction": "ldr x8, [x8, #0x668]"
+        },
+        {
+          "RVA": "0x11e8d4c",
+          "bytes": "e30315aa",
+          "instruction": "mov x3, x21"
+        },
+        {
+          "RVA": "0x11e8d50",
+          "bytes": "e403142a",
+          "instruction": "mov w4, w20"
+        },
+        {
+          "RVA": "0x11e8d54",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x11e8d58",
+          "bytes": "80000036",
+          "instruction": "tbz w0, #0, #0x11e8d68"
+        },
+        {
+          "RVA": "0x11e8d5c",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x11e8d60",
+          "bytes": "620efb97",
+          "instruction": "bl #0x10ac6e8"
+        },
+        {
+          "RVA": "0x11e8d64",
+          "bytes": "06000014",
+          "instruction": "b #0x11e8d7c"
+        },
+        {
+          "RVA": "0x11e8d68",
+          "bytes": "680240f9",
+          "instruction": "ldr x8, [x19]"
+        },
+        {
+          "RVA": "0x11e8d6c",
+          "bytes": "e00313aa",
+          "instruction": "mov x0, x19"
+        },
+        {
+          "RVA": "0x11e8d70",
+          "bytes": "080540f9",
+          "instruction": "ldr x8, [x8, #8]"
+        },
+        {
+          "RVA": "0x11e8d74",
+          "bytes": "00013fd6",
+          "instruction": "blr x8"
+        },
+        {
+          "RVA": "0x11e8d78",
+          "bytes": "f3031faa",
+          "instruction": "mov x19, xzr"
+        }
+      ]
+    }
+  ],
+  "resource_evidence": {
+    "observed_literals": [
+      {
+        "RVA": "0x55a21c",
+        "value": "songs/pack/1080/select_"
+      },
+      {
+        "RVA": "0x582ec2",
+        "value": "layouts/songselect/AppendPackSaleAsset.csb"
+      },
+      {
+        "RVA": "0x58667e",
+        "value": "img/songselect/1080/button_all_songs.png"
+      },
+      {
+        "RVA": "0x5866a7",
+        "value": "img/songselect/1080/button_all_songs-pressed.png"
+      },
+      {
+        "RVA": "0x537514",
+        "value": "img/songselect/1080/favorites/favorites-backing.png"
+      },
+      {
+        "RVA": "0x539f76",
+        "value": "img/story/actselect/corner-btn.png"
+      },
+      {
+        "RVA": "0x5891f3",
+        "value": "img/story/actselect/corner-btn-pressed.png"
+      },
+      {
+        "RVA": "0x576965",
+        "value": "img/songselect/1080/favorites/favorites-"
+      }
+    ],
+    "conditional_CSB": {
+      "site": "0x16f9dc0",
+      "callee": "0x95af50",
+      "resource": "layouts/songselect/AppendPackSaleAsset.csb",
+      "guard": "Branch0x16f9d60 skips on zero state field; additional prior eligibility checks gate this path. It is not shown to run for every pack."
+    },
+    "dynamic_card_loop": {
+      "loop_header": "0x16f913c compares iterator x22 with end x17",
+      "item_load": "0x16f9144 loads item pointer [x22]",
+      "advance": "0x16f9138 increments x22 by8",
+      "backedge": "0x16faf84 returns through0x16f912c",
+      "category_key": "0x16f914c calls0xe131bc on current item; concrete prototype unresolved",
+      "button_resource": "0x16f9ae8 formats songs/pack/1080/select_ with item id;0x16f9b44 calls0x11e8cf4",
+      "card_or_item_factory": "0x16f92b4 calls0x1678074 with current item x24; callee not expanded",
+      "capacity": "Native dynamic vectors/maps grow from their pointer ranges; no63-entry bound is proposed or inferred."
+    }
+  },
+  "frozen_Mod_sidebar_source": {
+    "path_role": "semantic/native/mod_category_bridge.h",
+    "sha256": "bf88e197ac1d27419e6a2ec72c37f288573f622761b1cef2e60adfd4a67d1d32",
+    "facts": [
+      "initialize_mod_bridge binds reserved callback to mod_sidebar.",
+      "mod_sidebar adds section8/category button6 and a scroll stop, then always invokes original0x1402a28.",
+      "mod_heading retains original0xc3a6e0 creation and adds ModDividerNativeFrame.csb through0x95af50; count/cost is not measured here."
+    ],
+    "no_new_cache": "Layer already reused at SongSelect scene+0x3a8; duplicate layer caching is rejected."
+  },
+  "one_partition_proposal": {
+    "selection": "Eight strict points over existing first-create pre-update outer phase, seven adjacent buckets; root chooses whether to author.",
+    "source_implementation_authorized_by_this_report": false,
+    "points": [
+      {
+        "id": 1,
+        "kind": 0,
+        "RVA": "0x19f859c",
+        "bytes": "e80f1cfc",
+        "instruction": "str d8, [sp, #-0x40]!",
+        "role": "entry",
+        "replay_requirement": "STR d8 preindex; entry layer snapshot accepts only known first_create"
+      },
+      {
+        "id": 2,
+        "kind": 2,
+        "RVA": "0x19f86cc",
+        "bytes": "a66be697",
+        "instruction": "bl #0x1393564",
+        "role": "before custom initialization",
+        "replay_requirement": "BL 0x1393564; original target/LR 0x19f86d0/SP preserved"
+      },
+      {
+        "id": 3,
+        "kind": 2,
+        "RVA": "0x13939a8",
+        "bytes": "b88301d1",
+        "instruction": "sub x24, x29, #0x60",
+        "role": "after init prelude and five float scroll stops",
+        "replay_requirement": "SUB x24,x29,#0x60 replay"
+      },
+      {
+        "id": 4,
+        "kind": 2,
+        "RVA": "0x1393df4",
+        "bytes": "e00314aa",
+        "instruction": "mov x0, x20",
+        "role": "after five category containers and button map",
+        "replay_requirement": "MOV x0,x20 replay"
+      },
+      {
+        "id": 5,
+        "kind": 2,
+        "RVA": "0x1393e08",
+        "bytes": "2c930d94",
+        "instruction": "bl #0x16f8ab8",
+        "role": "before catalog/UI population",
+        "replay_requirement": "BL 0x16f8ab8; original target/LR 0x1393e0c/SP preserved"
+      },
+      {
+        "id": 6,
+        "kind": 2,
+        "RVA": "0x1393e0c",
+        "bytes": "604b1494",
+        "instruction": "bl #0x18a6b8c",
+        "role": "after catalog/UI population",
+        "replay_requirement": "BL 0x18a6b8c; original target/LR 0x1393e10/SP preserved"
+      },
+      {
+        "id": 7,
+        "kind": 2,
+        "RVA": "0x1394950",
+        "bytes": "c0035fd6",
+        "instruction": "ret ",
+        "role": "nested initialization normal return",
+        "replay_requirement": "RET replay; keep timing root active until outer endpoint"
+      },
+      {
+        "id": 1,
+        "kind": 1,
+        "RVA": "0x19f8834",
+        "bytes": "3cabf597",
+        "instruction": "bl #0x1763524",
+        "role": "before per-open update",
+        "replay_requirement": "BL 0x1763524 replay after root completion; original target/LR 0x19f8838/SP preserved"
+      }
+    ],
+    "phases": [
+      {
+        "phase": 1,
+        "from": "0x19f859c",
+        "to": "0x19f86cc",
+        "meaning": "outer allocation/base-constructor/object setup before custom init"
+      },
+      {
+        "phase": 2,
+        "from": "0x19f86cc",
+        "to": "0x13939a8",
+        "meaning": "inherited init, flags and five float scroll-stop insertions"
+      },
+      {
+        "phase": 3,
+        "from": "0x13939a8",
+        "to": "0x1393df4",
+        "meaning": "root/container factory, five category containers and button1..button5 map"
+      },
+      {
+        "phase": 4,
+        "from": "0x1393df4",
+        "to": "0x1393e08",
+        "meaning": "schedule callback setup and accepted Mod sidebar initialization"
+      },
+      {
+        "phase": 5,
+        "from": "0x1393e08",
+        "to": "0x1393e0c",
+        "meaning": "direct0x16f8ab8 dynamic catalog/UI population call only"
+      },
+      {
+        "phase": 6,
+        "from": "0x1393e0c",
+        "to": "0x1394950",
+        "meaning": "remaining init controls, images/buttons, state-dependent favorite paths and bindings"
+      },
+      {
+        "phase": 7,
+        "from": "0x1394950",
+        "to": "0x19f8834",
+        "meaning": "native return, autorelease/scene ownership attachment and all remaining outer pre-update work"
+      }
+    ],
+    "mandatory_flow_proof": {
+      "method": "Direct-branch CFG with BL/BLR assumed normal return; selected custom-init BL expanded and its RET linked to native caller resume. Force only observed first-create selector and inherited-init success. Removing any selected point makes outer endpoint unreachable.",
+      "known_path_constraints": {
+        "0x19f85b8": "scene+0x3a8 known zero; take fallthrough",
+        "0x13935ac": "inherited init success; take fallthrough"
+      },
+      "all_eight_dominate_first_create_success_endpoint": {
+        "0x19f859c": true,
+        "0x19f86cc": true,
+        "0x13939a8": true,
+        "0x1393df4": true,
+        "0x1393e08": true,
+        "0x1393e0c": true,
+        "0x1394950": true,
+        "0x19f8834": true
+      },
+      "exceptions_not_modeled": "Throwing calls can bypass points and must reject the full runtime root."
+    },
+    "runtime_contract": [
+      "At entry use one guarded8-byte scene+0x3a8 snapshot before timestamp; reject unknown, accept only known zero first_create. Count reused entries as ignored without starting a root.",
+      "Record at most12 first-create roots; strict exact order and exactly-once points2..7, then endpoint; missing/duplicate/reentry/clock invalid invalidates entire root.",
+      "Nested initializer RET is an interior point, not timing completion. Failure/exception bypasses are never accepted.",
+      "Preserve original STR/SUB/MOV/LDR/RET semantics, allGPR/SIMD/NZCV/FPCR/FPSR/SP/TLS errno; replay four displaced BL callsites with exact native callee target/LR/SP.",
+      "Final event ends timing BEFORE BL0x1763524; replay update unchanged outside measurement; no forcedRET or update skip.",
+      "OwnerGL deferred flush only when no root active; no per-card logging or observer reads inside root. Preserve raw clocks, telescoping conservation and outerCPU<=wall.",
+      "Repeat first-open in newly constructed SongSelect scenes; distinguish resource-warm first_create from actual same-scene reused roots.",
+      "Temporary QA cave has no FDE; independent source and emitted-byte review, bounded emulator capture and normalV36 restore remain mandatory before any runtime interpretation."
+    ]
+  },
+  "exact_shared_callee_overlap": {
+    "CSB_loader": "0x95af50 reached by Pack population at0x16f9dc0 and existing Mod heading source; SongSelect and Game direct calls listed below.",
+    "calls": {
+      "SongSelect": {
+        "0x95af50": [
+          "0x161b96c",
+          "0x161ba20"
+        ],
+        "0x11e8cf4": [
+          "0x161af10",
+          "0x161b0fc",
+          "0x161b344",
+          "0x161ca5c",
+          "0x161cb30",
+          "0x161d310",
+          "0x161dac4"
+        ],
+        "0x16a3d20": [
+          "0x161d3e8"
+        ]
+      },
+      "Game": {
+        "0x95af50": [
+          "0xe2f674"
+        ],
+        "0x11e8cf4": [],
+        "0x16a3d20": [
+          "0xe2f860"
+        ]
+      }
+    },
+    "scheduling_helper": "0x16a3d20 called from Pack init0x1393df8 and existing SongSelect/Game bodies. Prior source evidence describes callback scheduling, not resource construction.",
+    "cost_claim": "Exact callee overlap only. No shared bottleneck, duplicate load, cache miss, decode/upload duration or safe skip proven."
+  },
+  "decision": [
+    "First isolate0x16f8ab8 and distinguish it from root/category setup, Mod sidebar, remaining controls and outer work.",
+    "Preserve all63 observed packs, every category/scroll target and future dynamic capacity; never cap pack cards or lower image/audio quality.",
+    "Do not skip inexpensive per-open update or add duplicate layer reuse.",
+    "Choose a product change only after the one partition identifies a large measured owner."
+  ],
+  "limits": [
+    "Static reachability is not execution/count/duration evidence.",
+    "Native names and prototypes remain inferred where explicitly stated; no deeper callee bodies beyond selected five were expanded.",
+    "No body at0x782e10 has an invented FDE range: shim has exact bounded instruction spans and a frozen source callback.",
+    "The optional pack-sale CSB does not establish all-card CSB cost; original image loading/GL upload substeps remain unmeasured.",
+    "Root retains control of emulator, package, signing and future source partition implementation."
+  ],
+  "retained_workspace_report_sha256": "803c40d09c8532ff69047b595a33c22a17317b34b3d2f5d9a0c906333b3c6cb0",
+  "report_note": "Portable selected evidence; full instruction evidence remains in the hash-bound workspace report."
+}

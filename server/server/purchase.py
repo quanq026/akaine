@@ -9,6 +9,7 @@ from core.purchase import Purchase, PurchaseList
 from core.redeem import UserRedeem
 from core.sql import Connect
 from core.user import UserOnline
+from core.client_packs import pack_ids_for_dynamic_user, uses_dynamic_packs
 
 from .auth import auth_required
 from .func import arc_try, success_return
@@ -80,6 +81,16 @@ def buy_pack_or_single(user_id):
 
         x = Purchase(c, UserOnline(c, user_id)).select(purchase_name)
         x.buy()
+
+        if uses_dynamic_packs(request.headers):
+            packs = pack_ids_for_dynamic_user(x.user, request.headers)
+            return success_return({
+                'user_id': x.user.user_id,
+                'ticket': x.user.ticket,
+                'packs': packs,
+                'singles': x.user.singles,
+                'characters': x.user.characters_list
+            })
 
         return success_return({
             'user_id': x.user.user_id,

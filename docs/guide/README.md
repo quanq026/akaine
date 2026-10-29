@@ -57,10 +57,12 @@ content delivery, Cloudflare DNS and the required Windows tools.
 
 ## Part 2: Android client
 
-6. [Build, sign and test the Android client](06-build-android-client.md).
+6. [Use the current production V36 checkpoint](../production-checkpoint.md).
 
-Chapter 6 builds and tests the Android client from the verified upstream XAPK
-and the patch source in this repository.
+The current route links the verified production V9 input, V36 source profile,
+signing checks and production semantic CLI. The private build kit remains
+required. [Chapter 6](06-build-android-client.md) preserves the historical
+fresh-XAPK build for its earlier checkpoint; it does not produce V36.
 
 ## Part 3: content releases
 

@@ -1,0 +1,33 @@
+{
+  "schema": "akaine.emulator-reset.v1",
+  "status": "FRESH30G_CREATED_AND_APK34_BUNDLE25_LOCALLY_INSTALLED_RUNTIME_PENDING",
+  "date_local": "2026-10-26",
+  "user_requested_clean_recreation": true,
+  "only_target_AVD_deleted": "akaine_cli_stage_20261020",
+  "configured_data": "30G",
+  "RAM_MiB": 4096,
+  "cores": 4,
+  "API": 35,
+  "resolution": "1280x720",
+  "refresh_hz": 120,
+  "old_userdata_restored": false,
+  "W_free_before_reset_bytes": 23448485888,
+  "W_free_after_reset_bytes": 45316149248,
+  "physical_device_changed_by_reset": false,
+  "prod_AVD_changed_by_reset": false,
+  "native_cache_install_files_verified": 20903,
+  "bundle": "7.0.255.25",
+  "manifest_sha256": "6e079c075bfa7d412fff06f188d26191656496599e28288722f3cfb58ac23891",
+  "fresh_native_setup_and_performance_pending": true,
+  "old40G_frame_observation_not_used_as_final_recheck": true,
+  "operator_permission_repair": {
+    "cause": "Fresh USB helper mkdir used default umask and produced files0777; existing CLI guard correctly rejects world-write.",
+    "mode_before": "0777",
+    "mode_after": "0771",
+    "APK_modified": false,
+    "media_bytes_modified": false,
+    "owner_UID_GID_preserved": true,
+    "CLI_status_after_restart": "ready",
+    "new_installer_fresh_parent_mode": "0700 with explicit owner/GID/no-worldwrite checks"
+  }
+}

@@ -13,6 +13,18 @@ domain khác, các native route cũng phải được patch và kiểm chứng c
 này ở `api.example.com` chứng minh server hoạt động; việc đó chưa làm APK AkaineXD đã
 phát hành kết nối tới `api.example.com`.
 
+## Checkpoint source production
+
+Cây `server/` công khai bắt đầu từ các source sibling production25 dùng cùng
+client V36. [Provenance và ngoại lệ tích hợp](../../production-checkpoint.vi.md)
+được ghi riêng: helper account công khai giữ atomic provisioning cho bot, và
+năm giá trị identity/secret mặc định trong `core/config_manager.py` được để
+trống. Hãy cấp private config của bạn. Catalogue/media vẫn lấy từ resource kit
+đã xác minh; quy trình này không copy config production, database hay hồ sơ
+người chơi của operator. Control pack động và assetset profile trong config mẫu
+mặc định tắt, cần kiểm chứng đúng catalogue/client trước khi dùng. Archive lịch
+sử được giữ nguyên.
+
 ## 1. Chuẩn bị Linux instance
 
 Các lệnh trong phần này chạy trong Lightsail SSH terminal. Đăng nhập bằng user `ubuntu`,

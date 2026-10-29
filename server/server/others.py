@@ -52,22 +52,24 @@ def game_content_bundle():
     app_version = request.headers.get('AppVersion')
     bundle_version = request.headers.get('ContentBundle')
     device_id = request.headers.get('DeviceId')
+    assetset = request.headers.get('Akaine-Assets')
     with Connect(in_memory=True) as c_m:
         bundle_download = BundleDownload(c_m)
         effective_bundle_version = bundle_version
         bundle_download.set_client_info(
-            app_version, effective_bundle_version, device_id)
+            app_version, effective_bundle_version, device_id, assetset)
         ordered_results = bundle_download.get_bundle_list()
         if (not bundle_version or bundle_version == '0.0.0') and len(ordered_results) > 1:
             ordered_results = ordered_results[:1]
         current_app.logger.info(
-            'content_bundle request app=%s bundle=%s effective_bundle=%s device=%s results=%s versions=%s',
+            'content_bundle request app=%s bundle=%s effective_bundle=%s device=%s results=%s versions=%s assetset=%s',
             app_version,
             bundle_version,
             effective_bundle_version,
             device_id,
             len(ordered_results),
             [item.get('contentBundleVersion') for item in ordered_results],
+            bundle_download.assetset or 'none',
         )
         return success_return({
             'orderedResults': ordered_results

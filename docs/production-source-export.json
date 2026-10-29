@@ -1,0 +1,147 @@
+{
+  "schema": "akaine.public-production-source-checkpoint.v1",
+  "date": "2026-10-29",
+  "status": "LOCAL_SOURCE_VALIDATION_PASS",
+  "checkpoint": {
+    "application_version": "7.0.255",
+    "client_build": "V36",
+    "package": "akai.arc.lmao",
+    "APK_sha256": "a8b243c59adc527e8fa1ada27a0394979234d345b2063da40fcc2fbcc2ffc5fd",
+    "ordinary_content_version": "7.0.255.25",
+    "bundle_alias": "7.0.255-prod-original-base25-20261027",
+    "standalone_original_quality": true
+  },
+  "export_source_commit": "640a97c7013fe7c3c46f7e76ad5a545cc3fc9710",
+  "client_source": {
+    "source_lock_sha256": "5d064af13e9b1115920eb236d63fe44ac733461ea8e394517fb65c0f83ef2b9a",
+    "checkout_map_sha256": "6477a77cccf521b2ddf50f1229c03720df8691b791fb23fcf29e67b440ffeb6d",
+    "authored_paths_verified": 114,
+    "all_private_role_inputs_verified_locally": 1063,
+    "opaque_header_accessed_by_verifier": false,
+    "fresh_APK_rebuild_for_this_source_export": false
+  },
+  "server_projection": [
+    {
+      "path": "server/core/bundle.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/bundle.py",
+      "archive_sha256": "d3974e9bd5d3bb3b112b21abb46af0bb24f9cd66ef203a886089b501bd072966",
+      "export_sha256": "d3974e9bd5d3bb3b112b21abb46af0bb24f9cd66ef203a886089b501bd072966",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/core/client_packs.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/client_packs.py",
+      "archive_sha256": "54bcba56df608e88b95d70074e5a32eeb90540d2b81b9487e41de1345f0c4490",
+      "export_sha256": "54bcba56df608e88b95d70074e5a32eeb90540d2b81b9487e41de1345f0c4490",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/core/config_manager.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/config_manager.py",
+      "archive_sha256": "c2adba2ae44d6dd18a7d9b61133ec834d6da358e34d10d58af80c1b20d2c4eb4",
+      "export_sha256": "2c6b7073f4801c7dd9fe9c0544d89344fc6279d08bcca5cccbeb73c2efc4633c",
+      "byte_identical_to_archive": false
+    },
+    {
+      "path": "server/core/content_grants.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/content_grants.py",
+      "archive_sha256": "06ee547e81b54ed212331def6bc37ea1074873c38851a822896de1472516d607",
+      "export_sha256": "06ee547e81b54ed212331def6bc37ea1074873c38851a822896de1472516d607",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/core/download.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/download.py",
+      "archive_sha256": "41c971c1e4b1bf9a703356636c43f22773d1dc92bf4277fa8ad7c09cbfae9495",
+      "export_sha256": "41c971c1e4b1bf9a703356636c43f22773d1dc92bf4277fa8ad7c09cbfae9495",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/core/pack_contract.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/pack_contract.py",
+      "archive_sha256": "187e2e21024de639d6d532a30fde369c6abd7f3d623d1326f7b6b6b13bfbc68e",
+      "export_sha256": "187e2e21024de639d6d532a30fde369c6abd7f3d623d1326f7b6b6b13bfbc68e",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/core/user.py",
+      "archive_path": "operations/production25-20261027/server-overlay/core/user.py",
+      "archive_sha256": "407d6aa58e8b52bf16f2695e0d22a84bf6fcefbcb4a88511cd0d6c502426c5fe",
+      "export_sha256": "407d6aa58e8b52bf16f2695e0d22a84bf6fcefbcb4a88511cd0d6c502426c5fe",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/server/others.py",
+      "archive_path": "operations/production25-20261027/server-overlay/server/others.py",
+      "archive_sha256": "dfa432257b35ac3d1f0c7226ffe524f421a9bfa4fb9e7cfaa4f6a35462055592",
+      "export_sha256": "dfa432257b35ac3d1f0c7226ffe524f421a9bfa4fb9e7cfaa4f6a35462055592",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/server/purchase.py",
+      "archive_path": "operations/production25-20261027/server-overlay/server/purchase.py",
+      "archive_sha256": "78199caa6fe73672e1d99c1f7b7608111d5abcb901b9f921716645c69f480884",
+      "export_sha256": "78199caa6fe73672e1d99c1f7b7608111d5abcb901b9f921716645c69f480884",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/server/user.py",
+      "archive_path": "operations/production25-20261027/server-overlay/server/user.py",
+      "archive_sha256": "a3bb99388f378f7e94b7f2a4557bcb3693779ce74cb9abd1c36a7f45b4fb7486",
+      "export_sha256": "a3bb99388f378f7e94b7f2a4557bcb3693779ce74cb9abd1c36a7f45b4fb7486",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/tools/check_dynamic_pack_catalog.py",
+      "archive_path": "operations/production25-20261027/server-overlay/tools/check_dynamic_pack_catalog.py",
+      "archive_sha256": "04e664e210c224ae0c5dabceb53a8501ce6b1e5a814d95c23181880777fea046",
+      "export_sha256": "04e664e210c224ae0c5dabceb53a8501ce6b1e5a814d95c23181880777fea046",
+      "byte_identical_to_archive": true
+    },
+    {
+      "path": "server/tools/create_user_cli.py",
+      "archive_path": "operations/production25-20261027/server-overlay/tools/create_user_cli.py",
+      "archive_sha256": "f5f3c2cc0fa041eb2450aea7805d2b631cbb67cb2c1eaa6773cf755c4994435e",
+      "export_sha256": "c0582a779fe5e6f1067a2d84d636f80159017dd83f4c7cc19dac32e10fa76d5b",
+      "byte_identical_to_archive": false
+    }
+  ],
+  "integration_exceptions": [
+    "Keep all five deployment identity/secret defaults empty in primary config_manager.py; archived production source remains unchanged.",
+    "Use the accepted shared atomic account-provisioning helper required by the bot, rather than the older archived CLI helper.",
+    "Preserve existing public bot Unicode display strings and mention/ranking fixes while adding the accepted direct atomic account creation.",
+    "Adapt the password-guard test fixture to the production constant-time comparison without modifying that production guard."
+  ],
+  "validation": {
+    "server_tests": {
+      "passed": 32
+    },
+    "bot_account_grant_password_tests": {
+      "passed": 27
+    },
+    "public_build_and_guide_tests": {
+      "passed": 20
+    },
+    "production_source_and_signed_receipt_tests": {
+      "passed": 12
+    },
+    "CLI_tests": {
+      "passed": 150,
+      "skipped": 1,
+      "skip_reason": "Advanced native guide fixture needs a host C++ compiler."
+    },
+    "production_archive_verifier": "PASS",
+    "current_source_lock_bindings": "PASS"
+  },
+  "boundaries": {
+    "production_deployed_by_this_export": false,
+    "new_bundle_built_or_uploaded": false,
+    "new_APK_built_or_uploaded": false,
+    "paused_bundle26_27_changes_included": false,
+    "CI_CD_configuration_changed": false,
+    "existing_public_Git_history_retained": true,
+    "credentials_keys_media_player_data_included": false,
+    "new_device_runtime_testing": false
+  },
+  "private_inputs": "Use the matching private build/resource kit outside Git. Public source and synthetic fixtures do not include commercial media, signing identities, loader key material, private path maps or player databases."
+}
