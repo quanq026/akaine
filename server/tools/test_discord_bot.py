@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -178,6 +179,49 @@ class CharacterAssetTests(unittest.TestCase):
                 b30_generator.CHAR_PATH = original
 
         self.assertEqual(actual, str(expected))
+
+    def test_b30_renders_unicode_assets_and_font_fallback(self) -> None:
+        scores = [{
+            "song_id": "fixture", "name": f"Bài hát thử {index}", "diff": index % 5,
+            "score": 9_950_000 - index * 100, "ct": "FR", "base": 10.5, "ptt": 12.1,
+            "p": 950, "sp": 900, "f": 3, "l": 1, "days": index,
+        } for index in range(30)]
+        data = {"scores": scores, "max_ptt": 13.1, "r10_avg": 12.0,
+                "character_id": 97, "is_uncapped": False, "rank": 2}
+        font = next((path for path in ["C:/Windows/Fonts/arial.ttf", *b30_generator.SYSTEM_FONT_REG]
+                     if Path(path).is_file()), None)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image = b30_generator.Image
+            image.new("RGB", (100, 100), (80, 120, 180)).save(root / "fixture.png")
+            image.new("RGBA", (64, 64), (220, 120, 80, 255)).save(root / "97_icon.png")
+            image.new("RGBA", (180, 360), (140, 80, 180, 200)).save(root / "97.png")
+            image.new("RGBA", (56, 56), (120, 160, 200, 255)).save(root / "rating_7.png")
+            for configured_font in ([font, None] if font else [None]):
+                with self.subTest(font="truetype" if configured_font else "fallback"):
+                    settings = dict(OUT_DIR=directory, JACKETS_PATH=directory, CHAR_PATH=directory,
+                        IMG_PATH=directory, FONT_REG=configured_font or str(root / "missing.ttf"),
+                        FONT_BOLD=configured_font or str(root / "missing-bold.ttf"),
+                        FONT_TITLE=str(root / "missing-title.otf"), SYSTEM_FONT_REG=[], SYSTEM_FONT_BOLD=[],
+                        PARTNER_OVERRIDE_PATH=None, ICON_OVERRIDE_PATH=None)
+                    rendered_strokes = []
+                    draw_text = b30_generator.ImageDraw.ImageDraw.text
+                    def record_text(draw, *args, **kwargs):
+                        result = draw_text(draw, *args, **kwargs)
+                        if kwargs.get("stroke_width"):
+                            rendered_strokes.append(kwargs["stroke_width"])
+                        return result
+                    with patch.multiple(b30_generator, **settings), \
+                         patch.object(b30_generator, "fetch_scores", return_value=data), \
+                         patch.object(b30_generator, "download_fonts") as download, \
+                         patch.object(b30_generator.ImageDraw.ImageDraw, "text", new=record_text):
+                        output = b30_generator.generate_b30("123456789", "Người Chơi Ánh")
+                    download.assert_called_once_with()
+                    self.assertIn(2, rendered_strokes)
+                    with image.open(output) as result:
+                        result.load()
+                        self.assertEqual((result.format, result.mode, result.size), ("JPEG", "RGB", (1024, 1536)))
+                        self.assertTrue(any(low != high for low, high in result.getextrema()))
 
 
 class RankingTests(unittest.TestCase):
