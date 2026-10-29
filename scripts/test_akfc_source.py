@@ -19,7 +19,6 @@ from core.akfc import (  # noqa: E402
     wrap_dek,
 )
 import generate_akfc_key_header  # noqa: E402
-import build_akfc_loader  # noqa: E402
 import build_boringssl_android  # noqa: E402
 
 

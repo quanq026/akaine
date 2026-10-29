@@ -16,49 +16,368 @@
     {
       "archive_path": "lib/arm64-v8a/libcocos2dcpp.so",
       "source_sha256": "3eaca4e6dabb3395f276f8915698d57675757d0df0970e716b23a3dc201c79be",
-      "output_sha256": "5a7926c2c7e772cb4cd73a554b3053036373ae4500e8da05b0206d6b45d19334",
+      "output_sha256": "f2729d67166faa1fcee05601ea35d775548d3bfdc2f1a3d04777b082066b235d",
       "operations": [
         {
-          "label": "production-routes",
-          "offset": 7875168,
-          "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-          "after": "e00308aa1f7c00a91f0800f9410000104cac4b1468747470733a2f2f617574682e616b61692e69642e766e2f617574682f6c6f67696e000000000000e00308aa1f7c00a91f0800f9410000103dac4b1468747470733a2f2f6172636170692d76332e616b61692e69642e766e2f636f6d706f73652f6167677265676174653f63616c6c733d000000e00308aa1f7c00a91f0800f9410000102aac4b1468747470733a2f2f6172636170692d76332e616b61692e69642e766e2f67616d652f636f6e74656e745f62756e646c65"
+          "label": "anomaly-toggle:local-pref-owned-bss-extension + official-replay-lifecycle:official-owned-mailbox-extension",
+          "offset": 272,
+          "before": "20e8050000000000",
+          "after": "a0e8050000000000"
         },
         {
-          "label": "production-shared-api-base",
+          "label": "anomaly-toggle:local-pref-ui-setter-binding",
+          "offset": 634056,
+          "before": "147f7d0100000000",
+          "after": "902f780000000000"
+        },
+        {
+          "label": "anomaly-toggle:local-pref-ui-getter-binding",
+          "offset": 1449000,
+          "before": "a4cc5a0100000000",
+          "after": "782f780000000000"
+        },
+        {
+          "label": "anomaly-toggle:local-pref-ui-text",
+          "offset": 5540013,
+          "before": "52656365697665206e6f74696669636174696f6e730a7768656e20696e766974656420746f204c696e6b20506c617900",
+          "after": "5265706c6179204d562c20696e74726f20616e640a616e6f6d616c7920696e20737570706f7274656420736f6e677300"
+        },
+        {
+          "label": "isolated-mod-sidebar-resource:dedicated-mod-sidebar-path",
+          "offset": 5671416,
+          "before": "6c61796f7574732f736f6e6773656c6563742f5061636b4c697374536964656261722e63736200",
+          "after": "6c61796f7574732f736f6e6773656c6563742f5061636b4c6973744d6f644d656e752e63736200"
+        },
+        {
+          "label": "anomaly-toggle:local-pref-ui-text",
+          "offset": 5701511,
+          "before": "496e76697465204e6f74696669636174696f6e00",
+          "after": "416e6f6d616c79205265706c6179000000000000"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_heading + classic-native:production-routes + production-routes:production-login + temporary-staging-routes:staging-login + production-routes:production-aggregate + temporary-staging-routes:staging-aggregate + production-routes:production-content-bundle + temporary-staging-routes:staging-content-bundle",
+          "offset": 7875152,
+          "before": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "after": "08a400b008dd40f9e82c00b400011fd6e00308aa1f7c00a91f0800f9410000104cac4b1468747470733a2f2f617574682e616b61692e69642e766e2f617574682f6c6f67696e000000000000e00308aa1f7c00a91f0800f9410000103dac4b1468747470733a2f2f6172636170692d76332e616b61692e69642e766e2f636f6d706f73652f6167677265676174653f63616c6c733d000000e00308aa1f7c00a91f0800f9410000102aac4b1468747470733a2f2f6172636170692d76332e616b61692e69642e766e2f67616d652f636f6e74656e745f62756e646c65000000"
+        },
+        {
+          "label": "official-replay-lifecycle:.cave_a + mod-section-and-geometry:mod_pack_geometry",
+          "offset": 7875376,
+          "before": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "after": "08a400b008b140f9480000b400011fd67a114414e10308aa08a400b008b540f9480000b400011fd620001fd6e20308aa08a400b008b940f9480000b400011fd640001fd6e30308aa08a400b008bd40f9480000b400011fd660001fd609a400b02ad140f94a0114cbea0000b52a9941b94a0500518a00003597a000f0f7623d91e96b221497a000f0b96b221409a400b02ad140f94a0116cbca0000b52a9941b94a0900516a00003528008052dbd430146802142ad9d430141f15007148a5a85241000054e870a852f8b53c14"
+        },
+        {
+          "label": "classic-native:route-helper + official-replay-lifecycle:.cave_b + mod-pack-consumers:ordinal_end_a + classic-native:byd-allowlist + mod-section-and-geometry:mod_sidebar + classic-native:aether-guard-cave + mod-section-and-geometry:mod_heading_geometry + official-replay-lifecycle:.cave_c + mod-section-and-geometry:mod_title + mod-pack-consumers:ordinal_end_b + diein-condition-guard:diein-null-block-cave + diein-full-unlock-null-compatibility:missing-diein-condition",
+          "offset": 7875584,
+          "before": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "after": "280040391fc10071c1000054280440391ff10171610000544806805228000039fe8d00b0dec30a91deab4b14e40313aa0500805208a400b008c140f9480000b400011fd680861c14e40313aa2500805208a400b008c140f9480000b400011fd6b8844214e40317aa4500805208a400b008c140f9480000b400011fd6b3e31314e40317aa6500805208a400b008c140f9480000b400011fd64b6b0514e40317aa8500805208a400b008c140f9480000b400011fd6a5e31314e40317aaa500805208a400b008c140f9480000b400011fd63d6b051409a400b02ac540f94a0117cb8a0000b52ac940f94a0000b41f503e14006940f974503e145f1500717f000014c0030037682641b91f0d007121030054610500101b000094000300344105005018000094a00200344105003015000094400200344105001012000094e0010034210500100f00009480010034210500700c000094200100340105001009000094c0000034010500300600009460000034f3031f2a67ea2d143300805265ea2d1460e2029108004039680000370004009102000014000840f908144038291440381f01096b8100005488ffff35e0031f2ac0035fd620008052c0035fd670656e74696d656e7400617263616e616564656e00776f726c64656e646572007465737469667900696e66696e697465737472696665006c617374006c617374657465726e69747900617869756d63726973697308a400b008ad40f9c80e00b400011fd6400000b4c6f32e94534e01141f0d007148a5a85241000054e870a85269e03d1409a400b02ad140f94a0114cbaa0100b52a9941b94a0d00514a0100358af242b90a0100358aea42b9aa0000344a0500516a0000344a0500514a0000352800805288460c39f3482d1409a400b02ad540f94a0100cb6a0000b500008052258d431408a542f9228d431409a400b03fd900f99f13007108010054f9000035db000034295141b98900003509a400b08a0700112ad900f9130000143f200071a1000054a9e98d52890ca072c8008052ca424014e9e78752c6424014480080523f000014be7f0090de831591400000b48cf32e14180080522000805292cd3f14"
+        },
+        {
+          "label": "official-replay-lifecycle:.intro_range + testify-replay:testify-normal-intro-leaf + anomaly-toggle:local-pref-native-leaf-caves + testify-replay:testify-normal-factory-leaf + mod-section-and-geometry:mod_fallbacks + mod-pack-consumers:ordinal_end_c",
+          "offset": 7876384,
+          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+          "after": "9f130071e8000054d9000035bb00003409a400b0295141b9f8031f2a3301005209031b0a377b1d14881243b92801003508a400b0155141b9750000349f2603b99f2a03b9b5020052a9035e38aa114414889a41f9a111441408a400b008a140f9480000b400011fd620008052c0035fd608a400b008a540f9480000b400011fd6c0035fd6530200b4881243b9e801003508a400b0085141b988010034680240f969a000d029413d911f0109ebe100005468f642b91f090071810000549f2603b99f2a03b96710441419114414751044148efe3114bbdd12142100881a61d91a14"
+        },
+        {
+          "label": "classic-native:aether-guard-hook",
+          "offset": 8218480,
+          "before": "73a52d94",
+          "after": "acb1fe17"
+        },
+        {
+          "label": "classic-native:divine-gate",
+          "offset": 8307868,
+          "before": "f503002a",
+          "after": "b5008052"
+        },
+        {
+          "label": "classic-native:divine-cell-a",
+          "offset": 8308720,
+          "before": "2800c0d22a00a052",
+          "after": "e8031faaea031f2a"
+        },
+        {
+          "label": "classic-native:divine-cell-b",
+          "offset": 8308896,
+          "before": "2800c0d22a00a052",
+          "after": "e8031faaea031f2a"
+        },
+        {
+          "label": "classic-native:dread-area",
+          "offset": 8637520,
+          "before": "e8e3009100c30091",
+          "after": "34008052a5000014"
+        },
+        {
+          "label": "classic-native:route-hook-a",
+          "offset": 9446084,
+          "before": "92d34194",
+          "after": "e701fa97"
+        },
+        {
+          "label": "mod-pack-consumers:click_cmp",
+          "offset": 10504756,
+          "before": "ff120071",
+          "after": "ff160071"
+        },
+        {
+          "label": "mod-pack-consumers:click_guard",
+          "offset": 10504764,
+          "before": "a8000054",
+          "after": "a2000054"
+        },
+        {
+          "label": "mod-pack-consumers:click_default",
+          "offset": 10504784,
+          "before": "e8031faa",
+          "after": "e8029f9a"
+        },
+        {
+          "label": "mod-pack-consumers:click_ordinal",
+          "offset": 10505100,
+          "before": "e8031f2a",
+          "after": "e8029f1a"
+        },
+        {
+          "label": "anomaly-toggle:local-pref-two-choice-ui",
+          "offset": 12112516,
+          "before": "c02a42f9",
+          "after": "06000014"
+        },
+        {
+          "label": "official-replay-lifecycle:official_finish",
+          "offset": 12746508,
+          "before": "00013fd6",
+          "after": "1a6bed97"
+        },
+        {
+          "label": "mod-pack-consumers:selected_cmp + mod-pack-consumers:selected_guard",
+          "offset": 14053736,
+          "before": "1f110071a8000054",
+          "after": "1f150071a2000054"
+        },
+        {
+          "label": "mod-pack-consumers:selected_default",
+          "offset": 14053760,
+          "before": "e8031faa",
+          "after": "08019f9a"
+        },
+        {
+          "label": "official-replay-lifecycle:official_factory",
+          "offset": 14871272,
+          "before": "90612994",
+          "after": "1250e597"
+        },
+        {
+          "label": "mod-pack-consumers:scroll_cmp",
+          "offset": 14914992,
+          "before": "1f110071",
+          "after": "1f150071"
+        },
+        {
+          "label": "mod-pack-consumers:scroll_guard",
+          "offset": 14915008,
+          "before": "28020054",
+          "after": "22020054"
+        },
+        {
+          "label": "mod-pack-consumers:scroll_previous + mod-pack-consumers:scroll_index",
+          "offset": 14915076,
+          "before": "f4031f2af6031f2a",
+          "after": "f4179f1a16019f1a"
+        },
+        {
+          "label": "official-replay-lifecycle:intro_mark_gate + testify-replay:testify-normal-intro-hook",
+          "offset": 15604764,
+          "before": "09031b0a",
+          "after": "a384e217"
+        },
+        {
+          "label": "mod-swipe-recognizer:swipe_bound",
+          "offset": 16555948,
+          "before": "bf120071",
+          "after": "bf160071"
+        },
+        {
+          "label": "mod-swipe-recognizer:swipe_tail",
+          "offset": 16556072,
+          "before": "80000054e00000b4a80080520200001488008052090040f9287968f800013fd6a80600511f0d0071a800005489aeffb029c1079121d968b80200001441008052e00313aa65eae897",
+          "after": "c00000b4e8079f1a090040f908110011287968f800013fd6a80600511f0d0071c800005489aeffb029c1079121d968b8040000141f2003d5a10a550b21080011e00313aa65eae897"
+        },
+        {
+          "label": "official-replay-lifecycle:axium_gate",
+          "offset": 16898712,
+          "before": "d75b0090",
+          "after": "3d94dd17"
+        },
+        {
+          "label": "mod-pack-consumers:include_section8_in_sorted_pack_flattening",
+          "offset": 19669620,
+          "before": "bf220071",
+          "after": "bf260071"
+        },
+        {
+          "label": "official-replay-lifecycle:tempest_gate",
+          "offset": 19747404,
+          "before": "88460c39",
+          "after": "fdb6d217"
+        },
+        {
+          "label": "classic-native:byd-registry-hook",
+          "offset": 19912460,
+          "before": "f303002a",
+          "after": "7d15d217"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_sidebar_site",
+          "offset": 20528640,
+          "before": "0abb0194",
+          "after": "04bccf97"
+        },
+        {
+          "label": "official-replay-lifecycle:ether_gate",
+          "offset": 20676420,
+          "before": "6802142a",
+          "after": "1e2bcf17"
+        },
+        {
+          "label": "mod-pack-consumers:end_seed + mod-pack-consumers:end_dispatch",
+          "offset": 20979632,
+          "before": "4100805273dde817",
+          "after": "010180525103ce17"
+        },
+        {
+          "label": "classic-native:route-hook-b",
+          "offset": 21824008,
+          "before": "c19b1294",
+          "after": "25caca97"
+        },
+        {
+          "label": "official-replay-lifecycle:last_accept_story",
+          "offset": 23788180,
+          "before": "2d30d797",
+          "after": "744cc397"
+        },
+        {
+          "label": "official-replay-lifecycle:last_accept_story_persist",
+          "offset": 23788192,
+          "before": "c9b7c897",
+          "after": "784cc397"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_pack_geometry_site",
+          "offset": 23790548,
+          "before": "48a5a852",
+          "after": "054ac317"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_heading_site",
+          "offset": 24088928,
+          "before": "6005d597",
+          "after": "3c26c297"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_heading_geometry_site",
+          "offset": 24096732,
+          "before": "48a5a852",
+          "after": "941fc217"
+        },
+        {
+          "label": "official-replay-lifecycle:last_reject_story",
+          "offset": 24210804,
+          "before": "7593d597",
+          "after": "caafc197"
+        },
+        {
+          "label": "official-replay-lifecycle:last_reject_story_persist",
+          "offset": 24210816,
+          "before": "111bc797",
+          "after": "ceafc197"
+        },
+        {
+          "label": "official-replay-lifecycle:last_reject_progress",
+          "offset": 24211136,
+          "before": "006940f9",
+          "after": "85afc117"
+        },
+        {
+          "label": "diein-condition-guard:diein-null-block-hook",
+          "offset": 24601948,
+          "before": "f825ef97",
+          "after": "6932c017"
+        },
+        {
+          "label": "mod-section-and-geometry:mod_title_site",
+          "offset": 24721928,
+          "before": "e9e78752",
+          "after": "34bdbf17"
+        },
+        {
+          "label": "official-replay-lifecycle:last_accept_player",
+          "offset": 25099120,
+          "before": "b5d2da97",
+          "after": "2f4cbe97"
+        },
+        {
+          "label": "official-replay-lifecycle:last_accept_persist",
+          "offset": 25099132,
+          "before": "f1d00094",
+          "after": "334cbe97"
+        },
+        {
+          "label": "official-replay-lifecycle:official_init",
+          "offset": 25584380,
+          "before": "00013fd6",
+          "after": "1272bc97"
+        },
+        {
+          "label": "official-replay-lifecycle:replay_render_guard",
+          "offset": 25584424,
+          "before": "08a542f9",
+          "after": "d872bc17"
+        },
+        {
+          "label": "anomaly-toggle:testify-toggle-supplied-modifier-hook",
+          "offset": 25719228,
+          "before": "931400b5",
+          "after": "7aefbb17"
+        },
+        {
+          "label": "anomaly-toggle:testify-toggle-late-factory-hook + testify-replay:testify-normal-replay-factory-hook",
+          "offset": 25720308,
+          "before": "889a41f9",
+          "after": "55eebb17"
+        },
+        {
+          "label": "classic-native:crash-logger",
+          "offset": 25796946,
+          "before": "4039",
+          "after": "8052"
+        },
+        {
+          "label": "official-replay-lifecycle:official_update",
+          "offset": 25945196,
+          "before": "00013fd6",
+          "after": "bc11bb97"
+        },
+        {
+          "label": "classic-native:route-hook-c",
+          "offset": 26473132,
+          "before": "3dba0494",
+          "after": "550eb917"
+        },
+        {
+          "label": "classic-native:route-hook-d",
+          "offset": 26898812,
+          "before": "e43fff97",
+          "after": "5b6eb797"
+        },
+        {
+          "label": "classic-native:production-shared-api-base + production-routes:production-shared-api-base + temporary-staging-routes:staging-shared-api-base",
           "offset": 28958704,
           "before": "4d364c763854641402f720ac96b696198cb932c28bde8280cad46122473eeadd3c6aff3e8cabbaecabcb97b5e78204e44d674461727a60",
           "after": "4d364c763854641402f720ac96b696198bb93fc69ddede8680997821475d85b24e0e9650eddfdf88c9aafbd982f6678822042f4e46484f"
-        },
-        {
-          "label": "route-helper",
-          "offset": 7875584,
-          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-          "after": "280040391fc10071c1000054280440391ff10171610000544806805228000039fe8d00b0dec30a91deab4b14"
-        },
-        {
-          "label": "byd-allowlist",
-          "offset": 7875840,
-          "before": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-          "after": "c0030037682641b91f0d007121030054610500101b000094000300344105005018000094a00200344105003015000094400200344105001012000094e0010034210500100f00009480010034210500700c000094200100340105001009000094c0000034010500300600009460000034f3031f2a67ea2d143300805265ea2d1460e2029108004039680000370004009102000014000840f908144038291440381f01096b8100005488ffff35e0031f2ac0035fd620008052c0035fd670656e74696d656e7400617263616e616564656e00776f726c64656e646572007465737469667900696e66696e697465737472696665006c617374006c617374657465726e69747900617869756d637269736973"
-        },
-        {
-          "label": "aether-guard-cave",
-          "offset": 7876128,
-          "before": "0000000000000000000000000000000000000000000000000000000000000000",
-          "after": "400000b4c6f32e94534e01140000000000000000000000000000000000000000"
-        },
-        {"label": "aether-guard-hook", "offset": 8218480, "before": "73a52d94", "after": "acb1fe17"},
-        {"label": "divine-gate", "offset": 8307868, "before": "f503002a", "after": "b5008052"},
-        {"label": "divine-cell-a", "offset": 8308720, "before": "2800c0d22a00a052", "after": "e8031faaea031f2a"},
-        {"label": "divine-cell-b", "offset": 8308896, "before": "2800c0d22a00a052", "after": "e8031faaea031f2a"},
-        {"label": "dread-area", "offset": 8637520, "before": "e8e3009100c30091", "after": "34008052a5000014"},
-        {"label": "route-hook-a", "offset": 9446084, "before": "92d34194", "after": "e701fa97"},
-        {"label": "byd-registry-hook", "offset": 19912460, "before": "f303002a", "after": "7d15d217"},
-        {"label": "route-hook-b", "offset": 21824008, "before": "c19b1294", "after": "25caca97"},
-        {"label": "crash-logger", "offset": 25796946, "before": "4039", "after": "8052"},
-        {"label": "route-hook-c", "offset": 26473132, "before": "3dba0494", "after": "550eb917"},
-        {"label": "route-hook-d", "offset": 26898812, "before": "e43fff97", "after": "5b6eb797"}
+        }
       ]
     },
     {
@@ -81,5 +400,6 @@
       "alignment and signing",
       "runtime verification"
     ]
-  }
+  },
+  "description": "Current guarded native compatibility base for the V36 source build. Apply to exact upstream 7.0.255 bytes before compiling V36 owned-pack/integrity/news gates. No historical staging artifact is a runtime input."
 }

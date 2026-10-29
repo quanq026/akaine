@@ -2,9 +2,10 @@
 
 [English](../04-private-resources.md) | Tiếng Việt
 
-GitHub chứa mã nguồn và hướng dẫn này. Game content cùng APK production V9
-tương ứng để build V36 đến từ bộ tài nguyên riêng. NDK, Java và công cụ Android
-vẫn được cài tại đường dẫn do bạn chọn.
+GitHub chứa mã nguồn và hướng dẫn này. Tải client gốc qua link APKPure trong
+chương 6. Bộ tài nguyên riêng cung cấp content, native catalogue và đầu vào
+AKFC tương ứng. NDK, Java và công cụ Android được cài tại đường dẫn do bạn
+chọn; không cần APK Akaine đã patch.
 
 ![Chuỗi tin cậy của tài nguyên riêng trong chương 04](../../images/guides/04-private-resources-chain-of-trust.svg)
 
@@ -93,8 +94,6 @@ Không tiếp tục nếu quá trình xác minh báo cáo file bị thiếu ho�
 
 Trước chương 6, xác định những file đã kiểm này trong hướng dẫn của kit:
 
-- APK production V9 ngày 22/10/2026, SHA-256
-  `f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545`.
 - Native `songlist` JSON khớp catalogue content. Server metadata là file khác,
   không thay thế được nó.
 - Private AKFC key header tương ứng với protected chart. Giữ header ngoài
@@ -104,9 +103,11 @@ Trước chương 6, xác định những file đã kiểm này trong hướng d
 - Đúng jadx all-in-one JAR và Android Build-Tools `d8.jar`, cùng thông tin
   xác minh của chúng. Java 17 và NDK `28.2.13676358` được chọn ở chương 6.
 
-Kit không cần local path map của người phát triển, SDK directory được copy,
-payload `.so`/`.dex` cuối đã patch hay Android keystore của operator khác.
-Chương 6 nhận đường dẫn đầu vào tường minh rồi build output từ source.
+XAPK APKPure gốc và APKEditor được tải riêng theo chương 6; chương đó có
+hash chính xác của chúng. Kit không cần APK Akaine, local path map của người
+phát triển, SDK directory được copy, payload `.so`/`.dex` cuối đã patch hay
+Android keystore của operator khác. Chương 6 nhận đường dẫn đầu vào tường
+minh rồi build từ client gốc và source công khai.
 Không tạo AKFC key mới khi dùng catalogue hiện có: client đó sẽ không giải mã
 được những chart đã mã hóa.
 

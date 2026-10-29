@@ -625,7 +625,7 @@ static_assert(__builtin_offsetof(ToggleMailbox, reserved) == 24);
 static_assert(__builtin_offsetof(ToggleMailbox, reserved_tail) == 120);
 #include "mod_category_bridge.h"
 
-#include "staging_cli_bridge.h"
+#include "cli_bridge.h"
 
 void sample_game_metadata(Address scene) {
     if (!process_readable(scene, 0x338)) return;

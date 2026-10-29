@@ -59,10 +59,10 @@ content delivery, Cloudflare DNS and the required Windows tools.
 
 6. [Build, sign and test the V36 Android client](06-build-android-client.md).
 
-Chapter 6 uses the verified production V9 APK, public runtime source and
-explicit tool paths. It continues through your signing identity, installation
-and semantic CLI checks. The matching private APK, catalogue and AKFC inputs
-remain separate from the repository.
+Chapter 6 starts from the original APKPure XAPK. After setup, one build
+command merges the original modules, applies V36, compiles, aligns and signs.
+It then continues through installation and semantic CLI checks. The matching
+catalogue, chart key and content remain separate from the repository.
 
 ## Part 3: content releases
 

@@ -56,6 +56,10 @@ venv/
 *.idsig
 *.apk
 *.apks
+*.xapk
+*.a
+*.o
+*.elf
 *.cb
 *.ogg
 *.aff

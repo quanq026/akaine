@@ -54,12 +54,6 @@ def main() -> int:
         "zipalign": sdk_tool("zipalign"),
         "apksigner": sdk_tool("apksigner"),
     }
-    apktool_jar = os.environ.get("APKTOOL_JAR")
-    checks["apktool"] = (
-        str(Path(apktool_jar).resolve())
-        if apktool_jar and Path(apktool_jar).is_file()
-        else version("apktool", "--version")
-    )
     for name, value in checks.items():
         print(f"{'OK' if value else 'MISSING':7} {name:10} {value or ''}")
     required = ["git", "python"]

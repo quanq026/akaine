@@ -1,23 +1,25 @@
-# Akaine V36 runtime for Arcaea 7.0.255
+# Current 7.0.255 patch set
 
-Use [chapter 6](../../docs/guide/06-build-android-client.md) for the current
-source build. The entry point is `scripts/build_v36_client.py`.
+Follow [chapter 6](../../docs/guide/06-build-android-client.md). The single user
+entry point is `scripts/build_android_client.py`; it starts from the original
+APKPure arm64 XAPK and produces V36. Do not run individual internal stages.
 
-`runtime/` contains one current set of C++/ARM64/Java/Smali sources. Its small
-`sources.json` maps those files into a fresh build directory. `pin-layout.json`
-describes version-specific byte guards; the builder reads their bytes from the
-freshly rebuilt core rather than accepting generated private headers or final
-libraries as inputs. The native core must match V36 before APK assembly.
+This directory holds the current changes for that exact version:
 
-The required external inputs are the verified V9 APK, matching native songlist,
-Windows NDK and Java tools, a prefixed static BoringSSL archive, and the matching
-opaque AKFC key header. No key, APK, generated DEX/SO, operator path map, physical
-disk identity or deployment journal belongs in this directory.
+- `native-plan.json` checks original bytes before applying the native changes.
+- Native assembly/runtime source is compiled for the current V36 behavior.
+- Managed source patches update Android code, package resources and the Mod UI.
+- Version-specific guard data is checked against freshly built code.
 
-`native/akfc_loader.cpp` is compiled with the external key header. Its JNI and
-static-crypto contract is verified; an operator's different key is expected to
-produce a different loader hash. Existing charts require their matching key.
+The build merges the original package, applies the guarded changes, compiles
+native and managed code, and verifies unrelated APK members are unchanged.
+It does not use an older Akaine APK, an accepted final library, generated
+private pin headers or a maintainer's disk/path map as a build input.
 
-The older `native-plan.json` and managed patch sources remain for the original
-upstream-XAPK tooling. They are not an alternative V36 build path. The current
-guide never combines their baseline hashes with V9.
+The AKFC loader uses the matching external key header and prefixed static
+BoringSSL archive. A different operator key produces a different loader hash;
+existing encrypted charts require their matching key. Keep keys, APKs and build
+outputs outside Git.
+
+Historical releases and development experiments belong in the private
+development repository. This public patch set follows the current guide.

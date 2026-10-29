@@ -13,16 +13,17 @@ The guide and public client patches target only version `7.0.255` with version
 code `1209852`. Older and newer Arcaea releases use different files and native
 offsets, so they are outside this repository's instructions.
 
-The repository contains the guide, server and build tools. The APK input and
-game content are supplied separately when the guide needs them.
+The repository contains the guide, server and build tools. Download the
+original client from APKPure; matching content and chart-key inputs are
+supplied separately when the guide needs them.
 
 ## Current client: V36
 
-[Chapter 6](docs/guide/06-build-android-client.md) builds V36 from public source
-and the verified production V9 APK supplied separately. It covers the explicit
-toolchain and AKFC inputs, unsigned build, your own signer and semantic CLI.
-The builder preserves original media; content `7.0.255.25` is delivered
-separately. APKs, keys and game content remain outside Git.
+[Chapter 6](docs/guide/06-build-android-client.md) starts with the original
+APKPure 7.0.255 arm64 XAPK. After the one-time tool/key setup, one command
+merges, patches, builds and signs V36. No prepatched Akaine APK or developer
+path map is required. Original media is preserved; content `7.0.255.25` is
+delivered separately. APKs, keys and game content remain outside Git.
 
 The included 7.0.255 native patch uses the published Akaine API hosts. A
 client for a different domain also needs a verified native route change; the
@@ -37,7 +38,7 @@ By the end of the guide, you will have:
 - a domain protected by Cloudflare
 - a private-server API reachable over HTTPS
 - a private resource store for bundles and song files
-- an Android client configured for your domain
+- a V36 Android client built from the original APKPure package
 - a Discord bot for accounts and score tools
 - a backup and recovery routine
 
@@ -84,9 +85,10 @@ previous chapter's checks have passed.
 
 ## Private resources
 
-The APK input, game assets and content bundles are distributed separately.
-Obtain them privately from the project owner or another authorized provider.
-The kit includes a manifest so you can verify every file before using it.
+Download the unmodified client from the APKPure link in chapter 6. Obtain the
+matching content catalogue, AKFC inputs and game content privately from the
+project owner or another authorized provider. The private kit includes a
+manifest so you can verify every file before using it.
 
 ## Credits
 
