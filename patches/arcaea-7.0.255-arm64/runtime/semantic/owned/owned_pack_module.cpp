@@ -1,3 +1,4 @@
+#include "news_owned.h"
 #include "../native/child_reposition.h"
 // This TU alone uses exceptions; existing monitor TU keeps its original flags.
 #include "dynamic_owned_store.h"
@@ -154,6 +155,7 @@ bool prepare() noexcept {
         mailbox->invalidate = reinterpret_cast<uintptr_t>(&invalidate);
         mailbox->header = reinterpret_cast<uintptr_t>(&header);
         mailbox->reserved[1] = reinterpret_cast<uintptr_t>(&child_order_sort);
+        if (news_limit::initialize(core_base)) mailbox->reserved[2] = reinterpret_cast<uintptr_t>(&news_limit::sort);
         hooks_ready.store(true, std::memory_order_release);
         __atomic_store_n(&mailbox->ready, uint64_t{1}, __ATOMIC_RELEASE);
         __android_log_print(ANDROID_LOG_INFO, "AkaineOwnedPacks", "pack_prepare ready=1 bounded_shadow=64 dynamic_storage=1");

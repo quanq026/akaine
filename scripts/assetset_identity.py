@@ -85,8 +85,8 @@ if __name__ == '__main__':
     parser.add_argument('--expected-apk-sha256')
     args = parser.parse_args()
     if args.mode == 'create':
-        if args.private_manifest.exists() or args.private_manifest.drive.upper() != 'D:':
-            raise ValueError('Fresh private asset manifest on physical D required')
+        if args.private_manifest.exists() or args.private_manifest.is_symlink():
+            raise ValueError('Fresh private asset manifest required')
         result = inspect_apk(args.apk, args.expected_apk_sha256)
         args.private_manifest.parent.mkdir(parents=True, exist_ok=True)
         args.private_manifest.write_text(json.dumps(result, indent=2) + '\n')

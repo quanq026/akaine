@@ -1,8 +1,5 @@
 # Thêm fan chart và đặt nó vào một pack
 
-> Quy trình staging hiện tại: đọc [native-chart-intake](../../native-chart-intake.md) trước. Giới hạn62 pack bên dưới thuộc client legacy; V19+ dynamic dùng capability/profile riêng đã kiểm.
-
-
 [English](../09-add-fan-chart.md) | Tiếng Việt
 
 Chương này đưa một fan chart từ source folder thành bài có thể tải, chơi và lưu score
@@ -70,24 +67,23 @@ thiếu hoặc không bấm được.
 
 ## Quyết định có thật sự cần pack mới không
 
-Client 7.0.255 đã release nhận tối đa 62 pack entitlement. Akaine hiện đã dùng hết safe
-capacity này. Thêm entitlement hiển thị thứ 63 có thể làm account response lỗi dù
-`packlist` chứa pack mới.
+V36 hỗ trợ catalogue pack động khi server bật và kiểm profile tương ứng.
+Client cũ giữ response legacy giới hạn 62 pack entitlement. Không áp giới hạn
+slot legacy đó cho V36, và không bật response động cho client chưa có native
+support tương ứng.
 
-Cách đơn giản nhất là đặt chart mới vào pack `xd_fan_album` hiện có. Chỉ nên tạo pack
-khác khi bạn chủ động cấp cho nó một trong 62 visible slot. Vì vậy pack mới cần đủ các
-thay đổi sau:
+Dùng lại `xd_fan_album` là thay đổi nhỏ nhất nếu không cần collection khác.
+Một pack V36 mới cần đủ các thay đổi sau:
 
 1. thêm pack object vào `packlist` của bundle;
 2. thêm selector cover của pack vào bundle;
 3. gán ít nhất một bài cho pack;
 4. thêm pack vào custom/free entitlement configuration của server;
-5. đưa nó vào client pack projection 7.0.255, đồng thời bỏ hoặc ẩn một custom pack không
-   còn cần visible slot;
-6. xác nhận client pack payload cuối không dài quá 62 entry.
+5. pin đúng byte `packlist` cuối và epoch trong profile server động;
+6. xác minh catalogue rồi kiểm ownership và điều hướng pack thực tế trong V36.
 
-Không bỏ official pack chỉ để lấy chỗ. Với custom setup sạch, hãy thay một custom pack
-cũ hoặc dùng lại `xd_fan_album`.
+Không bỏ official pack chỉ để lấy chỗ. Nếu vẫn hỗ trợ client legacy,
+kiểm response riêng của nó trong giới hạn 62 entry.
 
 Ví dụ dưới đây dùng pack mới `my_fan_pack` và một bài FTR tên `my_fan_song`. Hãy thay
 cả hai ID một cách thống nhất.
@@ -241,8 +237,10 @@ phía trước còn object khác:
 
 `id` là relationship key nội bộ. `name_localized` và `description_localized` được hiển
 thị cho người chơi. `custom_banner` yêu cầu selector dùng custom pack image.
-`section: variety` đặt pack cùng nhóm variety/collaboration mà verified fan pack đang
-dùng.
+`section: variety` đặt pack trong nhóm Variety. Mod bridge hiện có của V36
+đưa `xd_fan_album` vào Mod; nó không tự hỗ trợ pack ID mới bất kỳ hay field
+`section: mod`. Dùng fan pack hiện có để đặt bài trong Mod, trừ khi bạn
+triển khai và kiểm native category mapping tương ứng cho pack mới.
 
 Xác minh JSON đã chỉnh ngay lập tức:
 
@@ -543,7 +541,14 @@ ASSET_SIGNING_SONG_IDS = ["my_fan_song"]
 CUSTOM_PACK_IDS = ["my_fan_pack"]
 CLIENT_VISIBLE_CUSTOM_PACK_IDS = ["my_fan_pack"]
 FREE_PACKS = ["my_fan_pack"]
-CLIENT_PACK_LIMIT = 62
+CLIENT_PACK_LIMIT = 62  # Legacy clients only.
+
+DYNAMIC_PACKS_ENABLED = True
+DYNAMIC_PACKS_NATIVE_ACCEPTED = True
+DYNAMIC_PACKS_FULL_CATALOG = False
+DYNAMIC_CLIENT_PACKLIST_PATH = "./database/client_catalogs/7.0.255/packlist"
+DYNAMIC_CLIENT_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
+DYNAMIC_CLIENT_CATALOG_EPOCH = "my-fan-pack-v1"
 ```
 
 Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. Giữ nguyên
@@ -551,10 +556,32 @@ Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. Giữ
 chung của các fan pack hiện có. `FREE_PACKS` là entitlement
 staging đơn giản nhất: mọi account nhận pack mà không cần tạo purchase row.
 
-Response 7.0.255 hiện tại còn có projection 62 entry rõ ràng trong
-`server/server/user.py`. Tìm `CLIENT_PACK_PROJECTION_7_0_255`, thay một custom-pack slot
-cũ bằng `my_fan_pack`, và giữ tuple ở 62 entry. Không append item thứ 63 và không tùy
-tiện bỏ official pack.
+Chỉ bật profile này sau khi kiểm client V36. Nó chọn representation động cho
+request có `AppVersion: 7.0.255` và `Akaine-Packs: dynamic1`; header không cấp
+ownership. Giữ `DYNAMIC_PACKS_FULL_CATALOG` false trừ khi chủ động muốn cấp
+toàn bộ catalogue. Không sửa tuple legacy `CLIENT_PACK_PROJECTION_7_0_255`
+để thêm pack V36.
+
+In hash của đúng bundle packlist đã chỉnh trên Windows:
+
+```powershell
+$packlistForServer = Get-Item (Join-Path $overlaySongs "packlist")
+(Get-FileHash -Algorithm SHA256 $packlistForServer.FullName).Hash.ToLowerInvariant()
+```
+
+Thay hash placeholder trong private config bằng toàn bộ giá trị chữ thường
+đó. Cài đúng byte packlist tại `DYNAMIC_CLIENT_PACKLIST_PATH`, giữ ownership
+của service user. Đổi epoch khi phát hành catalogue mới. Từ staging server
+root, sau khi kích hoạt Python environment của nó, chạy:
+
+```bash
+python tools/check_dynamic_pack_catalog.py
+```
+
+Lệnh phải báo số ID đã xác minh mà không có lỗi. Đây là read-only check
+trong process riêng; nó không reload serving worker. Restart hoặc reload
+staging theo quy trình service thông thường, rồi kiểm account response
+V36 và điều hướng pack thực tế.
 
 Server cần đúng edited songlist mà bundle sử dụng tại `database/songs/songlist`. Nó cũng
 cần edited `database/song_metadata.json`. Sao lưu hai staging file, cài bản mới, giữ
@@ -637,7 +664,7 @@ riêng.
 
 | Triệu chứng | Nguyên nhân có thể |
 | --- | --- |
-| Pack không xuất hiện | Nó thiếu trong client projection 62 entry hoặc entitlement configuration. |
+| Pack không xuất hiện | Bundle packlist, catalogue động đã pin hoặc ownership policy không khớp; client legacy vẫn có thể dùng projection riêng 62 entry. |
 | Pack mở nhưng không có card | Song `set` không khớp pack ID, hoặc bundle cuối chứa sai songlist. |
 | Bài hiện difficulty giả | Difficulty row rỗng hoặc trùng đã bị thêm vào songlist. |
 | BYD tile thiếu hoặc không bấm được | Class-3 ID mới chưa được native registry chấp nhận. Dùng FTR/ETR hoặc tạo client patch được xác minh riêng. |
@@ -654,7 +681,8 @@ riêng.
 - Bạn có quyền host mọi asset được cung cấp.
 - Source hash và author credit đã được ghi lại.
 - Song và pack ID ổn định, không trùng.
-- Pack entitlement payload còn tối đa 62 entry.
+- Hash/epoch catalogue động V36 và ownership policy khớp bundle;
+  response legacy được hỗ trợ vẫn giữ giới hạn riêng 62 entry.
 - Chỉ difficulty thật được hiển thị và xếp hạng.
 - AKFC receipt identity khớp song ID và filename cuối.
 - Metadata plaintext hash khớp source AFF và normalized audio.

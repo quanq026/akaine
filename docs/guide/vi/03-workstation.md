@@ -195,9 +195,9 @@ python scripts\doctor.py
 if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 ```
 
-Máy trạm lõi đã được chuẩn bị sẵn in `OK` cho `git` và `python`. Lệnh này cũng báo cáo
-các công cụ Android tùy chọn tìm thấy trên máy. Apktool sẽ chưa có ở lần kiểm tra
-đến chương tài nguyên riêng tư.
+Workstation cơ bản đã chuẩn bị sẽ in `OK` cho `git` và `python`. Lệnh cũng
+báo các công cụ Android tùy chọn tìm thấy trên máy. Chương 6 chọn tường minh
+compiler và đầu vào công cụ DEX của V36.
 
 Danh sách công cụ Android hoàn chỉnh là:
 
@@ -210,12 +210,11 @@ java
 adb
 zipalign
 apksigner
-apktool
 ```
 
-Nếu thiếu `zipalign` hoặc `apksigner`, hãy quay lại Trình quản lý SDK của Android Studio
-và cài đặt Công cụ build SDK Android. Chương tiếp theo bổ sung Apktool và chạy kiểm
-tra nghiêm ngặt.
+Nếu thiếu `zipalign` hoặc `apksigner`, quay lại Android Studio SDK Manager
+và cài Android SDK Build-Tools. Chương 4 xác minh tài nguyên riêng;
+chương 6 kiểm đường dẫn NDK, Java và công cụ DEX tường minh.
 
 ## Bước 7: chuẩn bị môi trường Python
 

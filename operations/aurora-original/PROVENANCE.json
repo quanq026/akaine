@@ -1,9 +1,0 @@
-{
-  "schema": 1,
-  "reference_source": "work/aurora-full-base-20261025/content/remote-original/prepare_original_delivery.py",
-  "reference_sha256": "120374623171ba67c46a126cd2c6bb55cc792905cccf498f6986f4060ed0408e",
-  "versioned_copy_sha256": "120374623171ba67c46a126cd2c6bb55cc792905cccf498f6986f4060ed0408e",
-  "byte_identical": true,
-  "actual_inputs_and_outputs": "Operator-owned local inventory and metadata files, not committed. See docs/bundles/prod18-aurora-original.md.",
-  "network_or_decryption_or_encoding_actions": false
-}

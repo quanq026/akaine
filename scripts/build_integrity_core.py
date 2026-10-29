@@ -7,7 +7,7 @@ import shutil
 import struct
 
 import build_dynamic_core
-import build_release_profile
+import build_client_support as build_release_profile
 import build_reset_core
 
 SOURCE_SHA = 'e49d1a98dc66edb87d0deca35241e52653be41e126b26ee89d2f2b3b2267e71b'

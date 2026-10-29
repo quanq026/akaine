@@ -33,17 +33,15 @@ class AndroidClientBuilderTests(unittest.TestCase):
         }
         self.assertIn("production-shared-api-base", labels)
 
-    def test_guide_explains_every_native_operation(self):
+    def test_guide_uses_current_v36_source_build(self):
         root = Path(__file__).resolve().parents[1]
-        plan = build_android_client.load_plan(
-            root / "patches/arcaea-7.0.255-arm64/native-plan.json"
-        )
         guide = (root / "docs/guide/06-build-android-client.md").read_text(
             encoding="utf-8"
         )
-        for row in plan["binary_patches"]:
-            for operation in row["operations"]:
-                self.assertIn(f"`{operation['label']}`", guide)
+        self.assertIn("scripts\\build_v36_client.py", guide)
+        self.assertIn("f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545", guide)
+        self.assertIn("--songlist", guide)
+        self.assertNotIn("production-checkpoint.md", guide)
 
     def test_beginner_guide_uses_verified_tools_and_stop_gates(self):
         root = Path(__file__).resolve().parents[1]
@@ -52,14 +50,12 @@ class AndroidClientBuilderTests(unittest.TestCase):
         )
         for required in (
             '$python = Join-Path $repoRoot ".venv\\Scripts\\python.exe"',
-            '& $python scripts\\doctor.py --android',
-            'XAPK size or SHA-256 does not match',
-            'Merged baseline does not match',
-            'Apktool decode failed',
-            'Native patch receipt does not contain the full release plan',
-            'Aligned APK verification failed',
+            '& $python scripts\\build_v36_client.py --help',
+            'Wrong base APK. Stop here.',
+            'BUILD_RECEIPT.json',
+            'zipalign',
             'APK signature verification failed',
-            '$serial = Read-Host "Device serial shown in the first column above"',
+            '$serial = Read-Host "Exact device serial shown above"',
         ):
             self.assertIn(required, guide)
 

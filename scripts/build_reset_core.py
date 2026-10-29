@@ -36,7 +36,7 @@ def bytes_array(name, raw):
 def build(assembly, baseline_kit, output, llvm, reader):
     global HERE, BUILD, KIT, LLVM
     HERE, BUILD, KIT, LLVM = assembly.parent, output, baseline_kit, llvm
-    import build_release_profile as guard
+    import build_client_support as guard
     from build_dynamic_core import branch, virtual_bytes
     disk = guard.physical_output(BUILD)
     assert reader.SHA == '7f3811cbe0308b709c9dcd4c72b6ffe18ee23454973fcb852a966ca5cf0c36c8'

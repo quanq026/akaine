@@ -10,7 +10,7 @@ import java.util.Set;
 
 /** Actual helper, real disposable files; only the Android app root is adapted. */
 public final class PartialCacheFixture {
-    private static final String URL = "https://cdn.akai.id.vn/arkane-test-bundle/7.0.255-staging-assets-thin21-20261024_0.cb";
+    private static final String URL = "https://cdn.akai.id.vn/bundle/7.0.255-prod-original-base25-20261027_0.cb";
     private static final byte[] PREFIX = {19, 2, 91, 17, -8, 23};
     private static Method select;
     private static int cases;
@@ -51,7 +51,7 @@ public final class PartialCacheFixture {
         select.setAccessible(true);
         File directory = new File(args[0]).getCanonicalFile();
         File root = fresh(directory, "restart");
-        String name = "7.0.255.21_0.bundle";
+        String name = "7.0.255.25_0.bundle";
         File destination = new File(root, "dltemp/" + name);
         File temporary = new File(destination.getPath() + ".tmp");
 
@@ -70,18 +70,34 @@ public final class PartialCacheFixture {
 
         cases++; AkaineBundlePartialCache.release(resumed);
         check(choose(root, URL, destination, temporary).equals(first));
-        File delta = choose(root, URL.replace("thin21-20261024_0", "delta20to21-20261024"), name);
+        File delta = choose(root, URL.replace("prod-original-base25-20261027_0", "prod-collapse-from14-20261022"), name);
         check(!delta.equals(first) && delta.length() == 0);
-        File version = choose(root, URL, "7.0.255.22_0.bundle");
+        File version = choose(root, URL, "7.0.255.26_0.bundle");
         check(!version.equals(first) && version.length() == 0);
-        File part = choose(root, URL, "7.0.255.21_1.bundle");
+        File part = choose(root, URL, "7.0.255.25_1.bundle");
         check(!part.equals(first) && part.length() == 0);
+
+        cases++;
+        String[] acceptedFallbacks = {
+            URL.replace("prod-original-base25-20261027_0", "prod-collapse-full-20261022_0"),
+            URL.replace("prod-original-base25-20261027_0", "prod-collapse-full-20261022_6"),
+            URL.replace("_0.cb", "_9.cb")};
+        for (String url : acceptedFallbacks) {
+            File accepted = choose(root, url, name);
+            check(accepted.getParentFile().equals(new File(root, "bundle-partials")));
+            AkaineBundlePartialCache.release(accepted);
+        }
 
         String[] denied = {null, URL + "?token=fixture", URL + "#fragment", URL.replace("https:", "http:"),
             URL.replace("cdn.akai.id.vn", "cdn.akai.id.vn.evil.invalid"), URL.replace("cdn.akai", "user@cdn.akai"),
             URL.replace(".vn/", ".vn:443/"), URL.replace("_0.cb", "_0.json"), URL.replace("_0.cb", "/_0.cb"),
-            URL.replace("_0.cb", "%2f0.cb"), URL.replace("arkane-test-bundle", "songs"),
-            URL.replace("thin21", "../../thin21"), URL + "/bad", URL.replace("thin21", new String(new char[161]).replace('\0', 'a'))};
+            URL.replace("_0.cb", "%2f0.cb"), URL.replace(".vn/bundle/", ".vn/songs/"),
+            URL.replace("prod-original", "../../prod-original"), URL + "/bad", URL.replace("prod-original", new String(new char[161]).replace('\0', 'a')),
+            URL.replace(".vn/bundle/", ".vn/arkane-test-bundle/"),
+            URL.replace("prod-original-base25-20261027_0", "staging-assets-thin21-20261024_0"),
+            URL.replace("base25", "base26"), URL.replace("_0.cb", "_10.cb"),
+            URL.replace("prod-original-base25-20261027_0", "prod-collapse-full-20261022_7"),
+            URL.replace("prod-original-base25-20261027_0", "prod-collapse-from15-20261022")};
         for (String url : denied) {
             cases++; check(choose(root, url, destination, temporary).equals(temporary));
         }

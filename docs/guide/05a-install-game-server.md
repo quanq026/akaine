@@ -11,17 +11,15 @@ For a different domain, its native routes must also be patched and verified for
 that host. Running this chapter at `api.example.com` proves the server works;
 it does not make the published AkaineXD APK connect to `api.example.com`.
 
-## Production source checkpoint
+## Server and client configuration
 
-The public `server/` tree starts from the production25 source siblings used with
-the V36 client. [Its provenance and integration exceptions](../production-checkpoint.md)
-are recorded separately: the public account helper retains atomic bot
-provisioning, and five identity/secret defaults in `core/config_manager.py` are
-empty. Supply your own private configuration. Catalogue/media still come from
-the verified resource kit; this setup never copies the operator's production
-config, database or player records. The sample dynamic-pack and assetset-profile
-controls start disabled and need matching catalogue/client verification before
-use. The historical archive remains unchanged.
+The public server includes dynamic pack handling, shared content grants and
+atomic account provisioning for the bot. Identity and secret defaults are
+empty; supply your own private configuration. Catalogue and media come from
+the verified resource kit, not another operator's database or player records.
+Dynamic-pack and assetset-profile controls start disabled. Configure them only
+with the matching catalogue and client; installing a V36 APK does not configure
+the server or grant content by itself.
 
 ## 1. Prepare the Linux instance
 

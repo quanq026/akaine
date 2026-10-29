@@ -196,8 +196,8 @@ if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 ```
 
 A prepared core workstation prints `OK` for `git` and `python`. The command
-also reports the optional Android tools it can find. Apktool is expected to be
-missing until the private resource chapter.
+also reports the optional Android tools it can find. Chapter 6 selects the
+V36 compiler and DEX tool inputs explicitly.
 
 The complete Android tool list is:
 
@@ -210,12 +210,11 @@ java
 adb
 zipalign
 apksigner
-apktool
 ```
 
 If `zipalign` or `apksigner` is missing, return to Android Studio's SDK Manager
-and install Android SDK Build-Tools. The next chapter adds Apktool and runs the
-strict check.
+and install Android SDK Build-Tools. Chapter 4 verifies the private resources;
+chapter 6 checks the explicit NDK, Java and DEX build-tool paths.
 
 ## Step 7: prepare the Python environment
 

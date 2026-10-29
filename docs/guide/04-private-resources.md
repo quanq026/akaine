@@ -1,8 +1,8 @@
 # Get and verify the private resource kit
 
-GitHub contains the source code and this guide. Game assets and content bundles
-come from a separate resource kit. Chapter 6 downloads its upstream XAPK and
-build tools directly from their published sources.
+GitHub contains source code and this guide. Game content and the matching
+production V9 APK used to build V36 come from a separate resource kit. The
+client's NDK, Java and Android tools remain installed at paths you choose.
 
 ![Chapter 04 private resource chain of trust](../images/guides/04-private-resources-chain-of-trust.svg)
 
@@ -91,38 +91,27 @@ maintenance script merely because it is present in the archive.
 
 Do not proceed if the verification reports a missing or mismatched file.
 
-## Configure Apktool
+## Check the V36 client inputs
 
-Set the environment variable from the extracted kit location:
+Before chapter 6, identify these verified files in the kit instructions:
 
-```powershell
-$kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
-$apktool = Join-Path $kitRoot "tools\apktool.jar"
+- The production V9 APK from 2026-10-22, SHA-256
+  `f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545`.
+- The native `songlist` JSON matching the content catalogue. Server metadata
+  is a different file and cannot replace it.
+- The private AKFC key header matching the protected charts. It remains
+  outside the repository and is passed directly to the native compiler.
+- The arm64 BoringSSL static archive with `akfc_`-prefixed symbols, or the
+  instructions for building it with the public helper.
+- The matching jadx all-in-one JAR and Android Build-Tools `d8.jar`, with their
+  verification information. Java 17 and NDK `28.2.13676358` are selected in
+  chapter 6.
 
-Get-Item $apktool
-
-[Environment]::SetEnvironmentVariable(
-    "APKTOOL_JAR",
-    $apktool,
-    "User"
-)
-```
-
-Close and reopen PowerShell, then run the strict Android check:
-
-```powershell
-$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
-$python = Join-Path $repoRoot ".venv\Scripts\python.exe"
-Set-Location $repoRoot
-Get-Item $python
-& $python scripts\doctor.py --android
-if ($LASTEXITCODE -ne 0) {
-    throw "Strict Android toolchain check failed."
-}
-```
-
-The command must finish with `Requested toolchain is ready.` If it reports a
-missing tool, return to the matching installation step instead of continuing.
+The kit does not need a developer's local path map, copied SDK directory,
+patched final `.so`/`.dex` payloads or another operator's Android keystore.
+Chapter 6 takes explicit input paths and builds its outputs from source.
+Do not generate a new AKFC key when using an existing catalogue: that client
+would not decode the already encrypted charts.
 
 ## Keep the kit private
 
