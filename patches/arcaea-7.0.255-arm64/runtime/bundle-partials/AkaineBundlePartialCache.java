@@ -8,9 +8,9 @@ import java.security.MessageDigest;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Keeps public staging bundle transport partials outside native StartScene cleanup. */
+/** Keeps public production bundle transport partials outside native StartScene cleanup. */
 public final class AkaineBundlePartialCache {
-    private static final String PREFIX = "https://cdn.akai.id.vn/arkane-test-bundle/";
+    private static final String PREFIX = "https://cdn.akai.id.vn/bundle/";
     private static final long MAX_STALE_BYTES = 2L * 1024 * 1024 * 1024;
     private static final long MAX_AGE_MS = 7L * 24 * 60 * 60 * 1000;
     private static final int MAX_STALE_FILES = 16;
@@ -34,7 +34,7 @@ public final class AkaineBundlePartialCache {
     private static File selectForRoot(File temporary, String url, File destination, File root) {
         try {
             if (url == null || !url.startsWith(PREFIX)
-                    || !url.substring(PREFIX.length()).matches("7[.]0[.]255-staging-assets-[A-Za-z0-9_-]{1,160}[.]cb")
+                    || !url.substring(PREFIX.length()).matches("7[.]0[.]255-(?:prod-original-base25-20261027_[0-9]|prod-collapse-full-20261022_[0-6]|prod-collapse-from14-20261022)[.]cb")
                     || !destination.getName().matches("[0-9]{1,4}(?:[.][0-9]{1,4}){3}_[0-9]{1,3}[.]bundle")
                     || !root.isDirectory() || !root.canWrite()) return temporary;
             File canonicalRoot = root.getCanonicalFile();

@@ -59,7 +59,7 @@ def main() -> int:
         relative = path.relative_to(ROOT)
         lowered = relative.as_posix().lower()
         if (
-            path.name == "config.py"
+            path.name in {"config.py", "embedded_key.h"}
             or (path.name.startswith(".env") and path.name != ".env.example")
             or "/backups/" in lowered
             or re.search(r"^scripts/.*_20[0-9]{6,}", lowered)

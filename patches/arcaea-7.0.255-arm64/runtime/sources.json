@@ -1,0 +1,245 @@
+{
+  "schema": "akaine.v36.sources.v1",
+  "sources": [
+    {
+      "role": "bundle-partials/AkaineBundlePartialCache.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/AkaineBundlePartialCache.java"
+    },
+    {
+      "role": "bundle-partials/PartialCacheFixture.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/PartialCacheFixture.java"
+    },
+    {
+      "role": "bundle-partials/compile-stubs/cz/msebera/android/httpclient/HttpEntity.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/compile-stubs/cz/msebera/android/httpclient/HttpEntity.java"
+    },
+    {
+      "role": "bundle-partials/compile-stubs/org/cocos2dx/lib/Cocos2dxDownloader.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/compile-stubs/org/cocos2dx/lib/Cocos2dxDownloader.java"
+    },
+    {
+      "role": "bundle-partials/compile-stubs/org/cocos2dx/lib/FileTaskHandler.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/compile-stubs/org/cocos2dx/lib/FileTaskHandler.java"
+    },
+    {
+      "role": "bundle-partials/patch_restart.py",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/bundle-partials/patch_restart.py"
+    },
+    {
+      "role": "integrity/child_order_gate.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/integrity/child_order_gate.S"
+    },
+    {
+      "role": "integrity/download_run_once_gate.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/integrity/download_run_once_gate.S"
+    },
+    {
+      "role": "integrity/download_success_size_gate.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/integrity/download_success_size_gate.S"
+    },
+    {
+      "role": "news/news_gates.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/news/news_gates.S"
+    },
+    {
+      "role": "pacing/baseline_onDrawFrame.smali",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/pacing/baseline_onDrawFrame.smali"
+    },
+    {
+      "role": "pacing/onDrawFrame.smali",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/pacing/onDrawFrame.smali"
+    },
+    {
+      "role": "pacing/test_cap60_pacing.py",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/pacing/test_cap60_pacing.py"
+    },
+    {
+      "role": "retained-build/build_startup_dex.py",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/retained-build/build_startup_dex.py"
+    },
+    {
+      "role": "semantic/account/account_adapter.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/account/account_adapter.h"
+    },
+    {
+      "role": "semantic/account/account_credentials.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/account/account_credentials.h"
+    },
+    {
+      "role": "semantic/character/character_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/character/character_controls.h"
+    },
+    {
+      "role": "semantic/cloudsync/cli_cloudsync.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/cloudsync/cli_cloudsync.h"
+    },
+    {
+      "role": "semantic/controls/settings_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/controls/settings_controls.h"
+    },
+    {
+      "role": "semantic/controls/skill_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/controls/skill_controls.h"
+    },
+    {
+      "role": "semantic/filter-v12/filter_adapter.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/filter-v12/filter_adapter.h"
+    },
+    {
+      "role": "semantic/filter-v12/query_input.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/filter-v12/query_input.h"
+    },
+    {
+      "role": "semantic/native/anomaly_monitor_mod.cpp",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/anomaly_monitor_mod.cpp"
+    },
+    {
+      "role": "semantic/native/bounds.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/bounds.h"
+    },
+    {
+      "role": "semantic/native/child_reposition.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/child_reposition.h"
+    },
+    {
+      "role": "semantic/native/cli_core.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/cli_core.h"
+    },
+    {
+      "role": "semantic/native/cli_files.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/cli_files.h"
+    },
+    {
+      "role": "semantic/native/cli_onboarding.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/cli_onboarding.h"
+    },
+    {
+      "role": "semantic/native/cli_ui_core.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/cli_ui_core.h"
+    },
+    {
+      "role": "semantic/native/cli_ui_native.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/cli_ui_native.h"
+    },
+    {
+      "role": "semantic/native/maps_snapshot.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/maps_snapshot.h"
+    },
+    {
+      "role": "semantic/native/metadata_v2.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/metadata_v2.h"
+    },
+    {
+      "role": "semantic/native/mod_category_bridge.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/mod_category_bridge.h"
+    },
+    {
+      "role": "semantic/native/mod_divider_alignment.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/mod_divider_alignment.h"
+    },
+    {
+      "role": "semantic/native/mod_scroll_stops.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/mod_scroll_stops.h"
+    },
+    {
+      "role": "semantic/native/mod_widget_bounds.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/mod_widget_bounds.h"
+    },
+    {
+      "role": "semantic/native/official32/finale/finale_replay.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/official32/finale/finale_replay.h"
+    },
+    {
+      "role": "semantic/native/official32/legacy/legacy_replay.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/official32/legacy/legacy_replay.h"
+    },
+    {
+      "role": "semantic/native/official32/modern/modern_replay.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/official32/modern/modern_replay.h"
+    },
+    {
+      "role": "semantic/native/official_replay.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/official_replay.h"
+    },
+    {
+      "role": "semantic/native/perf_aggregate.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/perf_aggregate.h"
+    },
+    {
+      "role": "semantic/native/sampler_read_probe.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/sampler_read_probe.h"
+    },
+    {
+      "role": "semantic/native/setting_toggle.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/setting_toggle.h"
+    },
+    {
+      "role": "semantic/native/staging_cli_bridge.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/native/staging_cli_bridge.h"
+    },
+    {
+      "role": "semantic/navigation/navigation_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/navigation/navigation_controls.h"
+    },
+    {
+      "role": "semantic/overlays/overlay_state.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/overlays/overlay_state.h"
+    },
+    {
+      "role": "semantic/owned/dynamic_owned_store.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/dynamic_owned_store.h"
+    },
+    {
+      "role": "semantic/owned/news_latest10.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/news_latest10.h"
+    },
+    {
+      "role": "semantic/owned/news_owned.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/news_owned.h"
+    },
+    {
+      "role": "semantic/owned/owned_gates.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/owned_gates.S"
+    },
+    {
+      "role": "semantic/owned/owned_pack_module.cpp",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/owned_pack_module.cpp"
+    },
+    {
+      "role": "semantic/owned/reset_gate.S",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/owned/reset_gate.S"
+    },
+    {
+      "role": "semantic/play/confirm/play_confirm.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/play/confirm/play_confirm.h"
+    },
+    {
+      "role": "semantic/play/guide/play_guide.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/play/guide/play_guide.h"
+    },
+    {
+      "role": "semantic/play/play_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/play/play_controls.h"
+    },
+    {
+      "role": "semantic/result/result_state.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/result/result_state.h"
+    },
+    {
+      "role": "semantic/settings-v12/settings_panel.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/settings-v12/settings_panel.h"
+    },
+    {
+      "role": "semantic/song-v9/cli_song_native.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/song-v9/cli_song_native.h"
+    },
+    {
+      "role": "semantic/update/bundle_controls.h",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/semantic/update/bundle_controls.h"
+    },
+    {
+      "role": "tools/RawDexTool.java",
+      "source": "patches/arcaea-7.0.255-arm64/runtime/tools/RawDexTool.java"
+    }
+  ]
+}

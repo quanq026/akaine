@@ -13,17 +13,14 @@ domain khác, các native route cũng phải được patch và kiểm chứng c
 này ở `api.example.com` chứng minh server hoạt động; việc đó chưa làm APK AkaineXD đã
 phát hành kết nối tới `api.example.com`.
 
-## Checkpoint source production
+## Cấu hình server và client
 
-Cây `server/` công khai bắt đầu từ các source sibling production25 dùng cùng
-client V36. [Provenance và ngoại lệ tích hợp](../../production-checkpoint.vi.md)
-được ghi riêng: helper account công khai giữ atomic provisioning cho bot, và
-năm giá trị identity/secret mặc định trong `core/config_manager.py` được để
-trống. Hãy cấp private config của bạn. Catalogue/media vẫn lấy từ resource kit
-đã xác minh; quy trình này không copy config production, database hay hồ sơ
-người chơi của operator. Control pack động và assetset profile trong config mẫu
-mặc định tắt, cần kiểm chứng đúng catalogue/client trước khi dùng. Archive lịch
-sử được giữ nguyên.
+Public server có xử lý pack động, content grant dùng chung và atomic account
+provisioning cho bot. Giá trị identity/secret mặc định được để trống; hãy cấp
+private config của bạn. Catalogue và media đến từ resource kit đã xác minh,
+không phải database hay hồ sơ người chơi của operator khác. Control pack động
+và assetset profile mặc định tắt. Chỉ cấu hình chúng với catalogue và client
+tương ứng; cài APK V36 không tự cấu hình server hay tự cấp content.
 
 ## 1. Chuẩn bị Linux instance
 

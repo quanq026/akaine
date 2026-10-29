@@ -1,8 +1,5 @@
 # Add a fan chart and place it in a pack
 
-> Current staging workflow: read [native-chart-intake](../native-chart-intake.md) first. The62-pack advice below describes legacy clients; reviewed V19+ dynamic clients use their separate capability/profile.
-
-
 This chapter follows one fan chart from a source folder to a downloadable,
 playable and score-enabled song in Akaine 7.0.255. It also explains how to
 create a visible pack. Perform the first import on staging and use files you
@@ -72,24 +69,23 @@ produce a missing or unclickable BYD tile.
 
 ## Decide whether a new pack is necessary
 
-The released 7.0.255 client accepts at most 62 pack entitlements. Akaine already
-uses that safe capacity. Adding a 63rd visible entitlement can break the account
-response even if `packlist` contains the new pack.
+V36 supports a dynamic pack catalogue when the server enables and validates
+the matching profile. Older clients retain the legacy response limited to
+62 pack entitlements. Do not apply that legacy slot count to V36, and do not
+enable the dynamic response for a client that lacks its native support.
 
-The simplest choice is to place new charts in the existing `xd_fan_album` pack.
-Creating another pack is appropriate only when you deliberately allocate one
-of the 62 visible slots. A new pack therefore needs all of these changes:
+Reusing `xd_fan_album` is the smallest change when another collection is not
+needed. A new V36 pack requires all of these changes:
 
 1. add the pack object to bundle `packlist`;
 2. add its selector cover to the bundle;
 3. assign at least one song to the pack;
 4. add the pack to the server's custom/free entitlement configuration;
-5. include it in the 7.0.255 client pack projection while removing or hiding a
-   custom pack that no longer needs a visible slot;
-6. confirm the final client pack payload is no longer than 62 entries.
+5. pin the exact final `packlist` bytes and epoch in the dynamic server profile;
+6. validate the catalogue and test actual pack ownership and navigation in V36.
 
-Do not remove an official pack merely to make room. For a clean custom setup,
-replace an old custom pack slot or reuse `xd_fan_album`.
+Do not remove an official pack merely to make room. If you also support legacy
+clients, test their separate response within its 62-entry limit.
 
 The examples below use a new pack named `my_fan_pack` and one FTR song named
 `my_fan_song`. Replace both identifiers consistently.
@@ -247,7 +243,10 @@ it when another object precedes it:
 `id` is the internal relationship key. `name_localized` and
 `description_localized` are displayed to the player. `custom_banner` tells the
 selector to use the custom pack image. `section: variety` places the pack with
-the variety/collaboration group used by the verified fan pack.
+the Variety group. V36's existing Mod bridge projects `xd_fan_album` into Mod;
+that does not make arbitrary new pack IDs or a `section: mod` field supported.
+Use the existing fan pack for Mod placement unless you implement and verify
+the corresponding native category mapping for a new pack.
 
 Validate the edited JSON immediately:
 
@@ -554,7 +553,14 @@ ASSET_SIGNING_SONG_IDS = ["my_fan_song"]
 CUSTOM_PACK_IDS = ["my_fan_pack"]
 CLIENT_VISIBLE_CUSTOM_PACK_IDS = ["my_fan_pack"]
 FREE_PACKS = ["my_fan_pack"]
-CLIENT_PACK_LIMIT = 62
+CLIENT_PACK_LIMIT = 62  # Legacy clients only.
+
+DYNAMIC_PACKS_ENABLED = True
+DYNAMIC_PACKS_NATIVE_ACCEPTED = True
+DYNAMIC_PACKS_FULL_CATALOG = False
+DYNAMIC_CLIENT_PACKLIST_PATH = "./database/client_catalogs/7.0.255/packlist"
+DYNAMIC_CLIENT_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
+DYNAMIC_CLIENT_CATALOG_EPOCH = "my-fan-pack-v1"
 ```
 
 Preserve existing entries when the lists already contain other songs or packs.
@@ -564,10 +570,33 @@ fan packs.
 `FREE_PACKS` is the simplest staging entitlement: every account receives the
 pack without creating purchase rows.
 
-The current 7.0.255 response also has an explicit 62-entry projection in
-`server/server/user.py`. Locate `CLIENT_PACK_PROJECTION_7_0_255`, replace an
-obsolete custom-pack slot with `my_fan_pack`, and keep the tuple at 62 entries.
-Do not append a 63rd item and do not remove an official pack casually.
+Enable this profile only after verifying the V36 client. It selects the
+dynamic representation for requests carrying `AppVersion: 7.0.255` and
+`Akaine-Packs: dynamic1`; a header does not grant ownership. Keep
+`DYNAMIC_PACKS_FULL_CATALOG` false unless granting the entire catalogue is an
+explicit policy. Do not edit the legacy `CLIENT_PACK_PROJECTION_7_0_255` tuple
+to add a V36 pack.
+
+Print the hash of the exact edited bundle packlist on Windows:
+
+```powershell
+$packlistForServer = Get-Item (Join-Path $overlaySongs "packlist")
+(Get-FileHash -Algorithm SHA256 $packlistForServer.FullName).Hash.ToLowerInvariant()
+```
+
+Replace the hash placeholder in private config with that full lowercase value.
+Install the same packlist bytes at `DYNAMIC_CLIENT_PACKLIST_PATH`, preserving
+the service user's ownership. Change the epoch when releasing a new catalogue.
+From the staging server root, with its Python environment active, run:
+
+```bash
+python tools/check_dynamic_pack_catalog.py
+```
+
+It must report the validated ID count with no error. This is a read-only check
+in a separate process; it does not reload the serving worker. Restart or reload
+staging using its normal service procedure, then verify the actual V36 account
+response and pack navigation.
 
 The server needs the same edited songlist used by the bundle at
 `database/songs/songlist`. It also needs the edited
@@ -653,7 +682,7 @@ are separate gates.
 
 | Symptom | Likely cause |
 | --- | --- |
-| Pack is absent | It is missing from the 62-entry client projection or entitlement configuration. |
+| Pack is absent | The bundle packlist, pinned dynamic catalogue or ownership policy disagrees; a legacy client may still use its separate 62-entry projection. |
 | Pack opens with zero cards | Song `set` does not match pack ID, or the final bundle contains the wrong songlist. |
 | Song shows fake difficulties | Empty or duplicated difficulty rows were added to songlist. |
 | BYD tile is absent or unclickable | New class-3 ID is not accepted by the native registry. Use FTR/ETR or make a separately verified client patch. |
@@ -670,7 +699,8 @@ are separate gates.
 - You have permission to host every supplied asset.
 - Source hashes and author credits are recorded.
 - Song and pack IDs are stable and unique.
-- The pack entitlement payload remains at or below 62 entries.
+- The V36 dynamic catalogue hash/epoch and ownership policy match the bundle;
+  any supported legacy response remains within its separate 62-entry limit.
 - Only real difficulties are visible and ranked.
 - AKFC receipt identity matches the final song ID and filename.
 - Metadata plaintext hashes match the source AFF and normalized audio.

@@ -10,10 +10,10 @@ import hashlib
 
 from build_bundle_partial_cache import JAVA_SOURCES, SOURCE_SHA, compare, equivalent_handler
 import build_cap60_dex as dexutils
-import build_release_profile as shared
+import build_client_support as shared
 
-# Set from the sealed production profile; candidate mode never assembles an APK.
-OUTPUT_SHA = None
+# This DEX has no operator key material; its guarded source build is reproducible.
+OUTPUT_SHA = 'd4b7d264654edb81020b8abe0e40764e2146fde961311d5021742da0caaf5b8c'
 
 
 def build(source, java, javac, jar, rawdex, d8, output, sources, *, candidate=False):

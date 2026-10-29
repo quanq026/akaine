@@ -8,7 +8,7 @@ import struct
 import zipfile
 import zlib
 
-import build_release_profile as shared
+import build_client_support as shared
 
 ROOT = Path(__file__).resolve().parents[1]
 PATCH = ROOT / 'patches/arcaea-7.0.255-arm64/runtime/prod-rebase-dex'

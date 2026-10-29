@@ -1,7 +1,7 @@
 #include "maps_snapshot.h"
 #pragma once
 #if !defined(AKAINE_STAGING_CLI) || AKAINE_STAGING_CLI != 1
-#error The semantic bridge is available only in the isolated staging monitor.
+#error The semantic bridge requires the production profile monitor.
 #endif
 #include "cli_core.h"
 #include "cli_ui_core.h"
@@ -283,7 +283,7 @@ void respond(const Request& request, const Snapshot& value, const char* error, c
     Json json;
     json.add("{\"protocol\":1,\"request_id\":"); json.string(request.id);
     json.add(",\"session\":"); json.string(session);
-    json.add(",\"environment\":\"staging\",\"command\":"); json.string(request.command);
+    json.add(",\"environment\":\"production\",\"command\":"); json.string(request.command);
     json.add(",\"ok\":"); json.add(error ? "false" : "true");
     json.add(",\"state\":"); state_json(json, value);
     json.add(",\"error\":");
@@ -312,7 +312,7 @@ bool initialize(uint64_t now) {
     if (!akaine_cli::owned_directory(directory, getuid(), true)) { if (directory >= 0) close(directory); directory = -1; return false; }
     snprintf(session, sizeof(session), "%016llx%016llx", static_cast<unsigned long long>(getpid()), static_cast<unsigned long long>(now));
     Json json;
-    json.add("{\"protocol\":1,\"environment\":\"staging\",\"package\":\"akai.arc.lmao\",\"pid\":"); number(json, unsigned(getpid()));
+    json.add("{\"protocol\":1,\"environment\":\"production\",\"package\":\"akai.arc.lmao\",\"pid\":"); number(json, unsigned(getpid()));
     json.add(",\"session\":"); json.string(session); json.add(",\"commands\":[\"status\",\"category\",\"ui\",\"song_select\",\"pack_select\",\"pack_close\",\"difficulty\",\"sort\",\"group\",\"reverse\",\"character\",\"account\",\"sync\",\"replay\",\"play\",\"play_download\",\"play_guide\",\"play_set_speed\",\"skill\",\"filter\",\"navigation\",\"gameplay\",\"settings\",\"bundle\"]}\n");
     return akaine_cli::atomic_json(directory, ".bridge.tmp", "bridge.json", json);
 }
@@ -624,7 +624,7 @@ void poll(uint64_t now) {
     if (!attempted) {
         attempted = true;
         const bool ready = initialize(now);
-        __android_log_print(ready ? ANDROID_LOG_INFO : ANDROID_LOG_ERROR, TAG, "staging_cli_init status=%s protocol=1 owner_gl_thread=1", ready ? "ready" : "rejected");
+        __android_log_print(ready ? ANDROID_LOG_INFO : ANDROID_LOG_ERROR, TAG, "production_cli_init status=%s protocol=1 owner_gl_thread=1", ready ? "ready" : "rejected");
         if (!ready) { if (directory >= 0) close(directory); directory = -1; }
     }
     if (directory < 0 || (polled_ns && now >= polled_ns && now - polled_ns < 100000000ULL)) return;

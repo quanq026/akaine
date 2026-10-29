@@ -8,7 +8,7 @@ import zipfile
 
 import build_dynamic_core
 import build_integrity_core
-import build_release_profile as shared
+import build_client_support as shared
 import build_reset_core
 
 PROD_APK_SHA = 'f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545'
@@ -141,42 +141,3 @@ def account_output(prod, candidate, gates):
             'compiled_gates': gate_rows, 'inserted_file_bytes': INSERT_SIZE, 'ELF_metadata_fields': metadata,
             'every_output_byte_reconstructed_from_prod_and_declared_changes': True,
             'all_unlisted_production_input_bytes_preserved': True}
-
-
-def build(prod_apk, kit, output, llvm):
-    prod_apk, kit, output, llvm = map(Path, (prod_apk, kit, output, llvm))
-    require(shared.digest(prod_apk) == PROD_APK_SHA, 'Authentic production V9 whole APK required')
-    with zipfile.ZipFile(prod_apk) as archive:
-        prod = archive.read(CORE_ENTRY)
-    normalized, route_rows = normalize_routes(prod)
-    disk = shared.physical_output(output)
-    output.mkdir(parents=True)
-    Elf = shared.module('prod_rebase_elf', kit / 'retained-build/compare_core.py').Elf
-    Unwind = shared.module('prod_rebase_unwind', kit / 'retained-build/core_unwind_map.py').UnwindMap
-    source = SimpleNamespace(Elf=Elf, elf=Elf(normalized))
-    source.unwind = Unwind(source.elf)
-    r5 = build_dynamic_core.build_core(kit, output / 'r5-core', llvm, source)
-    require(shared.digest(output / 'r5-core/owned_core_pins.h')
-            == shared.digest(kit / 'reset-baseline/semantic/owned/owned_core_pins.h'), 'Regenerated R5 pins differ')
-    import capstone
-    raw = r5.read_bytes()
-    reader = SimpleNamespace(raw=raw, SHA=sha(raw), elf=Elf(raw),
-                             read=lambda address, size: build_dynamic_core.virtual_bytes(raw, address, size),
-                             decoder=capstone.Cs(capstone.CS_ARCH_ARM64, capstone.CS_MODE_ARM))
-    core, unused_pins, reset = build_reset_core.build(kit / 'semantic/owned/reset_gate.S', kit / 'reset-baseline',
-                                                     output / 'reset-core', llvm, reader)
-    core, pins, integrity = build_integrity_core.build(core, unused_pins, kit / 'integrity/download_success_size_gate.S',
-        kit / 'integrity/download_run_once_gate.S', kit / 'integrity/child_order_gate.S', output / 'integrity-core', llvm)
-    accounting = account_output(prod, core.read_bytes(), {name: (output / name).read_bytes() for name, _, _, _ in GATES})
-    for name, role in (('owned_core_pins.h', 'semantic/owned/owned_core_pins.h'),
-                       ('cli_song_pins.h', 'semantic/song-v9/cli_song_pins.h')):
-        require(shared.digest(pins / name) == shared.digest(kit / role), 'Regenerated final pins differ')
-    require(shared.digest(prod_apk) == PROD_APK_SHA, 'Production APK changed during build')
-    receipt = {'status': 'PROD_V9_ROOTED_STAGING_CORE_REBUILT_AND_EVERY_BYTE_ACCOUNTED',
-               'prod_APK_sha256': PROD_APK_SHA, 'core_sha256': shared.digest(core), 'core': str(core),
-               'private_pins': str(pins), 'route_normalization': route_rows, 'accounting': accounting,
-               'reset_receipt': reset, 'integrity_receipt': integrity, 'external_disk': disk,
-               'builder_sha256': shared.digest(Path(__file__)), 'compiled_from_prod_input_and_authored_gates': True,
-               'accepted_final_SO_used_as_build_input': False, 'device_or_server_actions': False}
-    (output / 'BUILD_RECEIPT.json').write_text(json.dumps(receipt, indent=2) + '\n', newline='\n')
-    return core, pins, receipt

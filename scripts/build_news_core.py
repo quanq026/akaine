@@ -7,7 +7,7 @@ import shutil
 import struct
 
 import build_dynamic_core
-import build_release_profile as shared
+import build_client_support as shared
 
 SOURCE_SHA = '299f271b3b0bb8a656ba02be6fd6327f90b1a0fe2fe11d1e670ae51ccfdae42d'
 OUTPUT_SHA = 'ce5210a472e437b3710075cc4a3a1253485ae1ba48bc2a17405caef067c5b1cf'

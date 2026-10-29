@@ -2,9 +2,9 @@
 
 [English](../04-private-resources.md) | Tiếng Việt
 
-GitHub chứa mã nguồn và hướng dẫn này. Nội dung trò chơi và content bundle đến từ một bộ
-tài nguyên riêng biệt. Chương 6 tải xuống XAPK upstream và build các công cụ trực
-tiếp từ các nguồn đã xuất bản của họ.
+GitHub chứa mã nguồn và hướng dẫn này. Game content cùng APK production V9
+tương ứng để build V36 đến từ bộ tài nguyên riêng. NDK, Java và công cụ Android
+vẫn được cài tại đường dẫn do bạn chọn.
 
 ![Chuỗi tin cậy của tài nguyên riêng trong chương 04](../../images/guides/04-private-resources-chain-of-trust.svg)
 
@@ -89,38 +89,26 @@ maintenance script chỉ vì nó có mặt trong file nén.
 
 Không tiếp tục nếu quá trình xác minh báo cáo file bị thiếu hoặc không khớp.
 
-## Định cấu hình Apktool
+## Kiểm đầu vào client V36
 
-Đặt biến môi trường trỏ tới thư mục vừa giải nén:
+Trước chương 6, xác định những file đã kiểm này trong hướng dẫn của kit:
 
-```powershell
-$kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
-$apktool = Join-Path $kitRoot "tools\apktool.jar"
+- APK production V9 ngày 22/10/2026, SHA-256
+  `f14c5ab0871440dec7ecf2107d32d6e2cad745abc82047d03b49db9dbac3f545`.
+- Native `songlist` JSON khớp catalogue content. Server metadata là file khác,
+  không thay thế được nó.
+- Private AKFC key header tương ứng với protected chart. Giữ header ngoài
+  repository; nó được truyền trực tiếp cho native compiler.
+- Static BoringSSL archive arm64 có symbol prefix `akfc_`, hoặc hướng dẫn
+  build nó bằng public helper.
+- Đúng jadx all-in-one JAR và Android Build-Tools `d8.jar`, cùng thông tin
+  xác minh của chúng. Java 17 và NDK `28.2.13676358` được chọn ở chương 6.
 
-Get-Item $apktool
-
-[Environment]::SetEnvironmentVariable(
-    "APKTOOL_JAR",
-    $apktool,
-    "User"
-)
-```
-
-Đóng và mở lại PowerShell, sau đó chạy quy trình kiểm tra nghiêm ngặt của Android:
-
-```powershell
-$repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
-$python = Join-Path $repoRoot ".venv\Scripts\python.exe"
-Set-Location $repoRoot
-Get-Item $python
-& $python scripts\doctor.py --android
-if ($LASTEXITCODE -ne 0) {
-    throw "Strict Android toolchain check failed."
-}
-```
-
-Lệnh phải kết thúc bằng `Requested toolchain is ready.` Nếu nó báo thiếu công cụ, hãy
-quay lại bước cài đặt phù hợp thay vì tiếp tục.
+Kit không cần local path map của người phát triển, SDK directory được copy,
+payload `.so`/`.dex` cuối đã patch hay Android keystore của operator khác.
+Chương 6 nhận đường dẫn đầu vào tường minh rồi build output từ source.
+Không tạo AKFC key mới khi dùng catalogue hiện có: client đó sẽ không giải mã
+được những chart đã mã hóa.
 
 ## Giữ bộ tài nguyên riêng tư
 

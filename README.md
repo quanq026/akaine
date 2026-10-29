@@ -16,16 +16,13 @@ offsets, so they are outside this repository's instructions.
 The repository contains the guide, server and build tools. The APK input and
 game content are supplied separately when the guide needs them.
 
-## Current production checkpoint
+## Current client: V36
 
-The public source now includes the production **V36** client checkpoint and the
-original-quality **`7.0.255.25`** standalone content-base records. Start with
-[the production checkpoint](docs/production-checkpoint.md) for the exact APK
-identity, current source-build path, production CLI and server-source boundary.
-The fresh-XAPK instructions in chapter 6 describe an earlier client checkpoint;
-use the production source profile when reproducing V36. Private APK inputs,
-keys, content and local build maps remain separate from Git.
-
+[Chapter 6](docs/guide/06-build-android-client.md) builds V36 from public source
+and the verified production V9 APK supplied separately. It covers the explicit
+toolchain and AKFC inputs, unsigned build, your own signer and semantic CLI.
+The builder preserves original media; content `7.0.255.25` is delivered
+separately. APKs, keys and game content remain outside Git.
 
 The included 7.0.255 native patch uses the published Akaine API hosts. A
 client for a different domain also needs a verified native route change; the

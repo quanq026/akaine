@@ -7,8 +7,8 @@ import shutil
 import zipfile
 
 import build_prod_rebase_core as original
-import build_prod_rebase_news_core as news
-import build_release_profile as shared
+
+import build_client_support as shared
 
 PROD_APK_SHA = original.PROD_APK_SHA
 PROD_CORE_SHA = original.PROD_CORE_SHA
@@ -52,32 +52,3 @@ def cli_route_pins(text, prod):
         text, count = re.subn(pattern, lambda match: match[1] + data + match[2], text)
         original.require(count == 1, 'Unique CLI routing pin required')
     return text
-
-
-def build(prod_apk, kit, output, llvm):
-    prod_apk, kit, output = map(Path, (prod_apk, kit, output))
-    original.require(shared.digest(prod_apk) == PROD_APK_SHA, 'Authentic production V9 whole APK required')
-    shared.physical_output(output)
-    output.mkdir(parents=True)
-    # Accepted binaries are hash controls; the input below is rebuilt from the production APK and authored gates.
-    rebuilt, pins, previous = news.build(prod_apk, kit, output / 'v36-source', llvm)
-    with zipfile.ZipFile(prod_apk) as archive:
-        prod = archive.read(original.CORE_ENTRY)
-    candidate, proof = production_routes(prod, rebuilt.read_bytes())
-    target = output / 'libcocos2dcpp.so'
-    target.write_bytes(candidate)
-    generated = output / 'pins'
-    shutil.copytree(pins, generated)
-    cli = kit / 'semantic/native/cli_pins.h'
-    regenerated = cli_route_pins(cli.read_text('utf-8'), prod).encode()
-    original.require(regenerated == cli.read_bytes(), 'Hydrated production CLI routing pins differ')
-    (generated / 'cli_pins.h').write_bytes(regenerated)
-    original.require(shared.digest(prod_apk) == PROD_APK_SHA, 'Production APK changed during build')
-    receipt = dict(status='PROD_V9_ROOTED_PRODUCTION_V36_CORE_REBUILT_AND_ACCOUNTED',
-                   prod_APK_sha256=PROD_APK_SHA, core_sha256=original.sha(candidate), core=str(target),
-                   private_pins=str(generated), fresh_V36_source_provenance=copy.deepcopy(previous),
-                   production_route_accounting=proof, compiled_from_prod_input_and_authored_gates=True,
-                   accepted_final_SO_used_as_build_input=False, builder_sha256=shared.digest(Path(__file__)),
-                   device_or_server_actions=False)
-    (output / 'BUILD_RECEIPT.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8', newline='\n')
-    return target, generated, receipt

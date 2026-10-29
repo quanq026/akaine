@@ -58,7 +58,7 @@ def compare(before, after):
 def build(source, java, jar, helper, output, candidate):
     global OUTPUT, CANDIDATE
     OUTPUT, CANDIDATE = output, candidate
-    import build_release_profile as driver
+    import build_client_support as driver
     for path, expected in ((source, DEX_SHA), (java, '5b463cad4fcd8e4c655cc1c6f45a3b2ebb002adac94ebad2fdaa4f43e2aee211'),
             (jar, 'fe3e12c45acf75f92369685fd02d1d7a7323385dc725680a9b98a0dac0ea554b'),
             (helper, '252425dc1998486b945b933d1eb4bed4199ea34b59054c28ec3177e02b551bf5')):

@@ -1,0 +1,4160 @@
+{
+  "schema": "akaine.native-pin-layout.v1",
+  "core_sha256": "1097f9e03939ae0cd47fc958bbb95ed241f61cf1f44eb7c2ef71406ea3367bbe",
+  "headers": [
+    {
+      "path": "semantic/native/pins_official.h",
+      "template": [
+        "#pragma once",
+        "#include \"bounds.h\"",
+        "namespace anomaly_monitor {",
+        "inline constexpr unsigned char EXPECTED_BUILD_ID[] = {@@EXPECTED_BUILD_ID@@};",
+        "inline constexpr Address TESTIFY_CHALLENGE_VTABLE = 0x1b90f50;",
+        "inline constexpr Address TESTIFY_CHALLENGE_TYPEINFO = 0x1b1f0d8;",
+        "inline constexpr Address TESTIFY_CHALLENGE_RTTI_ADDRESS = 0x4b863e;",
+        "inline constexpr Address USERDEFAULT_VTABLE = 0x1b5cf38;",
+        "inline constexpr Address USERDEFAULT_TYPEINFO = 0x1b45130;",
+        "inline constexpr Address USERDEFAULT_RTTI_ADDRESS = 0x465e36;",
+        "inline constexpr Address USERDEFAULT_GET_INSTANCE = 0x18a6b8c;",
+        "inline constexpr Address USERDEFAULT_GET_BOOL = 0x8ae440;",
+        "inline constexpr Address USERDEFAULT_SET_BOOL = 0x17ed498;",
+        "inline constexpr Address TOGGLE_MAILBOX_VA = 0x1c03140;",
+        "inline constexpr Address TOGGLE_RW_SEGMENT_VA = 0x1ba4920;",
+        "inline constexpr Address TOGGLE_RW_FILE_SIZE = 0x400b0;",
+        "inline constexpr Address TOGGLE_RW_MEMORY_SIZE = 0x5e920;",
+        "inline constexpr char TESTIFY_CHALLENGE_RTTI[] = \"28SpecialSceneTestifyChallenge\";",
+        "inline constexpr char USERDEFAULT_RTTI[] = \"N7cocos2d11UserDefaultE\";",
+        "struct InstructionPin { Address address; const unsigned char* bytes; Size size; };",
+        "inline constexpr unsigned char PIN_director_getter[] = {@@PIN_director_getter@@};",
+        "inline constexpr unsigned char PIN_native_render[] = {@@PIN_native_render@@};",
+        "inline constexpr unsigned char PIN_running_scene_switch[] = {@@PIN_running_scene_switch@@};",
+        "inline constexpr unsigned char PIN_scene_render_forward[] = {@@PIN_scene_render_forward@@};",
+        "inline constexpr unsigned char PIN_gamescene_modifier_field[] = {@@PIN_gamescene_modifier_field@@};",
+        "inline constexpr unsigned char PIN_gamescene_song_id_copy[] = {@@PIN_gamescene_song_id_copy@@};",
+        "inline constexpr unsigned char PIN_gamescene_factory_prologue[] = {@@PIN_gamescene_factory_prologue@@};",
+        "inline constexpr unsigned char PIN_gamescene_class_loader[] = {@@PIN_gamescene_class_loader@@};",
+        "inline constexpr unsigned char PIN_gamescene_class_ctor[] = {@@PIN_gamescene_class_ctor@@};",
+        "inline constexpr unsigned char PIN_testify_partner_seal[] = {@@PIN_testify_partner_seal@@};",
+        "inline constexpr unsigned char PIN_suppression_branch[] = {@@PIN_suppression_branch@@};",
+        "inline constexpr unsigned char PIN_testify_intro_gate[] = {@@PIN_testify_intro_gate@@};",
+        "inline constexpr unsigned char PIN_testify_intro_cave[] = {@@PIN_testify_intro_cave@@};",
+        "inline constexpr unsigned char PIN_testify_replay_factory_cave[] = {@@PIN_testify_replay_factory_cave@@};",
+        "inline constexpr unsigned char PIN_testify_challenge_creator[] = {@@PIN_testify_challenge_creator@@};",
+        "inline constexpr unsigned char PIN_userdefault_get_instance[] = {@@PIN_userdefault_get_instance@@};",
+        "inline constexpr unsigned char PIN_userdefault_get_bool[] = {@@PIN_userdefault_get_bool@@};",
+        "inline constexpr unsigned char PIN_userdefault_set_bool[] = {@@PIN_userdefault_set_bool@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_0[] = {@@PIN_toggle_operation_0@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_1[] = {@@PIN_toggle_operation_1@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_2[] = {@@PIN_toggle_operation_2@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_3[] = {@@PIN_toggle_operation_3@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_4[] = {@@PIN_toggle_operation_4@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_5[] = {@@PIN_toggle_operation_5@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_6[] = {@@PIN_toggle_operation_6@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_7[] = {@@PIN_toggle_operation_7@@};",
+        "inline constexpr unsigned char PIN_toggle_operation_8[] = {@@PIN_toggle_operation_8@@};",
+        "inline constexpr unsigned char PIN_official_operation_0[] = {@@PIN_official_operation_0@@};",
+        "inline constexpr unsigned char PIN_official_operation_1[] = {@@PIN_official_operation_1@@};",
+        "inline constexpr unsigned char PIN_official_operation_2[] = {@@PIN_official_operation_2@@};",
+        "inline constexpr unsigned char PIN_official_operation_3[] = {@@PIN_official_operation_3@@};",
+        "inline constexpr unsigned char PIN_official_operation_4[] = {@@PIN_official_operation_4@@};",
+        "inline constexpr unsigned char PIN_official_operation_5[] = {@@PIN_official_operation_5@@};",
+        "inline constexpr unsigned char PIN_official_operation_6[] = {@@PIN_official_operation_6@@};",
+        "inline constexpr unsigned char PIN_official_operation_7[] = {@@PIN_official_operation_7@@};",
+        "inline constexpr unsigned char PIN_official_operation_8[] = {@@PIN_official_operation_8@@};",
+        "inline constexpr unsigned char PIN_official_operation_9[] = {@@PIN_official_operation_9@@};",
+        "inline constexpr unsigned char PIN_official_operation_10[] = {@@PIN_official_operation_10@@};",
+        "inline constexpr unsigned char PIN_official_operation_11[] = {@@PIN_official_operation_11@@};",
+        "inline constexpr unsigned char PIN_official_operation_12[] = {@@PIN_official_operation_12@@};",
+        "inline constexpr unsigned char PIN_official_operation_13[] = {@@PIN_official_operation_13@@};",
+        "inline constexpr unsigned char PIN_official_operation_14[] = {@@PIN_official_operation_14@@};",
+        "inline constexpr unsigned char PIN_official_operation_15[] = {@@PIN_official_operation_15@@};",
+        "inline constexpr unsigned char PIN_official_operation_16[] = {@@PIN_official_operation_16@@};",
+        "inline constexpr unsigned char PIN_official_operation_17[] = {@@PIN_official_operation_17@@};",
+        "inline constexpr unsigned char PIN_official_operation_18[] = {@@PIN_official_operation_18@@};",
+        "inline constexpr unsigned char PIN_official_operation_19[] = {@@PIN_official_operation_19@@};",
+        "inline constexpr unsigned char PIN_official_operation_20[] = {@@PIN_official_operation_20@@};",
+        "inline constexpr unsigned char PIN_official_call_79b000[] = {@@PIN_official_call_79b000@@};",
+        "inline constexpr unsigned char PIN_official_call_7bf690[] = {@@PIN_official_call_7bf690@@};",
+        "inline constexpr unsigned char PIN_official_call_7f3028[] = {@@PIN_official_call_7f3028@@};",
+        "inline constexpr unsigned char PIN_official_call_819afc[] = {@@PIN_official_call_819afc@@};",
+        "inline constexpr unsigned char PIN_official_call_83520c[] = {@@PIN_official_call_83520c@@};",
+        "inline constexpr unsigned char PIN_official_call_88b42c[] = {@@PIN_official_call_88b42c@@};",
+        "inline constexpr unsigned char PIN_official_call_8dd9c4[] = {@@PIN_official_call_8dd9c4@@};",
+        "inline constexpr unsigned char PIN_official_call_8e6fd8[] = {@@PIN_official_call_8e6fd8@@};",
+        "inline constexpr unsigned char PIN_official_call_95c0e4[] = {@@PIN_official_call_95c0e4@@};",
+        "inline constexpr unsigned char PIN_official_call_961e14[] = {@@PIN_official_call_961e14@@};",
+        "inline constexpr unsigned char PIN_official_call_968c44[] = {@@PIN_official_call_968c44@@};",
+        "inline constexpr unsigned char PIN_official_call_9895b8[] = {@@PIN_official_call_9895b8@@};",
+        "inline constexpr unsigned char PIN_official_call_98b33c[] = {@@PIN_official_call_98b33c@@};",
+        "inline constexpr unsigned char PIN_official_call_98c314[] = {@@PIN_official_call_98c314@@};",
+        "inline constexpr unsigned char PIN_official_call_a11370[] = {@@PIN_official_call_a11370@@};",
+        "inline constexpr unsigned char PIN_official_call_a8db9c[] = {@@PIN_official_call_a8db9c@@};",
+        "inline constexpr unsigned char PIN_official_call_aacbfc[] = {@@PIN_official_call_aacbfc@@};",
+        "inline constexpr unsigned char PIN_official_call_ab0000[] = {@@PIN_official_call_ab0000@@};",
+        "inline constexpr unsigned char PIN_official_call_af8694[] = {@@PIN_official_call_af8694@@};",
+        "inline constexpr unsigned char PIN_official_call_afe9f0[] = {@@PIN_official_call_afe9f0@@};",
+        "inline constexpr unsigned char PIN_official_call_b3620c[] = {@@PIN_official_call_b3620c@@};",
+        "inline constexpr unsigned char PIN_official_call_b8a498[] = {@@PIN_official_call_b8a498@@};",
+        "inline constexpr unsigned char PIN_official_call_b9e0d0[] = {@@PIN_official_call_b9e0d0@@};",
+        "inline constexpr unsigned char PIN_official_call_c29e9c[] = {@@PIN_official_call_c29e9c@@};",
+        "inline constexpr unsigned char PIN_official_call_c39a34[] = {@@PIN_official_call_c39a34@@};",
+        "inline constexpr unsigned char PIN_official_call_c71958[] = {@@PIN_official_call_c71958@@};",
+        "inline constexpr unsigned char PIN_official_call_c7bb48[] = {@@PIN_official_call_c7bb48@@};",
+        "inline constexpr unsigned char PIN_official_call_ca5aec[] = {@@PIN_official_call_ca5aec@@};",
+        "inline constexpr unsigned char PIN_official_call_cacca4[] = {@@PIN_official_call_cacca4@@};",
+        "inline constexpr unsigned char PIN_official_call_caeda8[] = {@@PIN_official_call_caeda8@@};",
+        "inline constexpr unsigned char PIN_official_call_cf737c[] = {@@PIN_official_call_cf737c@@};",
+        "inline constexpr unsigned char PIN_official_call_d411d4[] = {@@PIN_official_call_d411d4@@};",
+        "inline constexpr unsigned char PIN_official_call_d4c178[] = {@@PIN_official_call_d4c178@@};",
+        "inline constexpr unsigned char PIN_official_call_d6476c[] = {@@PIN_official_call_d6476c@@};",
+        "inline constexpr unsigned char PIN_official_call_d6dc98[] = {@@PIN_official_call_d6dc98@@};",
+        "inline constexpr unsigned char PIN_official_call_da9b80[] = {@@PIN_official_call_da9b80@@};",
+        "inline constexpr unsigned char PIN_official_call_e1a8ac[] = {@@PIN_official_call_e1a8ac@@};",
+        "inline constexpr unsigned char PIN_official_call_e65708[] = {@@PIN_official_call_e65708@@};",
+        "inline constexpr unsigned char PIN_official_call_ea4644[] = {@@PIN_official_call_ea4644@@};",
+        "inline constexpr unsigned char PIN_official_call_fa0220[] = {@@PIN_official_call_fa0220@@};",
+        "inline constexpr unsigned char PIN_official_call_fa4320[] = {@@PIN_official_call_fa4320@@};",
+        "inline constexpr unsigned char PIN_official_call_fb5af4[] = {@@PIN_official_call_fb5af4@@};",
+        "inline constexpr unsigned char PIN_official_call_fb6550[] = {@@PIN_official_call_fb6550@@};",
+        "inline constexpr unsigned char PIN_official_call_ff8960[] = {@@PIN_official_call_ff8960@@};",
+        "inline constexpr unsigned char PIN_official_call_1007888[] = {@@PIN_official_call_1007888@@};",
+        "inline constexpr unsigned char PIN_official_call_101da2c[] = {@@PIN_official_call_101da2c@@};",
+        "inline constexpr unsigned char PIN_official_call_10a6b94[] = {@@PIN_official_call_10a6b94@@};",
+        "inline constexpr unsigned char PIN_official_call_10ac6e8[] = {@@PIN_official_call_10ac6e8@@};",
+        "inline constexpr unsigned char PIN_official_call_10e5124[] = {@@PIN_official_call_10e5124@@};",
+        "inline constexpr unsigned char PIN_official_call_10f58a0[] = {@@PIN_official_call_10f58a0@@};",
+        "inline constexpr unsigned char PIN_official_call_1135ab8[] = {@@PIN_official_call_1135ab8@@};",
+        "inline constexpr unsigned char PIN_official_call_113b944[] = {@@PIN_official_call_113b944@@};",
+        "inline constexpr unsigned char PIN_official_call_11e1d4c[] = {@@PIN_official_call_11e1d4c@@};",
+        "inline constexpr unsigned char PIN_official_call_1207f70[] = {@@PIN_official_call_1207f70@@};",
+        "inline constexpr unsigned char PIN_official_call_1247a84[] = {@@PIN_official_call_1247a84@@};",
+        "inline constexpr unsigned char PIN_official_call_128e1b8[] = {@@PIN_official_call_128e1b8@@};",
+        "inline constexpr unsigned char PIN_official_call_12c9038[] = {@@PIN_official_call_12c9038@@};",
+        "inline constexpr unsigned char PIN_official_call_12d50e0[] = {@@PIN_official_call_12d50e0@@};",
+        "inline constexpr unsigned char PIN_official_call_12fd3a4[] = {@@PIN_official_call_12fd3a4@@};",
+        "inline constexpr unsigned char PIN_official_call_131419c[] = {@@PIN_official_call_131419c@@};",
+        "inline constexpr unsigned char PIN_official_call_133503c[] = {@@PIN_official_call_133503c@@};",
+        "inline constexpr unsigned char PIN_official_call_133d938[] = {@@PIN_official_call_133d938@@};",
+        "inline constexpr unsigned char PIN_official_call_13b7dd4[] = {@@PIN_official_call_13b7dd4@@};",
+        "inline constexpr unsigned char PIN_official_call_13fe014[] = {@@PIN_official_call_13fe014@@};",
+        "inline constexpr unsigned char PIN_official_call_1460b84[] = {@@PIN_official_call_1460b84@@};",
+        "inline constexpr unsigned char PIN_official_call_147fe48[] = {@@PIN_official_call_147fe48@@};",
+        "inline constexpr unsigned char PIN_official_call_1480774[] = {@@PIN_official_call_1480774@@};",
+        "inline constexpr unsigned char PIN_official_call_148f630[] = {@@PIN_official_call_148f630@@};",
+        "inline constexpr unsigned char PIN_official_call_14e56fc[] = {@@PIN_official_call_14e56fc@@};",
+        "inline constexpr unsigned char PIN_official_call_1508dac[] = {@@PIN_official_call_1508dac@@};",
+        "inline constexpr unsigned char PIN_official_call_150a148[] = {@@PIN_official_call_150a148@@};",
+        "inline constexpr unsigned char PIN_official_call_150fd18[] = {@@PIN_official_call_150fd18@@};",
+        "inline constexpr unsigned char PIN_official_call_1557b34[] = {@@PIN_official_call_1557b34@@};",
+        "inline constexpr unsigned char PIN_official_call_15b9414[] = {@@PIN_official_call_15b9414@@};",
+        "inline constexpr unsigned char PIN_official_call_160c7f0[] = {@@PIN_official_call_160c7f0@@};",
+        "inline constexpr unsigned char PIN_official_call_16afa94[] = {@@PIN_official_call_16afa94@@};",
+        "inline constexpr unsigned char PIN_official_call_16afaa0[] = {@@PIN_official_call_16afaa0@@};",
+        "inline constexpr unsigned char PIN_official_call_16bdad8[] = {@@PIN_official_call_16bdad8@@};",
+        "inline constexpr unsigned char PIN_official_call_16ce69c[] = {@@PIN_official_call_16ce69c@@};",
+        "inline constexpr unsigned char PIN_official_call_1716d68[] = {@@PIN_official_call_1716d68@@};",
+        "inline constexpr unsigned char PIN_official_call_1716d74[] = {@@PIN_official_call_1716d74@@};",
+        "inline constexpr unsigned char PIN_official_call_1716d80[] = {@@PIN_official_call_1716d80@@};",
+        "inline constexpr unsigned char PIN_official_call_1716ec0[] = {@@PIN_official_call_1716ec0@@};",
+        "inline constexpr unsigned char PIN_official_call_1716ec8[] = {@@PIN_official_call_1716ec8@@};",
+        "inline constexpr unsigned char PIN_official_call_1716ecc[] = {@@PIN_official_call_1716ecc@@};",
+        "inline constexpr unsigned char PIN_official_call_17c4c18[] = {@@PIN_official_call_17c4c18@@};",
+        "inline constexpr unsigned char PIN_official_call_17e79e0[] = {@@PIN_official_call_17e79e0@@};",
+        "inline constexpr unsigned char PIN_official_call_17efb70[] = {@@PIN_official_call_17efb70@@};",
+        "inline constexpr unsigned char PIN_official_call_17efb7c[] = {@@PIN_official_call_17efb7c@@};",
+        "inline constexpr unsigned char PIN_official_call_1819588[] = {@@PIN_official_call_1819588@@};",
+        "inline constexpr unsigned char PIN_official_call_1823f40[] = {@@PIN_official_call_1823f40@@};",
+        "inline constexpr unsigned char PIN_official_call_1856110[] = {@@PIN_official_call_1856110@@};",
+        "inline constexpr unsigned char PIN_official_call_187cc48[] = {@@PIN_official_call_187cc48@@};",
+        "inline constexpr unsigned char PIN_official_call_1887128[] = {@@PIN_official_call_1887128@@};",
+        "inline constexpr unsigned char PIN_official_call_1899aa4[] = {@@PIN_official_call_1899aa4@@};",
+        "inline constexpr unsigned char PIN_official_call_189f500[] = {@@PIN_official_call_189f500@@};",
+        "inline constexpr unsigned char PIN_official_call_18af9f4[] = {@@PIN_official_call_18af9f4@@};",
+        "inline constexpr unsigned char PIN_official_call_190742c[] = {@@PIN_official_call_190742c@@};",
+        "inline constexpr unsigned char PIN_official_call_1929dc0[] = {@@PIN_official_call_1929dc0@@};",
+        "inline constexpr unsigned char PIN_official_call_196e03c[] = {@@PIN_official_call_196e03c@@};",
+        "inline constexpr unsigned char PIN_official_call_1976684[] = {@@PIN_official_call_1976684@@};",
+        "inline constexpr unsigned char PIN_official_call_19f9bb8[] = {@@PIN_official_call_19f9bb8@@};",
+        "inline constexpr unsigned char PIN_official_call_1a11ab4[] = {@@PIN_official_call_1a11ab4@@};",
+        "inline constexpr unsigned char PIN_official_call_1a6d9c0[] = {@@PIN_official_call_1a6d9c0@@};",
+        "inline constexpr unsigned char PIN_mod_heading[] = {@@PIN_mod_heading@@};",
+        "inline constexpr unsigned char PIN_mod_sidebar[] = {@@PIN_mod_sidebar@@};",
+        "inline constexpr unsigned char PIN_mod_pack_geometry[] = {@@PIN_mod_pack_geometry@@};",
+        "inline constexpr unsigned char PIN_mod_heading_geometry[] = {@@PIN_mod_heading_geometry@@};",
+        "inline constexpr unsigned char PIN_mod_title[] = {@@PIN_mod_title@@};",
+        "inline constexpr unsigned char PIN_mod_fallbacks[] = {@@PIN_mod_fallbacks@@};",
+        "inline constexpr unsigned char PIN_mod_sidebar_site[] = {@@PIN_mod_sidebar_site@@};",
+        "inline constexpr unsigned char PIN_mod_heading_site[] = {@@PIN_mod_heading_site@@};",
+        "inline constexpr unsigned char PIN_mod_title_site[] = {@@PIN_mod_title_site@@};",
+        "inline constexpr unsigned char PIN_mod_pack_geometry_site[] = {@@PIN_mod_pack_geometry_site@@};",
+        "inline constexpr unsigned char PIN_mod_heading_geometry_site[] = {@@PIN_mod_heading_geometry_site@@};",
+        "inline constexpr unsigned char PIN_mod_call_193b304[] = {@@PIN_mod_call_193b304@@};",
+        "inline constexpr unsigned char PIN_mod_call_b0d8f8[] = {@@PIN_mod_call_b0d8f8@@};",
+        "inline constexpr unsigned char PIN_mod_call_1257490[] = {@@PIN_mod_call_1257490@@};",
+        "inline constexpr unsigned char PIN_mod_call_13d91cc[] = {@@PIN_mod_call_13d91cc@@};",
+        "inline constexpr unsigned char PIN_mod_call_95af50[] = {@@PIN_mod_call_95af50@@};",
+        "inline constexpr unsigned char PIN_mod_call_1a6d9c0[] = {@@PIN_mod_call_1a6d9c0@@};",
+        "inline constexpr unsigned char PIN_mod_call_1a6d9e0[] = {@@PIN_mod_call_1a6d9e0@@};",
+        "inline constexpr unsigned char PIN_mod_call_1a6da50[] = {@@PIN_mod_call_1a6da50@@};",
+        "inline constexpr unsigned char PIN_mod_call_1a6dba0[] = {@@PIN_mod_call_1a6dba0@@};",
+        "inline constexpr unsigned char PIN_mod_section_flatten[] = {@@PIN_mod_section_flatten@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_0[] = {@@PIN_mod_v2_op_0@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_1[] = {@@PIN_mod_v2_op_1@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_2[] = {@@PIN_mod_v2_op_2@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_3[] = {@@PIN_mod_v2_op_3@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_4[] = {@@PIN_mod_v2_op_4@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_5[] = {@@PIN_mod_v2_op_5@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_6[] = {@@PIN_mod_v2_op_6@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_7[] = {@@PIN_mod_v2_op_7@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_8[] = {@@PIN_mod_v2_op_8@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_9[] = {@@PIN_mod_v2_op_9@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_10[] = {@@PIN_mod_v2_op_10@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_11[] = {@@PIN_mod_v2_op_11@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_12[] = {@@PIN_mod_v2_op_12@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_13[] = {@@PIN_mod_v2_op_13@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_14[] = {@@PIN_mod_v2_op_14@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_15[] = {@@PIN_mod_v2_op_15@@};",
+        "inline constexpr unsigned char PIN_mod_v2_op_16[] = {@@PIN_mod_v2_op_16@@};",
+        "inline constexpr unsigned char PIN_mod_widget_detector[] = {@@PIN_mod_widget_detector@@};",
+        "inline constexpr unsigned char PIN_mod_widget_ctor[] = {@@PIN_mod_widget_ctor@@};",
+        "inline constexpr unsigned char PIN_mod_widget_size_bounds[] = {@@PIN_mod_widget_size_bounds@@};",
+        "inline constexpr unsigned char PIN_mod_swipe_recognizer[] = {@@PIN_mod_swipe_recognizer@@};",
+        "inline constexpr unsigned char PIN_mod_visual_c3a6e0[] = {@@PIN_mod_visual_c3a6e0@@};",
+        "inline constexpr unsigned char PIN_mod_visual_18372e8[] = {@@PIN_mod_visual_18372e8@@};",
+        "inline constexpr unsigned char PIN_mod_visual_d8cbe8[] = {@@PIN_mod_visual_d8cbe8@@};",
+        "inline constexpr unsigned char PIN_mod_visual_b38580[] = {@@PIN_mod_visual_b38580@@};",
+        "inline constexpr unsigned char PIN_mod_visual_efd848[] = {@@PIN_mod_visual_efd848@@};",
+        "inline constexpr unsigned char PIN_mod_template_widget_constructor[] = {@@PIN_mod_template_widget_constructor@@};",
+        "inline constexpr unsigned char PIN_mod_anchor_ec4b3c[] = {@@PIN_mod_anchor_ec4b3c@@};",
+        "inline constexpr unsigned char PIN_mod_anchor_16d8848[] = {@@PIN_mod_anchor_16d8848@@};",
+        "inline constexpr unsigned char PIN_mod_anchor_134d7a4[] = {@@PIN_mod_anchor_134d7a4@@};",
+        "inline constexpr unsigned char PIN_mod_anchor_18e1894[] = {@@PIN_mod_anchor_18e1894@@};",
+        "inline constexpr unsigned char PIN_mod_anchor_129c924[] = {@@PIN_mod_anchor_129c924@@};",
+        "inline constexpr InstructionPin PINS[] = {",
+        "{0x134d7a4,PIN_mod_anchor_134d7a4,sizeof(PIN_mod_anchor_134d7a4)},",
+        "{0x18e1894,PIN_mod_anchor_18e1894,sizeof(PIN_mod_anchor_18e1894)},",
+        "{0x129c924,PIN_mod_anchor_129c924,sizeof(PIN_mod_anchor_129c924)},",
+        "{0xec4b3c,PIN_mod_anchor_ec4b3c,sizeof(PIN_mod_anchor_ec4b3c)},",
+        "{0x16d8848,PIN_mod_anchor_16d8848,sizeof(PIN_mod_anchor_16d8848)},",
+        "{0xd87204,PIN_mod_template_widget_constructor,sizeof(PIN_mod_template_widget_constructor)},",
+        "{0xc3a6e0,PIN_mod_visual_c3a6e0,sizeof(PIN_mod_visual_c3a6e0)},",
+        "{0x18372e8,PIN_mod_visual_18372e8,sizeof(PIN_mod_visual_18372e8)},",
+        "{0xd8cbe8,PIN_mod_visual_d8cbe8,sizeof(PIN_mod_visual_d8cbe8)},",
+        "{0xb38580,PIN_mod_visual_b38580,sizeof(PIN_mod_visual_b38580)},",
+        "{0xefd848,PIN_mod_visual_efd848,sizeof(PIN_mod_visual_efd848)},",
+        "{0xfc9f60,PIN_mod_swipe_recognizer,sizeof(PIN_mod_swipe_recognizer)},",
+        "{0xa5cd08,PIN_mod_widget_size_bounds,sizeof(PIN_mod_widget_size_bounds)},",
+        "{0x875cd8,PIN_mod_widget_ctor,sizeof(PIN_mod_widget_ctor)},",
+        "{0x7e5654,PIN_mod_widget_detector,sizeof(PIN_mod_widget_detector)},",
+        "{0x782ff8,PIN_mod_v2_op_16,sizeof(PIN_mod_v2_op_16)},",
+        "{0x782ef8,PIN_mod_v2_op_15,sizeof(PIN_mod_v2_op_15)},",
+        "{0x782cf8,PIN_mod_v2_op_14,sizeof(PIN_mod_v2_op_14)},",
+        "{0x1401fb4,PIN_mod_v2_op_13,sizeof(PIN_mod_v2_op_13)},",
+        "{0xe395c0,PIN_mod_v2_op_12,sizeof(PIN_mod_v2_op_12)},",
+        "{0xa04a3c,PIN_mod_v2_op_11,sizeof(PIN_mod_v2_op_11)},",
+        "{0xd6716c,PIN_mod_v2_op_10,sizeof(PIN_mod_v2_op_10)},",
+        "{0x1401fb0,PIN_mod_v2_op_9,sizeof(PIN_mod_v2_op_9)},",
+        "{0xe39608,PIN_mod_v2_op_8,sizeof(PIN_mod_v2_op_8)},",
+        "{0xe39604,PIN_mod_v2_op_7,sizeof(PIN_mod_v2_op_7)},",
+        "{0xe395b0,PIN_mod_v2_op_6,sizeof(PIN_mod_v2_op_6)},",
+        "{0xa04b8c,PIN_mod_v2_op_5,sizeof(PIN_mod_v2_op_5)},",
+        "{0xa04a50,PIN_mod_v2_op_4,sizeof(PIN_mod_v2_op_4)},",
+        "{0xa04a34,PIN_mod_v2_op_3,sizeof(PIN_mod_v2_op_3)},",
+        "{0xd67180,PIN_mod_v2_op_2,sizeof(PIN_mod_v2_op_2)},",
+        "{0xd67168,PIN_mod_v2_op_1,sizeof(PIN_mod_v2_op_1)},",
+        "{0x12c2274,PIN_mod_v2_op_0,sizeof(PIN_mod_v2_op_0)},",
+        "{0x12c2258,PIN_mod_section_flatten,sizeof(PIN_mod_section_flatten)},",
+        "{0x782a50,PIN_mod_heading,sizeof(PIN_mod_heading)},",
+        "{0x782e10,PIN_mod_sidebar,sizeof(PIN_mod_sidebar)},",
+        "{0x782be8,PIN_mod_pack_geometry,sizeof(PIN_mod_pack_geometry)},",
+        "{0x782e2c,PIN_mod_heading_geometry,sizeof(PIN_mod_heading_geometry)},",
+        "{0x782ed8,PIN_mod_title,sizeof(PIN_mod_title)},",
+        "{0x782ff0,PIN_mod_fallbacks,sizeof(PIN_mod_fallbacks)},",
+        "{0x1393e00,PIN_mod_sidebar_site,sizeof(PIN_mod_sidebar_site)},",
+        "{0x16f9160,PIN_mod_heading_site,sizeof(PIN_mod_heading_site)},",
+        "{0x1793a08,PIN_mod_title_site,sizeof(PIN_mod_title_site)},",
+        "{0x16b03d4,PIN_mod_pack_geometry_site,sizeof(PIN_mod_pack_geometry_site)},",
+        "{0x16fafdc,PIN_mod_heading_geometry_site,sizeof(PIN_mod_heading_geometry_site)},",
+        "{0x193b304,PIN_mod_call_193b304,sizeof(PIN_mod_call_193b304)},",
+        "{0xb0d8f8,PIN_mod_call_b0d8f8,sizeof(PIN_mod_call_b0d8f8)},",
+        "{0x1257490,PIN_mod_call_1257490,sizeof(PIN_mod_call_1257490)},",
+        "{0x13d91cc,PIN_mod_call_13d91cc,sizeof(PIN_mod_call_13d91cc)},",
+        "{0x95af50,PIN_mod_call_95af50,sizeof(PIN_mod_call_95af50)},",
+        "{0x1a6d9c0,PIN_mod_call_1a6d9c0,sizeof(PIN_mod_call_1a6d9c0)},",
+        "{0x1a6d9e0,PIN_mod_call_1a6d9e0,sizeof(PIN_mod_call_1a6d9e0)},",
+        "{0x1a6da50,PIN_mod_call_1a6da50,sizeof(PIN_mod_call_1a6da50)},",
+        "{0x1a6dba0,PIN_mod_call_1a6dba0,sizeof(PIN_mod_call_1a6dba0)},",
+        "{0xa4227c,PIN_director_getter,sizeof(PIN_director_getter)},",
+        "{0xe181d0,PIN_native_render,sizeof(PIN_native_render)},",
+        "{0xd0dc14,PIN_running_scene_switch,sizeof(PIN_running_scene_switch)},",
+        "{0x1a1319c,PIN_scene_render_forward,sizeof(PIN_scene_render_forward)},",
+        "{0x1887150,PIN_gamescene_modifier_field,sizeof(PIN_gamescene_modifier_field)},",
+        "{0x18871c0,PIN_gamescene_song_id_copy,sizeof(PIN_gamescene_song_id_copy)},",
+        "{0x1887128,PIN_gamescene_factory_prologue,sizeof(PIN_gamescene_factory_prologue)},",
+        "{0xe2f0b8,PIN_gamescene_class_loader,sizeof(PIN_gamescene_class_loader)},",
+        "{0xe4e594,PIN_gamescene_class_ctor,sizeof(PIN_gamescene_class_ctor)},",
+        "{0x18875f4,PIN_testify_partner_seal,sizeof(PIN_testify_partner_seal)},",
+        "{0x1887160,PIN_suppression_branch,sizeof(PIN_suppression_branch)},",
+        "{0xee1c1c,PIN_testify_intro_gate,sizeof(PIN_testify_intro_gate)},",
+        "{0x782f20,PIN_testify_intro_cave,sizeof(PIN_testify_intro_cave)},",
+        "{0x782f40,PIN_testify_replay_factory_cave,sizeof(PIN_testify_replay_factory_cave)},",
+        "{0x11e1d4c,PIN_testify_challenge_creator,sizeof(PIN_testify_challenge_creator)},",
+        "{0x18a6b8c,PIN_userdefault_get_instance,sizeof(PIN_userdefault_get_instance)},",
+        "{0x8ae440,PIN_userdefault_get_bool,sizeof(PIN_userdefault_get_bool)},",
+        "{0x17ed498,PIN_userdefault_set_bool,sizeof(PIN_userdefault_set_bool)},",
+        "{0x110,PIN_toggle_operation_0,sizeof(PIN_toggle_operation_0)},",
+        "{0x9acc8,PIN_toggle_operation_1,sizeof(PIN_toggle_operation_1)},",
+        "{0x161c28,PIN_toggle_operation_2,sizeof(PIN_toggle_operation_2)},",
+        "{0x5488ad,PIN_toggle_operation_3,sizeof(PIN_toggle_operation_3)},",
+        "{0x56ff87,PIN_toggle_operation_4,sizeof(PIN_toggle_operation_4)},",
+        "{0x782f20,PIN_toggle_operation_5,sizeof(PIN_toggle_operation_5)},",
+        "{0xb8d284,PIN_toggle_operation_6,sizeof(PIN_toggle_operation_6)},",
+        "{0x18871bc,PIN_toggle_operation_7,sizeof(PIN_toggle_operation_7)},",
+        "{0x18875f4,PIN_toggle_operation_8,sizeof(PIN_toggle_operation_8)},",
+        "{0x110,PIN_official_operation_0,sizeof(PIN_official_operation_0)},",
+        "{0x782b30,PIN_official_operation_1,sizeof(PIN_official_operation_1)},",
+        "{0x782c2c,PIN_official_operation_2,sizeof(PIN_official_operation_2)},",
+        "{0x782e40,PIN_official_operation_3,sizeof(PIN_official_operation_3)},",
+        "{0x782f20,PIN_official_operation_4,sizeof(PIN_official_operation_4)},",
+        "{0xc27f0c,PIN_official_operation_5,sizeof(PIN_official_operation_5)},",
+        "{0xe2eae8,PIN_official_operation_6,sizeof(PIN_official_operation_6)},",
+        "{0xee1c1c,PIN_official_operation_7,sizeof(PIN_official_operation_7)},",
+        "{0x101da98,PIN_official_operation_8,sizeof(PIN_official_operation_8)},",
+        "{0x12d524c,PIN_official_operation_9,sizeof(PIN_official_operation_9)},",
+        "{0x13b7f44,PIN_official_operation_10,sizeof(PIN_official_operation_10)},",
+        "{0x16afa94,PIN_official_operation_11,sizeof(PIN_official_operation_11)},",
+        "{0x16afaa0,PIN_official_operation_12,sizeof(PIN_official_operation_12)},",
+        "{0x1716d74,PIN_official_operation_13,sizeof(PIN_official_operation_13)},",
+        "{0x1716d80,PIN_official_operation_14,sizeof(PIN_official_operation_14)},",
+        "{0x1716ec0,PIN_official_operation_15,sizeof(PIN_official_operation_15)},",
+        "{0x17efb70,PIN_official_operation_16,sizeof(PIN_official_operation_16)},",
+        "{0x17efb7c,PIN_official_operation_17,sizeof(PIN_official_operation_17)},",
+        "{0x18662fc,PIN_official_operation_18,sizeof(PIN_official_operation_18)},",
+        "{0x1866328,PIN_official_operation_19,sizeof(PIN_official_operation_19)},",
+        "{0x18be46c,PIN_official_operation_20,sizeof(PIN_official_operation_20)},",
+        "{0x79b000,PIN_official_call_79b000,sizeof(PIN_official_call_79b000)},",
+        "{0x7bf690,PIN_official_call_7bf690,sizeof(PIN_official_call_7bf690)},",
+        "{0x7f3028,PIN_official_call_7f3028,sizeof(PIN_official_call_7f3028)},",
+        "{0x819afc,PIN_official_call_819afc,sizeof(PIN_official_call_819afc)},",
+        "{0x83520c,PIN_official_call_83520c,sizeof(PIN_official_call_83520c)},",
+        "{0x88b42c,PIN_official_call_88b42c,sizeof(PIN_official_call_88b42c)},",
+        "{0x8dd9c4,PIN_official_call_8dd9c4,sizeof(PIN_official_call_8dd9c4)},",
+        "{0x8e6fd8,PIN_official_call_8e6fd8,sizeof(PIN_official_call_8e6fd8)},",
+        "{0x95c0e4,PIN_official_call_95c0e4,sizeof(PIN_official_call_95c0e4)},",
+        "{0x961e14,PIN_official_call_961e14,sizeof(PIN_official_call_961e14)},",
+        "{0x968c44,PIN_official_call_968c44,sizeof(PIN_official_call_968c44)},",
+        "{0x9895b8,PIN_official_call_9895b8,sizeof(PIN_official_call_9895b8)},",
+        "{0x98b33c,PIN_official_call_98b33c,sizeof(PIN_official_call_98b33c)},",
+        "{0x98c314,PIN_official_call_98c314,sizeof(PIN_official_call_98c314)},",
+        "{0xa11370,PIN_official_call_a11370,sizeof(PIN_official_call_a11370)},",
+        "{0xa8db9c,PIN_official_call_a8db9c,sizeof(PIN_official_call_a8db9c)},",
+        "{0xaacbfc,PIN_official_call_aacbfc,sizeof(PIN_official_call_aacbfc)},",
+        "{0xab0000,PIN_official_call_ab0000,sizeof(PIN_official_call_ab0000)},",
+        "{0xaf8694,PIN_official_call_af8694,sizeof(PIN_official_call_af8694)},",
+        "{0xafe9f0,PIN_official_call_afe9f0,sizeof(PIN_official_call_afe9f0)},",
+        "{0xb3620c,PIN_official_call_b3620c,sizeof(PIN_official_call_b3620c)},",
+        "{0xb8a498,PIN_official_call_b8a498,sizeof(PIN_official_call_b8a498)},",
+        "{0xb9e0d0,PIN_official_call_b9e0d0,sizeof(PIN_official_call_b9e0d0)},",
+        "{0xc29e9c,PIN_official_call_c29e9c,sizeof(PIN_official_call_c29e9c)},",
+        "{0xc39a34,PIN_official_call_c39a34,sizeof(PIN_official_call_c39a34)},",
+        "{0xc71958,PIN_official_call_c71958,sizeof(PIN_official_call_c71958)},",
+        "{0xc7bb48,PIN_official_call_c7bb48,sizeof(PIN_official_call_c7bb48)},",
+        "{0xca5aec,PIN_official_call_ca5aec,sizeof(PIN_official_call_ca5aec)},",
+        "{0xcacca4,PIN_official_call_cacca4,sizeof(PIN_official_call_cacca4)},",
+        "{0xcaeda8,PIN_official_call_caeda8,sizeof(PIN_official_call_caeda8)},",
+        "{0xcf737c,PIN_official_call_cf737c,sizeof(PIN_official_call_cf737c)},",
+        "{0xd411d4,PIN_official_call_d411d4,sizeof(PIN_official_call_d411d4)},",
+        "{0xd4c178,PIN_official_call_d4c178,sizeof(PIN_official_call_d4c178)},",
+        "{0xd6476c,PIN_official_call_d6476c,sizeof(PIN_official_call_d6476c)},",
+        "{0xd6dc98,PIN_official_call_d6dc98,sizeof(PIN_official_call_d6dc98)},",
+        "{0xda9b80,PIN_official_call_da9b80,sizeof(PIN_official_call_da9b80)},",
+        "{0xe1a8ac,PIN_official_call_e1a8ac,sizeof(PIN_official_call_e1a8ac)},",
+        "{0xe65708,PIN_official_call_e65708,sizeof(PIN_official_call_e65708)},",
+        "{0xea4644,PIN_official_call_ea4644,sizeof(PIN_official_call_ea4644)},",
+        "{0xfa0220,PIN_official_call_fa0220,sizeof(PIN_official_call_fa0220)},",
+        "{0xfa4320,PIN_official_call_fa4320,sizeof(PIN_official_call_fa4320)},",
+        "{0xfb5af4,PIN_official_call_fb5af4,sizeof(PIN_official_call_fb5af4)},",
+        "{0xfb6550,PIN_official_call_fb6550,sizeof(PIN_official_call_fb6550)},",
+        "{0xff8960,PIN_official_call_ff8960,sizeof(PIN_official_call_ff8960)},",
+        "{0x1007888,PIN_official_call_1007888,sizeof(PIN_official_call_1007888)},",
+        "{0x101da2c,PIN_official_call_101da2c,sizeof(PIN_official_call_101da2c)},",
+        "{0x10a6b94,PIN_official_call_10a6b94,sizeof(PIN_official_call_10a6b94)},",
+        "{0x10ac6e8,PIN_official_call_10ac6e8,sizeof(PIN_official_call_10ac6e8)},",
+        "{0x10e5124,PIN_official_call_10e5124,sizeof(PIN_official_call_10e5124)},",
+        "{0x10f58a0,PIN_official_call_10f58a0,sizeof(PIN_official_call_10f58a0)},",
+        "{0x1135ab8,PIN_official_call_1135ab8,sizeof(PIN_official_call_1135ab8)},",
+        "{0x113b944,PIN_official_call_113b944,sizeof(PIN_official_call_113b944)},",
+        "{0x11e1d4c,PIN_official_call_11e1d4c,sizeof(PIN_official_call_11e1d4c)},",
+        "{0x1207f70,PIN_official_call_1207f70,sizeof(PIN_official_call_1207f70)},",
+        "{0x1247a84,PIN_official_call_1247a84,sizeof(PIN_official_call_1247a84)},",
+        "{0x128e1b8,PIN_official_call_128e1b8,sizeof(PIN_official_call_128e1b8)},",
+        "{0x12c9038,PIN_official_call_12c9038,sizeof(PIN_official_call_12c9038)},",
+        "{0x12d50e0,PIN_official_call_12d50e0,sizeof(PIN_official_call_12d50e0)},",
+        "{0x12fd3a4,PIN_official_call_12fd3a4,sizeof(PIN_official_call_12fd3a4)},",
+        "{0x131419c,PIN_official_call_131419c,sizeof(PIN_official_call_131419c)},",
+        "{0x133503c,PIN_official_call_133503c,sizeof(PIN_official_call_133503c)},",
+        "{0x133d938,PIN_official_call_133d938,sizeof(PIN_official_call_133d938)},",
+        "{0x13b7dd4,PIN_official_call_13b7dd4,sizeof(PIN_official_call_13b7dd4)},",
+        "{0x13fe014,PIN_official_call_13fe014,sizeof(PIN_official_call_13fe014)},",
+        "{0x1460b84,PIN_official_call_1460b84,sizeof(PIN_official_call_1460b84)},",
+        "{0x147fe48,PIN_official_call_147fe48,sizeof(PIN_official_call_147fe48)},",
+        "{0x1480774,PIN_official_call_1480774,sizeof(PIN_official_call_1480774)},",
+        "{0x148f630,PIN_official_call_148f630,sizeof(PIN_official_call_148f630)},",
+        "{0x14e56fc,PIN_official_call_14e56fc,sizeof(PIN_official_call_14e56fc)},",
+        "{0x1508dac,PIN_official_call_1508dac,sizeof(PIN_official_call_1508dac)},",
+        "{0x150a148,PIN_official_call_150a148,sizeof(PIN_official_call_150a148)},",
+        "{0x150fd18,PIN_official_call_150fd18,sizeof(PIN_official_call_150fd18)},",
+        "{0x1557b34,PIN_official_call_1557b34,sizeof(PIN_official_call_1557b34)},",
+        "{0x15b9414,PIN_official_call_15b9414,sizeof(PIN_official_call_15b9414)},",
+        "{0x160c7f0,PIN_official_call_160c7f0,sizeof(PIN_official_call_160c7f0)},",
+        "{0x16afa94,PIN_official_call_16afa94,sizeof(PIN_official_call_16afa94)},",
+        "{0x16afaa0,PIN_official_call_16afaa0,sizeof(PIN_official_call_16afaa0)},",
+        "{0x16bdad8,PIN_official_call_16bdad8,sizeof(PIN_official_call_16bdad8)},",
+        "{0x16ce69c,PIN_official_call_16ce69c,sizeof(PIN_official_call_16ce69c)},",
+        "{0x1716d68,PIN_official_call_1716d68,sizeof(PIN_official_call_1716d68)},",
+        "{0x1716d74,PIN_official_call_1716d74,sizeof(PIN_official_call_1716d74)},",
+        "{0x1716d80,PIN_official_call_1716d80,sizeof(PIN_official_call_1716d80)},",
+        "{0x1716ec0,PIN_official_call_1716ec0,sizeof(PIN_official_call_1716ec0)},",
+        "{0x1716ec8,PIN_official_call_1716ec8,sizeof(PIN_official_call_1716ec8)},",
+        "{0x1716ecc,PIN_official_call_1716ecc,sizeof(PIN_official_call_1716ecc)},",
+        "{0x17c4c18,PIN_official_call_17c4c18,sizeof(PIN_official_call_17c4c18)},",
+        "{0x17e79e0,PIN_official_call_17e79e0,sizeof(PIN_official_call_17e79e0)},",
+        "{0x17efb70,PIN_official_call_17efb70,sizeof(PIN_official_call_17efb70)},",
+        "{0x17efb7c,PIN_official_call_17efb7c,sizeof(PIN_official_call_17efb7c)},",
+        "{0x1819588,PIN_official_call_1819588,sizeof(PIN_official_call_1819588)},",
+        "{0x1823f40,PIN_official_call_1823f40,sizeof(PIN_official_call_1823f40)},",
+        "{0x1856110,PIN_official_call_1856110,sizeof(PIN_official_call_1856110)},",
+        "{0x187cc48,PIN_official_call_187cc48,sizeof(PIN_official_call_187cc48)},",
+        "{0x1887128,PIN_official_call_1887128,sizeof(PIN_official_call_1887128)},",
+        "{0x1899aa4,PIN_official_call_1899aa4,sizeof(PIN_official_call_1899aa4)},",
+        "{0x189f500,PIN_official_call_189f500,sizeof(PIN_official_call_189f500)},",
+        "{0x18af9f4,PIN_official_call_18af9f4,sizeof(PIN_official_call_18af9f4)},",
+        "{0x190742c,PIN_official_call_190742c,sizeof(PIN_official_call_190742c)},",
+        "{0x1929dc0,PIN_official_call_1929dc0,sizeof(PIN_official_call_1929dc0)},",
+        "{0x196e03c,PIN_official_call_196e03c,sizeof(PIN_official_call_196e03c)},",
+        "{0x1976684,PIN_official_call_1976684,sizeof(PIN_official_call_1976684)},",
+        "{0x19f9bb8,PIN_official_call_19f9bb8,sizeof(PIN_official_call_19f9bb8)},",
+        "{0x1a11ab4,PIN_official_call_1a11ab4,sizeof(PIN_official_call_1a11ab4)},",
+        "{0x1a6d9c0,PIN_official_call_1a6d9c0,sizeof(PIN_official_call_1a6d9c0)},",
+        "};",
+        "inline constexpr unsigned char PIN_ui_text_3[] = {@@PIN_ui_text_3@@};",
+        "inline constexpr unsigned char PIN_ui_text_4[] = {@@PIN_ui_text_4@@};",
+        "inline constexpr InstructionPin DATA_PINS[] = {",
+        "{0x5488ad,PIN_ui_text_3,sizeof(PIN_ui_text_3)},",
+        "{0x56ff87,PIN_ui_text_4,sizeof(PIN_ui_text_4)},",
+        "};",
+        "struct RelocatedPointerPin { Address address; Address expected; };",
+        "inline constexpr RelocatedPointerPin RELOCATED_PINS[] = {",
+        "{0x1b142d8,0x7e5654},",
+        "{0x1a88fe8,0x782f90},",
+        "{0x1add8a0,0x782f78},",
+        "};",
+        "}"
+      ],
+      "pins": [
+        {
+          "symbol": "EXPECTED_BUILD_ID",
+          "bytes": 20,
+          "sha256": "f55820ba80bff210988567e6bb7b07db682598262a39433f07ac2082165d901f",
+          "file_offset": 736
+        },
+        {
+          "symbol": "PIN_director_getter",
+          "bytes": 88,
+          "sha256": "127ef7ab62c8041213a130578de7229f5aa8f386caf0d69eaab1dc8b46d720a4",
+          "address": "0xa4227c"
+        },
+        {
+          "symbol": "PIN_native_render",
+          "bytes": 48,
+          "sha256": "25a21fa5de0871ccaa12b5ea38cd50f1f239990e2cfbc0835175363bcb9188ea",
+          "address": "0xe181d0"
+        },
+        {
+          "symbol": "PIN_running_scene_switch",
+          "bytes": 32,
+          "sha256": "11ce306fede458f5613d0e385be8317003528dea06467bcd8468f04319cfc9a4",
+          "address": "0xd0dc14"
+        },
+        {
+          "symbol": "PIN_scene_render_forward",
+          "bytes": 36,
+          "sha256": "422995cd2c3e1e4783bf5c197bbf4a738c9ffc9a9eedc00f33b7204d2c03895f",
+          "address": "0x1a1319c"
+        },
+        {
+          "symbol": "PIN_gamescene_modifier_field",
+          "bytes": 28,
+          "sha256": "243ed9bb5dacf20ad7f241db4b4259188f5626c4994ca1242043a4ac949b7773",
+          "address": "0x1887150"
+        },
+        {
+          "symbol": "PIN_gamescene_song_id_copy",
+          "bytes": 32,
+          "sha256": "678ae8a930446a923733698fa67b32f2030b7f3a096b30d6ecedb9844bb84cbe",
+          "address": "0x18871c0"
+        },
+        {
+          "symbol": "PIN_gamescene_factory_prologue",
+          "bytes": 28,
+          "sha256": "52243d3a0d1535025aa9f65ff58d7ef43b32b18791770d3e3c728593860d343f",
+          "address": "0x1887128"
+        },
+        {
+          "symbol": "PIN_gamescene_class_loader",
+          "bytes": 40,
+          "sha256": "f83d0bb4dbc16bd7a841636600d6895012eb527e0de5f409bc5bb2074f6095dd",
+          "address": "0xe2f0b8"
+        },
+        {
+          "symbol": "PIN_gamescene_class_ctor",
+          "bytes": 4,
+          "sha256": "0d3bbd19c357a75f00447d45eed6984aeca67cd35747671d8dec019a6c8eac38",
+          "address": "0xe4e594"
+        },
+        {
+          "symbol": "PIN_testify_partner_seal",
+          "bytes": 36,
+          "sha256": "154c3ebd8323fa1988ac545f164f607baf70000a6605eb93a10c0781755c53e7",
+          "address": "0x18875f4"
+        },
+        {
+          "symbol": "PIN_suppression_branch",
+          "bytes": 32,
+          "sha256": "71388a95a80e4cc4aa2228f6c020be2b415f43640456a6f8cfdaf03b582df44c",
+          "address": "0x1887160"
+        },
+        {
+          "symbol": "PIN_testify_intro_gate",
+          "bytes": 4,
+          "sha256": "91aad8677d3e2e411b1de1220231e7379a1f5342a9bdeaa4b79f2d83e0ee19bf",
+          "address": "0xee1c1c"
+        },
+        {
+          "symbol": "PIN_testify_intro_cave",
+          "bytes": 32,
+          "sha256": "85eeefcbbf25d8e37cff88990b8f9611f5542e6a708a0bda7eebc0396a7db160",
+          "address": "0x782f20"
+        },
+        {
+          "symbol": "PIN_testify_replay_factory_cave",
+          "bytes": 28,
+          "sha256": "4f9aae61ffa6c6451bc42a3d035022154203761858065b8b0bccb94068c3be29",
+          "address": "0x782f40"
+        },
+        {
+          "symbol": "PIN_testify_challenge_creator",
+          "bytes": 136,
+          "sha256": "428c95700c2c5a66472322eb7bfe2573be5826a7368f35db65a067cd606304ac",
+          "address": "0x11e1d4c"
+        },
+        {
+          "symbol": "PIN_userdefault_get_instance",
+          "bytes": 152,
+          "sha256": "7e0b52ed96366007698575e698429aa60ba61c756db9bbd450360e8d9330fbb1",
+          "address": "0x18a6b8c"
+        },
+        {
+          "symbol": "PIN_userdefault_get_bool",
+          "bytes": 548,
+          "sha256": "a483de3cd41eebd5f14490e605f85cc4e053851abb46fca2b4e83d1287283e74",
+          "address": "0x8ae440"
+        },
+        {
+          "symbol": "PIN_userdefault_set_bool",
+          "bytes": 340,
+          "sha256": "408219c758988d2d500ac982f9ecc1eea4c9945458371aedff923f089ee10ee1",
+          "address": "0x17ed498"
+        },
+        {
+          "symbol": "PIN_toggle_operation_0",
+          "bytes": 8,
+          "sha256": "31c421df2c5d1e62db90332f2a843263ed46460990b095f09d4a595b24f03149",
+          "address": "0x110"
+        },
+        {
+          "symbol": "PIN_toggle_operation_1",
+          "bytes": 8,
+          "sha256": "c006f05062348354c21c97f3aece1e9d51e23b60c701676293663da99d0acf9d",
+          "address": "0x9acc8"
+        },
+        {
+          "symbol": "PIN_toggle_operation_2",
+          "bytes": 8,
+          "sha256": "2ff4bdd536dbd523e2d736fa38b9ed2e16e80db870cd5dbf3be2c913f116ff26",
+          "address": "0x161c28"
+        },
+        {
+          "symbol": "PIN_toggle_operation_3",
+          "bytes": 48,
+          "sha256": "bfb28eef4fe162d6d3a92f9ddb5146709566d1eff4504a64537e70ac671b4ec0",
+          "address": "0x5488ad"
+        },
+        {
+          "symbol": "PIN_toggle_operation_4",
+          "bytes": 20,
+          "sha256": "3f7fe02cca87645e17e4c34b96a8eb86c9413ff25a239d7d2bb309475b1bdc16",
+          "address": "0x56ff87"
+        },
+        {
+          "symbol": "PIN_toggle_operation_5",
+          "bytes": 224,
+          "sha256": "80e0a91c55b62c38096b7fb25ad9513d9b570426ced3f11ee3e1c86dadd6eaef",
+          "address": "0x782f20"
+        },
+        {
+          "symbol": "PIN_toggle_operation_6",
+          "bytes": 4,
+          "sha256": "d9d0ef4ab4751094b71c55b6991f36ad1ac5437a4f3be46d82d552737ac4f0b5",
+          "address": "0xb8d284"
+        },
+        {
+          "symbol": "PIN_toggle_operation_7",
+          "bytes": 4,
+          "sha256": "19fe34b80a9040f5c078569676efdf170b0992d73110b6cc9b0510e7d083fc33",
+          "address": "0x18871bc"
+        },
+        {
+          "symbol": "PIN_toggle_operation_8",
+          "bytes": 4,
+          "sha256": "6c699ddfe224fff373cd65e4be609f99a75f8e998728fa9e519b2302b89fe611",
+          "address": "0x18875f4"
+        },
+        {
+          "symbol": "PIN_official_operation_0",
+          "bytes": 8,
+          "sha256": "31c421df2c5d1e62db90332f2a843263ed46460990b095f09d4a595b24f03149",
+          "address": "0x110"
+        },
+        {
+          "symbol": "PIN_official_operation_1",
+          "bytes": 184,
+          "sha256": "a9c538ba6cb6171223b975b99045869de21a8eb4be09b6307cbe465b60d5e592",
+          "address": "0x782b30"
+        },
+        {
+          "symbol": "PIN_official_operation_2",
+          "bytes": 204,
+          "sha256": "0e1dca6d25681fabbef8925a53a1d06e1d15c1500c328f9b4f84175ff4f1cdc4",
+          "address": "0x782c2c"
+        },
+        {
+          "symbol": "PIN_official_operation_3",
+          "bytes": 152,
+          "sha256": "1b1059812317e588797562a33a653043ba470cbcf40eacfce369f23340477676",
+          "address": "0x782e40"
+        },
+        {
+          "symbol": "PIN_official_operation_4",
+          "bytes": 8,
+          "sha256": "7dc119d102f1ad44bffc174179ab038c580bbe0b7aa03b1297df0e650229e9af",
+          "address": "0x782f20"
+        },
+        {
+          "symbol": "PIN_official_operation_5",
+          "bytes": 4,
+          "sha256": "721c7d5d67c1276b65984e5f575274c42a96fafaf7eeb5009c83055406f926e6",
+          "address": "0xc27f0c"
+        },
+        {
+          "symbol": "PIN_official_operation_6",
+          "bytes": 4,
+          "sha256": "3d613eb5209624e0b73b0c59ee5b908b00954d6183cec99b2c52b4f98a54abde",
+          "address": "0xe2eae8"
+        },
+        {
+          "symbol": "PIN_official_operation_7",
+          "bytes": 4,
+          "sha256": "91aad8677d3e2e411b1de1220231e7379a1f5342a9bdeaa4b79f2d83e0ee19bf",
+          "address": "0xee1c1c"
+        },
+        {
+          "symbol": "PIN_official_operation_8",
+          "bytes": 4,
+          "sha256": "a6a28126be401cfdd89850e04aec84d719491a0e246ce8ea01c3deda39fd0112",
+          "address": "0x101da98"
+        },
+        {
+          "symbol": "PIN_official_operation_9",
+          "bytes": 4,
+          "sha256": "76f73edc29470e294a3378b1324e0ff94dd4a795c79f20aee312014f01200800",
+          "address": "0x12d524c"
+        },
+        {
+          "symbol": "PIN_official_operation_10",
+          "bytes": 4,
+          "sha256": "2f95dfeb695b73f2fc32dc7f0e844dcbaf01c7aee2759cd0c82a63c981a68ccf",
+          "address": "0x13b7f44"
+        },
+        {
+          "symbol": "PIN_official_operation_11",
+          "bytes": 4,
+          "sha256": "e87159066318b055d5f90cd63381938bc60b236e259582af5ef935a1871b8e18",
+          "address": "0x16afa94"
+        },
+        {
+          "symbol": "PIN_official_operation_12",
+          "bytes": 4,
+          "sha256": "be6419088bbfbcb674cd44496200d6d6dea94af738a2203780c6af403f3b6acf",
+          "address": "0x16afaa0"
+        },
+        {
+          "symbol": "PIN_official_operation_13",
+          "bytes": 4,
+          "sha256": "7b2218091207fb1ceeb9a700589c48ca64f67040440800c58f7767b274b7b485",
+          "address": "0x1716d74"
+        },
+        {
+          "symbol": "PIN_official_operation_14",
+          "bytes": 4,
+          "sha256": "a902d765e5a9f2cacc9c33b5d7164b9666148b8bad87745aa4eb69da7a4acd5e",
+          "address": "0x1716d80"
+        },
+        {
+          "symbol": "PIN_official_operation_15",
+          "bytes": 4,
+          "sha256": "f8de17451272edc598a1b7a5ab33d937d7bb0671355d0044462b493352829875",
+          "address": "0x1716ec0"
+        },
+        {
+          "symbol": "PIN_official_operation_16",
+          "bytes": 4,
+          "sha256": "38ba076b7ab205ae60493db2882b49352fab41816399aef428e8567754c079bc",
+          "address": "0x17efb70"
+        },
+        {
+          "symbol": "PIN_official_operation_17",
+          "bytes": 4,
+          "sha256": "97416d1fee90032858b076bbf6531758a1b67b7152422fc9f4b0a1543a888772",
+          "address": "0x17efb7c"
+        },
+        {
+          "symbol": "PIN_official_operation_18",
+          "bytes": 4,
+          "sha256": "bfc5644fed0be09c48d52e1ae3346a16793302ab706a5b13507672fca39c2be0",
+          "address": "0x18662fc"
+        },
+        {
+          "symbol": "PIN_official_operation_19",
+          "bytes": 4,
+          "sha256": "e160df2d20a1c85d3181e4e72708f10e6c7fab9ca8228ebf0cda936a63137d9d",
+          "address": "0x1866328"
+        },
+        {
+          "symbol": "PIN_official_operation_20",
+          "bytes": 4,
+          "sha256": "98caead46ecb587bc449e0e873b3f114e0b7a568918befd2357375a3e5865c2b",
+          "address": "0x18be46c"
+        },
+        {
+          "symbol": "PIN_official_call_79b000",
+          "bytes": 28,
+          "sha256": "8fabfe6158ecd807ade658b6be26dae683642f2f9ac5899964f4b8e195d5b0e5",
+          "address": "0x79b000"
+        },
+        {
+          "symbol": "PIN_official_call_7bf690",
+          "bytes": 64,
+          "sha256": "e6b8ae5b06c663aabd84aa2a68abf40755a40c403668b7d3ffd69a1ac8c863ff",
+          "address": "0x7bf690"
+        },
+        {
+          "symbol": "PIN_official_call_7f3028",
+          "bytes": 4,
+          "sha256": "110f46b5b35c069160560c6ad6786f647dd44e8760a52a46fc22dbbcd7630b91",
+          "address": "0x7f3028"
+        },
+        {
+          "symbol": "PIN_official_call_819afc",
+          "bytes": 64,
+          "sha256": "c2eb2806beb58685a54cb1c6bcf9b13267e1d77c1b0344e7b11d11af435c56d5",
+          "address": "0x819afc"
+        },
+        {
+          "symbol": "PIN_official_call_83520c",
+          "bytes": 64,
+          "sha256": "9c91cce058a3e5e9f3fe16abeb78f1d8e970b56588de479ee48fceb6f3dfcc28",
+          "address": "0x83520c"
+        },
+        {
+          "symbol": "PIN_official_call_88b42c",
+          "bytes": 64,
+          "sha256": "128e5fa5044255238dc402f008938d8234f23dcfc11aacfbe24cf0df4780c399",
+          "address": "0x88b42c"
+        },
+        {
+          "symbol": "PIN_official_call_8dd9c4",
+          "bytes": 64,
+          "sha256": "821daae9b8b42bf1b826997767ed1d493ca9d206d638fa28eeb22e6bc7ad1faf",
+          "address": "0x8dd9c4"
+        },
+        {
+          "symbol": "PIN_official_call_8e6fd8",
+          "bytes": 64,
+          "sha256": "d9b09a042ab0375127882ebaf5237ccc6bf2bd15386688783755ce2b0e6350b1",
+          "address": "0x8e6fd8"
+        },
+        {
+          "symbol": "PIN_official_call_95c0e4",
+          "bytes": 64,
+          "sha256": "a21a9d7bb6d22de33a756fc9701a9135d988795c9a45ad4cd694be7406c123b9",
+          "address": "0x95c0e4"
+        },
+        {
+          "symbol": "PIN_official_call_961e14",
+          "bytes": 64,
+          "sha256": "0b447b8f9357f567f3371799774912df5423d68ed1690301fd6efa4e06eed945",
+          "address": "0x961e14"
+        },
+        {
+          "symbol": "PIN_official_call_968c44",
+          "bytes": 64,
+          "sha256": "ee1f6ce15da5be89d52a27cb44881d52b86857120fb37931d4ef1fab9defc780",
+          "address": "0x968c44"
+        },
+        {
+          "symbol": "PIN_official_call_9895b8",
+          "bytes": 64,
+          "sha256": "009508b21b76fb9a754d10fb55d73f187cc96d4cede8ef2fe1d0f3f9480c9005",
+          "address": "0x9895b8"
+        },
+        {
+          "symbol": "PIN_official_call_98b33c",
+          "bytes": 8,
+          "sha256": "6e2a485ba377af0a34e67b35cdcfa7a444e27f3dfc4342d1b3d7e7db46415fec",
+          "address": "0x98b33c"
+        },
+        {
+          "symbol": "PIN_official_call_98c314",
+          "bytes": 64,
+          "sha256": "c02ea2dca91206013693c52467f42de77a322f45211ecf17f82b6329ad2f2198",
+          "address": "0x98c314"
+        },
+        {
+          "symbol": "PIN_official_call_a11370",
+          "bytes": 64,
+          "sha256": "d7d7a6726114d7026c1e139b864f29c2d157f0285a13296e683eb49f52a97afb",
+          "address": "0xa11370"
+        },
+        {
+          "symbol": "PIN_official_call_a8db9c",
+          "bytes": 64,
+          "sha256": "cbb19d651ad7773c3c31c0da381f498ac2048cc45c8b73ae2d74b4d9427c413e",
+          "address": "0xa8db9c"
+        },
+        {
+          "symbol": "PIN_official_call_aacbfc",
+          "bytes": 64,
+          "sha256": "3c4c81a845bd41cba8dc5b2a455af084a7cf7cb50df441deb25775f151055578",
+          "address": "0xaacbfc"
+        },
+        {
+          "symbol": "PIN_official_call_ab0000",
+          "bytes": 64,
+          "sha256": "ed2c7ba069a6c6ca6b5ce72421862d09ff19252f91f0c423fa662bb920b3fe8b",
+          "address": "0xab0000"
+        },
+        {
+          "symbol": "PIN_official_call_af8694",
+          "bytes": 64,
+          "sha256": "82f74acd8720936fc1b058f4c0837c8a58a0b1c280f5878e45e2c0f840582ec6",
+          "address": "0xaf8694"
+        },
+        {
+          "symbol": "PIN_official_call_afe9f0",
+          "bytes": 52,
+          "sha256": "d3ed8d1d44140889d91f795c4f4c04ba1a37217e003ff42a81c74e5ceeda06bd",
+          "address": "0xafe9f0"
+        },
+        {
+          "symbol": "PIN_official_call_b3620c",
+          "bytes": 64,
+          "sha256": "a0e2aadd9212d6b9d652f34644ab91b73ce980d2690e2edd05402a61f9716057",
+          "address": "0xb3620c"
+        },
+        {
+          "symbol": "PIN_official_call_b8a498",
+          "bytes": 64,
+          "sha256": "dbd7e4d7a2228bcbd528f6f62c417f02a13167a42f949e8bf6447b9d8bd9087f",
+          "address": "0xb8a498"
+        },
+        {
+          "symbol": "PIN_official_call_b9e0d0",
+          "bytes": 64,
+          "sha256": "b0e9167fa7d9715a0807475fe6efbdc4862dbd51099913f364adfd83abd7490d",
+          "address": "0xb9e0d0"
+        },
+        {
+          "symbol": "PIN_official_call_c29e9c",
+          "bytes": 64,
+          "sha256": "25d229f525ffad8f23d592afb92eeb5b289fa48d7fc87a56e25cca1f6eee39fe",
+          "address": "0xc29e9c"
+        },
+        {
+          "symbol": "PIN_official_call_c39a34",
+          "bytes": 64,
+          "sha256": "7ce40a36af6f7f759b93ed36cc3f61ccefd972247f5641f9690080d55261d78c",
+          "address": "0xc39a34"
+        },
+        {
+          "symbol": "PIN_official_call_c71958",
+          "bytes": 64,
+          "sha256": "a19111574546313034ea02f63d7f92966fc11852d019a19cf6eb13fa1badb70c",
+          "address": "0xc71958"
+        },
+        {
+          "symbol": "PIN_official_call_c7bb48",
+          "bytes": 20,
+          "sha256": "f032c1a1cabac5cf8ed42c2f92999a4d18b3c6d19a6e406867258a17c22bb4cf",
+          "address": "0xc7bb48"
+        },
+        {
+          "symbol": "PIN_official_call_ca5aec",
+          "bytes": 64,
+          "sha256": "abba42f12c4d328758d76352a291d1a4024037452f95738d1dc99389fd70081f",
+          "address": "0xca5aec"
+        },
+        {
+          "symbol": "PIN_official_call_cacca4",
+          "bytes": 64,
+          "sha256": "e36af582f73cdac7cc65faace0aa62408338a4f5935c0887bd25375e3670fc6b",
+          "address": "0xcacca4"
+        },
+        {
+          "symbol": "PIN_official_call_caeda8",
+          "bytes": 64,
+          "sha256": "304862c2f4ad2ee8b2f3f4bc1341286c94119679d0ce44ec56937f0cb90f9754",
+          "address": "0xcaeda8"
+        },
+        {
+          "symbol": "PIN_official_call_cf737c",
+          "bytes": 64,
+          "sha256": "f588c22789051aff6cc1d90f9ed45e685077669a030f4be955f3f6570a50d531",
+          "address": "0xcf737c"
+        },
+        {
+          "symbol": "PIN_official_call_d411d4",
+          "bytes": 64,
+          "sha256": "97c259fb3a224db62b689dd77916a238d2826376c43575ecad2f9b722de13acd",
+          "address": "0xd411d4"
+        },
+        {
+          "symbol": "PIN_official_call_d4c178",
+          "bytes": 64,
+          "sha256": "6c955edbc3a076028e42054bbb1e48dfda0a95d1a88382aa3ac86be97587d26d",
+          "address": "0xd4c178"
+        },
+        {
+          "symbol": "PIN_official_call_d6476c",
+          "bytes": 64,
+          "sha256": "23a370cbe15a16980e3dec8b45af4b4b07e9a79fd01c152e7c3669efe11639f5",
+          "address": "0xd6476c"
+        },
+        {
+          "symbol": "PIN_official_call_d6dc98",
+          "bytes": 32,
+          "sha256": "7faf279870d590c454e20bdf37553859468b0cab9bd811d149c524ef47eb05d2",
+          "address": "0xd6dc98"
+        },
+        {
+          "symbol": "PIN_official_call_da9b80",
+          "bytes": 64,
+          "sha256": "d7cdf4a70386b1f9b53e0d5eaf154c4c23f85afa15b6ef4f0b0ff7b101edb9a8",
+          "address": "0xda9b80"
+        },
+        {
+          "symbol": "PIN_official_call_e1a8ac",
+          "bytes": 64,
+          "sha256": "6a64fd5a22c4fe45970f27a59fdabc8473cf0685bf19d594339b9df45fb682eb",
+          "address": "0xe1a8ac"
+        },
+        {
+          "symbol": "PIN_official_call_e65708",
+          "bytes": 44,
+          "sha256": "a32d2fc8145c07bb07b88e30e76b6ffbc5a272dc4e726da839341d0d805a900c",
+          "address": "0xe65708"
+        },
+        {
+          "symbol": "PIN_official_call_ea4644",
+          "bytes": 32,
+          "sha256": "8acb568d692c606660e3a40ccc20b2feeea962d54dcc2738db0dc759ce940d90",
+          "address": "0xea4644"
+        },
+        {
+          "symbol": "PIN_official_call_fa0220",
+          "bytes": 64,
+          "sha256": "2d74ef8e9b02da5712b5fc1ba3b68ea49c3eb8cdaf105bca3598681cbe8b45d1",
+          "address": "0xfa0220"
+        },
+        {
+          "symbol": "PIN_official_call_fa4320",
+          "bytes": 64,
+          "sha256": "cc6ef67da5cc921bfc5617bb02be9603c4348ee8bc3a0adba2147deb0307df12",
+          "address": "0xfa4320"
+        },
+        {
+          "symbol": "PIN_official_call_fb5af4",
+          "bytes": 64,
+          "sha256": "28eb4e22b0e92fb663ad9afbe48d3c4b8dc3c60d4eca2e4e39a5b6a77324f821",
+          "address": "0xfb5af4"
+        },
+        {
+          "symbol": "PIN_official_call_fb6550",
+          "bytes": 64,
+          "sha256": "f54dbb861ffd38d1decbcdcec5107287f65779b30a78dc7813e599b4ce06a878",
+          "address": "0xfb6550"
+        },
+        {
+          "symbol": "PIN_official_call_ff8960",
+          "bytes": 64,
+          "sha256": "3dc996c2e7eb2af0d5488d6b6c3383f97d013f4e360e7ab4fbb650ef9a8708eb",
+          "address": "0xff8960"
+        },
+        {
+          "symbol": "PIN_official_call_1007888",
+          "bytes": 64,
+          "sha256": "3822ecad76d03e37dfaf6750bb032a807e3b752a5348496bafd8aa73ccb62331",
+          "address": "0x1007888"
+        },
+        {
+          "symbol": "PIN_official_call_101da2c",
+          "bytes": 64,
+          "sha256": "7d712f63c89cb76f60081e142dcdc003b84d8bff1683e07a6e7e5a3df50fca32",
+          "address": "0x101da2c"
+        },
+        {
+          "symbol": "PIN_official_call_10a6b94",
+          "bytes": 52,
+          "sha256": "15ead598dd0bd861570cdd7c63f5841e2fe9aea330ac7026a8d09c4f5f19dac8",
+          "address": "0x10a6b94"
+        },
+        {
+          "symbol": "PIN_official_call_10ac6e8",
+          "bytes": 48,
+          "sha256": "c31225cb3518d6fe1feb1117182285ca0672503c23cca26856c045fb3a0cbb72",
+          "address": "0x10ac6e8"
+        },
+        {
+          "symbol": "PIN_official_call_10e5124",
+          "bytes": 64,
+          "sha256": "4af416596c9a66870f786bc669014a9a02a9a85646661d68a8efbfadcac0ed66",
+          "address": "0x10e5124"
+        },
+        {
+          "symbol": "PIN_official_call_10f58a0",
+          "bytes": 64,
+          "sha256": "a78e25c50702d602be6f4d4e13a67cc750298bd4a2827d59e7091b87f9f30d09",
+          "address": "0x10f58a0"
+        },
+        {
+          "symbol": "PIN_official_call_1135ab8",
+          "bytes": 64,
+          "sha256": "2810d958b235315637816f78c37de04fc661f1985b9f5aaa17260b92e1ab1ab1",
+          "address": "0x1135ab8"
+        },
+        {
+          "symbol": "PIN_official_call_113b944",
+          "bytes": 64,
+          "sha256": "4270d91798999d32e6e39944f8d47c1dcfc839e8d350644c398cc4a2073bc22b",
+          "address": "0x113b944"
+        },
+        {
+          "symbol": "PIN_official_call_11e1d4c",
+          "bytes": 64,
+          "sha256": "cfdf8e37a151307075ceef5b6e21a81a974d67ec05e46fbe075c71d092d6eada",
+          "address": "0x11e1d4c"
+        },
+        {
+          "symbol": "PIN_official_call_1207f70",
+          "bytes": 64,
+          "sha256": "932586d45b97dfbf67e6c5f2f36e753442913f5fa74d24e43efd7d4be3e49d79",
+          "address": "0x1207f70"
+        },
+        {
+          "symbol": "PIN_official_call_1247a84",
+          "bytes": 64,
+          "sha256": "cde68b4a4dc040f18f8a78ec5ae9bae5a6b308f86159089e5849a91a3ad0063f",
+          "address": "0x1247a84"
+        },
+        {
+          "symbol": "PIN_official_call_128e1b8",
+          "bytes": 64,
+          "sha256": "e3204e6dc3835d4ef5720c80f1216894da3d59904699d2e8e9244dea1fb19e97",
+          "address": "0x128e1b8"
+        },
+        {
+          "symbol": "PIN_official_call_12c9038",
+          "bytes": 64,
+          "sha256": "e84eb0836e48bc759f3fdce732b2d2c7081a3fe5e5577ac55c342065db0a0da4",
+          "address": "0x12c9038"
+        },
+        {
+          "symbol": "PIN_official_call_12d50e0",
+          "bytes": 64,
+          "sha256": "02ee307c3800bb5562d510ccf3428450bc9285b2ddcb201579d4f2d8c8d7c0a8",
+          "address": "0x12d50e0"
+        },
+        {
+          "symbol": "PIN_official_call_12fd3a4",
+          "bytes": 64,
+          "sha256": "4ef9e0bc74e5449235862b31ce20b21c9972d1d85d7f1c6738d194167676a79a",
+          "address": "0x12fd3a4"
+        },
+        {
+          "symbol": "PIN_official_call_131419c",
+          "bytes": 64,
+          "sha256": "685a7695319ea720f7fe60e5da49bf701c4062d672a79fbc8cd6ddb2c6f15a4c",
+          "address": "0x131419c"
+        },
+        {
+          "symbol": "PIN_official_call_133503c",
+          "bytes": 4,
+          "sha256": "110f46b5b35c069160560c6ad6786f647dd44e8760a52a46fc22dbbcd7630b91",
+          "address": "0x133503c"
+        },
+        {
+          "symbol": "PIN_official_call_133d938",
+          "bytes": 64,
+          "sha256": "0c49ae0ae633be22b955b1e3031c07cd85069f86d0a7f72e57cfd14bf2ca25f0",
+          "address": "0x133d938"
+        },
+        {
+          "symbol": "PIN_official_call_13b7dd4",
+          "bytes": 64,
+          "sha256": "a2e80337352387e3adba38fa2c1907b2e79cf3bfb73527a7fe1be6877fd6549f",
+          "address": "0x13b7dd4"
+        },
+        {
+          "symbol": "PIN_official_call_13fe014",
+          "bytes": 64,
+          "sha256": "d8f6140e40bbda8258f90c81555dc15161cd1d0e87df118a9be5c230ac75b8e8",
+          "address": "0x13fe014"
+        },
+        {
+          "symbol": "PIN_official_call_1460b84",
+          "bytes": 64,
+          "sha256": "007c06a801e2b917c2a85c0570e107c9340fdbd7b7c537582e9a6eb25b05b3b0",
+          "address": "0x1460b84"
+        },
+        {
+          "symbol": "PIN_official_call_147fe48",
+          "bytes": 16,
+          "sha256": "b3289eea1f5fac6110473f382e2659fdcf6854f2468aa0ba467ea25e378a3bd6",
+          "address": "0x147fe48"
+        },
+        {
+          "symbol": "PIN_official_call_1480774",
+          "bytes": 64,
+          "sha256": "f0a268853e1af25013d5e54c51d3880992237004d0b5724f6e3a74580c5217e0",
+          "address": "0x1480774"
+        },
+        {
+          "symbol": "PIN_official_call_148f630",
+          "bytes": 64,
+          "sha256": "75b58cbeb75c8a0a97e9e479f3d673f3bd8d100da2e37a0d8a1735e5a41aa2ba",
+          "address": "0x148f630"
+        },
+        {
+          "symbol": "PIN_official_call_14e56fc",
+          "bytes": 64,
+          "sha256": "bd828c75aea8e523ad0aff1538868de4f35c4b495f54cb4f8724d3734d2e0b2b",
+          "address": "0x14e56fc"
+        },
+        {
+          "symbol": "PIN_official_call_1508dac",
+          "bytes": 64,
+          "sha256": "cb2941ad0a4c76106cefeed47bbd6bbd60aef3ea384ea7e5bd1d7a677942d753",
+          "address": "0x1508dac"
+        },
+        {
+          "symbol": "PIN_official_call_150a148",
+          "bytes": 64,
+          "sha256": "c7fc8a8509e187e62f488332a8455e0c300addb38ab64a685709bbb41921bbd8",
+          "address": "0x150a148"
+        },
+        {
+          "symbol": "PIN_official_call_150fd18",
+          "bytes": 64,
+          "sha256": "f3cb01d2033eb63a4d0ee0f4c7fe501dd113a323944919942b64927d3d99b74f",
+          "address": "0x150fd18"
+        },
+        {
+          "symbol": "PIN_official_call_1557b34",
+          "bytes": 64,
+          "sha256": "06a528c7813d9fd10b7739bb95b5a21d3f72dda0f76240edf5092119448c79d8",
+          "address": "0x1557b34"
+        },
+        {
+          "symbol": "PIN_official_call_15b9414",
+          "bytes": 8,
+          "sha256": "2b59db05426e0f313d72b30f3398c65721de2562a59dc46ceeba224f98d0b876",
+          "address": "0x15b9414"
+        },
+        {
+          "symbol": "PIN_official_call_160c7f0",
+          "bytes": 64,
+          "sha256": "81db82c5464ad6024adef8a0ec880d284dc7ead87e4cafe6459b75eaff36f734",
+          "address": "0x160c7f0"
+        },
+        {
+          "symbol": "PIN_official_call_16afa94",
+          "bytes": 64,
+          "sha256": "0870dc44eaf127d961d9b2da8d1a9c2e968c8f685fbb8f40f41e5a81235629fd",
+          "address": "0x16afa94"
+        },
+        {
+          "symbol": "PIN_official_call_16afaa0",
+          "bytes": 64,
+          "sha256": "047fc02050fba3a9f27a428b0b431a01b6ee4f714ea46116be425b1c28e8e94e",
+          "address": "0x16afaa0"
+        },
+        {
+          "symbol": "PIN_official_call_16bdad8",
+          "bytes": 64,
+          "sha256": "89e2554ba87c642e067c001c054f6b56a27bc5ef735dbf64456d3487037368df",
+          "address": "0x16bdad8"
+        },
+        {
+          "symbol": "PIN_official_call_16ce69c",
+          "bytes": 64,
+          "sha256": "b7419163f73e1578385ec83a18314aa80b7942aabc639a397ba408600d1753ac",
+          "address": "0x16ce69c"
+        },
+        {
+          "symbol": "PIN_official_call_1716d68",
+          "bytes": 64,
+          "sha256": "7a029c42d824bf5690558a8884a3859ca342dbfb7e548f6d5039b995d83342ff",
+          "address": "0x1716d68"
+        },
+        {
+          "symbol": "PIN_official_call_1716d74",
+          "bytes": 64,
+          "sha256": "4c5f38209d6323e8772ca2160da30c40b2408fbfa9f07a41e680a5c6b6815b68",
+          "address": "0x1716d74"
+        },
+        {
+          "symbol": "PIN_official_call_1716d80",
+          "bytes": 64,
+          "sha256": "224f350a0f776312820f57cb23d05f4d87e5116a94d0a95dbc101e0818623eca",
+          "address": "0x1716d80"
+        },
+        {
+          "symbol": "PIN_official_call_1716ec0",
+          "bytes": 64,
+          "sha256": "2238702465c9e46adbce0cd6aafcaa01eb1e31da828045e9da4a480e56e5bb46",
+          "address": "0x1716ec0"
+        },
+        {
+          "symbol": "PIN_official_call_1716ec8",
+          "bytes": 64,
+          "sha256": "4964c3b7a2c987ac5a96c4c023c12f1412cb4f62eec958dc2e703a8fef396093",
+          "address": "0x1716ec8"
+        },
+        {
+          "symbol": "PIN_official_call_1716ecc",
+          "bytes": 64,
+          "sha256": "4fc0c5804103883ea5c95d98d7e95e99a72e3412b246b227e93edfd16ab711af",
+          "address": "0x1716ecc"
+        },
+        {
+          "symbol": "PIN_official_call_17c4c18",
+          "bytes": 64,
+          "sha256": "8f2d19d343b62405149da6aedcd825e59eb488649db22982f6a3cc341f385a23",
+          "address": "0x17c4c18"
+        },
+        {
+          "symbol": "PIN_official_call_17e79e0",
+          "bytes": 64,
+          "sha256": "032a198d3b961cb4389519825997ed446bc27609c13704bbc79b1561620319df",
+          "address": "0x17e79e0"
+        },
+        {
+          "symbol": "PIN_official_call_17efb70",
+          "bytes": 64,
+          "sha256": "cbe94cbde74ae602a15821cc50318f2be458f1a38797923c2026a12ae84fbfdd",
+          "address": "0x17efb70"
+        },
+        {
+          "symbol": "PIN_official_call_17efb7c",
+          "bytes": 64,
+          "sha256": "47fdaf8407b390c4620502b8dc7778eb109222c334decb2817f555d9f2d36410",
+          "address": "0x17efb7c"
+        },
+        {
+          "symbol": "PIN_official_call_1819588",
+          "bytes": 64,
+          "sha256": "cadf42d428365ed61da3be50e4f01f685b2cfb71a306120e10cc6fbc1f29d83f",
+          "address": "0x1819588"
+        },
+        {
+          "symbol": "PIN_official_call_1823f40",
+          "bytes": 64,
+          "sha256": "ab1e223a474ca106eb543425c85cdd7ddc875dfd06194e02e06e3b45e3bebd09",
+          "address": "0x1823f40"
+        },
+        {
+          "symbol": "PIN_official_call_1856110",
+          "bytes": 64,
+          "sha256": "fb83336c22976d59c2bf33c568a90c8b87413c05a2eba8b65aec779db556f52b",
+          "address": "0x1856110"
+        },
+        {
+          "symbol": "PIN_official_call_187cc48",
+          "bytes": 24,
+          "sha256": "7d1e0f4718a578747fb99772216302ba21d1372799278e9652f1890f42b2129c",
+          "address": "0x187cc48"
+        },
+        {
+          "symbol": "PIN_official_call_1887128",
+          "bytes": 64,
+          "sha256": "f297cd9562ac960547fd06983d504580db9c903b057f3857437e35d6e6998d80",
+          "address": "0x1887128"
+        },
+        {
+          "symbol": "PIN_official_call_1899aa4",
+          "bytes": 64,
+          "sha256": "a23cd5a3f41662c35835da3dbfb0791845d95e8dc99ddd3359b682659eca1480",
+          "address": "0x1899aa4"
+        },
+        {
+          "symbol": "PIN_official_call_189f500",
+          "bytes": 64,
+          "sha256": "2deedffdb465e688bb88aa04024822f0be3e839e5d4466a39ec35b5443602fcb",
+          "address": "0x189f500"
+        },
+        {
+          "symbol": "PIN_official_call_18af9f4",
+          "bytes": 64,
+          "sha256": "6723b48b466091270521d368d9c1d9017eeb81cd712f1d6b3b31355941895de7",
+          "address": "0x18af9f4"
+        },
+        {
+          "symbol": "PIN_official_call_190742c",
+          "bytes": 44,
+          "sha256": "dc394773a73756e93e4fae73e68c88159234b7eefacd69673defd3bd9754001b",
+          "address": "0x190742c"
+        },
+        {
+          "symbol": "PIN_official_call_1929dc0",
+          "bytes": 8,
+          "sha256": "c487d098b95db398db22c338ae3c4bab5b05aa4cdb2e9ec75011975a9f160065",
+          "address": "0x1929dc0"
+        },
+        {
+          "symbol": "PIN_official_call_196e03c",
+          "bytes": 64,
+          "sha256": "08174b71ff32937ad4bd2ed8196aba0c550b8fb388a24f5310994c6b951748fd",
+          "address": "0x196e03c"
+        },
+        {
+          "symbol": "PIN_official_call_1976684",
+          "bytes": 64,
+          "sha256": "794507a1bae45f82d3357d8b10acf65144b56ba68b4c485139f0f5e4b5b8afdd",
+          "address": "0x1976684"
+        },
+        {
+          "symbol": "PIN_official_call_19f9bb8",
+          "bytes": 64,
+          "sha256": "aeed57f5848d72d1567a2d9ba913e4091f1616e29503d8f1cec7b3f519ccd485",
+          "address": "0x19f9bb8"
+        },
+        {
+          "symbol": "PIN_official_call_1a11ab4",
+          "bytes": 64,
+          "sha256": "acc8d246abb9ea12211342277a05957c93f63e0bde52ffdd80e1c60ec12de5a7",
+          "address": "0x1a11ab4"
+        },
+        {
+          "symbol": "PIN_official_call_1a6d9c0",
+          "bytes": 16,
+          "sha256": "2524caf509addc870e936a2518ff6842f53046a18239aa24c0a120697a618567",
+          "address": "0x1a6d9c0"
+        },
+        {
+          "symbol": "PIN_mod_heading",
+          "bytes": 16,
+          "sha256": "644e770da007ac48878b016d780257180e41bec8de49101ce3fb06ee098a176f",
+          "address": "0x782a50"
+        },
+        {
+          "symbol": "PIN_mod_sidebar",
+          "bytes": 16,
+          "sha256": "7d906cc82dd8f0ad611f324eed3c3205e00e20b35c489730fb60fb9f32ca4666",
+          "address": "0x782e10"
+        },
+        {
+          "symbol": "PIN_mod_pack_geometry",
+          "bytes": 20,
+          "sha256": "b7cc5b48afd413d84ad5f83290278cf2a80578d48883114698e0a2ae2f2e29be",
+          "address": "0x782be8"
+        },
+        {
+          "symbol": "PIN_mod_heading_geometry",
+          "bytes": 20,
+          "sha256": "33d531484879fc9c25b7beb9c19fb5aa1c1c316e91c4e76219d32e2926269810",
+          "address": "0x782e2c"
+        },
+        {
+          "symbol": "PIN_mod_title",
+          "bytes": 32,
+          "sha256": "ad4b175e426f87b6e40affc6da44141944f32fb615ecc97249b7fae799feb1e6",
+          "address": "0x782ed8"
+        },
+        {
+          "symbol": "PIN_mod_fallbacks",
+          "bytes": 8,
+          "sha256": "c36ee3785da2e0489b74a7a9f7a5eef972dd9cc7097ce1e84a567279eff14a47",
+          "address": "0x782ff0"
+        },
+        {
+          "symbol": "PIN_mod_sidebar_site",
+          "bytes": 4,
+          "sha256": "4c215a37e7645b39c5dff16457fdd476e61765e3b99dfd8bcd1633061aa3a77c",
+          "address": "0x1393e00"
+        },
+        {
+          "symbol": "PIN_mod_heading_site",
+          "bytes": 4,
+          "sha256": "74794b5582d688bb8288acf5f041549c0dfb02dd258f8cfcd836548d143b24f9",
+          "address": "0x16f9160"
+        },
+        {
+          "symbol": "PIN_mod_title_site",
+          "bytes": 4,
+          "sha256": "83916798d119e6e2b371842324c5deeb340670f32401a42e0e7f508340c73110",
+          "address": "0x1793a08"
+        },
+        {
+          "symbol": "PIN_mod_pack_geometry_site",
+          "bytes": 4,
+          "sha256": "5b50812c36318ff87632fdeb32d0efacdddbf2b43b25e599e8f826b9af58570c",
+          "address": "0x16b03d4"
+        },
+        {
+          "symbol": "PIN_mod_heading_geometry_site",
+          "bytes": 4,
+          "sha256": "744a5363e91cf2a0820aab465feab4686b6e5d6febe1760f6f72261daca78305",
+          "address": "0x16fafdc"
+        },
+        {
+          "symbol": "PIN_mod_call_193b304",
+          "bytes": 16,
+          "sha256": "2f8fc7e7c555d29a51b7af27c813b026f8f8c787551c94932ff329ebaa95989e",
+          "address": "0x193b304"
+        },
+        {
+          "symbol": "PIN_mod_call_b0d8f8",
+          "bytes": 16,
+          "sha256": "f038f03ef211e25152056b99d26d290f5ca7c195e5e7aa8b3b5a8fac4d2242fd",
+          "address": "0xb0d8f8"
+        },
+        {
+          "symbol": "PIN_mod_call_1257490",
+          "bytes": 16,
+          "sha256": "1cbc87a57a8b53d69149af618a80c9a6d993dc05c8d96c23fa32c4fad31325e8",
+          "address": "0x1257490"
+        },
+        {
+          "symbol": "PIN_mod_call_13d91cc",
+          "bytes": 16,
+          "sha256": "abc564bf0b6ed091bfd6e7e00df5277a1d62c82126f63a676efc5933e618d8cc",
+          "address": "0x13d91cc"
+        },
+        {
+          "symbol": "PIN_mod_call_95af50",
+          "bytes": 16,
+          "sha256": "f00bb7b191248fd64305d9f16b600314f763c7fc8b267d59569cbb7c120c7974",
+          "address": "0x95af50"
+        },
+        {
+          "symbol": "PIN_mod_call_1a6d9c0",
+          "bytes": 16,
+          "sha256": "2524caf509addc870e936a2518ff6842f53046a18239aa24c0a120697a618567",
+          "address": "0x1a6d9c0"
+        },
+        {
+          "symbol": "PIN_mod_call_1a6d9e0",
+          "bytes": 16,
+          "sha256": "150284a045f53940bae2a4bd34fcccdf911c75e76098d3d9bfd8bcc8f7a4e844",
+          "address": "0x1a6d9e0"
+        },
+        {
+          "symbol": "PIN_mod_call_1a6da50",
+          "bytes": 16,
+          "sha256": "64ee1331904331d8fa9d624a854c790e639e3260440effbb7d8ccbccc2240cae",
+          "address": "0x1a6da50"
+        },
+        {
+          "symbol": "PIN_mod_call_1a6dba0",
+          "bytes": 16,
+          "sha256": "01b986f8e58e14cc4b9f76949649a6f552306f2294f666d2dd6b7d051d03dbda",
+          "address": "0x1a6dba0"
+        },
+        {
+          "symbol": "PIN_mod_section_flatten",
+          "bytes": 308,
+          "sha256": "837e6c414158116fe7a9e8fbcc1f15994a1551e112c538d62855a0e6f0ec4ef6",
+          "address": "0x12c2258"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_0",
+          "bytes": 4,
+          "sha256": "8e188d1fb69e8433ce65b8de23cc77ace999c62c3cc952cd5c4c8880ad9a15b7",
+          "address": "0x12c2274"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_1",
+          "bytes": 4,
+          "sha256": "34cdba2d70d96b4db849f2af3f5c8cef50547009ff321c3c4c8f8be44fd5679b",
+          "address": "0xd67168"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_2",
+          "bytes": 4,
+          "sha256": "6df96a4ba4fead8fb5ecb99a733e806a7f23bb73433397e348d2ad25e8539d8c",
+          "address": "0xd67180"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_3",
+          "bytes": 4,
+          "sha256": "a50a7b23a6ee1da4aecb37faa7bf6171397ad98e125f8d7a3569c84dd59db50b",
+          "address": "0xa04a34"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_4",
+          "bytes": 4,
+          "sha256": "eb5bd9f469ae6cf5bc8d71769150ec2dec15c31759bef238d1fcab01e4caf685",
+          "address": "0xa04a50"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_5",
+          "bytes": 4,
+          "sha256": "f6989905f6f5f3d81c5fb180335dfbfdaa5cc1188ef22a878b346cd8ddf324f5",
+          "address": "0xa04b8c"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_6",
+          "bytes": 4,
+          "sha256": "34cdba2d70d96b4db849f2af3f5c8cef50547009ff321c3c4c8f8be44fd5679b",
+          "address": "0xe395b0"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_7",
+          "bytes": 4,
+          "sha256": "5f60db2ddb377f14e53d6ac9977dc8e5356ac779e1f4a2afeaf6defa8b6540db",
+          "address": "0xe39604"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_8",
+          "bytes": 4,
+          "sha256": "6942240b7f0ea055882138e5ab0fa8377a16b92b8dff42297e4c37738868d1de",
+          "address": "0xe39608"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_9",
+          "bytes": 4,
+          "sha256": "4f2a288dc390e9a56358906713b3d56d01af271adf5d92a721d06a98e69ee213",
+          "address": "0x1401fb0"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_10",
+          "bytes": 4,
+          "sha256": "97d6f64c73d325c162ddf4305f283ef696f5748449e2c56bd3f52198a0267575",
+          "address": "0xd6716c"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_11",
+          "bytes": 4,
+          "sha256": "97d6f64c73d325c162ddf4305f283ef696f5748449e2c56bd3f52198a0267575",
+          "address": "0xa04a3c"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_12",
+          "bytes": 4,
+          "sha256": "bcc514b563534bf001059821fb2b3e5b2ef4b77ccd555d8afa5af6fa4f102936",
+          "address": "0xe395c0"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_13",
+          "bytes": 4,
+          "sha256": "8cc634260fcc3318367a429cdda4a830ceb04ca4e25f34827513ad06e243ddae",
+          "address": "0x1401fb4"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_14",
+          "bytes": 8,
+          "sha256": "be08d0c5de15671f960c51e951fee14e8ab44556ca965ee557408a5e3a3592ef",
+          "address": "0x782cf8"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_15",
+          "bytes": 8,
+          "sha256": "272bb24e58672049fb69be1fa4e80328d92464de9be5a96fb5b8273314bbccd4",
+          "address": "0x782ef8"
+        },
+        {
+          "symbol": "PIN_mod_v2_op_16",
+          "bytes": 8,
+          "sha256": "2a29a210bba8885b248b94581a5e892a5b77e468263223226a351f3dec1a2ece",
+          "address": "0x782ff8"
+        },
+        {
+          "symbol": "PIN_mod_widget_detector",
+          "bytes": 288,
+          "sha256": "6f39cf3d221c52740fb8695b75285f12097a5853003ecc18092a451ac57de27d",
+          "address": "0x7e5654"
+        },
+        {
+          "symbol": "PIN_mod_widget_ctor",
+          "bytes": 48,
+          "sha256": "a47e3c3856c08e292302336a171479ae6675a593ca57cfc018cd67eaede868de",
+          "address": "0x875cd8"
+        },
+        {
+          "symbol": "PIN_mod_widget_size_bounds",
+          "bytes": 16,
+          "sha256": "ef318a614f56635aeadfdcb03f663e40b69e715be5b82c6acc167aee417b483e",
+          "address": "0xa5cd08"
+        },
+        {
+          "symbol": "PIN_mod_swipe_recognizer",
+          "bytes": 384,
+          "sha256": "90de3f609a0e4269d5435a7ec8a1c1ab525e06cccf63674e4191b5c42b580dfb",
+          "address": "0xfc9f60"
+        },
+        {
+          "symbol": "PIN_mod_visual_c3a6e0",
+          "bytes": 816,
+          "sha256": "4605552f2c471bc8280aa22d7c4cf4d8f503d398330c4202caa98d00d2b8ffd3",
+          "address": "0xc3a6e0"
+        },
+        {
+          "symbol": "PIN_mod_visual_18372e8",
+          "bytes": 16,
+          "sha256": "78fcc9bbd4082b85397ba9b370961ee2b4360e2d84ffaa383fdac5ee634fa70f",
+          "address": "0x18372e8"
+        },
+        {
+          "symbol": "PIN_mod_visual_d8cbe8",
+          "bytes": 16,
+          "sha256": "2063c4e2ab143d8e8d4f37278357f20c68b3f910460bf07321651359af9cc4c4",
+          "address": "0xd8cbe8"
+        },
+        {
+          "symbol": "PIN_mod_visual_b38580",
+          "bytes": 16,
+          "sha256": "c8f28f8277b1e8396884d102569111398d8ba8244c563420b13696f7b1c1bf4e",
+          "address": "0xb38580"
+        },
+        {
+          "symbol": "PIN_mod_visual_efd848",
+          "bytes": 16,
+          "sha256": "f5e448a8d098efd379f616cf6f8ed4058e7596986c1ed7b00d7923498f3a75b9",
+          "address": "0xefd848"
+        },
+        {
+          "symbol": "PIN_mod_template_widget_constructor",
+          "bytes": 16,
+          "sha256": "6bb0959887bb8b64c30f892e7e902544b8464d20e76abb8b44f41e690b28c0f1",
+          "address": "0xd87204"
+        },
+        {
+          "symbol": "PIN_mod_anchor_ec4b3c",
+          "bytes": 88,
+          "sha256": "3b4f79f7749cdf2b480d9637f6a3294ecda79e1dd5693f23b1f026ba6c7f3a8e",
+          "address": "0xec4b3c"
+        },
+        {
+          "symbol": "PIN_mod_anchor_16d8848",
+          "bytes": 44,
+          "sha256": "d7eeb3c5f77dc3678cf645af51eed45c7907da4de5fcee044b4c87e550f97ef6",
+          "address": "0x16d8848"
+        },
+        {
+          "symbol": "PIN_mod_anchor_134d7a4",
+          "bytes": 116,
+          "sha256": "790b5920d8fd3046152271e48cad55bc74cbdfb788cc532a649e6616d1029ccc",
+          "address": "0x134d7a4"
+        },
+        {
+          "symbol": "PIN_mod_anchor_18e1894",
+          "bytes": 44,
+          "sha256": "65262b74d15f393bfe0968ce4ffe36185ec968374c126ecb7d1cb507d53ca228",
+          "address": "0x18e1894"
+        },
+        {
+          "symbol": "PIN_mod_anchor_129c924",
+          "bytes": 52,
+          "sha256": "9d5286e81060e03e74db4cf6ea51f0baed90edfb812f2d5c62291948af9c72c9",
+          "address": "0x129c924"
+        },
+        {
+          "symbol": "PIN_ui_text_3",
+          "bytes": 48,
+          "sha256": "bfb28eef4fe162d6d3a92f9ddb5146709566d1eff4504a64537e70ac671b4ec0",
+          "address": "0x5488ad"
+        },
+        {
+          "symbol": "PIN_ui_text_4",
+          "bytes": 20,
+          "sha256": "3f7fe02cca87645e17e4c34b96a8eb86c9413ff25a239d7d2bb309475b1bdc16",
+          "address": "0x56ff87"
+        }
+      ]
+    },
+    {
+      "path": "semantic/native/cli_pins.h",
+      "template": [
+        "#pragma once",
+        "struct CliPin { Address address; const unsigned char* bytes; Size size; };",
+        "inline constexpr unsigned char CLI_ROUTE_0[] = {@@CLI_ROUTE_0@@};",
+        "inline constexpr unsigned char CLI_ROUTE_1[] = {@@CLI_ROUTE_1@@};",
+        "inline constexpr unsigned char CLI_ROUTE_2[] = {@@CLI_ROUTE_2@@};",
+        "inline constexpr unsigned char CLI_ROUTE_3[] = {@@CLI_ROUTE_3@@};",
+        "inline constexpr unsigned char CLI_CALLBACK[] = {@@CLI_CALLBACK@@};",
+        "inline constexpr unsigned char CLI_VISIBILITY[] = {@@CLI_VISIBILITY@@};",
+        "inline constexpr unsigned char CLI_CURRENT_ORDINAL[] = {@@CLI_CURRENT_ORDINAL@@};",
+        "inline constexpr CliPin CLI_ROUTE_PINS[] = {",
+        "{0x782a74,CLI_ROUTE_0,sizeof(CLI_ROUTE_0)},",
+        "{0x782ab0,CLI_ROUTE_1,sizeof(CLI_ROUTE_1)},",
+        "{0x782afc,CLI_ROUTE_2,sizeof(CLI_ROUTE_2)},",
+        "{0x1ba5ff0,CLI_ROUTE_3,sizeof(CLI_ROUTE_3)},",
+        "};",
+        "inline constexpr CliPin CLI_ACTION_PINS[] = {",
+        "{0xa04a00,CLI_CALLBACK,sizeof(CLI_CALLBACK)},",
+        "{0x18e1894,CLI_VISIBILITY,sizeof(CLI_VISIBILITY)},",
+        "{0xd66f08,CLI_CURRENT_ORDINAL,sizeof(CLI_CURRENT_ORDINAL)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_ROUTE_0",
+          "bytes": 37,
+          "sha256": "ff4e64f4f9796b2b88bff4c3f282f43183bdbcaa39aae26775d8c931820b71f1",
+          "address": "0x782a74"
+        },
+        {
+          "symbol": "CLI_ROUTE_1",
+          "bytes": 56,
+          "sha256": "2afec8d0c5b85116b7d42b53fcaae987484e6bc70440f3040c026fe7830ef035",
+          "address": "0x782ab0"
+        },
+        {
+          "symbol": "CLI_ROUTE_2",
+          "bytes": 51,
+          "sha256": "84b1823684a24d861834130f6d57c18d31a4c618de38f1a0d3b75f17bdb5b115",
+          "address": "0x782afc"
+        },
+        {
+          "symbol": "CLI_ROUTE_3",
+          "bytes": 55,
+          "sha256": "d7fef37d547533b3b9b93e81d3cc305af68563ff64efd771a210584045d5b823",
+          "address": "0x1ba5ff0"
+        },
+        {
+          "symbol": "CLI_CALLBACK",
+          "bytes": 676,
+          "sha256": "329c9269c78b5b91d03fdfd7732ca9b1af1a72658195c836f616fd08f9667e92",
+          "address": "0xa04a00"
+        },
+        {
+          "symbol": "CLI_VISIBILITY",
+          "bytes": 44,
+          "sha256": "65262b74d15f393bfe0968ce4ffe36185ec968374c126ecb7d1cb507d53ca228",
+          "address": "0x18e1894"
+        },
+        {
+          "symbol": "CLI_CURRENT_ORDINAL",
+          "bytes": 28,
+          "sha256": "32eecd01a7febcf832a9cdc07db823ba1515041427bca4cc9be7ee7a3b18ab7a",
+          "address": "0xd66f08"
+        }
+      ]
+    },
+    {
+      "path": "semantic/native/cli_ui_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_UI_0[] = {@@CLI_UI_0@@};",
+        "inline constexpr unsigned char CLI_UI_1[] = {@@CLI_UI_1@@};",
+        "inline constexpr unsigned char CLI_UI_2[] = {@@CLI_UI_2@@};",
+        "inline constexpr unsigned char CLI_UI_3[] = {@@CLI_UI_3@@};",
+        "inline constexpr unsigned char CLI_UI_4[] = {@@CLI_UI_4@@};",
+        "inline constexpr unsigned char CLI_UI_5[] = {@@CLI_UI_5@@};",
+        "inline constexpr unsigned char CLI_UI_6[] = {@@CLI_UI_6@@};",
+        "inline constexpr unsigned char CLI_UI_7[] = {@@CLI_UI_7@@};",
+        "inline constexpr unsigned char CLI_UI_8[] = {@@CLI_UI_8@@};",
+        "inline constexpr unsigned char CLI_UI_9[] = {@@CLI_UI_9@@};",
+        "inline constexpr unsigned char CLI_UI_10[] = {@@CLI_UI_10@@};",
+        "inline constexpr unsigned char CLI_UI_11[] = {@@CLI_UI_11@@};",
+        "inline constexpr unsigned char CLI_UI_12[] = {@@CLI_UI_12@@};",
+        "inline constexpr unsigned char CLI_UI_13[] = {@@CLI_UI_13@@};",
+        "inline constexpr unsigned char CLI_UI_14[] = {@@CLI_UI_14@@};",
+        "inline constexpr unsigned char CLI_UI_15[] = {@@CLI_UI_15@@};",
+        "inline constexpr unsigned char CLI_UI_16[] = {@@CLI_UI_16@@};",
+        "inline constexpr unsigned char CLI_UI_17[] = {@@CLI_UI_17@@};",
+        "inline constexpr unsigned char CLI_UI_18[] = {@@CLI_UI_18@@};",
+        "inline constexpr unsigned char CLI_UI_19[] = {@@CLI_UI_19@@};",
+        "inline constexpr unsigned char CLI_UI_20[] = {@@CLI_UI_20@@};",
+        "inline constexpr unsigned char CLI_PACK_0[] = {@@CLI_PACK_0@@};",
+        "inline constexpr unsigned char CLI_PACK_1[] = {@@CLI_PACK_1@@};",
+        "inline constexpr unsigned char CLI_PACK_2[] = {@@CLI_PACK_2@@};",
+        "inline constexpr unsigned char CLI_PACK_3[] = {@@CLI_PACK_3@@};",
+        "inline constexpr unsigned char CLI_PACK_4[] = {@@CLI_PACK_4@@};",
+        "inline constexpr CliPin CLI_UI_PINS[] = {",
+        "{0x19864e0,CLI_UI_0,sizeof(CLI_UI_0)},",
+        "{0x1271084,CLI_UI_1,sizeof(CLI_UI_1)},",
+        "{0x13d5f98,CLI_UI_2,sizeof(CLI_UI_2)},",
+        "{0x1754440,CLI_UI_3,sizeof(CLI_UI_3)},",
+        "{0x172db24,CLI_UI_4,sizeof(CLI_UI_4)},",
+        "{0x14f978c,CLI_UI_5,sizeof(CLI_UI_5)},",
+        "{0x1591420,CLI_UI_6,sizeof(CLI_UI_6)},",
+        "{0x15afdd4,CLI_UI_7,sizeof(CLI_UI_7)},",
+        "{0x1762b34,CLI_UI_8,sizeof(CLI_UI_8)},",
+        "{0x1646a9c,CLI_UI_9,sizeof(CLI_UI_9)},",
+        "{0xf9b898,CLI_UI_10,sizeof(CLI_UI_10)},",
+        "{0x13321bc,CLI_UI_11,sizeof(CLI_UI_11)},",
+        "{0x10f9288,CLI_UI_12,sizeof(CLI_UI_12)},",
+        "{0xb160bc,CLI_UI_13,sizeof(CLI_UI_13)},",
+        "{0x916df4,CLI_UI_14,sizeof(CLI_UI_14)},",
+        "{0xad0d8c,CLI_UI_15,sizeof(CLI_UI_15)},",
+        "{0x7ddfd0,CLI_UI_16,sizeof(CLI_UI_16)},",
+        "{0x1577dd0,CLI_UI_17,sizeof(CLI_UI_17)},",
+        "{0x8866e8,CLI_UI_18,sizeof(CLI_UI_18)},",
+        "{0xe3dcb0,CLI_UI_19,sizeof(CLI_UI_19)},",
+        "{0x13d206c,CLI_UI_20,sizeof(CLI_UI_20)},",
+        "{0x161ba40,CLI_PACK_0,sizeof(CLI_PACK_0)},",
+        "{0x12ccb44,CLI_PACK_1,sizeof(CLI_PACK_1)},",
+        "{0x19f859c,CLI_PACK_2,sizeof(CLI_PACK_2)},",
+        "{0x1393564,CLI_PACK_3,sizeof(CLI_PACK_3)},",
+        "{0xf66c9c,CLI_PACK_4,sizeof(CLI_PACK_4)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_UI_0",
+          "bytes": 164,
+          "sha256": "89b159dcc4adebfaa7d7edb407b9cae6dde109512d602032452a8277090f7f88",
+          "address": "0x19864e0"
+        },
+        {
+          "symbol": "CLI_UI_1",
+          "bytes": 108,
+          "sha256": "fe887bdeae035f89d08e81c90bb50acf79220144f4917d99308fe4a39dd3a089",
+          "address": "0x1271084"
+        },
+        {
+          "symbol": "CLI_UI_2",
+          "bytes": 336,
+          "sha256": "3152523edcb1af0e3c3e3b54a70d14e24678313665d26eb2172c9f79b7acde9c",
+          "address": "0x13d5f98"
+        },
+        {
+          "symbol": "CLI_UI_3",
+          "bytes": 128,
+          "sha256": "772b00d7ee4cfd01b7fe042c8416abf8f34c23da847b2acbd045a9f3ffa4c26e",
+          "address": "0x1754440"
+        },
+        {
+          "symbol": "CLI_UI_4",
+          "bytes": 128,
+          "sha256": "fe21d5101f9546f14c232b30c81b972b9608f62adab30c3b6dedc27fbbc395ad",
+          "address": "0x172db24"
+        },
+        {
+          "symbol": "CLI_UI_5",
+          "bytes": 220,
+          "sha256": "4d13f93bdf3bd010f5acfc2cc5ff1ccfcacf151d95299707355ebac2bfdbd9f9",
+          "address": "0x14f978c"
+        },
+        {
+          "symbol": "CLI_UI_6",
+          "bytes": 1644,
+          "sha256": "b3f3685e2a2913b830cc6cd2c36a8e20e49882f5f09353348755c331c0438b16",
+          "address": "0x1591420"
+        },
+        {
+          "symbol": "CLI_UI_7",
+          "bytes": 2448,
+          "sha256": "8fae5eae70af52c6ed255aad16ebed6c3470dc0da3d7870aaca6f8c973480593",
+          "address": "0x15afdd4"
+        },
+        {
+          "symbol": "CLI_UI_8",
+          "bytes": 408,
+          "sha256": "bc3ae64234d664d25344dad9def493018dcd9186020d5461102cc90774f014cc",
+          "address": "0x1762b34"
+        },
+        {
+          "symbol": "CLI_UI_9",
+          "bytes": 344,
+          "sha256": "6596def0361a1b4d9f4fb0bd3b3092ce559f8b4045a02f0e2694a6e7c4454ffb",
+          "address": "0x1646a9c"
+        },
+        {
+          "symbol": "CLI_UI_10",
+          "bytes": 8,
+          "sha256": "a3494d7d66f70e50da11fcd1e261d3fd00580d5480c7697e5e0afbf52eae95a2",
+          "address": "0xf9b898"
+        },
+        {
+          "symbol": "CLI_UI_11",
+          "bytes": 104,
+          "sha256": "ccd21753819d2a660fd4411366d250796eb24336b56800c93ce55cea55b01d55",
+          "address": "0x13321bc"
+        },
+        {
+          "symbol": "CLI_UI_12",
+          "bytes": 408,
+          "sha256": "8243177c26d3c481a9947328b7888e92558449a5c92b83fc1eb1ae5237475187",
+          "address": "0x10f9288"
+        },
+        {
+          "symbol": "CLI_UI_13",
+          "bytes": 576,
+          "sha256": "f2b16da3f4a0d69730b378010bb034605a672281e9dd5ad849e545ba7edaf49a",
+          "address": "0xb160bc"
+        },
+        {
+          "symbol": "CLI_UI_14",
+          "bytes": 588,
+          "sha256": "a043f8be7a5f9818c0c68de39d0cc8ad2ce6a28b6c45eabc07beb645510a93e6",
+          "address": "0x916df4"
+        },
+        {
+          "symbol": "CLI_UI_15",
+          "bytes": 360,
+          "sha256": "bac4e553914b4d07d672c337441562253838c11da557e695fee52e69d68fe35b",
+          "address": "0xad0d8c"
+        },
+        {
+          "symbol": "CLI_UI_16",
+          "bytes": 256,
+          "sha256": "9a0467cf265667c3b073b051e423440e49aee8d4b14efe7caf7b7689717cb082",
+          "address": "0x7ddfd0"
+        },
+        {
+          "symbol": "CLI_UI_17",
+          "bytes": 488,
+          "sha256": "d64d0414fdcf90f653cec9a6cd0cbde3212cc8201b16e8660a4849f792906d5a",
+          "address": "0x1577dd0"
+        },
+        {
+          "symbol": "CLI_UI_18",
+          "bytes": 72,
+          "sha256": "10a571637f9a9d967edc189f56ce12f8c7acfc88e0f9c8661b25e79d99533872",
+          "address": "0x8866e8"
+        },
+        {
+          "symbol": "CLI_UI_19",
+          "bytes": 8,
+          "sha256": "b22096b8dbcaeb6448153ea569f160de5e7da5c2e668f8718c20f7ec155ce0c9",
+          "address": "0xe3dcb0"
+        },
+        {
+          "symbol": "CLI_UI_20",
+          "bytes": 8,
+          "sha256": "953c57623b1a6c3113b825a80bfb71ef19f1f810675f8ef6217a3d64c2cd5f1b",
+          "address": "0x13d206c"
+        },
+        {
+          "symbol": "CLI_PACK_0",
+          "bytes": 104,
+          "sha256": "b491372ce7d3dabb55dbf70a1e5960a3577d01136d9a8d3aef3ee2a79569b53c",
+          "address": "0x161ba40"
+        },
+        {
+          "symbol": "CLI_PACK_1",
+          "bytes": 168,
+          "sha256": "b113e39186aca1d671a076b43430599519e5e3feb9fa22abe6b80c65fd54a118",
+          "address": "0x12ccb44"
+        },
+        {
+          "symbol": "CLI_PACK_2",
+          "bytes": 888,
+          "sha256": "3135c2794a2c153bc8563817d8f8fe769191cb247bcbab044b464c75ed7d09cc",
+          "address": "0x19f859c"
+        },
+        {
+          "symbol": "CLI_PACK_3",
+          "bytes": 5712,
+          "sha256": "0d33d21a706066755751950b747dfea9e42cf02140ee4426e643e9bdc05a37f8",
+          "address": "0x1393564"
+        },
+        {
+          "symbol": "CLI_PACK_4",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        }
+      ]
+    },
+    {
+      "path": "semantic/native/cli_widget_types.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr Address CLI_WIDGET_VTABLES[] = {0x1a8b2e8,0x1a8ece0,0x1a91fd8,0x1a93cf0,0x1a95f28,0x1a98ce0,0x1a993f0,0x1a9a7f0,0x1aa57f8,0x1aa8420,0x1aad270,0x1ab4898,0x1abb710,0x1ac0390,0x1ad4218,0x1ad63a8,0x1adeaa8,0x1ae6000,0x1aea538,0x1aeb240,0x1aee410,0x1aeec98,0x1af1098,0x1af2d48,0x1afad30,0x1afc958,0x1b039c0,0x1b05950,0x1b0d7b0,0x1b102a0,0x1b10ad8,0x1b13b50,0x1b15c88,0x1b177d0,0x1b31908,0x1b34198,0x1b4b118,0x1b4bd38,0x1b6ad48,0x1b6c758,0x1b77a40,0x1b85ce0};"
+      ],
+      "pins": []
+    },
+    {
+      "path": "semantic/overlays/overlay_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_OVERLAY_PACK_HINT_BUILDER[] = {@@CLI_OVERLAY_PACK_HINT_BUILDER@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_PROGRESSION_FACTORY[] = {@@CLI_OVERLAY_PROGRESSION_FACTORY@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_PROGRESSION_INIT[] = {@@CLI_OVERLAY_PROGRESSION_INIT@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_PROGRESSION_ADVANCE[] = {@@CLI_OVERLAY_PROGRESSION_ADVANCE@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_PROGRESSION_TOUCH_CLOSURE[] = {@@CLI_OVERLAY_PROGRESSION_TOUCH_CLOSURE@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_TOUCH_DISABLE_INIT[] = {@@CLI_OVERLAY_TOUCH_DISABLE_INIT@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_TOUCH_DISABLE_LISTENER_INSTALL[] = {@@CLI_OVERLAY_TOUCH_DISABLE_LISTENER_INSTALL@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_TOUCH_DISABLE_BEGAN[] = {@@CLI_OVERLAY_TOUCH_DISABLE_BEGAN@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_TOUCH_DISABLE_LISTENER_CLOSURE[] = {@@CLI_OVERLAY_TOUCH_DISABLE_LISTENER_CLOSURE@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_TOUCH_LISTENER_SWALLOW_SETTER[] = {@@CLI_OVERLAY_TOUCH_LISTENER_SWALLOW_SETTER@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_DISPLAYED_OPACITY_GETTER[] = {@@CLI_OVERLAY_DISPLAYED_OPACITY_GETTER@@};",
+        "inline constexpr unsigned char CLI_OVERLAY_REAL_OPACITY_GETTER[] = {@@CLI_OVERLAY_REAL_OPACITY_GETTER@@};",
+        "inline constexpr CliPin CLI_OVERLAY_PINS[] = {",
+        "{0x14f32dc,CLI_OVERLAY_PACK_HINT_BUILDER,sizeof(CLI_OVERLAY_PACK_HINT_BUILDER)},",
+        "{0x16d8ef8,CLI_OVERLAY_PROGRESSION_FACTORY,sizeof(CLI_OVERLAY_PROGRESSION_FACTORY)},",
+        "{0xfceb4c,CLI_OVERLAY_PROGRESSION_INIT,sizeof(CLI_OVERLAY_PROGRESSION_INIT)},",
+        "{0xee8578,CLI_OVERLAY_PROGRESSION_ADVANCE,sizeof(CLI_OVERLAY_PROGRESSION_ADVANCE)},",
+        "{0x1934b7c,CLI_OVERLAY_PROGRESSION_TOUCH_CLOSURE,sizeof(CLI_OVERLAY_PROGRESSION_TOUCH_CLOSURE)},",
+        "{0x185934c,CLI_OVERLAY_TOUCH_DISABLE_INIT,sizeof(CLI_OVERLAY_TOUCH_DISABLE_INIT)},",
+        "{0xdc1044,CLI_OVERLAY_TOUCH_DISABLE_LISTENER_INSTALL,sizeof(CLI_OVERLAY_TOUCH_DISABLE_LISTENER_INSTALL)},",
+        "{0xd3e2a4,CLI_OVERLAY_TOUCH_DISABLE_BEGAN,sizeof(CLI_OVERLAY_TOUCH_DISABLE_BEGAN)},",
+        "{0x1592dd4,CLI_OVERLAY_TOUCH_DISABLE_LISTENER_CLOSURE,sizeof(CLI_OVERLAY_TOUCH_DISABLE_LISTENER_CLOSURE)},",
+        "{0xbd3ab4,CLI_OVERLAY_TOUCH_LISTENER_SWALLOW_SETTER,sizeof(CLI_OVERLAY_TOUCH_LISTENER_SWALLOW_SETTER)},",
+        "{0x83dc34,CLI_OVERLAY_DISPLAYED_OPACITY_GETTER,sizeof(CLI_OVERLAY_DISPLAYED_OPACITY_GETTER)},",
+        "{0xfcb94c,CLI_OVERLAY_REAL_OPACITY_GETTER,sizeof(CLI_OVERLAY_REAL_OPACITY_GETTER)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_OVERLAY_PACK_HINT_BUILDER",
+          "bytes": 2820,
+          "sha256": "e413a4bf0ad14a9087038417186fe3c20d346f182d1475b582331220324a2eb7",
+          "address": "0x14f32dc"
+        },
+        {
+          "symbol": "CLI_OVERLAY_PROGRESSION_FACTORY",
+          "bytes": 552,
+          "sha256": "e986adcc085b0668019e027d8ae5dece455f8454dab70ab9b249a36b4cd420a9",
+          "address": "0x16d8ef8"
+        },
+        {
+          "symbol": "CLI_OVERLAY_PROGRESSION_INIT",
+          "bytes": 1300,
+          "sha256": "90eb1ab927c60a651bd5948655ac16560994d7844d340e2a2711edd688948a3f",
+          "address": "0xfceb4c"
+        },
+        {
+          "symbol": "CLI_OVERLAY_PROGRESSION_ADVANCE",
+          "bytes": 744,
+          "sha256": "f4f641752c780435e07702ca293d91ce0756106aad1136746649eb9090b2b000",
+          "address": "0xee8578"
+        },
+        {
+          "symbol": "CLI_OVERLAY_PROGRESSION_TOUCH_CLOSURE",
+          "bytes": 8,
+          "sha256": "f8771be9de1121edf8e7ba5be4374d4f1b867fced7855c56fb4a8f550e6b763f",
+          "address": "0x1934b7c"
+        },
+        {
+          "symbol": "CLI_OVERLAY_TOUCH_DISABLE_INIT",
+          "bytes": 320,
+          "sha256": "10125151d3a020e7374d49bdcfd0029760cc98007767047b414490b0d50d2240",
+          "address": "0x185934c"
+        },
+        {
+          "symbol": "CLI_OVERLAY_TOUCH_DISABLE_LISTENER_INSTALL",
+          "bytes": 216,
+          "sha256": "560bf7f1887b21f2b51d736e00b20d02f61a1687e8e69f2ba4982507541e4407",
+          "address": "0xdc1044"
+        },
+        {
+          "symbol": "CLI_OVERLAY_TOUCH_DISABLE_BEGAN",
+          "bytes": 188,
+          "sha256": "83de627672756039e43a90f5024298a244a2c2156accb6ed0186d1e905f66f33",
+          "address": "0xd3e2a4"
+        },
+        {
+          "symbol": "CLI_OVERLAY_TOUCH_DISABLE_LISTENER_CLOSURE",
+          "bytes": 36,
+          "sha256": "8231d116594daeb85208f796744145ba7980e5896eb17957132232c7dcbd1e32",
+          "address": "0x1592dd4"
+        },
+        {
+          "symbol": "CLI_OVERLAY_TOUCH_LISTENER_SWALLOW_SETTER",
+          "bytes": 12,
+          "sha256": "29b54e009ed8fcad72e5cd32cbc4b6bc5846d694d82ab32e497455ef8e16a894",
+          "address": "0xbd3ab4"
+        },
+        {
+          "symbol": "CLI_OVERLAY_DISPLAYED_OPACITY_GETTER",
+          "bytes": 8,
+          "sha256": "e269f93db53d676a384c06ecd3dcdd0d5999b7bce2e59fccf7318e79862b7f6c",
+          "address": "0x83dc34"
+        },
+        {
+          "symbol": "CLI_OVERLAY_REAL_OPACITY_GETTER",
+          "bytes": 8,
+          "sha256": "88f02348febddeb9843c48f46e5a1addd46585d2e7eb93f6a3bc260ab6625eec",
+          "address": "0xfcb94c"
+        }
+      ]
+    },
+    {
+      "path": "semantic/update/bundle_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_BUNDLE_BUNDLE_GUARD[] = {@@CLI_BUNDLE_BUNDLE_GUARD@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_CREATE_POPUP[] = {@@CLI_BUNDLE_CREATE_POPUP@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_POPUP_ACCEPT[] = {@@CLI_BUNDLE_POPUP_ACCEPT@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_POPUP_CANCEL[] = {@@CLI_BUNDLE_POPUP_CANCEL@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_START_DOWNLOAD[] = {@@CLI_BUNDLE_START_DOWNLOAD@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ACCEPT_DOWNLOAD[] = {@@CLI_BUNDLE_ACCEPT_DOWNLOAD@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_CANCEL_DOWNLOAD[] = {@@CLI_BUNDLE_CANCEL_DOWNLOAD@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_BUTTON_RELEASE[] = {@@CLI_BUNDLE_BUTTON_RELEASE@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_BUTTON_REGISTER[] = {@@CLI_BUNDLE_BUTTON_REGISTER@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_DOWNLOAD_FINISH[] = {@@CLI_BUNDLE_DOWNLOAD_FINISH@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_FETCH_FINISH[] = {@@CLI_BUNDLE_FETCH_FINISH@@};",
+        "inline constexpr CliPin CLI_BUNDLE_PINS[] = {",
+        "{0x15afdd4,CLI_BUNDLE_BUNDLE_GUARD,sizeof(CLI_BUNDLE_BUNDLE_GUARD)},",
+        "{0x16e9dc8,CLI_BUNDLE_CREATE_POPUP,sizeof(CLI_BUNDLE_CREATE_POPUP)},",
+        "{0x14b215c,CLI_BUNDLE_POPUP_ACCEPT,sizeof(CLI_BUNDLE_POPUP_ACCEPT)},",
+        "{0x88920c,CLI_BUNDLE_POPUP_CANCEL,sizeof(CLI_BUNDLE_POPUP_CANCEL)},",
+        "{0x10f99ac,CLI_BUNDLE_START_DOWNLOAD,sizeof(CLI_BUNDLE_START_DOWNLOAD)},",
+        "{0xbd8c68,CLI_BUNDLE_ACCEPT_DOWNLOAD,sizeof(CLI_BUNDLE_ACCEPT_DOWNLOAD)},",
+        "{0xf43c54,CLI_BUNDLE_CANCEL_DOWNLOAD,sizeof(CLI_BUNDLE_CANCEL_DOWNLOAD)},",
+        "{0xf66c9c,CLI_BUNDLE_BUTTON_RELEASE,sizeof(CLI_BUNDLE_BUTTON_RELEASE)},",
+        "{0xafa834,CLI_BUNDLE_BUTTON_REGISTER,sizeof(CLI_BUNDLE_BUTTON_REGISTER)},",
+        "{0xf0769c,CLI_BUNDLE_DOWNLOAD_FINISH,sizeof(CLI_BUNDLE_DOWNLOAD_FINISH)},",
+        "{0x16a7c74,CLI_BUNDLE_FETCH_FINISH,sizeof(CLI_BUNDLE_FETCH_FINISH)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_BUNDLE_BUNDLE_GUARD",
+          "bytes": 2448,
+          "sha256": "8fae5eae70af52c6ed255aad16ebed6c3470dc0da3d7870aaca6f8c973480593",
+          "address": "0x15afdd4"
+        },
+        {
+          "symbol": "CLI_BUNDLE_CREATE_POPUP",
+          "bytes": 3332,
+          "sha256": "15fe9b1eb302450bb1c8644e4ed09cd0338946df43c0491bf6103301ed046550",
+          "address": "0x16e9dc8"
+        },
+        {
+          "symbol": "CLI_BUNDLE_POPUP_ACCEPT",
+          "bytes": 320,
+          "sha256": "45c5dc81b13960e8b516a2f0fbbba72bcc3f35138f5896a6f216603c1e409cf8",
+          "address": "0x14b215c"
+        },
+        {
+          "symbol": "CLI_BUNDLE_POPUP_CANCEL",
+          "bytes": 320,
+          "sha256": "ef7257f45870881e206dd4e6b6907029fba6c1f18a7cca6f3f548b7672251adb",
+          "address": "0x88920c"
+        },
+        {
+          "symbol": "CLI_BUNDLE_START_DOWNLOAD",
+          "bytes": 3824,
+          "sha256": "bb619c5e76eaf03702ff82502a7c3cc810ac36160959126476ed2ec2659da453",
+          "address": "0x10f99ac"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ACCEPT_DOWNLOAD",
+          "bytes": 1204,
+          "sha256": "d7cf2ed9be15c380e03fae202dcdddadbcee7a3a90b6573e29c5a38fe9bcd842",
+          "address": "0xbd8c68"
+        },
+        {
+          "symbol": "CLI_BUNDLE_CANCEL_DOWNLOAD",
+          "bytes": 4,
+          "sha256": "110f46b5b35c069160560c6ad6786f647dd44e8760a52a46fc22dbbcd7630b91",
+          "address": "0xf43c54"
+        },
+        {
+          "symbol": "CLI_BUNDLE_BUTTON_RELEASE",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "CLI_BUNDLE_BUTTON_REGISTER",
+          "bytes": 200,
+          "sha256": "a199c4cb56d3b8ac3655606361464116183f9ae5ec0788358d0ccd8e67a810ec",
+          "address": "0xafa834"
+        },
+        {
+          "symbol": "CLI_BUNDLE_DOWNLOAD_FINISH",
+          "bytes": 716,
+          "sha256": "3799c5c7c1dd84244d5548629340c8cf4482f4622b7412edcac04aeeac6017df",
+          "address": "0xf0769c"
+        },
+        {
+          "symbol": "CLI_BUNDLE_FETCH_FINISH",
+          "bytes": 164,
+          "sha256": "ca6fa3318a03a15e911ee2253394e5dfbfceb97efce2a4960238b244eab41801",
+          "address": "0x16a7c74"
+        }
+      ]
+    },
+    {
+      "path": "semantic/song-v9/cli_song_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_SONG_HIGHLIGHT[] = {@@CLI_SONG_HIGHLIGHT@@};",
+        "inline constexpr unsigned char CLI_SONG_SORT_GROUP_REVERSE[] = {@@CLI_SONG_SORT_GROUP_REVERSE@@};",
+        "inline constexpr unsigned char CLI_SONG_DIFFICULTY_BUTTON_HANDLER[] = {@@CLI_SONG_DIFFICULTY_BUTTON_HANDLER@@};",
+        "inline constexpr unsigned char CLI_SONG_DIFFICULTY_CLOSURE[] = {@@CLI_SONG_DIFFICULTY_CLOSURE@@};",
+        "inline constexpr unsigned char CLI_SONG_SELECTED_PAIR_UPDATE[] = {@@CLI_SONG_SELECTED_PAIR_UPDATE@@};",
+        "inline constexpr unsigned char CLI_SONG_PACK_SELECT_HANDLER[] = {@@CLI_SONG_PACK_SELECT_HANDLER@@};",
+        "inline constexpr unsigned char CLI_SONG_PACK_LOOKUP[] = {@@CLI_SONG_PACK_LOOKUP@@};",
+        "inline constexpr unsigned char CLI_SONG_PACK_CLOSE_ANIMATION[] = {@@CLI_SONG_PACK_CLOSE_ANIMATION@@};",
+        "inline constexpr unsigned char CLI_SONG_PACK_CLOSE_RESTORE[] = {@@CLI_SONG_PACK_CLOSE_RESTORE@@};",
+        "inline constexpr unsigned char CLI_SONG_SELECTED_LAYER_FACTORY[] = {@@CLI_SONG_SELECTED_LAYER_FACTORY@@};",
+        "inline constexpr unsigned char CLI_SONG_SCENE_SELECTED_LAYER_STORE[] = {@@CLI_SONG_SCENE_SELECTED_LAYER_STORE@@};",
+        "inline constexpr unsigned char CLI_SONG_SCENE_STATE_ACCESS_DELEGATE_BINDINGS[] = {@@CLI_SONG_SCENE_STATE_ACCESS_DELEGATE_BINDINGS@@};",
+        "inline constexpr CliPin CLI_SONG_PINS[] = {",
+        "{0xfae834,CLI_SONG_HIGHLIGHT,sizeof(CLI_SONG_HIGHLIGHT)},",
+        "{0x181a7d4,CLI_SONG_SORT_GROUP_REVERSE,sizeof(CLI_SONG_SORT_GROUP_REVERSE)},",
+        "{0x13a3860,CLI_SONG_DIFFICULTY_BUTTON_HANDLER,sizeof(CLI_SONG_DIFFICULTY_BUTTON_HANDLER)},",
+        "{0x13f0c2c,CLI_SONG_DIFFICULTY_CLOSURE,sizeof(CLI_SONG_DIFFICULTY_CLOSURE)},",
+        "{0x14ef098,CLI_SONG_SELECTED_PAIR_UPDATE,sizeof(CLI_SONG_SELECTED_PAIR_UPDATE)},",
+        "{0x7b7680,CLI_SONG_PACK_SELECT_HANDLER,sizeof(CLI_SONG_PACK_SELECT_HANDLER)},",
+        "{0x193b304,CLI_SONG_PACK_LOOKUP,sizeof(CLI_SONG_PACK_LOOKUP)},",
+        "{0x1326458,CLI_SONG_PACK_CLOSE_ANIMATION,sizeof(CLI_SONG_PACK_CLOSE_ANIMATION)},",
+        "{0xb69d74,CLI_SONG_PACK_CLOSE_RESTORE,sizeof(CLI_SONG_PACK_CLOSE_RESTORE)},",
+        "{0x9df984,CLI_SONG_SELECTED_LAYER_FACTORY,sizeof(CLI_SONG_SELECTED_LAYER_FACTORY)},",
+        "{0x161add0,CLI_SONG_SCENE_SELECTED_LAYER_STORE,sizeof(CLI_SONG_SCENE_SELECTED_LAYER_STORE)},",
+        "{0x161c584,CLI_SONG_SCENE_STATE_ACCESS_DELEGATE_BINDINGS,sizeof(CLI_SONG_SCENE_STATE_ACCESS_DELEGATE_BINDINGS)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_SONG_HIGHLIGHT",
+          "bytes": 2836,
+          "sha256": "649091cc502d5655ab0bc97dec0e9dc34cd26bc7af19c92bfcc4e3f43558ef81",
+          "address": "0xfae834"
+        },
+        {
+          "symbol": "CLI_SONG_SORT_GROUP_REVERSE",
+          "bytes": 900,
+          "sha256": "0e6377a86c44e1a9b8c1cdf30ae854a675a681380ee915e3decd7bda9a0e4e3c",
+          "address": "0x181a7d4"
+        },
+        {
+          "symbol": "CLI_SONG_DIFFICULTY_BUTTON_HANDLER",
+          "bytes": 548,
+          "sha256": "7ee4ddc64e81fc00325f0e400c2dcdfbedfcfea132dae39e238594ea1c6cccea",
+          "address": "0x13a3860"
+        },
+        {
+          "symbol": "CLI_SONG_DIFFICULTY_CLOSURE",
+          "bytes": 36,
+          "sha256": "800ccf673aaade12c70fa34118a236262bac0d0b2915e465368b3919f6a372e3",
+          "address": "0x13f0c2c"
+        },
+        {
+          "symbol": "CLI_SONG_SELECTED_PAIR_UPDATE",
+          "bytes": 176,
+          "sha256": "e425b6538b53e0ede5ed38045fc9123f490eeb54ff9bc82a09ab20bd914bd2a7",
+          "address": "0x14ef098"
+        },
+        {
+          "symbol": "CLI_SONG_PACK_SELECT_HANDLER",
+          "bytes": 348,
+          "sha256": "bd89fd19ab952df50d79f51ad9a358863e725814126c6020ece5923cd76523dc",
+          "address": "0x7b7680"
+        },
+        {
+          "symbol": "CLI_SONG_PACK_LOOKUP",
+          "bytes": 220,
+          "sha256": "6fa6e38ee533abf4c30bae8702d1e908a935a54fdc99dbb35dd2f7e4561a461d",
+          "address": "0x193b304"
+        },
+        {
+          "symbol": "CLI_SONG_PACK_CLOSE_ANIMATION",
+          "bytes": 192,
+          "sha256": "a8682e1c238618acfd3df2d7236f608e098ab030fdb2af07a35ca00bf7ddf54b",
+          "address": "0x1326458"
+        },
+        {
+          "symbol": "CLI_SONG_PACK_CLOSE_RESTORE",
+          "bytes": 1156,
+          "sha256": "f29d5b67e2894fc0a0eaffdc7d4bc26e3a7dd7252b3202578165aaad139548b5",
+          "address": "0xb69d74"
+        },
+        {
+          "symbol": "CLI_SONG_SELECTED_LAYER_FACTORY",
+          "bytes": 296,
+          "sha256": "6817501cc25dffb2598390dab5844a599117329c2ba05f1359b23c4613b315a7",
+          "address": "0x9df984"
+        },
+        {
+          "symbol": "CLI_SONG_SCENE_SELECTED_LAYER_STORE",
+          "bytes": 12,
+          "sha256": "4237e54fda00dafddef73d93dc4977119eab3c13dd8ee1ceecde43ddc8e62402",
+          "address": "0x161add0"
+        },
+        {
+          "symbol": "CLI_SONG_SCENE_STATE_ACCESS_DELEGATE_BINDINGS",
+          "bytes": 48,
+          "sha256": "b7738bcaaf3acfefcde04953067a576f7cb3edb67e2014928bfa3c469b688161",
+          "address": "0x161c584"
+        }
+      ]
+    },
+    {
+      "path": "semantic/play/play_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_PLAY_SCENE_SONG_SELECTED_THUNK[] = {@@CLI_PLAY_SCENE_SONG_SELECTED_THUNK@@};",
+        "inline constexpr unsigned char CLI_PLAY_SCENE_SONG_SELECTED[] = {@@CLI_PLAY_SCENE_SONG_SELECTED@@};",
+        "inline constexpr CliPin CLI_PLAY_PINS[] = {",
+        "{0xa12308,CLI_PLAY_SCENE_SONG_SELECTED_THUNK,sizeof(CLI_PLAY_SCENE_SONG_SELECTED_THUNK)},",
+        "{0x13f3ce4,CLI_PLAY_SCENE_SONG_SELECTED,sizeof(CLI_PLAY_SCENE_SONG_SELECTED)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_PLAY_SCENE_SONG_SELECTED_THUNK",
+          "bytes": 16,
+          "sha256": "daf8927764884458ab5427c6b656c83ab2fa8c303b0dfa846ab612a3e226d1f1",
+          "address": "0xa12308"
+        },
+        {
+          "symbol": "CLI_PLAY_SCENE_SONG_SELECTED",
+          "bytes": 3684,
+          "sha256": "b3dca99ab5acfc07a45e6274e55d3d51033a44e58f8be0c0164d302a9e60149c",
+          "address": "0x13f3ce4"
+        }
+      ]
+    },
+    {
+      "path": "semantic/play/confirm/play_confirm_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_BUTTON_RELEASE[] = {@@CLI_PLAY_DOWNLOAD_BUTTON_RELEASE@@};",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_DIALOG_BUTTON1[] = {@@CLI_PLAY_DOWNLOAD_DIALOG_BUTTON1@@};",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_DOWNLOAD_ACCEPT[] = {@@CLI_PLAY_DOWNLOAD_DOWNLOAD_ACCEPT@@};",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_DOWNLOAD_CANCEL[] = {@@CLI_PLAY_DOWNLOAD_DOWNLOAD_CANCEL@@};",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_SELECTION_REFRESH[] = {@@CLI_PLAY_DOWNLOAD_SELECTION_REFRESH@@};",
+        "inline constexpr unsigned char CLI_PLAY_DOWNLOAD_DOWNLOAD_PROMPT[] = {@@CLI_PLAY_DOWNLOAD_DOWNLOAD_PROMPT@@};",
+        "inline constexpr CliPin CLI_PLAY_DOWNLOAD_PINS[] = {",
+        "{0xf66c9c,CLI_PLAY_DOWNLOAD_BUTTON_RELEASE,sizeof(CLI_PLAY_DOWNLOAD_BUTTON_RELEASE)},",
+        "{0x1411494,CLI_PLAY_DOWNLOAD_DIALOG_BUTTON1,sizeof(CLI_PLAY_DOWNLOAD_DIALOG_BUTTON1)},",
+        "{0xc8efa4,CLI_PLAY_DOWNLOAD_DOWNLOAD_ACCEPT,sizeof(CLI_PLAY_DOWNLOAD_DOWNLOAD_ACCEPT)},",
+        "{0xd89828,CLI_PLAY_DOWNLOAD_DOWNLOAD_CANCEL,sizeof(CLI_PLAY_DOWNLOAD_DOWNLOAD_CANCEL)},",
+        "{0x1727c90,CLI_PLAY_DOWNLOAD_SELECTION_REFRESH,sizeof(CLI_PLAY_DOWNLOAD_SELECTION_REFRESH)},",
+        "{0x1136c4c,CLI_PLAY_DOWNLOAD_DOWNLOAD_PROMPT,sizeof(CLI_PLAY_DOWNLOAD_DOWNLOAD_PROMPT)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_BUTTON_RELEASE",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_DIALOG_BUTTON1",
+          "bytes": 156,
+          "sha256": "051b931448c47bc90e4505c042a9b0b5daa94474f4ae1ae6f0ed4bfeafe58a29",
+          "address": "0x1411494"
+        },
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_DOWNLOAD_ACCEPT",
+          "bytes": 816,
+          "sha256": "06f5ec81d4695bdbbe3ebdf5772e98cd16383adfa807ee49921d8d1da6e5f1b4",
+          "address": "0xc8efa4"
+        },
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_DOWNLOAD_CANCEL",
+          "bytes": 8,
+          "sha256": "7ca06b2ab9b35b94735dd9b978692a4aea0acd60774e91ae566dbaf315f94300",
+          "address": "0xd89828"
+        },
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_SELECTION_REFRESH",
+          "bytes": 24,
+          "sha256": "065f3d1e3566af347cb7117d4224467d654d4c69fe771a1a8a01136843048d82",
+          "address": "0x1727c90"
+        },
+        {
+          "symbol": "CLI_PLAY_DOWNLOAD_DOWNLOAD_PROMPT",
+          "bytes": 4420,
+          "sha256": "595aa90fb7014ccee8ac2621825cc9e0c7cc207f36c21d4e940e40941865ef75",
+          "address": "0x1136c4c"
+        }
+      ]
+    },
+    {
+      "path": "semantic/play/guide/play_guide_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_PLAY_GUIDE_DIALOG_BUTTON2[] = {@@CLI_PLAY_GUIDE_DIALOG_BUTTON2@@};",
+        "inline constexpr unsigned char CLI_PLAY_GUIDE_SKIP_ADVANCED_GUIDE[] = {@@CLI_PLAY_GUIDE_SKIP_ADVANCED_GUIDE@@};",
+        "inline constexpr unsigned char CLI_PLAY_GUIDE_ADVANCED_GUIDE_PROMPT[] = {@@CLI_PLAY_GUIDE_ADVANCED_GUIDE_PROMPT@@};",
+        "inline constexpr CliPin CLI_PLAY_GUIDE_PINS[] = {",
+        "{0x11b1d84,CLI_PLAY_GUIDE_DIALOG_BUTTON2,sizeof(CLI_PLAY_GUIDE_DIALOG_BUTTON2)},",
+        "{0x1870d58,CLI_PLAY_GUIDE_SKIP_ADVANCED_GUIDE,sizeof(CLI_PLAY_GUIDE_SKIP_ADVANCED_GUIDE)},",
+        "{0x15be5b4,CLI_PLAY_GUIDE_ADVANCED_GUIDE_PROMPT,sizeof(CLI_PLAY_GUIDE_ADVANCED_GUIDE_PROMPT)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_PLAY_GUIDE_DIALOG_BUTTON2",
+          "bytes": 156,
+          "sha256": "b651fe25cd0aaa89fe3f7e52dffa651cbc3ed6e2f44483b159315987dedf96f2",
+          "address": "0x11b1d84"
+        },
+        {
+          "symbol": "CLI_PLAY_GUIDE_SKIP_ADVANCED_GUIDE",
+          "bytes": 68,
+          "sha256": "0af56cf2c8031418df4745c6330b8bef3b80d09c28eaeb892579751844460b38",
+          "address": "0x1870d58"
+        },
+        {
+          "symbol": "CLI_PLAY_GUIDE_ADVANCED_GUIDE_PROMPT",
+          "bytes": 840,
+          "sha256": "9ab20842ef9024ba7286783be95c19542cb83617c22bed76452d10153a5e55e9",
+          "address": "0x15be5b4"
+        }
+      ]
+    },
+    {
+      "path": "semantic/character/character_pins.h",
+      "template": [
+        "#pragma once",
+        "struct CharacterPin { Address address; Size size; const unsigned char* bytes; };",
+        "inline constexpr unsigned char CHARACTER_PIN_0[] = {@@CHARACTER_PIN_0@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_1[] = {@@CHARACTER_PIN_1@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_2[] = {@@CHARACTER_PIN_2@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_3[] = {@@CHARACTER_PIN_3@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_4[] = {@@CHARACTER_PIN_4@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_5[] = {@@CHARACTER_PIN_5@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_6[] = {@@CHARACTER_PIN_6@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_7[] = {@@CHARACTER_PIN_7@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_8[] = {@@CHARACTER_PIN_8@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_9[] = {@@CHARACTER_PIN_9@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_10[] = {@@CHARACTER_PIN_10@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_11[] = {@@CHARACTER_PIN_11@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_12[] = {@@CHARACTER_PIN_12@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_13[] = {@@CHARACTER_PIN_13@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_14[] = {@@CHARACTER_PIN_14@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_15[] = {@@CHARACTER_PIN_15@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_16[] = {@@CHARACTER_PIN_16@@};",
+        "inline constexpr unsigned char CHARACTER_PIN_17[] = {@@CHARACTER_PIN_17@@};",
+        "inline constexpr CharacterPin CHARACTER_PINS[] = {",
+        "    {0xf66c9c, sizeof(CHARACTER_PIN_0), CHARACTER_PIN_0},",
+        "    {0x13fa258, sizeof(CHARACTER_PIN_1), CHARACTER_PIN_1},",
+        "    {0x1087c18, sizeof(CHARACTER_PIN_2), CHARACTER_PIN_2},",
+        "    {0xb688e0, sizeof(CHARACTER_PIN_3), CHARACTER_PIN_3},",
+        "    {0x1331f60, sizeof(CHARACTER_PIN_4), CHARACTER_PIN_4},",
+        "    {0x8ee05c, sizeof(CHARACTER_PIN_5), CHARACTER_PIN_5},",
+        "    {0xb4247c, sizeof(CHARACTER_PIN_6), CHARACTER_PIN_6},",
+        "    {0xa90950, sizeof(CHARACTER_PIN_7), CHARACTER_PIN_7},",
+        "    {0xd4b210, sizeof(CHARACTER_PIN_8), CHARACTER_PIN_8},",
+        "    {0x9c8ce0, sizeof(CHARACTER_PIN_9), CHARACTER_PIN_9},",
+        "    {0x8cf294, sizeof(CHARACTER_PIN_10), CHARACTER_PIN_10},",
+        "    {0x164c604, sizeof(CHARACTER_PIN_11), CHARACTER_PIN_11},",
+        "    {0x1945d10, sizeof(CHARACTER_PIN_12), CHARACTER_PIN_12},",
+        "    {0xfb034c, sizeof(CHARACTER_PIN_13), CHARACTER_PIN_13},",
+        "    {0xfb05e8, sizeof(CHARACTER_PIN_14), CHARACTER_PIN_14},",
+        "    {0xb16e0c, sizeof(CHARACTER_PIN_15), CHARACTER_PIN_15},",
+        "    {0xa423f4, sizeof(CHARACTER_PIN_16), CHARACTER_PIN_16},",
+        "    {0xafa834, sizeof(CHARACTER_PIN_17), CHARACTER_PIN_17},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CHARACTER_PIN_0",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "CHARACTER_PIN_1",
+          "bytes": 504,
+          "sha256": "c43d82c24c350d2910eb1ea477edb542952b0427d1e1930105928ca79527a10c",
+          "address": "0x13fa258"
+        },
+        {
+          "symbol": "CHARACTER_PIN_2",
+          "bytes": 740,
+          "sha256": "0649388c368aed24bd02ec0f5f76d2ffcffb116dc98169df5ac8c514cea0c4f2",
+          "address": "0x1087c18"
+        },
+        {
+          "symbol": "CHARACTER_PIN_3",
+          "bytes": 32,
+          "sha256": "8da8f5b97cf5b24bc046f93af857363bf228a5ddefbc933aa3dc0679a565d9fc",
+          "address": "0xb688e0"
+        },
+        {
+          "symbol": "CHARACTER_PIN_4",
+          "bytes": 476,
+          "sha256": "c1607b49e04ea9fe195e03fc87e646dfe0ab59d2a0693db6cd2fd7ee0673fe30",
+          "address": "0x1331f60"
+        },
+        {
+          "symbol": "CHARACTER_PIN_5",
+          "bytes": 160,
+          "sha256": "112971289e0964b4a9598c4217eaa2612b681750dc5cd2ab6a7b22cb47ea5589",
+          "address": "0x8ee05c"
+        },
+        {
+          "symbol": "CHARACTER_PIN_6",
+          "bytes": 28,
+          "sha256": "7f70620c1b981075f4acb60811fcfe588f376d47171616e1b001946abea792ab",
+          "address": "0xb4247c"
+        },
+        {
+          "symbol": "CHARACTER_PIN_7",
+          "bytes": 124,
+          "sha256": "e8159e54cef9f80d84e1b20a59afce39c2072f63fb9c71e9e729dbdddc76c5fc",
+          "address": "0xa90950"
+        },
+        {
+          "symbol": "CHARACTER_PIN_8",
+          "bytes": 704,
+          "sha256": "e6153f7f16d5fbbdca8eca7f1ed360cc55b0cbce509e2ed02f827aeb555a1853",
+          "address": "0xd4b210"
+        },
+        {
+          "symbol": "CHARACTER_PIN_9",
+          "bytes": 440,
+          "sha256": "a572476f74fd0f81f13059f2d26bb54215f443d9025a9b55df552900f4ae27ab",
+          "address": "0x9c8ce0"
+        },
+        {
+          "symbol": "CHARACTER_PIN_10",
+          "bytes": 144,
+          "sha256": "c72ef1d0f37ca232a6f89e34648d19b40fe31e3d1aa9aeaff3fe9e01614d7693",
+          "address": "0x8cf294"
+        },
+        {
+          "symbol": "CHARACTER_PIN_11",
+          "bytes": 180,
+          "sha256": "48069e60c06d677b079e1422899fa0270ab3c03fb3b5f778739de35d2121a230",
+          "address": "0x164c604"
+        },
+        {
+          "symbol": "CHARACTER_PIN_12",
+          "bytes": 60,
+          "sha256": "3a9505f551c5c61bbef400dfe3a7a250819626f1877893c5a729c532477612da",
+          "address": "0x1945d10"
+        },
+        {
+          "symbol": "CHARACTER_PIN_13",
+          "bytes": 68,
+          "sha256": "7d54f42eacb32f47c09698b521cbb702908aab7242a5fe7e3e309ef710a53646",
+          "address": "0xfb034c"
+        },
+        {
+          "symbol": "CHARACTER_PIN_14",
+          "bytes": 56,
+          "sha256": "e36489d165cb0bd290715c41419e71f1bc0cced234f75df7ed6c57e1547c0ba8",
+          "address": "0xfb05e8"
+        },
+        {
+          "symbol": "CHARACTER_PIN_15",
+          "bytes": 200,
+          "sha256": "9e7879d4aaf0d29e7e306f76d423ec94da171884256227703e14cbbe42441d17",
+          "address": "0xb16e0c"
+        },
+        {
+          "symbol": "CHARACTER_PIN_16",
+          "bytes": 108,
+          "sha256": "039367613f0ace52396fe8cfbbef5f7c543704af85ccd5080b546995bfacacd8",
+          "address": "0xa423f4"
+        },
+        {
+          "symbol": "CHARACTER_PIN_17",
+          "bytes": 204,
+          "sha256": "fc41cd00ed4a694bce5a1d96d6c51772f1beb706c7eced7430abf7e913648148",
+          "address": "0xafa834"
+        }
+      ]
+    },
+    {
+      "path": "semantic/controls/skill_pins.h",
+      "template": [
+        "#pragma once",
+        "struct SkillPin { Address address; Size size; const unsigned char* bytes; };",
+        "inline constexpr unsigned char SKILL_PIN_0[] = {@@SKILL_PIN_0@@};",
+        "inline constexpr unsigned char SKILL_PIN_1[] = {@@SKILL_PIN_1@@};",
+        "inline constexpr unsigned char SKILL_PIN_2[] = {@@SKILL_PIN_2@@};",
+        "inline constexpr unsigned char SKILL_PIN_3[] = {@@SKILL_PIN_3@@};",
+        "inline constexpr unsigned char SKILL_PIN_4[] = {@@SKILL_PIN_4@@};",
+        "inline constexpr unsigned char SKILL_PIN_5[] = {@@SKILL_PIN_5@@};",
+        "inline constexpr unsigned char SKILL_PIN_6[] = {@@SKILL_PIN_6@@};",
+        "inline constexpr unsigned char SKILL_PIN_7[] = {@@SKILL_PIN_7@@};",
+        "inline constexpr SkillPin SKILL_PINS[] = {",
+        "    {0xdce310,sizeof(SKILL_PIN_0),SKILL_PIN_0},",
+        "    {0x179727c,sizeof(SKILL_PIN_1),SKILL_PIN_1},",
+        "    {0x889a18,sizeof(SKILL_PIN_2),SKILL_PIN_2},",
+        "    {0x1581ccc,sizeof(SKILL_PIN_3),SKILL_PIN_3},",
+        "    {0x1003b90,sizeof(SKILL_PIN_4),SKILL_PIN_4},",
+        "    {0x1622e90,sizeof(SKILL_PIN_5),SKILL_PIN_5},",
+        "    {0x1823268,sizeof(SKILL_PIN_6),SKILL_PIN_6},",
+        "    {0xfb26d8,sizeof(SKILL_PIN_7),SKILL_PIN_7},",
+        "};",
+        "struct SkillAbilityType { Address vtable; const char* name; };",
+        "inline constexpr SkillAbilityType SKILL_ABILITY_TYPES[] = {",
+        "    {0x1b4bbc0,\"24CharacterAbilityLunaIlot\"},",
+        "    {0x1ae9fd8,\"38CharacterAbilityHealthLossBasedOnCombo\"},",
+        "    {0x1ae6958,\"52CharacterAbilityMaxHealthReducesBasedOnCurrentHealth\"},",
+        "    {0x1b79798,\"27CharacterAbilitySlowHpDrain\"},",
+        "    {0x1adf800,\"25CharacterAbilityKouWinter\"},",
+        "    {0x1afa868,\"39CharacterAbilityModifyFragmentElizabeth\"},",
+        "    {0x1aa4a20,\"28CharacterAbilityNamiTwilight\"},",
+        "    {0x1b2fe68,\"33CharacterAbilityModifyFragmentRNG\"},",
+        "    {0x1b6f208,\"20CharacterAbilityMaya\"},",
+        "    {0x1ac4680,\"32CharacterAbilityLowComboNoHpGain\"},",
+        "    {0x1a91160,\"24CharacterAbilityEtoHoppe\"},",
+        "    {0x1ad7828,\"40CharacterAbilityFragDoubledAfterEarningX\"},",
+        "    {0x1b7b2e8,\"42CharacterAbilityModifyFragmentInterpolated\"},",
+        "    {0x1ab2328,\"37CharacterAbilityClearBasedOnBestGrade\"},",
+        "    {0x1a8f420,\"31CharacterAbilityViewNoteResults\"},",
+        "    {0x1ab1828,\"47CharacterAbilitySometimesModifyFragmentMirrored\"},",
+        "    {0x1b94070,\"34CharacterAbilityPreferredSongDaily\"},",
+        "    {0x1ab96c8,\"25CharacterAbilityShamaMilk\"},",
+        "    {0x1b7ddc0,\"28CharacterAbilityFatalisGauge\"},",
+        "    {0x1a97798,\"30CharacterAbilityLoseFragOnLost\"},",
+        "    {0x1b021a0,\"43CharacterAbilityAlterRankOnClearModifyFrags\"},",
+        "    {0x1b4baa0,\"29CharacterAbilityIlithAwakened\"},",
+        "    {0x1b89c48,\"31CharacterAbilityDescriptionOnly\"},",
+        "    {0x1b07fa8,\"26CharacterAbilityDjmaxFever\"},",
+        "    {0x1ac2068,\"40CharacterAbilityGaugeRateBasedOnProgress\"},",
+        "    {0x1a9f170,\"34CharacterAbilityModifyFragmentLily\"},",
+        "    {0x1a97928,\"30CharacterAbilityKanaeMidsummer\"},",
+        "    {0x1b05110,\"40CharacterAbilityBonusesBasedOnPeakHealth\"},",
+        "    {0x1b49c28,\"21CharacterAbilityAmane\"},",
+        "    {0x1b18d58,\"45CharacterAbilityComboIntervalBasedOnNoteCount\"},",
+        "    {0x1b6f3c8,\"40CharacterAbilityGaugeFixedValueCondition\"},",
+        "    {0x1b4fe90,\"34CharacterAbilityGainStatsFromGauge\"},",
+        "    {0x1af63d8,\"29CharacterAbilityPreferredSong\"},",
+        "    {0x1aee0f0,\"23CharacterAbilityReunion\"},",
+        "    {0x1b78c80,\"41CharacterAbilityDisableGaugeGainAtSongEnd\"},",
+        "    {0x1af1e10,\"28CharacterAbilitySayaKonzetsu\"},",
+        "    {0x1ac18f0,\"28CharacterAbilityTempestGauge\"},",
+        "    {0x1ad3110,\"38CharacterAbilityModifyFragmentOnResult\"},",
+        "    {0x1b7a828,\"31CharacterAbilityHpRateBasedOnHp\"},",
+        "    {0x1b4cd60,\"38CharacterAbilityAwardBonusBasedOnCombo\"},",
+        "    {0x1b87a30,\"34CharacterAbilityModifyFragmentLuin\"},",
+        "    {0x1af95a0,\"45CharacterAbilityLoseHealthGainFragAtIntervals\"},",
+        "    {0x1aee218,\"36CharacterAbilityModifyFragmentOnFail\"},",
+        "    {0x1a95bf0,\"16CharacterAbility\"},",
+        "    {0x1aac9b0,\"20CharacterAbilitySafe\"},",
+        "    {0x1b5e0a0,\"31CharacterAbilityGaugeRateModify\"},",
+        "    {0x1aa4720,\"33CharacterAbilityClearBasedOnScore\"},",
+        "    {0x1b7d2f0,\"29CharacterAbilityGaugeChunithm\"},",
+        "    {0x1b1c068,\"28CharacterAbilityInsightGauge\"},",
+        "    {0x1ad0c80,\"37CharacterAbilityModifyFragmentOnGrade\"},",
+        "    {0x1acca18,\"30CharacterAbilityNextstageDaily\"},",
+        "    {0x1b5a168,\"31CharacterAbilityInsightKonzetsu\"},",
+        "    {0x1a84510,\"44CharacterAbilityModifyFragmentOnResultOngeki\"},",
+        "    {0x1b70ef8,\"34CharacterAbilityModifyFragmentNami\"},",
+        "    {0x1abc2c0,\"34CharacterAbilityHighHpLossAtHighHp\"},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "SKILL_PIN_0",
+          "bytes": 52,
+          "sha256": "51251be5725a9c9b691827b910d1c5e5ff70d05dd97aa23f7d1df6a4063fe083",
+          "address": "0xdce310"
+        },
+        {
+          "symbol": "SKILL_PIN_1",
+          "bytes": 8,
+          "sha256": "5df1989c16767cd1d335f12745774eb72525d351309884cd8e2ac543e19f2ed0",
+          "address": "0x179727c"
+        },
+        {
+          "symbol": "SKILL_PIN_2",
+          "bytes": 8,
+          "sha256": "7cffe687c758bc2cd950a25a5cf0fffb605cc3561d20b4b0a099f830c104365b",
+          "address": "0x889a18"
+        },
+        {
+          "symbol": "SKILL_PIN_3",
+          "bytes": 8,
+          "sha256": "f2a41acf67c1de0eee5443c8fa2e53019a2650b802e011084b07064fdddf8e82",
+          "address": "0x1581ccc"
+        },
+        {
+          "symbol": "SKILL_PIN_4",
+          "bytes": 8,
+          "sha256": "78583cb90ad13e712ee5163aea9c5efe9cbc3402f4096685a45821db97a1cd2a",
+          "address": "0x1003b90"
+        },
+        {
+          "symbol": "SKILL_PIN_5",
+          "bytes": 96,
+          "sha256": "18c472691d5b60a5f2831b6771b2b4819124f24582685ff3d548b50025d0dc69",
+          "address": "0x1622e90"
+        },
+        {
+          "symbol": "SKILL_PIN_6",
+          "bytes": 56,
+          "sha256": "f1f92aaf677a8868ab14f1f3f68ca05e713d7b1dbee99f1bf2da8979fde4b338",
+          "address": "0x1823268"
+        },
+        {
+          "symbol": "SKILL_PIN_7",
+          "bytes": 32,
+          "sha256": "73471d750afb121e050060faaa3600ade490b3bab599739c0f04ff1cb34fb223",
+          "address": "0xfb26d8"
+        }
+      ]
+    },
+    {
+      "path": "semantic/settings-v12/settings_panel_pins.h",
+      "template": [
+        "#pragma once",
+        "struct SettingsPanelPin { Address address; Size size; const unsigned char* bytes; };",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_0[] = {@@SETTINGS_PANEL_PIN_0@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_1[] = {@@SETTINGS_PANEL_PIN_1@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_2[] = {@@SETTINGS_PANEL_PIN_2@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_3[] = {@@SETTINGS_PANEL_PIN_3@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_4[] = {@@SETTINGS_PANEL_PIN_4@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_5[] = {@@SETTINGS_PANEL_PIN_5@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_6[] = {@@SETTINGS_PANEL_PIN_6@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_7[] = {@@SETTINGS_PANEL_PIN_7@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_8[] = {@@SETTINGS_PANEL_PIN_8@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_9[] = {@@SETTINGS_PANEL_PIN_9@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_10[] = {@@SETTINGS_PANEL_PIN_10@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_11[] = {@@SETTINGS_PANEL_PIN_11@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_12[] = {@@SETTINGS_PANEL_PIN_12@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_13[] = {@@SETTINGS_PANEL_PIN_13@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_14[] = {@@SETTINGS_PANEL_PIN_14@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_15[] = {@@SETTINGS_PANEL_PIN_15@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_16[] = {@@SETTINGS_PANEL_PIN_16@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_17[] = {@@SETTINGS_PANEL_PIN_17@@};",
+        "inline constexpr unsigned char SETTINGS_PANEL_PIN_18[] = {@@SETTINGS_PANEL_PIN_18@@};",
+        "inline constexpr SettingsPanelPin SETTINGS_PANEL_PINS[] = {",
+        "    {0x1581e18,sizeof(SETTINGS_PANEL_PIN_0),SETTINGS_PANEL_PIN_0},",
+        "    {0xd80924,sizeof(SETTINGS_PANEL_PIN_1),SETTINGS_PANEL_PIN_1},",
+        "    {0x145778c,sizeof(SETTINGS_PANEL_PIN_2),SETTINGS_PANEL_PIN_2},",
+        "    {0xc7febc,sizeof(SETTINGS_PANEL_PIN_3),SETTINGS_PANEL_PIN_3},",
+        "    {0x9f6140,sizeof(SETTINGS_PANEL_PIN_4),SETTINGS_PANEL_PIN_4},",
+        "    {0x1620450,sizeof(SETTINGS_PANEL_PIN_5),SETTINGS_PANEL_PIN_5},",
+        "    {0xf638a0,sizeof(SETTINGS_PANEL_PIN_6),SETTINGS_PANEL_PIN_6},",
+        "    {0x14abd44,sizeof(SETTINGS_PANEL_PIN_7),SETTINGS_PANEL_PIN_7},",
+        "    {0xd762e0,sizeof(SETTINGS_PANEL_PIN_8),SETTINGS_PANEL_PIN_8},",
+        "    {0x1646cf0,sizeof(SETTINGS_PANEL_PIN_9),SETTINGS_PANEL_PIN_9},",
+        "    {0x169e288,sizeof(SETTINGS_PANEL_PIN_10),SETTINGS_PANEL_PIN_10},",
+        "    {0xcd0fb8,sizeof(SETTINGS_PANEL_PIN_11),SETTINGS_PANEL_PIN_11},",
+        "    {0x1886b34,sizeof(SETTINGS_PANEL_PIN_12),SETTINGS_PANEL_PIN_12},",
+        "    {0xd7760c,sizeof(SETTINGS_PANEL_PIN_13),SETTINGS_PANEL_PIN_13},",
+        "    {0x17cc574,sizeof(SETTINGS_PANEL_PIN_14),SETTINGS_PANEL_PIN_14},",
+        "    {0x8f1c9c,sizeof(SETTINGS_PANEL_PIN_15),SETTINGS_PANEL_PIN_15},",
+        "    {0x1563e0c,sizeof(SETTINGS_PANEL_PIN_16),SETTINGS_PANEL_PIN_16},",
+        "    {0x1556400,sizeof(SETTINGS_PANEL_PIN_17),SETTINGS_PANEL_PIN_17},",
+        "    {0x15556c8,sizeof(SETTINGS_PANEL_PIN_18),SETTINGS_PANEL_PIN_18},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "SETTINGS_PANEL_PIN_0",
+          "bytes": 104,
+          "sha256": "aa783dedfdf6140267e72a13ea63facbeeef238db333076f7f77a0803416f122",
+          "address": "0x1581e18"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_1",
+          "bytes": 104,
+          "sha256": "5b3fa9600ae25559e093a242e63e0f963169665a4b1e13a28de04648be9293b3",
+          "address": "0xd80924"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_2",
+          "bytes": 108,
+          "sha256": "e93c692202fa9cde10e687de7df6fad5136b5cd7825a1cf6b3ee2aa5f92dd99c",
+          "address": "0x145778c"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_3",
+          "bytes": 320,
+          "sha256": "3366d6e473ed18faa9895c54a7a5881ae1e60cb708e42ee55e0035fa20042a6e",
+          "address": "0xc7febc"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_4",
+          "bytes": 420,
+          "sha256": "a713ed7aa1b458611eb4f52a5076c5afb3cbf970c4fc5b5b4fadf8574d4fd3b9",
+          "address": "0x9f6140"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_5",
+          "bytes": 72,
+          "sha256": "406c0d7fd2323ef1e4c5ff1eba4d5f7074d77daab99b78def12065e9bcb9a225",
+          "address": "0x1620450"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_6",
+          "bytes": 24,
+          "sha256": "520e1b95398dc37872fbfe6639760219f5e156df96f44f5122f08257ad23e527",
+          "address": "0xf638a0"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_7",
+          "bytes": 56,
+          "sha256": "fa1e210a292bf97d83761569b5c0ee36d2318d23b759e8d1e8067ee12fe798fc",
+          "address": "0x14abd44"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_8",
+          "bytes": 60,
+          "sha256": "b1adc9aaa44e8c2194469d94e221cb9bd43ea835c897ddfc8f8003f427532b92",
+          "address": "0xd762e0"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_9",
+          "bytes": 68,
+          "sha256": "7203070db395edbbdcffe50f59d0d2e18caf14987ef7b4acd813d81175d66c07",
+          "address": "0x1646cf0"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_10",
+          "bytes": 92,
+          "sha256": "81d21bcc16b5fa049a65ac887ee60f6e05bed596a876e021c1c3505b2b8a98d7",
+          "address": "0x169e288"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_11",
+          "bytes": 44,
+          "sha256": "54dd3cd64ea050b3db507cfb916d16cd63b3b3ed097512b9454b975c6e1195ae",
+          "address": "0xcd0fb8"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_12",
+          "bytes": 64,
+          "sha256": "27342df23b8b19988a1506cf4ceaa7f504ac504bf3b75011fd38a91847240032",
+          "address": "0x1886b34"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_13",
+          "bytes": 464,
+          "sha256": "a09c230d41287efca787422a2c53b04d0f7b37c99df678d61ff74af20fbf517a",
+          "address": "0xd7760c"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_14",
+          "bytes": 52,
+          "sha256": "df3f951d31e069df5b59b6bb9f1f83e534c290e4e36213317ffbe3ec42c0c5e2",
+          "address": "0x17cc574"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_15",
+          "bytes": 796,
+          "sha256": "fe2f4506a34a195c759713d3cbba5b2268b767592fbe05d95cfb212b476bf35b",
+          "address": "0x8f1c9c"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_16",
+          "bytes": 452,
+          "sha256": "d73e0474f9366721c53d6918e5a4f8e4c14a8b148e608e575336de0436e03175",
+          "address": "0x1563e0c"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_17",
+          "bytes": 44,
+          "sha256": "12c93e06bed7f0425e1f1e53b5b6beafc6ccd92a39666bb19f44bd9ccebce724",
+          "address": "0x1556400"
+        },
+        {
+          "symbol": "SETTINGS_PANEL_PIN_18",
+          "bytes": 300,
+          "sha256": "84d999a271291f03ed4cadff1cbb3a3e25386cd4e85c4172d870f5d50131c3c3",
+          "address": "0x15556c8"
+        }
+      ]
+    },
+    {
+      "path": "semantic/settings-v12/highfps_pins.h",
+      "template": [
+        "#pragma once",
+        "// Generated from the pinned staging core; keep outside public source.",
+        "inline constexpr unsigned char highfps_pin_0[] = {@@highfps_pin_0@@};",
+        "inline constexpr unsigned char highfps_pin_1[] = {@@highfps_pin_1@@};",
+        "inline constexpr unsigned char highfps_pin_2[] = {@@highfps_pin_2@@};",
+        "inline constexpr unsigned char highfps_pin_3[] = {@@highfps_pin_3@@};",
+        "inline constexpr unsigned char highfps_pin_4[] = {@@highfps_pin_4@@};",
+        "inline constexpr unsigned char highfps_pin_5[] = {@@highfps_pin_5@@};",
+        "inline constexpr unsigned char highfps_pin_6[] = {@@highfps_pin_6@@};",
+        "inline constexpr unsigned char highfps_pin_7[] = {@@highfps_pin_7@@};",
+        "inline constexpr unsigned char highfps_pin_8[] = {@@highfps_pin_8@@};",
+        "inline constexpr unsigned char highfps_pin_9[] = {@@highfps_pin_9@@};",
+        "inline constexpr unsigned char highfps_pin_10[] = {@@highfps_pin_10@@};",
+        "inline constexpr unsigned char highfps_pin_11[] = {@@highfps_pin_11@@};",
+        "inline constexpr unsigned char highfps_pin_12[] = {@@highfps_pin_12@@};",
+        "inline constexpr unsigned char highfps_pin_13[] = {@@highfps_pin_13@@};",
+        "struct HighFpsPin { Address address; const unsigned char* bytes; Size size; };",
+        "inline constexpr HighFpsPin HIGHFPS_PINS[] = {",
+        "{0xb8c1e4,highfps_pin_0,sizeof(highfps_pin_0)},",
+        "{0xb8eb74,highfps_pin_1,sizeof(highfps_pin_1)},",
+        "{0x1254450,highfps_pin_2,sizeof(highfps_pin_2)},",
+        "{0x15a2768,highfps_pin_3,sizeof(highfps_pin_3)},",
+        "{0x13f58f4,highfps_pin_4,sizeof(highfps_pin_4)},",
+        "{0xa39168,highfps_pin_5,sizeof(highfps_pin_5)},",
+        "{0x12da56c,highfps_pin_6,sizeof(highfps_pin_6)},",
+        "{0x120dcf4,highfps_pin_7,sizeof(highfps_pin_7)},",
+        "{0x8b02a4,highfps_pin_8,sizeof(highfps_pin_8)},",
+        "{0xdb5064,highfps_pin_9,sizeof(highfps_pin_9)},",
+        "{0x14bd6cc,highfps_pin_10,sizeof(highfps_pin_10)},",
+        "{0xdcb790,highfps_pin_11,sizeof(highfps_pin_11)},",
+        "{0xf66c9c,highfps_pin_12,sizeof(highfps_pin_12)},",
+        "{0xafa834,highfps_pin_13,sizeof(highfps_pin_13)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "highfps_pin_0",
+          "bytes": 112,
+          "sha256": "537826291178b5b4ec15c6c1b6632ba024105566d999d73860827caafea66f02",
+          "address": "0xb8c1e4"
+        },
+        {
+          "symbol": "highfps_pin_1",
+          "bytes": 536,
+          "sha256": "e84b7d187ffd81bd351b1fab9af5dc5df330539bc211b22d77cb1b3fad691845",
+          "address": "0xb8eb74"
+        },
+        {
+          "symbol": "highfps_pin_2",
+          "bytes": 348,
+          "sha256": "1951ae42a41555221b9e5fac83b7a321648a8105335970ea740596a5a33e5a6f",
+          "address": "0x1254450"
+        },
+        {
+          "symbol": "highfps_pin_3",
+          "bytes": 372,
+          "sha256": "37ee30a73a3e29c6c2381b36105d81c647db1c4b9318679173c92ae49d5ab376",
+          "address": "0x15a2768"
+        },
+        {
+          "symbol": "highfps_pin_4",
+          "bytes": 528,
+          "sha256": "819078f38797831051f474c0a69534be2b005f777e11f8129db7b860bfb725af",
+          "address": "0x13f58f4"
+        },
+        {
+          "symbol": "highfps_pin_5",
+          "bytes": 52,
+          "sha256": "77094739655db947b37ba44ad56b0cfb2af8ca1efbbb11719088095ffb73a2c7",
+          "address": "0xa39168"
+        },
+        {
+          "symbol": "highfps_pin_6",
+          "bytes": 328,
+          "sha256": "8048d3d53e5b2199981bef402807044d298af8ef2600b6a7bdee546e01efb60f",
+          "address": "0x12da56c"
+        },
+        {
+          "symbol": "highfps_pin_7",
+          "bytes": 64,
+          "sha256": "ba5956096d2c82b19e3e8459aa83a7af24cd73c110f9bd7d5125cd52bcd512c5",
+          "address": "0x120dcf4"
+        },
+        {
+          "symbol": "highfps_pin_8",
+          "bytes": 116,
+          "sha256": "42fcc4f3a895b41693fdf3d0cd246c5114965c1c311650e7d1dc972e2849d5c8",
+          "address": "0x8b02a4"
+        },
+        {
+          "symbol": "highfps_pin_9",
+          "bytes": 56,
+          "sha256": "cfcb8b1096d2b9e09753d1293745663c246d3c25c38b37085183c87ee4710af2",
+          "address": "0xdb5064"
+        },
+        {
+          "symbol": "highfps_pin_10",
+          "bytes": 24,
+          "sha256": "b9f8b578961538b8d2669638b5823c5ecedc8043f1674cc855440d6141996542",
+          "address": "0x14bd6cc"
+        },
+        {
+          "symbol": "highfps_pin_11",
+          "bytes": 332,
+          "sha256": "6a9c3e38b7e8734957cac755212fd6751d7834f5e86847f017c4121b3a32f526",
+          "address": "0xdcb790"
+        },
+        {
+          "symbol": "highfps_pin_12",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "highfps_pin_13",
+          "bytes": 200,
+          "sha256": "a199c4cb56d3b8ac3655606361464116183f9ae5ec0788358d0ccd8e67a810ec",
+          "address": "0xafa834"
+        }
+      ]
+    },
+    {
+      "path": "semantic/result/result_pins.h",
+      "template": [
+        "#pragma once",
+        "// Exact core ELF SHA-256: f2729d67166faa1fcee05601ea35d775548d3bfdc2f1a3d04777b082066b235d",
+        "struct ResultPin { Address address; const unsigned char* bytes; Size size; };",
+        "inline constexpr unsigned char RESULT_PIN_0[] = {@@RESULT_PIN_0@@};",
+        "inline constexpr unsigned char RESULT_PIN_1[] = {@@RESULT_PIN_1@@};",
+        "inline constexpr unsigned char RESULT_PIN_2[] = {@@RESULT_PIN_2@@};",
+        "inline constexpr unsigned char RESULT_PIN_3[] = {@@RESULT_PIN_3@@};",
+        "inline constexpr unsigned char RESULT_PIN_4[] = {@@RESULT_PIN_4@@};",
+        "inline constexpr unsigned char RESULT_PIN_5[] = {@@RESULT_PIN_5@@};",
+        "inline constexpr unsigned char RESULT_PIN_6[] = {@@RESULT_PIN_6@@};",
+        "inline constexpr unsigned char RESULT_PIN_7[] = {@@RESULT_PIN_7@@};",
+        "inline constexpr unsigned char RESULT_PIN_8[] = {@@RESULT_PIN_8@@};",
+        "inline constexpr unsigned char RESULT_PIN_9[] = {@@RESULT_PIN_9@@};",
+        "inline constexpr unsigned char RESULT_PIN_10[] = {@@RESULT_PIN_10@@};",
+        "inline constexpr ResultPin RESULT_PINS[] = {",
+        "    {0x1315038, RESULT_PIN_0, sizeof(RESULT_PIN_0)},",
+        "    {0xe43b80, RESULT_PIN_1, sizeof(RESULT_PIN_1)},",
+        "    {0x12a5574, RESULT_PIN_2, sizeof(RESULT_PIN_2)},",
+        "    {0x1604390, RESULT_PIN_3, sizeof(RESULT_PIN_3)},",
+        "    {0x134bbe8, RESULT_PIN_4, sizeof(RESULT_PIN_4)},",
+        "    {0x1356fe0, RESULT_PIN_5, sizeof(RESULT_PIN_5)},",
+        "    {0x135745c, RESULT_PIN_6, sizeof(RESULT_PIN_6)},",
+        "    {0x13577b8, RESULT_PIN_7, sizeof(RESULT_PIN_7)},",
+        "    {0x11c6734, RESULT_PIN_8, sizeof(RESULT_PIN_8)},",
+        "    {0x11c6750, RESULT_PIN_9, sizeof(RESULT_PIN_9)},",
+        "    {0x11c677c, RESULT_PIN_10, sizeof(RESULT_PIN_10)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "RESULT_PIN_0",
+          "bytes": 44,
+          "sha256": "6d9a008b108269ba85db7e8896719c17c287212a4fe8c42dfe38d19bf2602a3f",
+          "address": "0x1315038"
+        },
+        {
+          "symbol": "RESULT_PIN_1",
+          "bytes": 128,
+          "sha256": "7a4ccfea4d0ec2327ad2a47154f20a755818e6a4b76d6cb7869801c61b8ba303",
+          "address": "0xe43b80"
+        },
+        {
+          "symbol": "RESULT_PIN_2",
+          "bytes": 320,
+          "sha256": "26d2f6a09dcb714fd812437d1563c4b2499ec3a15b0b1d1a43835893087c228e",
+          "address": "0x12a5574"
+        },
+        {
+          "symbol": "RESULT_PIN_3",
+          "bytes": 8,
+          "sha256": "fd5c66128704695a5ce5a6d4943edc26f0e46fdafa5df0ece2fb068f0f8cdf73",
+          "address": "0x1604390"
+        },
+        {
+          "symbol": "RESULT_PIN_4",
+          "bytes": 272,
+          "sha256": "c1e8acd5735312507b05f7fc173c580e66c4c02f542f74b2d096debaad50df4f",
+          "address": "0x134bbe8"
+        },
+        {
+          "symbol": "RESULT_PIN_5",
+          "bytes": 16,
+          "sha256": "ae311273c047bd07cb56b7e7bfccd28292ca2ed4941c60cb896ec0cb2712ecd8",
+          "address": "0x1356fe0"
+        },
+        {
+          "symbol": "RESULT_PIN_6",
+          "bytes": 12,
+          "sha256": "31bc60f37becab2b48d4ea88bef4ad8ce40b885be17251ee174f91ff5af98bfe",
+          "address": "0x135745c"
+        },
+        {
+          "symbol": "RESULT_PIN_7",
+          "bytes": 8,
+          "sha256": "27172b6a525f06af4d9e0a0a33a378f7bfa23cdde48f4e38e86ea24957cfebd6",
+          "address": "0x13577b8"
+        },
+        {
+          "symbol": "RESULT_PIN_8",
+          "bytes": 8,
+          "sha256": "1306f56e29d33e29c263149127c9e4f199ef982c172c1be1664edc4b452cb08e",
+          "address": "0x11c6734"
+        },
+        {
+          "symbol": "RESULT_PIN_9",
+          "bytes": 12,
+          "sha256": "1cd62aec157d4843177968520647bd8741edb5ea6b8993802711c3ad180fe36c",
+          "address": "0x11c6750"
+        },
+        {
+          "symbol": "RESULT_PIN_10",
+          "bytes": 12,
+          "sha256": "cb19ba05f93d1fce96a2440066eaa455d6d24af2fb5a9cf3c7547bc712278f9d",
+          "address": "0x11c677c"
+        }
+      ]
+    },
+    {
+      "path": "semantic/account/account_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char ACCOUNT_PIN_0[] = {@@ACCOUNT_PIN_0@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_1[] = {@@ACCOUNT_PIN_1@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_2[] = {@@ACCOUNT_PIN_2@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_3[] = {@@ACCOUNT_PIN_3@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_4[] = {@@ACCOUNT_PIN_4@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_5[] = {@@ACCOUNT_PIN_5@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_6[] = {@@ACCOUNT_PIN_6@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_7[] = {@@ACCOUNT_PIN_7@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_8[] = {@@ACCOUNT_PIN_8@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_9[] = {@@ACCOUNT_PIN_9@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_10[] = {@@ACCOUNT_PIN_10@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_11[] = {@@ACCOUNT_PIN_11@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_12[] = {@@ACCOUNT_PIN_12@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_13[] = {@@ACCOUNT_PIN_13@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_14[] = {@@ACCOUNT_PIN_14@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_15[] = {@@ACCOUNT_PIN_15@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_16[] = {@@ACCOUNT_PIN_16@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_17[] = {@@ACCOUNT_PIN_17@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_18[] = {@@ACCOUNT_PIN_18@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_19[] = {@@ACCOUNT_PIN_19@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_20[] = {@@ACCOUNT_PIN_20@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_21[] = {@@ACCOUNT_PIN_21@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_22[] = {@@ACCOUNT_PIN_22@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_23[] = {@@ACCOUNT_PIN_23@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_24[] = {@@ACCOUNT_PIN_24@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_25[] = {@@ACCOUNT_PIN_25@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_26[] = {@@ACCOUNT_PIN_26@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_27[] = {@@ACCOUNT_PIN_27@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_28[] = {@@ACCOUNT_PIN_28@@};",
+        "inline constexpr unsigned char ACCOUNT_PIN_29[] = {@@ACCOUNT_PIN_29@@};",
+        "inline constexpr CliPin ACCOUNT_PINS[] = {",
+        "    {0x847f98,ACCOUNT_PIN_0,sizeof(ACCOUNT_PIN_0)},",
+        "    {0x93f460,ACCOUNT_PIN_1,sizeof(ACCOUNT_PIN_1)},",
+        "    {0x965244,ACCOUNT_PIN_2,sizeof(ACCOUNT_PIN_2)},",
+        "    {0xba307c,ACCOUNT_PIN_3,sizeof(ACCOUNT_PIN_3)},",
+        "    {0x163e138,ACCOUNT_PIN_4,sizeof(ACCOUNT_PIN_4)},",
+        "    {0xd50198,ACCOUNT_PIN_5,sizeof(ACCOUNT_PIN_5)},",
+        "    {0x1886e54,ACCOUNT_PIN_6,sizeof(ACCOUNT_PIN_6)},",
+        "    {0xca27a8,ACCOUNT_PIN_7,sizeof(ACCOUNT_PIN_7)},",
+        "    {0x19736b8,ACCOUNT_PIN_8,sizeof(ACCOUNT_PIN_8)},",
+        "    {0x120e99c,ACCOUNT_PIN_9,sizeof(ACCOUNT_PIN_9)},",
+        "    {0xe160e0,ACCOUNT_PIN_10,sizeof(ACCOUNT_PIN_10)},",
+        "    {0x1529c24,ACCOUNT_PIN_11,sizeof(ACCOUNT_PIN_11)},",
+        "    {0xac5bc0,ACCOUNT_PIN_12,sizeof(ACCOUNT_PIN_12)},",
+        "    {0xb6a4dc,ACCOUNT_PIN_13,sizeof(ACCOUNT_PIN_13)},",
+        "    {0xa1ad08,ACCOUNT_PIN_14,sizeof(ACCOUNT_PIN_14)},",
+        "    {0x14e7ef4,ACCOUNT_PIN_15,sizeof(ACCOUNT_PIN_15)},",
+        "    {0xe3a1e0,ACCOUNT_PIN_16,sizeof(ACCOUNT_PIN_16)},",
+        "    {0x1378124,ACCOUNT_PIN_17,sizeof(ACCOUNT_PIN_17)},",
+        "    {0x18897f0,ACCOUNT_PIN_18,sizeof(ACCOUNT_PIN_18)},",
+        "    {0x18f81dc,ACCOUNT_PIN_19,sizeof(ACCOUNT_PIN_19)},",
+        "    {0x96a884,ACCOUNT_PIN_20,sizeof(ACCOUNT_PIN_20)},",
+        "    {0xd891a0,ACCOUNT_PIN_21,sizeof(ACCOUNT_PIN_21)},",
+        "    {0xdb69c4,ACCOUNT_PIN_22,sizeof(ACCOUNT_PIN_22)},",
+        "    {0x1411494,ACCOUNT_PIN_23,sizeof(ACCOUNT_PIN_23)},",
+        "    {0xe25f24,ACCOUNT_PIN_24,sizeof(ACCOUNT_PIN_24)},",
+        "    {0xb3e20c,ACCOUNT_PIN_25,sizeof(ACCOUNT_PIN_25)},",
+        "    {0x84b510,ACCOUNT_PIN_26,sizeof(ACCOUNT_PIN_26)},",
+        "    {0x172fff8,ACCOUNT_PIN_27,sizeof(ACCOUNT_PIN_27)},",
+        "    {0x1a6dba0,ACCOUNT_PIN_28,sizeof(ACCOUNT_PIN_28)},",
+        "    {0x1a6d9e0,ACCOUNT_PIN_29,sizeof(ACCOUNT_PIN_29)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "ACCOUNT_PIN_0",
+          "bytes": 92,
+          "sha256": "ed508da49498445f8ac4ba1db715d772178f22d7bdd55f9d69efc4f370f34604",
+          "address": "0x847f98"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_1",
+          "bytes": 280,
+          "sha256": "a0b9283c84c3535a8b66986b3f55f7f54cad9a680be03dc4032d817edb67def0",
+          "address": "0x93f460"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_2",
+          "bytes": 2768,
+          "sha256": "4de73dfe77314e9df2056bc89836bf3301a7dc4f230d62dc051c800632944e64",
+          "address": "0x965244"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_3",
+          "bytes": 456,
+          "sha256": "19b376f02dacb6559e133c696226a5b625966734720046e34f71541c730401d1",
+          "address": "0xba307c"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_4",
+          "bytes": 4188,
+          "sha256": "695231791096ba60b67884a9495bd7a17914c5b5f6f9721f42436984cd2cd12e",
+          "address": "0x163e138"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_5",
+          "bytes": 972,
+          "sha256": "cd194f6e187c3d4d8389616be1de46bf5efe46331ddc826f2913bd4424f75688",
+          "address": "0xd50198"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_6",
+          "bytes": 596,
+          "sha256": "5801bcf781a76c5345a6bcdf58833bbbdd201a9f426ea2e8e43413c26b839d03",
+          "address": "0x1886e54"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_7",
+          "bytes": 1120,
+          "sha256": "3a92322ba957288ef7c502477aeda414020148fac41361f629cbc71afedc1289",
+          "address": "0xca27a8"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_8",
+          "bytes": 492,
+          "sha256": "e35bea9b9e04045f99fef2667e031f7e35e9afa941d172510a299fcf20c0caba",
+          "address": "0x19736b8"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_9",
+          "bytes": 452,
+          "sha256": "97f7cd515c525a796ef8cd1bd1e56228fb785a69ec7a5d02a870ff9600b3dda8",
+          "address": "0x120e99c"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_10",
+          "bytes": 16,
+          "sha256": "192b76186532e274ef12c5666ffd23370c575d865ec1d302b6f7a49dc7bec008",
+          "address": "0xe160e0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_11",
+          "bytes": 8,
+          "sha256": "26fcc587ea6f76dd42d656380450993d33f4ff55b1025ac35055e04d2a7eb467",
+          "address": "0x1529c24"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_12",
+          "bytes": 8,
+          "sha256": "894b2c1ad9fdfa97f8ad6d2271692a141c4e87d93923a6ca8b67c923c8482056",
+          "address": "0xac5bc0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_13",
+          "bytes": 28,
+          "sha256": "717749b749cffd6390c6bc9800022cc7a8790ccd5fa97782bc97ee0af7b36bb3",
+          "address": "0xb6a4dc"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_14",
+          "bytes": 32,
+          "sha256": "f60b48303ebbf581e4dc11c31e8bb1a69d02785279f5d0f0481b6fdfbb7599d0",
+          "address": "0xa1ad08"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_15",
+          "bytes": 520,
+          "sha256": "b460d4bd5fa9a9a6283c9e13a79fa627137e7ba0fdddf6b159c9991db034c793",
+          "address": "0x14e7ef4"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_16",
+          "bytes": 8,
+          "sha256": "64f48f7471e92ce665d3aa3f328f3f516361dc0f3e58ade98a41e4f11f7fcf5d",
+          "address": "0xe3a1e0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_17",
+          "bytes": 752,
+          "sha256": "c635ec270f475da29c6a507651847a624e6e86f64baa68627d5cb47de4b8e3fe",
+          "address": "0x1378124"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_18",
+          "bytes": 3304,
+          "sha256": "4c3d65d97201e148d628d9b6d1f85eb3ea960c31ee476aa87218a36b1a3b7ffc",
+          "address": "0x18897f0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_19",
+          "bytes": 220,
+          "sha256": "4f8356abe9a5e74dfd5d543fb9eef8aa66de7915495fb2a55b2520d9e6cdc3db",
+          "address": "0x18f81dc"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_20",
+          "bytes": 220,
+          "sha256": "1df1f895f88070c40fd568827f03496d3de4027edfc6575ea28e73d8428bce87",
+          "address": "0x96a884"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_21",
+          "bytes": 824,
+          "sha256": "49238d65aeafa78bf8301d1361ee0c947e49a58386cdcdbb21554bbe7ff21500",
+          "address": "0xd891a0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_22",
+          "bytes": 4196,
+          "sha256": "780ae4368ae27a895c1118665f5b307375e270e88d04e20056981cd10aa5f65a",
+          "address": "0xdb69c4"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_23",
+          "bytes": 156,
+          "sha256": "051b931448c47bc90e4505c042a9b0b5daa94474f4ae1ae6f0ed4bfeafe58a29",
+          "address": "0x1411494"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_24",
+          "bytes": 88,
+          "sha256": "8d0fdd4d96722a951383143d0cee1e5493f084be448fa0c7c9cfa72f2dfe520b",
+          "address": "0xe25f24"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_25",
+          "bytes": 60,
+          "sha256": "7ebcb4f259c0da2696e56fafc8663ab5140b077dc9b573fe6d21c66ee5845649",
+          "address": "0xb3e20c"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_26",
+          "bytes": 3148,
+          "sha256": "8f23f1d91983f29c8d4e6d350923b92f544d430f37b24a8ac92176164ca9f6de",
+          "address": "0x84b510"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_27",
+          "bytes": 420,
+          "sha256": "aee9f4132eed33923b7e86fdbb190bf4704d46552c2a901ae06618cbafb2dfab",
+          "address": "0x172fff8"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_28",
+          "bytes": 16,
+          "sha256": "01b986f8e58e14cc4b9f76949649a6f552306f2294f666d2dd6b7d051d03dbda",
+          "address": "0x1a6dba0"
+        },
+        {
+          "symbol": "ACCOUNT_PIN_29",
+          "bytes": 16,
+          "sha256": "150284a045f53940bae2a4bd34fcccdf911c75e76098d3d9bfd8bcc8f7a4e844",
+          "address": "0x1a6d9e0"
+        }
+      ]
+    },
+    {
+      "path": "semantic/cloudsync/cloudsync_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_0[] = {@@CLOUDSYNC_PIN_0@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_1[] = {@@CLOUDSYNC_PIN_1@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_2[] = {@@CLOUDSYNC_PIN_2@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_3[] = {@@CLOUDSYNC_PIN_3@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_4[] = {@@CLOUDSYNC_PIN_4@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_5[] = {@@CLOUDSYNC_PIN_5@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_6[] = {@@CLOUDSYNC_PIN_6@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_7[] = {@@CLOUDSYNC_PIN_7@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_8[] = {@@CLOUDSYNC_PIN_8@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_9[] = {@@CLOUDSYNC_PIN_9@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_10[] = {@@CLOUDSYNC_PIN_10@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_11[] = {@@CLOUDSYNC_PIN_11@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_12[] = {@@CLOUDSYNC_PIN_12@@};",
+        "inline constexpr unsigned char CLOUDSYNC_PIN_13[] = {@@CLOUDSYNC_PIN_13@@};",
+        "inline constexpr CliPin CLOUDSYNC_PINS[] = {",
+        "{0xc7fd80,CLOUDSYNC_PIN_0,sizeof(CLOUDSYNC_PIN_0)},",
+        "{0x941134,CLOUDSYNC_PIN_1,sizeof(CLOUDSYNC_PIN_1)},",
+        "{0x11aa1ac,CLOUDSYNC_PIN_2,sizeof(CLOUDSYNC_PIN_2)},",
+        "{0x13926fc,CLOUDSYNC_PIN_3,sizeof(CLOUDSYNC_PIN_3)},",
+        "{0x1823f40,CLOUDSYNC_PIN_4,sizeof(CLOUDSYNC_PIN_4)},",
+        "{0x96ddf8,CLOUDSYNC_PIN_5,sizeof(CLOUDSYNC_PIN_5)},",
+        "{0x1354690,CLOUDSYNC_PIN_6,sizeof(CLOUDSYNC_PIN_6)},",
+        "{0x1488dd4,CLOUDSYNC_PIN_7,sizeof(CLOUDSYNC_PIN_7)},",
+        "{0xfbf76c,CLOUDSYNC_PIN_8,sizeof(CLOUDSYNC_PIN_8)},",
+        "{0x18fe91c,CLOUDSYNC_PIN_9,sizeof(CLOUDSYNC_PIN_9)},",
+        "{0x15a8670,CLOUDSYNC_PIN_10,sizeof(CLOUDSYNC_PIN_10)},",
+        "{0x1a6d9c0,CLOUDSYNC_PIN_11,sizeof(CLOUDSYNC_PIN_11)},",
+        "{0x1a6d9e0,CLOUDSYNC_PIN_12,sizeof(CLOUDSYNC_PIN_12)},",
+        "{0x1a6db80,CLOUDSYNC_PIN_13,sizeof(CLOUDSYNC_PIN_13)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLOUDSYNC_PIN_0",
+          "bytes": 316,
+          "sha256": "f65bbf1c2b4826b151206f8b0c6e851d050777b06eb342c80dfdfd0e5fa80652",
+          "address": "0xc7fd80"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_1",
+          "bytes": 89824,
+          "sha256": "96b61750affb9fd11eb72e746967825ed3e50e32fe811e1f565453893e1e5c1b",
+          "address": "0x941134"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_2",
+          "bytes": 3468,
+          "sha256": "801aa720213690591c65f6410fa52d04328d932ed0e71480d39a9fa3f23fd990",
+          "address": "0x11aa1ac"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_3",
+          "bytes": 1340,
+          "sha256": "6ddd31f393fdc87f15221e3305979047da9ba71a58c1f394bee76c3631040eee",
+          "address": "0x13926fc"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_4",
+          "bytes": 256,
+          "sha256": "9a25ffe84c3be5c08b5c9894a9d263fae15bb640c79f09007863076a1cee9ca3",
+          "address": "0x1823f40"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_5",
+          "bytes": 220,
+          "sha256": "2693ba6f81b818d42453dd95a249cd8885d7628dc5611c3fbb02779da786fdbb",
+          "address": "0x96ddf8"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_6",
+          "bytes": 1948,
+          "sha256": "41b97515bcbfb246a9d01c526055975bf29f1dc2bfc75497449bdcbbb091ba46",
+          "address": "0x1354690"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_7",
+          "bytes": 136,
+          "sha256": "dd9ad42cca1bc1eecf51180391299d9e8af290677999e5c5d40f494574da0673",
+          "address": "0x1488dd4"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_8",
+          "bytes": 156,
+          "sha256": "96ac6e22561b4b3ea516764b35a3e9db6452008d7546efa43b08c9c05bceeb0f",
+          "address": "0xfbf76c"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_9",
+          "bytes": 52,
+          "sha256": "3a077cd5ba5614b05d046da4d093d8ccae88c0fa7ec47db1c8bbce15ed2bcea4",
+          "address": "0x18fe91c"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_10",
+          "bytes": 76,
+          "sha256": "aa159c6353bb7ceb0401bc4a9923aa9e22ef8b2d0ff64e26d32ed6591edc5a01",
+          "address": "0x15a8670"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_11",
+          "bytes": 16,
+          "sha256": "2524caf509addc870e936a2518ff6842f53046a18239aa24c0a120697a618567",
+          "address": "0x1a6d9c0"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_12",
+          "bytes": 16,
+          "sha256": "150284a045f53940bae2a4bd34fcccdf911c75e76098d3d9bfd8bcc8f7a4e844",
+          "address": "0x1a6d9e0"
+        },
+        {
+          "symbol": "CLOUDSYNC_PIN_13",
+          "bytes": 16,
+          "sha256": "84af6896d6a22b5c3719ac72fe640af9d3d84e3edf8181c43eac52b1318776cd",
+          "address": "0x1a6db80"
+        }
+      ]
+    },
+    {
+      "path": "semantic/filter-v12/filter_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char FILTER_DIALOG_OPEN[] = {@@FILTER_DIALOG_OPEN@@};",
+        "inline constexpr unsigned char FILTER_DIALOG_CLOSE[] = {@@FILTER_DIALOG_CLOSE@@};",
+        "inline constexpr unsigned char FILTER_QUERY_EVENT[] = {@@FILTER_QUERY_EVENT@@};",
+        "inline constexpr unsigned char FILTER_QUERY_DEFERRED[] = {@@FILTER_QUERY_DEFERRED@@};",
+        "inline constexpr unsigned char FILTER_QUERY_REBUILD[] = {@@FILTER_QUERY_REBUILD@@};",
+        "inline constexpr unsigned char FILTER_DIALOG_REFRESH[] = {@@FILTER_DIALOG_REFRESH@@};",
+        "inline constexpr unsigned char FILTER_RESET_EVENT[] = {@@FILTER_RESET_EVENT@@};",
+        "inline constexpr unsigned char FILTER_FIELD_SET[] = {@@FILTER_FIELD_SET@@};",
+        "inline constexpr unsigned char FILTER_FIELD_GET[] = {@@FILTER_FIELD_GET@@};",
+        "inline constexpr CliPin FILTER_PINS[] = {",
+        "{0xe5eb84,FILTER_DIALOG_OPEN,sizeof(FILTER_DIALOG_OPEN)},",
+        "{0x1575a80,FILTER_DIALOG_CLOSE,sizeof(FILTER_DIALOG_CLOSE)},",
+        "{0x16bf2e4,FILTER_QUERY_EVENT,sizeof(FILTER_QUERY_EVENT)},",
+        "{0x18d5b90,FILTER_QUERY_DEFERRED,sizeof(FILTER_QUERY_DEFERRED)},",
+        "{0x18ee70c,FILTER_QUERY_REBUILD,sizeof(FILTER_QUERY_REBUILD)},",
+        "{0xedf100,FILTER_DIALOG_REFRESH,sizeof(FILTER_DIALOG_REFRESH)},",
+        "{0x1246b14,FILTER_RESET_EVENT,sizeof(FILTER_RESET_EVENT)},",
+        "{0x120e99c,FILTER_FIELD_SET,sizeof(FILTER_FIELD_SET)},",
+        "{0xe160e0,FILTER_FIELD_GET,sizeof(FILTER_FIELD_GET)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "FILTER_DIALOG_OPEN",
+          "bytes": 4884,
+          "sha256": "e4b5529172bb413e67b483a2aef5607307eaaa82a75cdb785ccf65883420355b",
+          "address": "0xe5eb84"
+        },
+        {
+          "symbol": "FILTER_DIALOG_CLOSE",
+          "bytes": 420,
+          "sha256": "f42ed26f0f5dce9cde70de03ecca07f12270f4d705c4cfe925ad2049c49ad479",
+          "address": "0x1575a80"
+        },
+        {
+          "symbol": "FILTER_QUERY_EVENT",
+          "bytes": 528,
+          "sha256": "9d51d2f94478b9d9811d01eb944774746c5f31e39e19f5fdf750152cf8e3d6b8",
+          "address": "0x16bf2e4"
+        },
+        {
+          "symbol": "FILTER_QUERY_DEFERRED",
+          "bytes": 156,
+          "sha256": "6760dbb0e068c175f64210baec823ac1d023a92b74a446b6ad7d76c5506e2ac8",
+          "address": "0x18d5b90"
+        },
+        {
+          "symbol": "FILTER_QUERY_REBUILD",
+          "bytes": 1216,
+          "sha256": "a956aa6b7ab65bfcbe225a0f363907617e641643f26e147b026007cb934ef0aa",
+          "address": "0x18ee70c"
+        },
+        {
+          "symbol": "FILTER_DIALOG_REFRESH",
+          "bytes": 4640,
+          "sha256": "2cc3089c0faf5206dd3b5a26e70760c0756744a32e24dae353f58aa56a00381b",
+          "address": "0xedf100"
+        },
+        {
+          "symbol": "FILTER_RESET_EVENT",
+          "bytes": 388,
+          "sha256": "96362134410ce693aa6611d7301d5a7caa76585ce11ecdf47acbef72ca390042",
+          "address": "0x1246b14"
+        },
+        {
+          "symbol": "FILTER_FIELD_SET",
+          "bytes": 452,
+          "sha256": "97f7cd515c525a796ef8cd1bd1e56228fb785a69ec7a5d02a870ff9600b3dda8",
+          "address": "0x120e99c"
+        },
+        {
+          "symbol": "FILTER_FIELD_GET",
+          "bytes": 16,
+          "sha256": "192b76186532e274ef12c5666ffd23370c575d865ec1d302b6f7a49dc7bec008",
+          "address": "0xe160e0"
+        }
+      ]
+    },
+    {
+      "path": "semantic/navigation/navigation_pins.h",
+      "template": [
+        "#pragma once",
+        "// Exact core ELF SHA-256: f2729d67166faa1fcee05601ea35d775548d3bfdc2f1a3d04777b082066b235d",
+        "struct NavigationPin { Address address; const unsigned char* bytes; Size size; };",
+        "inline constexpr unsigned char NAVIGATION_PIN_0[] = {@@NAVIGATION_PIN_0@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_1[] = {@@NAVIGATION_PIN_1@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_2[] = {@@NAVIGATION_PIN_2@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_3[] = {@@NAVIGATION_PIN_3@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_4[] = {@@NAVIGATION_PIN_4@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_5[] = {@@NAVIGATION_PIN_5@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_6[] = {@@NAVIGATION_PIN_6@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_7[] = {@@NAVIGATION_PIN_7@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_8[] = {@@NAVIGATION_PIN_8@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_9[] = {@@NAVIGATION_PIN_9@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_10[] = {@@NAVIGATION_PIN_10@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_11[] = {@@NAVIGATION_PIN_11@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_12[] = {@@NAVIGATION_PIN_12@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_13[] = {@@NAVIGATION_PIN_13@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_14[] = {@@NAVIGATION_PIN_14@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_15[] = {@@NAVIGATION_PIN_15@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_16[] = {@@NAVIGATION_PIN_16@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_17[] = {@@NAVIGATION_PIN_17@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_18[] = {@@NAVIGATION_PIN_18@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_19[] = {@@NAVIGATION_PIN_19@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_20[] = {@@NAVIGATION_PIN_20@@};",
+        "inline constexpr unsigned char NAVIGATION_PIN_21[] = {@@NAVIGATION_PIN_21@@};",
+        "inline constexpr NavigationPin NAVIGATION_PINS[] = {",
+        "    {0xf66c9c, NAVIGATION_PIN_0, sizeof(NAVIGATION_PIN_0)},",
+        "    {0x121940c, NAVIGATION_PIN_1, sizeof(NAVIGATION_PIN_1)},",
+        "    {0x1346450, NAVIGATION_PIN_2, sizeof(NAVIGATION_PIN_2)},",
+        "    {0xc07304, NAVIGATION_PIN_3, sizeof(NAVIGATION_PIN_3)},",
+        "    {0x1632d78, NAVIGATION_PIN_4, sizeof(NAVIGATION_PIN_4)},",
+        "    {0xa90b80, NAVIGATION_PIN_5, sizeof(NAVIGATION_PIN_5)},",
+        "    {0xf6793c, NAVIGATION_PIN_6, sizeof(NAVIGATION_PIN_6)},",
+        "    {0xbd1c74, NAVIGATION_PIN_7, sizeof(NAVIGATION_PIN_7)},",
+        "    {0x148a4fc, NAVIGATION_PIN_8, sizeof(NAVIGATION_PIN_8)},",
+        "    {0x161af98, NAVIGATION_PIN_9, sizeof(NAVIGATION_PIN_9)},",
+        "    {0xa5b89c, NAVIGATION_PIN_10, sizeof(NAVIGATION_PIN_10)},",
+        "    {0xa5b9f8, NAVIGATION_PIN_11, sizeof(NAVIGATION_PIN_11)},",
+        "    {0xa5bb2c, NAVIGATION_PIN_12, sizeof(NAVIGATION_PIN_12)},",
+        "    {0x15ddebc, NAVIGATION_PIN_13, sizeof(NAVIGATION_PIN_13)},",
+        "    {0x891dcc, NAVIGATION_PIN_14, sizeof(NAVIGATION_PIN_14)},",
+        "    {0x139d4f4, NAVIGATION_PIN_15, sizeof(NAVIGATION_PIN_15)},",
+        "    {0x139d5d4, NAVIGATION_PIN_16, sizeof(NAVIGATION_PIN_16)},",
+        "    {0x165212c, NAVIGATION_PIN_17, sizeof(NAVIGATION_PIN_17)},",
+        "    {0x165218c, NAVIGATION_PIN_18, sizeof(NAVIGATION_PIN_18)},",
+        "    {0x17effac, NAVIGATION_PIN_19, sizeof(NAVIGATION_PIN_19)},",
+        "    {0xdcb2e0, NAVIGATION_PIN_20, sizeof(NAVIGATION_PIN_20)},",
+        "    {0x186ac10, NAVIGATION_PIN_21, sizeof(NAVIGATION_PIN_21)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "NAVIGATION_PIN_0",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_1",
+          "bytes": 268,
+          "sha256": "4380bf8866a6ba79e1c1a2868ee8d378747e1f8f5e941764f251f53d4b7d62fd",
+          "address": "0x121940c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_2",
+          "bytes": 120,
+          "sha256": "6ae2bf8a468514f45dceb6d491074bdc30149a33e97dc0d948267e9194a8136d",
+          "address": "0x1346450"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_3",
+          "bytes": 148,
+          "sha256": "6ec77ad896500735a81e9ad21b86ed9cc5d8dc86979894289e961acbacf04476",
+          "address": "0xc07304"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_4",
+          "bytes": 132,
+          "sha256": "8f2b9bbfc0912b9775ba8a7b299df57169b8024dc2ca3425cbf86c6583182cf7",
+          "address": "0x1632d78"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_5",
+          "bytes": 132,
+          "sha256": "57fe5c9807fb072d764f5c4110125d43a82a0321d4bf6e8c93adc4ecfa2d6306",
+          "address": "0xa90b80"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_6",
+          "bytes": 264,
+          "sha256": "6336dca82111330ff7dc5a875598cb9685c174efeda71e3a1ab3d4ef8c126e17",
+          "address": "0xf6793c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_7",
+          "bytes": 24,
+          "sha256": "762cef086a08545928821d8c3121de6f5b9b08708e1e4fa92eabe1bf4ec25e67",
+          "address": "0xbd1c74"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_8",
+          "bytes": 5848,
+          "sha256": "9beb6c6a9185d37595866fab3ce8b43d8ba0ea7352d3fbb935de8d63d3ad7be4",
+          "address": "0x148a4fc"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_9",
+          "bytes": 32,
+          "sha256": "eaee0d284ac885e9548cdd200c5c02eac6f96aaa8109a7cfce4f6eaf93e1975b",
+          "address": "0x161af98"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_10",
+          "bytes": 32,
+          "sha256": "ef037859be227b6d7804e25816af2eb33f110d639cb61665f8fc1300f8236327",
+          "address": "0xa5b89c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_11",
+          "bytes": 32,
+          "sha256": "45dec011cc0aea56e66e75cdc7c42e0b01fd152d16c8b5b1925fbd52a6160445",
+          "address": "0xa5b9f8"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_12",
+          "bytes": 32,
+          "sha256": "11a99e4ceee3afe61d1fbd2fdb1388a6548f7dd1a939ed7fb66c8036388a1c4b",
+          "address": "0xa5bb2c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_13",
+          "bytes": 40,
+          "sha256": "826de3fd268eda1d83b86738f4b60f909ad0b263e198643e1b3ce6046a03e57a",
+          "address": "0x15ddebc"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_14",
+          "bytes": 32,
+          "sha256": "e2d32aea46449d6206aaaf6fb131284049d4a2eb6a952ca4ca740912afbcec79",
+          "address": "0x891dcc"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_15",
+          "bytes": 32,
+          "sha256": "83a0a273cc39f384085613c870d2943fad84b113727c6de8f53cde58b805c556",
+          "address": "0x139d4f4"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_16",
+          "bytes": 32,
+          "sha256": "2f84247c3e80670b35d4200c727eac715f3d65ca04448f05b8474db46ae6b1a2",
+          "address": "0x139d5d4"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_17",
+          "bytes": 16,
+          "sha256": "779bce3474ea5f06f7baa413ad6c4645031a87092682e655b0baa0c37a6ab453",
+          "address": "0x165212c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_18",
+          "bytes": 16,
+          "sha256": "083378099b514c3d0e82a4c05a97d1ec56a6eb23cb77a4762cc6402420ab7054",
+          "address": "0x165218c"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_19",
+          "bytes": 16,
+          "sha256": "187524127d9aa98cf093390461d0b2f97f94928aef188bc413282a09c27d352f",
+          "address": "0x17effac"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_20",
+          "bytes": 12,
+          "sha256": "b2cda9d7dac10e6652730037286971d5c4ac5ffdc17d8e6002913dc0f71c1ca5",
+          "address": "0xdcb2e0"
+        },
+        {
+          "symbol": "NAVIGATION_PIN_21",
+          "bytes": 12,
+          "sha256": "94ab1e127b501be7fb24f593307517cbea46eba84bc764e232d604c733410e41",
+          "address": "0x186ac10"
+        }
+      ]
+    },
+    {
+      "path": "semantic/update/bundle_error_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_FACTORY[] = {@@CLI_BUNDLE_ERROR_FACTORY@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_BUTTON[] = {@@CLI_BUNDLE_ERROR_BUTTON@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_CONTINUATION[] = {@@CLI_BUNDLE_ERROR_CONTINUATION@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_TRANSPORT_FINISH[] = {@@CLI_BUNDLE_ERROR_TRANSPORT_FINISH@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_RETRY_BUTTON[] = {@@CLI_BUNDLE_ERROR_RETRY_BUTTON@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_CANCEL_BUTTON[] = {@@CLI_BUNDLE_ERROR_CANCEL_BUTTON@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_RETRY_CONTINUATION[] = {@@CLI_BUNDLE_ERROR_RETRY_CONTINUATION@@};",
+        "inline constexpr unsigned char CLI_BUNDLE_ERROR_CANCEL_CONTINUATION[] = {@@CLI_BUNDLE_ERROR_CANCEL_CONTINUATION@@};",
+        "inline constexpr CliPin CLI_BUNDLE_ERROR_PINS[] = {",
+        "{0xddb7f0,CLI_BUNDLE_ERROR_TRANSPORT_FINISH,sizeof(CLI_BUNDLE_ERROR_TRANSPORT_FINISH)},",
+        "{0xf208c4,CLI_BUNDLE_ERROR_RETRY_BUTTON,sizeof(CLI_BUNDLE_ERROR_RETRY_BUTTON)},",
+        "{0xcf77d8,CLI_BUNDLE_ERROR_CANCEL_BUTTON,sizeof(CLI_BUNDLE_ERROR_CANCEL_BUTTON)},",
+        "{0xc91f68,CLI_BUNDLE_ERROR_RETRY_CONTINUATION,sizeof(CLI_BUNDLE_ERROR_RETRY_CONTINUATION)},",
+        "{0x142b6c8,CLI_BUNDLE_ERROR_CANCEL_CONTINUATION,sizeof(CLI_BUNDLE_ERROR_CANCEL_CONTINUATION)},",
+        "{0x97ddec,CLI_BUNDLE_ERROR_FACTORY,sizeof(CLI_BUNDLE_ERROR_FACTORY)},",
+        "{0x1619540,CLI_BUNDLE_ERROR_BUTTON,sizeof(CLI_BUNDLE_ERROR_BUTTON)},",
+        "{0xa571a0,CLI_BUNDLE_ERROR_CONTINUATION,sizeof(CLI_BUNDLE_ERROR_CONTINUATION)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_BUNDLE_ERROR_FACTORY",
+          "bytes": 3960,
+          "sha256": "f7a11a4dc66a75ebaf0fd12964cb354e11252a39b0edc6f7e05dd5fbf8416a21",
+          "address": "0x97ddec"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_BUTTON",
+          "bytes": 300,
+          "sha256": "8406020819c3e52a0c6551a50c5ead4d157a8253b8f9aebd8f35694d29620cd8",
+          "address": "0x1619540"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_CONTINUATION",
+          "bytes": 296,
+          "sha256": "93c6888661d567f95fc666b6e079e1178beb92556e870f226fc1f1a68bcb1353",
+          "address": "0xa571a0"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_TRANSPORT_FINISH",
+          "bytes": 2760,
+          "sha256": "09e484bac0b7d4a3971c1f289c38485cef6da56456603f74536693dc9eb4a936",
+          "address": "0xddb7f0"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_RETRY_BUTTON",
+          "bytes": 320,
+          "sha256": "d6e15e224939bcbec8076fd300319bbebdcd71ba631919e65f9d94235a1f1239",
+          "address": "0xf208c4"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_CANCEL_BUTTON",
+          "bytes": 320,
+          "sha256": "53d785268e94c2de6315e49de36e1f8335bc6d3478a917f5176bcc323c3abed6",
+          "address": "0xcf77d8"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_RETRY_CONTINUATION",
+          "bytes": 444,
+          "sha256": "9d2b494bb9f8276e2d79d5937623dfc859c14404a00b777e0980d3b731f864b2",
+          "address": "0xc91f68"
+        },
+        {
+          "symbol": "CLI_BUNDLE_ERROR_CANCEL_CONTINUATION",
+          "bytes": 4,
+          "sha256": "110f46b5b35c069160560c6ad6786f647dd44e8760a52a46fc22dbbcd7630b91",
+          "address": "0x142b6c8"
+        }
+      ]
+    },
+    {
+      "path": "semantic/native/onboarding_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_ONBOARDING_0[] = {@@CLI_ONBOARDING_0@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_1[] = {@@CLI_ONBOARDING_1@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_2[] = {@@CLI_ONBOARDING_2@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_3[] = {@@CLI_ONBOARDING_3@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_4[] = {@@CLI_ONBOARDING_4@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_5[] = {@@CLI_ONBOARDING_5@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_6[] = {@@CLI_ONBOARDING_6@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_7[] = {@@CLI_ONBOARDING_7@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_8[] = {@@CLI_ONBOARDING_8@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_9[] = {@@CLI_ONBOARDING_9@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_10[] = {@@CLI_ONBOARDING_10@@};",
+        "inline constexpr unsigned char CLI_ONBOARDING_11[] = {@@CLI_ONBOARDING_11@@};",
+        "inline constexpr CliPin CLI_ONBOARDING_PINS[] = {",
+        "{0xf66c9c, CLI_ONBOARDING_0, sizeof(CLI_ONBOARDING_0)},",
+        "{0x98ab54, CLI_ONBOARDING_1, sizeof(CLI_ONBOARDING_1)},",
+        "{0x9ad6f4, CLI_ONBOARDING_2, sizeof(CLI_ONBOARDING_2)},",
+        "{0x1411494, CLI_ONBOARDING_3, sizeof(CLI_ONBOARDING_3)},",
+        "{0x11b1d84, CLI_ONBOARDING_4, sizeof(CLI_ONBOARDING_4)},",
+        "{0xdb69c4, CLI_ONBOARDING_5, sizeof(CLI_ONBOARDING_5)},",
+        "{0xc7febc, CLI_ONBOARDING_6, sizeof(CLI_ONBOARDING_6)},",
+        "{0x8779f8, CLI_ONBOARDING_7, sizeof(CLI_ONBOARDING_7)},",
+        "{0xb016dc, CLI_ONBOARDING_8, sizeof(CLI_ONBOARDING_8)},",
+        "{0x185aee4, CLI_ONBOARDING_9, sizeof(CLI_ONBOARDING_9)},",
+        "{0x9ef864, CLI_ONBOARDING_10, sizeof(CLI_ONBOARDING_10)},",
+        "{0x1620450, CLI_ONBOARDING_11, sizeof(CLI_ONBOARDING_11)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_ONBOARDING_0",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_1",
+          "bytes": 72,
+          "sha256": "b9590b3088c1f80f51211c965ea9d6429204af054347def047518db7d264b7e9",
+          "address": "0x98ab54"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_2",
+          "bytes": 156,
+          "sha256": "6b1e9b5c1127ef6571b09c41bec19a867fb5fd6e371e5943923b22d61cf89123",
+          "address": "0x9ad6f4"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_3",
+          "bytes": 156,
+          "sha256": "051b931448c47bc90e4505c042a9b0b5daa94474f4ae1ae6f0ed4bfeafe58a29",
+          "address": "0x1411494"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_4",
+          "bytes": 156,
+          "sha256": "b651fe25cd0aaa89fe3f7e52dffa651cbc3ed6e2f44483b159315987dedf96f2",
+          "address": "0x11b1d84"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_5",
+          "bytes": 4196,
+          "sha256": "780ae4368ae27a895c1118665f5b307375e270e88d04e20056981cd10aa5f65a",
+          "address": "0xdb69c4"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_6",
+          "bytes": 500,
+          "sha256": "c875bf96bfc1e589df9d261297e5a033047a92de3f4fe6683cfa8efd93f58811",
+          "address": "0xc7febc"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_7",
+          "bytes": 2336,
+          "sha256": "34b0f9f6b219ac8d90fe6fcc100bfdb2f63648b2c5a344f11abe0b58b13f2d45",
+          "address": "0x8779f8"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_8",
+          "bytes": 1568,
+          "sha256": "3de34b11b227f69ba2086109985dd3ec38011d13f3607b32dac0feba83ddf772",
+          "address": "0xb016dc"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_9",
+          "bytes": 1012,
+          "sha256": "977045a048fad2a1f31e3d95a7e10efa38b627ec7c3617dfcaf2ef451240be13",
+          "address": "0x185aee4"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_10",
+          "bytes": 112,
+          "sha256": "99500059a2a059e2ffcc844b97fff1665c5e1eb27736de3881695ad3323ba71e",
+          "address": "0x9ef864"
+        },
+        {
+          "symbol": "CLI_ONBOARDING_11",
+          "bytes": 72,
+          "sha256": "406c0d7fd2323ef1e4c5ff1eba4d5f7074d77daab99b78def12065e9bcb9a225",
+          "address": "0x1620450"
+        }
+      ]
+    },
+    {
+      "path": "semantic/overlays/main_hint_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_MAIN_HINT_0[] = {@@CLI_MAIN_HINT_0@@};",
+        "inline constexpr unsigned char CLI_MAIN_HINT_1[] = {@@CLI_MAIN_HINT_1@@};",
+        "inline constexpr unsigned char CLI_MAIN_HINT_2[] = {@@CLI_MAIN_HINT_2@@};",
+        "inline constexpr CliPin CLI_MAIN_HINT_PINS[] = {",
+        "{0xa911f8,CLI_MAIN_HINT_0,sizeof(CLI_MAIN_HINT_0)},",
+        "{0x11b4ce4,CLI_MAIN_HINT_1,sizeof(CLI_MAIN_HINT_1)},",
+        "{0xa43d94,CLI_MAIN_HINT_2,sizeof(CLI_MAIN_HINT_2)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_MAIN_HINT_0",
+          "bytes": 652,
+          "sha256": "47e8aed8f8dcc8d9363b51c97de2c05da15264ffff6eb58e6722b70823ca80ec",
+          "address": "0xa911f8"
+        },
+        {
+          "symbol": "CLI_MAIN_HINT_1",
+          "bytes": 4968,
+          "sha256": "bac320550e4741874fa2251ee65d782c38314ae5e8cbe22ae52cc2cd37d1161a",
+          "address": "0x11b4ce4"
+        },
+        {
+          "symbol": "CLI_MAIN_HINT_2",
+          "bytes": 4,
+          "sha256": "110f46b5b35c069160560c6ad6786f647dd44e8760a52a46fc22dbbcd7630b91",
+          "address": "0xa43d94"
+        }
+      ]
+    },
+    {
+      "path": "semantic/overlays/notification_hint_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_NOTIFICATION_HINT_0[] = {@@CLI_NOTIFICATION_HINT_0@@};",
+        "inline constexpr unsigned char CLI_NOTIFICATION_HINT_1[] = {@@CLI_NOTIFICATION_HINT_1@@};",
+        "inline constexpr unsigned char CLI_NOTIFICATION_HINT_2[] = {@@CLI_NOTIFICATION_HINT_2@@};",
+        "inline constexpr unsigned char CLI_NOTIFICATION_HINT_3[] = {@@CLI_NOTIFICATION_HINT_3@@};",
+        "inline constexpr CliPin CLI_NOTIFICATION_HINT_PINS[] = {",
+        "{0x1728500,CLI_NOTIFICATION_HINT_0,sizeof(CLI_NOTIFICATION_HINT_0)},",
+        "{0xf1a878,CLI_NOTIFICATION_HINT_1,sizeof(CLI_NOTIFICATION_HINT_1)},",
+        "{0xbac0a4,CLI_NOTIFICATION_HINT_2,sizeof(CLI_NOTIFICATION_HINT_2)},",
+        "{0x1026cac,CLI_NOTIFICATION_HINT_3,sizeof(CLI_NOTIFICATION_HINT_3)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_NOTIFICATION_HINT_0",
+          "bytes": 640,
+          "sha256": "227725afcf07d6f89f7bde1dad1ca8b49224a7e463931fb2a01daca84f5a9ab3",
+          "address": "0x1728500"
+        },
+        {
+          "symbol": "CLI_NOTIFICATION_HINT_1",
+          "bytes": 2300,
+          "sha256": "e030ea347067a322dc8f431faf15400692a0aa671e4dce15aeec64cde4a47931",
+          "address": "0xf1a878"
+        },
+        {
+          "symbol": "CLI_NOTIFICATION_HINT_2",
+          "bytes": 28,
+          "sha256": "2e68e6bf95644ffef55f99169fb70c36bf0445779a6ded9fdc54627080cda6f0",
+          "address": "0xbac0a4"
+        },
+        {
+          "symbol": "CLI_NOTIFICATION_HINT_3",
+          "bytes": 184,
+          "sha256": "50a5f8977525160df33f15ee25528367e105a65946c0168d2a6cbdc59e17645c",
+          "address": "0x1026cac"
+        }
+      ]
+    },
+    {
+      "path": "semantic/overlays/note_speed_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_FACTORY[] = {@@CLI_NOTE_SPEED_FACTORY@@};",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_INIT[] = {@@CLI_NOTE_SPEED_INIT@@};",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_SET_RELEASE_CLOSURE[] = {@@CLI_NOTE_SPEED_SET_RELEASE_CLOSURE@@};",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_SET_HANDLER[] = {@@CLI_NOTE_SPEED_SET_HANDLER@@};",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_NORMAL_SONG_CONTINUATION[] = {@@CLI_NOTE_SPEED_NORMAL_SONG_CONTINUATION@@};",
+        "inline constexpr unsigned char CLI_NOTE_SPEED_WIDGET_RELEASE[] = {@@CLI_NOTE_SPEED_WIDGET_RELEASE@@};",
+        "inline constexpr CliPin CLI_NOTE_SPEED_PINS[] = {",
+        "{0x968130,CLI_NOTE_SPEED_FACTORY,sizeof(CLI_NOTE_SPEED_FACTORY)},",
+        "{0xcf64e0,CLI_NOTE_SPEED_INIT,sizeof(CLI_NOTE_SPEED_INIT)},",
+        "{0x107ab4c,CLI_NOTE_SPEED_SET_RELEASE_CLOSURE,sizeof(CLI_NOTE_SPEED_SET_RELEASE_CLOSURE)},",
+        "{0xa969fc,CLI_NOTE_SPEED_SET_HANDLER,sizeof(CLI_NOTE_SPEED_SET_HANDLER)},",
+        "{0x1297db0,CLI_NOTE_SPEED_NORMAL_SONG_CONTINUATION,sizeof(CLI_NOTE_SPEED_NORMAL_SONG_CONTINUATION)},",
+        "{0xf66c9c,CLI_NOTE_SPEED_WIDGET_RELEASE,sizeof(CLI_NOTE_SPEED_WIDGET_RELEASE)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "CLI_NOTE_SPEED_FACTORY",
+          "bytes": 180,
+          "sha256": "262bf648581d89a44957a8ab3c6c0e8826810ecde6ebf9a5cc8cd5f54753b679",
+          "address": "0x968130"
+        },
+        {
+          "symbol": "CLI_NOTE_SPEED_INIT",
+          "bytes": 2956,
+          "sha256": "7665e52c0ac269abda80a9ceab399afc91ae59a12c6dff49b1a3cf91ddeb358a",
+          "address": "0xcf64e0"
+        },
+        {
+          "symbol": "CLI_NOTE_SPEED_SET_RELEASE_CLOSURE",
+          "bytes": 16,
+          "sha256": "bac13355dbb88cab8bb25a4c073c32c896db86e7a55c933e83055c68c6915a50",
+          "address": "0x107ab4c"
+        },
+        {
+          "symbol": "CLI_NOTE_SPEED_SET_HANDLER",
+          "bytes": 680,
+          "sha256": "7b54d0458894afdebe8378e10b84471873a3953bf8aff2a0bc7903e7bba0a741",
+          "address": "0xa969fc"
+        },
+        {
+          "symbol": "CLI_NOTE_SPEED_NORMAL_SONG_CONTINUATION",
+          "bytes": 340,
+          "sha256": "7865dc310861693c22cb62bcc233957b2b9b9898f2e52ae69c42c3b9e57d6aa4",
+          "address": "0x1297db0"
+        },
+        {
+          "symbol": "CLI_NOTE_SPEED_WIDGET_RELEASE",
+          "bytes": 276,
+          "sha256": "2d19920bdf3f094d6620e6b25e5c3f3ffd7cf41c4a3f53b5125bdc5a4e40a205",
+          "address": "0xf66c9c"
+        }
+      ]
+    },
+    {
+      "path": "semantic/account/account_error_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char LOGIN_ERROR_0[] = {@@LOGIN_ERROR_0@@};",
+        "inline constexpr unsigned char LOGIN_ERROR_1[] = {@@LOGIN_ERROR_1@@};",
+        "inline constexpr unsigned char LOGIN_ERROR_2[] = {@@LOGIN_ERROR_2@@};",
+        "inline constexpr unsigned char LOGIN_ERROR_3[] = {@@LOGIN_ERROR_3@@};",
+        "inline constexpr unsigned char LOGIN_ERROR_4[] = {@@LOGIN_ERROR_4@@};",
+        "inline constexpr unsigned char LOGIN_ERROR_5[] = {@@LOGIN_ERROR_5@@};",
+        "inline constexpr CliPin LOGIN_ERROR_PINS[] = {",
+        "{0x1556400,LOGIN_ERROR_0,sizeof(LOGIN_ERROR_0)},",
+        "{0x155e7f8,LOGIN_ERROR_1,sizeof(LOGIN_ERROR_1)},",
+        "{0xb9acbc,LOGIN_ERROR_2,sizeof(LOGIN_ERROR_2)},",
+        "{0x837290,LOGIN_ERROR_3,sizeof(LOGIN_ERROR_3)},",
+        "{0xef8354,LOGIN_ERROR_4,sizeof(LOGIN_ERROR_4)},",
+        "{0x171c2e4,LOGIN_ERROR_5,sizeof(LOGIN_ERROR_5)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "LOGIN_ERROR_0",
+          "bytes": 44,
+          "sha256": "12c93e06bed7f0425e1f1e53b5b6beafc6ccd92a39666bb19f44bd9ccebce724",
+          "address": "0x1556400"
+        },
+        {
+          "symbol": "LOGIN_ERROR_1",
+          "bytes": 240,
+          "sha256": "5bd37131115352c31027e2db2a5aa26e8f0be6b12e1bb9468fddd749e1411b5f",
+          "address": "0x155e7f8"
+        },
+        {
+          "symbol": "LOGIN_ERROR_2",
+          "bytes": 8,
+          "sha256": "af9d8e7f5cabe1decc6cfc9f9b1e12f21700f5c86679319ea397c095a3ddc8c8",
+          "address": "0xb9acbc"
+        },
+        {
+          "symbol": "LOGIN_ERROR_3",
+          "bytes": 2688,
+          "sha256": "e8ed46ccc274fd4ab6e1ea60f7cb4cc9cb5fd426818ec8bca577e9143231cba2",
+          "address": "0x837290"
+        },
+        {
+          "symbol": "LOGIN_ERROR_4",
+          "bytes": 640,
+          "sha256": "d89adfbba32ba12ed227d2ac1827a3db7eaab7f300bb979852086ef821314bc7",
+          "address": "0xef8354"
+        },
+        {
+          "symbol": "LOGIN_ERROR_5",
+          "bytes": 1324,
+          "sha256": "4078ae13b0b301ab49dec815525c9bfe2d7e13da95d2a134aaf0fc1a658231e7",
+          "address": "0x171c2e4"
+        }
+      ]
+    },
+    {
+      "path": "semantic/account/logout_pins.h",
+      "template": [
+        "#pragma once",
+        "inline constexpr unsigned char LOGOUT_PIN_0[] = {@@LOGOUT_PIN_0@@};",
+        "inline constexpr unsigned char LOGOUT_PIN_1[] = {@@LOGOUT_PIN_1@@};",
+        "inline constexpr unsigned char LOGOUT_PIN_2[] = {@@LOGOUT_PIN_2@@};",
+        "inline constexpr unsigned char LOGOUT_PIN_3[] = {@@LOGOUT_PIN_3@@};",
+        "inline constexpr CliPin LOGOUT_PINS[] = {",
+        "{0x11b6808,LOGOUT_PIN_0,sizeof(LOGOUT_PIN_0)},",
+        "{0x16e130c,LOGOUT_PIN_1,sizeof(LOGOUT_PIN_1)},",
+        "{0xaffee4,LOGOUT_PIN_2,sizeof(LOGOUT_PIN_2)},",
+        "{0x172db24,LOGOUT_PIN_3,sizeof(LOGOUT_PIN_3)},",
+        "};"
+      ],
+      "pins": [
+        {
+          "symbol": "LOGOUT_PIN_0",
+          "bytes": 2352,
+          "sha256": "2603826f74a01e314cae17be1e1d9e5a469b5aa551998ac65e8c3a2af152f8d6",
+          "address": "0x11b6808"
+        },
+        {
+          "symbol": "LOGOUT_PIN_1",
+          "bytes": 640,
+          "sha256": "816431d7465a4c6ffeac2f2384b2aa4faa4785731ef66081920d740f0ed15a7c",
+          "address": "0x16e130c"
+        },
+        {
+          "symbol": "LOGOUT_PIN_2",
+          "bytes": 28,
+          "sha256": "740f0433bc1d40538363f64998b9b9bdeec9f822c5a99e219370e10e6e14b9da",
+          "address": "0xaffee4"
+        },
+        {
+          "symbol": "LOGOUT_PIN_3",
+          "bytes": 320,
+          "sha256": "0715d6b3a0ec06f1692b1f63c6ba7a57957ad9c68c173cc908cc9b06762982c2",
+          "address": "0x172db24"
+        }
+      ]
+    }
+  ]
+}

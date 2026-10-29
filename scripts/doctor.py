@@ -64,7 +64,7 @@ def main() -> int:
         print(f"{'OK' if value else 'MISSING':7} {name:10} {value or ''}")
     required = ["git", "python"]
     if args.android:
-        required.extend(("java", "adb", "zipalign", "apksigner", "apktool"))
+        required.extend(("java", "adb", "zipalign", "apksigner"))
     missing = [name for name in required if not checks[name]]
     if missing:
         print("Required tools missing: " + ", ".join(missing), file=sys.stderr)

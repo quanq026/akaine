@@ -28,6 +28,7 @@
 *.db
 *.sqlite*
 config.py
+embedded_key.h
 *.bak
 *.bak-*
 *.backup*
