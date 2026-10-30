@@ -5,14 +5,14 @@
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Bản phát hành mới nhất" src="https://img.shields.io/github/v/release/quanq026/akaine?style=flat&amp;label=Release&amp;color=A63B52"></a>
+  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Bản phát hành V36" src="https://img.shields.io/badge/Release-V36-A63B52?style=flat"></a>
   <a href="docs/guide/vi/06-build-android-client.md"><img alt="Arcaea 7.0.255" src="https://img.shields.io/badge/Arcaea-7.0.255-547EA8?style=flat"></a>
   <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python và C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
   <a href="README.md"><img alt="Hướng dẫn tiếng Anh và tiếng Việt" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="https://github.com/quanq026/akaine/stargazers"><img alt="Số sao GitHub" src="https://img.shields.io/github/stars/quanq026/akaine?style=flat&amp;color=D5A64E&amp;logo=github"></a>
+  <a href="https://github.com/quanq026/akaine/stargazers"><img alt="Số sao GitHub" src="https://img.shields.io/github/stars/quanq026/akaine.svg?style=flat&amp;label=Stars&amp;color=D5A64E"></a>
   <a href="LICENSE"><img alt="Giấy phép MIT" src="https://img.shields.io/github/license/quanq026/akaine?style=flat&amp;color=6B7280"></a>
 </p>
 
@@ -33,6 +33,44 @@ native offset khác, vì vậy không thể dùng chung các bước trong repos
 
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
 từ APKPure; content và đầu vào chart key tương ứng được cung cấp riêng khi cần.
+
+## Tính năng
+
+### Server
+
+| Tính năng | Khả năng |
+| --- | --- |
+| Tài khoản và Cloud Sync | Đăng ký, đăng nhập và lưu dữ liệu trên cloud. |
+| Điểm số và Potential | Lịch sử điểm, tính Potential và xếp hạng bài/bạn bè. |
+| Nhân vật và World Mode | Sở hữu nhân vật, cấp độ, kỹ năng và tiến trình World Mode. |
+| Phân phối nội dung | Bundle theo phiên bản, tải từng bài và chart mã hóa AKFC. |
+| Pack và mở khóa | Danh mục pack động; cùng chính sách cấp nội dung cho tài khoản tạo từ game và bot. |
+| Discord bot | Tạo/liên kết tài khoản, hồ sơ, lượt chơi gần đây, ảnh B30 và xếp hạng người chơi. |
+
+Cài đặt: [game server](docs/guide/vi/05a-install-game-server.md) ·
+[Discord bot](docs/guide/vi/05b-discord-bot.md) ·
+[content bundle](docs/guide/vi/07-build-release-content-bundle.md).
+
+### Client Android · V36
+
+| Tính năng | Khả năng |
+| --- | --- |
+| Thư viện Mod | Mục Mod riêng, pack fan chart native và lưu trữ pack động. |
+| Kỹ năng nhân vật | Sửa đường xử lý skill native; đã kiểm thanh máu Tempest và Grievous Lady trên V36. |
+| Anomaly Replay | Bật/tắt replay cho các cảnh anomaly native được hỗ trợ. |
+| CLI qua ADB | Chọn bài/độ khó, tìm kiếm, filter, nhân vật, cài đặt, đăng nhập, sync và hướng dẫn đầu game đã nhận diện. |
+| Tải tài nguyên | Tải từng bài; cache file tải dở có kiểm tra cho các bundle production được hỗ trợ. |
+| Media và Main Menu | Giữ nguyên nhạc/ảnh bìa gốc; Main Menu hiển thị 10 thẻ tin mới nhất. |
+
+Sử dụng: [build client](docs/guide/vi/06-build-android-client.md) ·
+[lệnh CLI (tiếng Anh)](docs/guide/06a-semantic-cli.md) ·
+[thêm fan chart native](docs/guide/vi/09-add-fan-chart.md).
+
+**Tương thích:** Fan chart cần đúng định dạng native được hỗ trợ; chưa có runtime
+ArcCreate. CLI chỉ xử lý các bước hướng dẫn đã nhận diện; thỏa thuận pháp lý và
+quyền Android vẫn cần người dùng chọn trực tiếp. Một số chuyển cảnh menu/loading
+còn cần tối ưu. Danh sách tính năng không có nghĩa mọi chart, nhân vật hoặc thiết
+bị đều đã được kiểm thử.
 
 ## Client hiện tại: V36
 

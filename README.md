@@ -5,14 +5,14 @@ English | [Tiếng Việt](README.vi.md)
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/quanq026/akaine?style=flat&amp;label=Release&amp;color=A63B52"></a>
+  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Release V36" src="https://img.shields.io/badge/Release-V36-A63B52?style=flat"></a>
   <a href="docs/guide/06-build-android-client.md"><img alt="Arcaea 7.0.255" src="https://img.shields.io/badge/Arcaea-7.0.255-547EA8?style=flat"></a>
   <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python and C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
   <a href="README.vi.md"><img alt="Documentation in English and Vietnamese" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Join Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="https://github.com/quanq026/akaine/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/quanq026/akaine?style=flat&amp;color=D5A64E&amp;logo=github"></a>
+  <a href="https://github.com/quanq026/akaine/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/quanq026/akaine.svg?style=flat&amp;label=Stars&amp;color=D5A64E"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/quanq026/akaine?style=flat&amp;color=6B7280"></a>
 </p>
 
@@ -34,6 +34,44 @@ offsets, so they are outside this repository's instructions.
 The repository contains the guide, server and build tools. Download the
 original client from APKPure; matching content and chart-key inputs are
 supplied separately when the guide needs them.
+
+## Features
+
+### Server
+
+| Feature | What it provides |
+| --- | --- |
+| Accounts and Cloud Sync | Registration, login and cloud saves. |
+| Scores and Potential | Score history, Potential calculation and chart/friend rankings. |
+| Characters and World Mode | Character ownership, levels, skills and World Mode progression. |
+| Content delivery | Versioned bundles, per-song downloads and AKFC-encrypted charts. |
+| Packs and unlocks | Dynamic pack catalogue and a shared content-grant policy for game and bot accounts. |
+| Discord bot | Account creation/linking, profiles, recent plays, B30 images and player rankings. |
+
+Setup: [game server](docs/guide/05a-install-game-server.md) ·
+[Discord bot](docs/guide/05b-discord-bot.md) ·
+[content bundles](docs/guide/07-build-release-content-bundle.md).
+
+### Android client · V36
+
+| Feature | What it provides |
+| --- | --- |
+| Mod library | A dedicated Mod category, native fan-chart packs and dynamic pack storage. |
+| Character skills | Corrected native skill handling; Tempest and Grievous Lady gauges checked in V36. |
+| Anomaly Replay | Enable or disable replay for supported native anomaly scenes. |
+| CLI over ADB | Song/difficulty selection, search, filters, characters, settings, login, sync and recognized first-run guides. |
+| Downloads | Per-song downloads and guarded partial-file caching for supported production bundles. |
+| Media and Main Menu | Original music/jackets preserved; the latest 10 news cards shown on Main Menu. |
+
+Usage: [build the client](docs/guide/06-build-android-client.md) ·
+[CLI commands](docs/guide/06a-semantic-cli.md) ·
+[add a native fan chart](docs/guide/09-add-fan-chart.md).
+
+**Compatibility:** Fan charts must use the supported native format; an ArcCreate
+runtime is not included. CLI guide handling covers recognized steps; legal
+agreements and Android permission choices remain manual. Some menu/loading
+transitions still need optimization. These features do not imply that every
+chart, character or device has been tested.
 
 ## Current client: V36
 
