@@ -60,31 +60,13 @@ Setup: [game server](docs/guide/05a-install-game-server.md) ·
 | Character skills | Corrected native skill handling; Tempest and Grievous Lady gauges checked in V36. |
 | Anomaly Replay | Enable or disable replay for supported native anomaly scenes. |
 | CLI over ADB | Song/difficulty selection, search, filters, characters, settings, login, sync and recognized first-run guides. |
-| Downloads | Per-song downloads and guarded partial-file caching for supported production bundles. |
-| Media and Main Menu | Original music/jackets preserved; the latest 10 news cards shown on Main Menu. |
 
 Usage: [build the client](docs/guide/06-build-android-client.md) ·
 [CLI commands](docs/guide/06a-semantic-cli.md) ·
 [add a native fan chart](docs/guide/09-add-fan-chart.md).
 
 **Compatibility:** Fan charts must use the supported native format; an ArcCreate
-runtime is not included. CLI guide handling covers recognized steps; legal
-agreements and Android permission choices remain manual. Some menu/loading
-transitions still need optimization. These features do not imply that every
-chart, character or device has been tested.
-
-## Current client: V36
-
-[Chapter 6](docs/guide/06-build-android-client.md) starts with the original
-APKPure 7.0.255 arm64 XAPK. After the one-time tool/key setup, one command
-merges, patches, builds and signs V36. No prepatched Akaine APK or developer
-path map is required. Original media is preserved; content `7.0.255.25` is
-delivered separately. APKs, keys and game content remain outside Git.
-
-The included 7.0.255 native patch uses the published Akaine API hosts. A
-client for a different domain also needs a verified native route change; the
-public repository does not yet provide a general host-change command. The
-server guide includes an independent HTTP check for your own domain.
+runtime is not included. CLI guide handling covers recognized steps.
 
 ## What you will build
 
