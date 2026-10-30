@@ -39,27 +39,41 @@ supplied separately when the guide needs them.
 
 ### Server
 
-| Feature | What it provides |
+| Feature | Supported capabilities |
 | --- | --- |
-| Accounts and Cloud Sync | Registration, login and cloud saves. |
-| Scores and Potential | Score history, Potential calculation and chart/friend rankings. |
-| Characters and World Mode | Character ownership, levels, skills and World Mode progression. |
-| Content delivery | Versioned bundles, per-song downloads and AKFC-encrypted charts. |
-| Packs and unlocks | Dynamic pack catalogue and a shared content-grant policy for game and bot accounts. |
+| Accounts | Registration, login, sessions and login/registration rate limits. |
+| Scores and Potential | Score submission/checks, play history, Best 30, Recent 10 and chart rankings. |
+| Friends | Friend lists, adding/removing friends and score comparisons. |
+| Cloud Sync | Upload/download of saves and shared content-unlock policies. |
+| World Mode | Maps, stamina, progression and rewards. |
+| Characters | Ownership, levels, awakening and supported partner skills. |
+| Course Mode | Course progression, results and completion rewards. |
+| Songs and packs | Dynamic catalogue, song/pack ownership and unlocks using in-game currency. |
+| Gifts and missions | Presents, redeem codes and basic beginner missions. |
+| Content delivery | In-game bundle updates, per-song downloads, download checks and AKFC-encrypted charts. |
+| Administration | Web admin, permission-based API, account/content tools and score/Potential logs. |
 | Discord bot | Account creation/linking, profiles, recent plays, B30 images and player rankings. |
+
+**Support notes:** World Mode boosts and some partner skills may differ from the
+official game. Link Play room/matchmaking code is included, but requires separate
+setup and client compatibility verification.
 
 Setup: [game server](docs/guide/05a-install-game-server.md) ·
 [Discord bot](docs/guide/05b-discord-bot.md) ·
 [content bundles](docs/guide/07-build-release-content-bundle.md).
 
-### Android client · V36
+### Android client
 
-| Feature | What it provides |
+| Feature | Supported capabilities |
 | --- | --- |
-| Mod library | A dedicated Mod category, native fan-chart packs and dynamic pack storage. |
-| Character skills | Corrected native skill handling; Tempest and Grievous Lady gauges checked in V36. |
+| Native fan charts | Custom charts played through the native game engine, including AKFC-encrypted charts. |
+| Mod library | A dedicated category for custom content and an expandable pack catalogue. |
+| Song selection | Search, difficulty selection, sorting, grouping and filters. |
+| Characters and skills | Character selection, supported native skills and skill sealing. |
 | Anomaly Replay | Enable or disable replay for supported native anomaly scenes. |
-| CLI over ADB | Song/difficulty selection, search, filters, characters, settings, login, sync and recognized first-run guides. |
+| Online services | Private-server login and Cloud Sync. |
+| CLI over ADB | Read game state and operate menus, gameplay controls and recognized guides without coordinate clicks or image scanning. |
+| Diagnostics | Native event logs, state inspection and log/screenshot export. |
 
 Usage: [build the client](docs/guide/06-build-android-client.md) ·
 [CLI commands](docs/guide/06a-semantic-cli.md) ·

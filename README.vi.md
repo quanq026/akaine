@@ -38,51 +38,48 @@ từ APKPure; content và đầu vào chart key tương ứng được cung cấ
 
 ### Server
 
-| Tính năng | Khả năng |
+| Tính năng | Khả năng hỗ trợ |
 | --- | --- |
-| Tài khoản và Cloud Sync | Đăng ký, đăng nhập và lưu dữ liệu trên cloud. |
-| Điểm số và Potential | Lịch sử điểm, tính Potential và xếp hạng bài/bạn bè. |
-| Nhân vật và World Mode | Sở hữu nhân vật, cấp độ, kỹ năng và tiến trình World Mode. |
-| Phân phối nội dung | Bundle theo phiên bản, tải từng bài và chart mã hóa AKFC. |
-| Pack và mở khóa | Danh mục pack động; cùng chính sách cấp nội dung cho tài khoản tạo từ game và bot. |
+| Tài khoản | Đăng ký, đăng nhập, phiên đăng nhập và giới hạn tần suất đăng nhập/đăng ký. |
+| Điểm số và Potential | Gửi/kiểm tra điểm, lịch sử chơi, Best 30, Recent 10 và xếp hạng bài. |
+| Bạn bè | Danh sách bạn bè, thêm/xóa bạn và so sánh điểm. |
+| Cloud Sync | Upload/download dữ liệu lưu và chính sách cấp nội dung chung. |
+| World Mode | Bản đồ, thể lực, tiến trình và phần thưởng. |
+| Nhân vật | Sở hữu, cấp độ, thức tỉnh và các kỹ năng được hỗ trợ. |
+| Course Mode | Tiến trình thử thách, kết quả và phần thưởng hoàn thành. |
+| Bài hát và pack | Danh mục mở rộng, sở hữu bài/pack và mở khóa bằng tiền tệ trong game. |
+| Quà và nhiệm vụ | Quà tặng, mã đổi thưởng và nhiệm vụ tân thủ cơ bản. |
+| Phân phối nội dung | Cập nhật bundle trong game, tải từng bài, kiểm tra file tải và chart mã hóa AKFC. |
+| Quản trị | Web admin, API phân quyền, công cụ tài khoản/nội dung và log điểm/Potential. |
 | Discord bot | Tạo/liên kết tài khoản, hồ sơ, lượt chơi gần đây, ảnh B30 và xếp hạng người chơi. |
+
+**Lưu ý hỗ trợ:** Boost World Mode và một số kỹ năng nhân vật có thể khác game
+chính thức. Có mã nguồn phòng chơi/matchmaking Link Play, nhưng cần thiết lập
+riêng và kiểm tra tương thích với client.
 
 Cài đặt: [game server](docs/guide/vi/05a-install-game-server.md) ·
 [Discord bot](docs/guide/vi/05b-discord-bot.md) ·
 [content bundle](docs/guide/vi/07-build-release-content-bundle.md).
 
-### Client Android · V36
+### Client Android
 
-| Tính năng | Khả năng |
+| Tính năng | Khả năng hỗ trợ |
 | --- | --- |
-| Thư viện Mod | Mục Mod riêng, pack fan chart native và lưu trữ pack động. |
-| Kỹ năng nhân vật | Sửa đường xử lý skill native; đã kiểm thanh máu Tempest và Grievous Lady trên V36. |
+| Fan chart native | Chơi chart tùy chỉnh bằng engine của game, hỗ trợ chart mã hóa AKFC. |
+| Thư viện Mod | Mục riêng cho nội dung tùy chỉnh và danh mục pack mở rộng. |
+| Chọn bài | Tìm kiếm, chọn độ khó, sắp xếp, phân nhóm và lọc bài. |
+| Nhân vật và kỹ năng | Chọn nhân vật, sử dụng hoặc phong ấn các skill native được hỗ trợ. |
 | Anomaly Replay | Bật/tắt replay cho các cảnh anomaly native được hỗ trợ. |
-| CLI qua ADB | Chọn bài/độ khó, tìm kiếm, filter, nhân vật, cài đặt, đăng nhập, sync và hướng dẫn đầu game đã nhận diện. |
-| Tải tài nguyên | Tải từng bài; cache file tải dở có kiểm tra cho các bundle production được hỗ trợ. |
-| Media và Main Menu | Giữ nguyên nhạc/ảnh bìa gốc; Main Menu hiển thị 10 thẻ tin mới nhất. |
+| Dịch vụ online | Đăng nhập server riêng và Cloud Sync. |
+| CLI qua ADB | Đọc trạng thái, điều khiển menu/gameplay/hướng dẫn đã nhận diện bằng lệnh, không cần click tọa độ hoặc quét ảnh. |
+| Chẩn đoán | Log sự kiện native, đọc trạng thái và xuất log/ảnh chụp màn hình. |
 
 Sử dụng: [build client](docs/guide/vi/06-build-android-client.md) ·
 [lệnh CLI (tiếng Anh)](docs/guide/06a-semantic-cli.md) ·
 [thêm fan chart native](docs/guide/vi/09-add-fan-chart.md).
 
 **Tương thích:** Fan chart cần đúng định dạng native được hỗ trợ; chưa có runtime
-ArcCreate. CLI chỉ xử lý các bước hướng dẫn đã nhận diện; thỏa thuận pháp lý và
-quyền Android vẫn cần người dùng chọn trực tiếp. Một số chuyển cảnh menu/loading
-còn cần tối ưu. Danh sách tính năng không có nghĩa mọi chart, nhân vật hoặc thiết
-bị đều đã được kiểm thử.
-
-## Client hiện tại: V36
-
-[Chương 6](docs/guide/vi/06-build-android-client.md) bắt đầu từ XAPK arm64
-7.0.255 gốc của APKPure. Sau khi thiết lập công cụ/key một lần, một lệnh sẽ
-merge, patch, build và ký V36. Không cần APK Akaine đã patch hoặc path map
-của người phát triển. Media gốc được giữ nguyên; content `7.0.255.25` được
-phân phối riêng. APK, key và game content nằm ngoài Git.
-
-Native patch 7.0.255 đi kèm dùng các Akaine API host đã phát hành. Client dùng domain
-khác còn cần native route change được kiểm chứng; public repository hiện chưa có command
-đổi host tổng quát. Chương server có bước kiểm tra HTTP độc lập cho domain của bạn.
+ArcCreate. CLI chỉ xử lý các bước hướng dẫn đã nhận diện.
 
 ## Bạn sẽ dựng được gì
 
