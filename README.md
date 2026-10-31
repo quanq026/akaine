@@ -11,7 +11,6 @@ English | [Tiếng Việt](README.vi.md)
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python and C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
   <a href="README.vi.md"><img alt="Documentation in English and Vietnamese" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
-  <a href="https://discord.gg/9BBXhX7DkN"><img alt="Join Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/quanq026/akaine.svg?style=flat&amp;label=Stars&amp;color=D5A64E"></a>
   <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/quanq026/akaine?style=flat&amp;color=6B7280"></a>
 </p>
