@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="620" viewBox="0 0 1160 620" role="img" aria-labelledby="title desc">
+  <title id="title">Luồng tĩnh từ AppActivity tới FMOD trong APK production V36</title>
+  <desc id="desc">JADX cho thấy onStart gọi setStateStart và onStop gọi setStateStop. Trong libfmodProvider.so, các wrapper JNI chuyển tới mixerResume và mixerSuspend. Đây là minh họa bằng chứng tĩnh, không phải trace runtime hay ảnh giao diện.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#477196"/></marker></defs>
+  <rect width="1160" height="620" rx="16" fill="#f4f7fb"/>
+  <g font-family="Segoe UI,Arial,sans-serif">
+    <text x="40" y="52" font-size="14" font-weight="700" letter-spacing="2" fill="#477196">AKAINE · PRODUCTION V36 · PHÂN TÍCH TĨNH</text>
+    <text x="40" y="96" font-size="30" font-weight="700" fill="#132c43">Lần một luồng nhỏ qua ba lớp</text>
+    <text x="40" y="130" font-size="18" fill="#4c6378">Cùng APK, cùng thư viện, đối chiếu Java với assembly và mã giả.</text>
+    <rect x="40" y="172" width="320" height="320" rx="12" fill="#fff" stroke="#c4d2e0"/>
+    <rect x="420" y="172" width="320" height="320" rx="12" fill="#fff" stroke="#c4d2e0"/>
+    <rect x="800" y="172" width="320" height="320" rx="12" fill="#fff" stroke="#c4d2e0"/>
+    <text x="62" y="209" font-size="14" font-weight="700" fill="#477196">01 · JAVA / DEX</text>
+    <text x="442" y="209" font-size="14" font-weight="700" fill="#477196">02 · JNI / ARM64</text>
+    <text x="822" y="209" font-size="14" font-weight="700" fill="#477196">03 · IMPORT FMOD</text>
+    <text x="62" y="242" font-size="20" font-weight="600" fill="#132c43">low.moe.AppActivity</text>
+    <text x="442" y="242" font-size="20" font-weight="600" fill="#132c43">libfmodProvider.so</text>
+    <text x="822" y="242" font-size="20" font-weight="600" fill="#132c43">FMOD::System</text>
+    <g font-family="Consolas,monospace" fill="#172f45" font-size="17">
+      <text x="62" y="305">onStart()</text><text x="62" y="334">  setStateStart()</text>
+      <text x="62" y="404">onStop()</text><text x="62" y="433">  setStateStop()</text>
+      <text x="442" y="305">setStateStart</text><text x="442" y="334" font-size="15">0x21b38 · 12 byte</text>
+      <text x="442" y="404">setStateStop</text><text x="442" y="433" font-size="15">0x3f0d0 · 12 byte</text>
+      <text x="822" y="305">mixerResume()</text><text x="822" y="404">mixerSuspend()</text>
+    </g>
+    <g stroke="#477196" stroke-width="2.5" marker-end="url(#arrow)"><path d="M360 315H411"/><path d="M360 414H411"/><path d="M740 315H791"/><path d="M740 414H791"/></g>
+    <text x="62" y="470" font-size="14" fill="#4c6378">JADX: quan hệ trong bytecode</text>
+    <text x="442" y="470" font-size="14" fill="#4c6378">radare2 + Ghidra: thân hàm</text>
+    <text x="822" y="470" font-size="14" fill="#4c6378">Tên import và đích tail call</text>
+    <path d="M40 526H1120" stroke="#c4d2e0"/>
+    <text x="40" y="555" font-size="17" font-weight="600" fill="#132c43">Đã đọc mã; chưa chạy game.</text>
+    <text x="40" y="584" font-size="16" fill="#4c6378">Sơ đồ minh họa kết quả thật. Không chứng minh lần gọi runtime, FPS hoặc chất lượng âm thanh.</text>
+  </g>
+</svg>
