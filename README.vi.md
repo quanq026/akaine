@@ -132,8 +132,6 @@ hệ thống sang nhà cung cấp VPS khác.
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
 9. [Thêm fan chart và đặt nó vào một pack](docs/guide/vi/09-add-fan-chart.md).
 
-Đọc thêm: [phân tích tĩnh APK production V36 và file `.so`, bằng Ghidra hoặc CLI](docs/guide/vi/appendix-static-analysis-v36.md).
-
 Hãy đọc từ chương một và làm theo đúng thứ tự. Mỗi chương phía sau giả định
 rằng bạn đã hoàn thành các bước kiểm tra của chương trước.
 
