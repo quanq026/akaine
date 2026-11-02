@@ -83,3 +83,9 @@ chẩn đoán CDN và rollback release.
 Chương 9 giải thích cách một fan chart đi qua pack/song catalogue, selector asset, AKFC
 encryption, protected R2 delivery, server metadata, chart constant, staging và runtime
 check cuối.
+
+## Đọc thêm: phân tích client
+
+- [Phụ lục A: đọc APK production V36 và thư viện `.so` bằng Ghidra hoặc CLI](appendix-static-analysis-v36.md).
+
+Phụ lục minh họa phân tích tĩnh bằng file thật và hai sơ đồ kết quả; không cần chạy game hay emulator.
