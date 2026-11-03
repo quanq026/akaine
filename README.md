@@ -1,7 +1,6 @@
 # Akaine 7.0.255
 
 English | [Tiếng Việt](README.vi.md)
-Discord: kuan.026
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
@@ -34,6 +33,7 @@ The repository contains the guide, server and build tools. Download the
 original client from APKPure; matching content and chart-key inputs are
 supplied separately when the guide needs them.
 
+Discord: kuan.026 if you have any questions!
 ## Features
 
 ### Server
