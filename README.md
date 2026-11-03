@@ -1,7 +1,7 @@
 # Akaine 7.0.255
 
 English | [Tiếng Việt](README.vi.md)
-
+Discord: kuan.026
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
