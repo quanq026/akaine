@@ -1,0 +1,21 @@
+{
+  "schema": "akaine.port71.production-output-seals.v1",
+  "environment": "production",
+  "package": "akai.arc.lmao",
+  "application_version": "7.1.0",
+  "payload_sha256": {
+    "AndroidManifest.xml": "05e601ed18dfbb9f17813a493d293a46224cbdca381eb247ab36137890b96c5c",
+    "resources.arsc": "96ee80e04ecfac2d99ca4614900dbd4faa987b98fe7e76075d57964e6a81b3e1",
+    "assets/layouts/songselect/PackListModMenu.csb": "f119b1a51824fdc3651883d119cc85e8462c0fd918161e15faef8010fcbb7293",
+    "assets/layouts/songselect/ModDividerNativeFrame.csb": "2e11c82033d86f0e0dff63ab28069e04e23fc7b87d33289159f6973bd5fed5cd",
+    "assets/img/1080/divider_mod_v8.png": "5e53987e1f542ed1107e4eea73ec150475341a0f03616950dd0ac73c0ab1526f",
+    "classes.dex": "c6f340ed88f4e4167629a14b5ee0f72317911a919b5563bea179afccd5eecf3c",
+    "classes3.dex": "f3184dc5f43d4a583596bab5781ba0379477a508eb8412267466c0fef7b8349d",
+    "classes4.dex": "6c4b63c3168a25a98c476862bc84f8de53de31257439c1e7473acfb3315f0ba0",
+    "lib/arm64-v8a/libcocos2dcpp.so": "5657e85d98b36d49aa02e9f3098cf52e1503ab892650a0944a6832e0280bf780",
+    "lib/arm64-v8a/libakaineanomaly_monitor.so": "ce258d5cff4023163bf0cae196d556255daa116413fbd2bc59276a9e941cf193",
+    "lib/arm64-v8a/libakfcloader.so": "81beea88f021c4620019be6f4fdd4be76aa25300e1b90ccd889d9e067d5d99f8",
+    "lib/arm64-v8a/libfmodProvider.so": "679d1eff38c619086c5eaef251c4bd60f2aeaad11eb4b7c0d7e0bab71fe23ca6"
+  },
+  "review": "Independent native and monitor reproduction; managed rebuilt with exact reviewed controls. Undeclared stock media and member verification remains an assembly requirement."
+}

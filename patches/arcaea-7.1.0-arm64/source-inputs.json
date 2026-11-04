@@ -1,0 +1,253 @@
+{
+  "schema": "akaine.port71.source-inputs.v1",
+  "baseline_repository": "https://github.com/quanq026/akaine",
+  "baseline_commit": "0bddaef45c485d4b0b0643b7fa1280d1b05fd051",
+  "baseline_patch": "patches/arcaea-7.0.255-arm64",
+  "files": [
+    {
+      "source": "runtime/bundle-partials/AkaineBundlePartialCache.java",
+      "target": "bundle-partials/AkaineBundlePartialCache.java",
+      "sha256": "e82d4c698867cf801df90c63c2243957028940f210b4074a14531e2197266a22"
+    },
+    {
+      "source": "runtime/bundle-partials/compile-stubs/cz/msebera/android/httpclient/HttpEntity.java",
+      "target": "bundle-partials/compile-stubs/cz/msebera/android/httpclient/HttpEntity.java",
+      "sha256": "41852aca22d9d03abbbb9039462911716ba97e765773bc4ef9ee93e9b852cb95"
+    },
+    {
+      "source": "runtime/bundle-partials/compile-stubs/org/cocos2dx/lib/Cocos2dxDownloader.java",
+      "target": "bundle-partials/compile-stubs/org/cocos2dx/lib/Cocos2dxDownloader.java",
+      "sha256": "0f121a33e6eeba83c147b08e46ba158a51b7deb77d64358d026d4fc7ca915c23"
+    },
+    {
+      "source": "runtime/bundle-partials/compile-stubs/org/cocos2dx/lib/FileTaskHandler.java",
+      "target": "bundle-partials/compile-stubs/org/cocos2dx/lib/FileTaskHandler.java",
+      "sha256": "a3ea3ab928d660e67ed144c5a13874d7902e626ed31a013fb923f04d757c9805"
+    },
+    {
+      "source": "runtime/bundle-partials/PartialCacheFixture.java",
+      "target": "bundle-partials/PartialCacheFixture.java",
+      "sha256": "8117571192bca76a07ec08b9bb36ae2705858c214c081331ad3133c6fd5bab4e"
+    },
+    {
+      "source": "runtime/pin-layout.json",
+      "target": "pin-layout.json",
+      "sha256": "1559e79fe6d387c5e72b9dc00d618f969f8e85be03dc8e4f0f0ee481eea9e89b"
+    },
+    {
+      "source": "runtime/semantic/account/account_adapter.h",
+      "target": "semantic/account/account_adapter.h",
+      "sha256": "5699c9b95be5af2179a4547de603dbdf4aea120a4a021b054905030b4b058ea0"
+    },
+    {
+      "source": "runtime/semantic/account/account_credentials.h",
+      "target": "semantic/account/account_credentials.h",
+      "sha256": "0a6c2b3dbf682c793a5bcd282d4ab098f0c37c684743d2ea3351b6a587174ba1"
+    },
+    {
+      "source": "runtime/semantic/character/character_controls.h",
+      "target": "semantic/character/character_controls.h",
+      "sha256": "9c145bbcc0a650f0df9affa2ed3e651a551f980ff12651d8ca9b099bd11f703e"
+    },
+    {
+      "source": "runtime/semantic/cloudsync/cli_cloudsync.h",
+      "target": "semantic/cloudsync/cli_cloudsync.h",
+      "sha256": "747b60f154a4ade60cc6db779821bb03c3d513f0744293f03cfd85f00e399d54"
+    },
+    {
+      "source": "runtime/semantic/controls/settings_controls.h",
+      "target": "semantic/controls/settings_controls.h",
+      "sha256": "60ee5624ffc62b92d04b0de1699b3bd30a1e8a42226f1f52ecf74fc415ebf124"
+    },
+    {
+      "source": "runtime/semantic/controls/skill_controls.h",
+      "target": "semantic/controls/skill_controls.h",
+      "sha256": "4e1a39a3261897c37423d3981baadc99997d5011adaa59c44e391d1039640273"
+    },
+    {
+      "source": "runtime/semantic/filter/filter_adapter.h",
+      "target": "semantic/filter/filter_adapter.h",
+      "sha256": "392ec040d8c46b80f2dbb8791c8f956fb4557f8845550e67e621a9a86e46c989"
+    },
+    {
+      "source": "runtime/semantic/native/anomaly_monitor_mod.cpp",
+      "target": "semantic/native/anomaly_monitor_mod.cpp",
+      "sha256": "db6edbbe9a151db716d36eaf11541383e3ac40eff5ab8f1222523c19969e09a7"
+    },
+    {
+      "source": "runtime/semantic/native/bounds.h",
+      "target": "semantic/native/bounds.h",
+      "sha256": "933dfa92f7d82519b6f255e80f6f45d7445aaef894e34725fb265c1859ed8589"
+    },
+    {
+      "source": "runtime/semantic/native/child_reposition.h",
+      "target": "semantic/native/child_reposition.h",
+      "sha256": "2f356fc49604c5e98b9af4adc96db646228579489c7fe45e9ad20960884b5881"
+    },
+    {
+      "source": "runtime/semantic/native/cli_bridge.h",
+      "target": "semantic/native/cli_bridge.h",
+      "sha256": "0edc6aeef91e33df03ff2af9c274d6c7105f2f7bc25416a988d94275f8995f6c"
+    },
+    {
+      "source": "runtime/semantic/native/cli_core.h",
+      "target": "semantic/native/cli_core.h",
+      "sha256": "6051eef4afc389a63bdbf4ff91502108f8bfdae4fc92fcb559604fa8298824f3"
+    },
+    {
+      "source": "runtime/semantic/native/cli_files.h",
+      "target": "semantic/native/cli_files.h",
+      "sha256": "6cd309ff7bd9d68262d75baaa941a535397e132bba67e546efe3998591a238b9"
+    },
+    {
+      "source": "runtime/semantic/native/cli_onboarding.h",
+      "target": "semantic/native/cli_onboarding.h",
+      "sha256": "575714c7bfdd1e51f66b95e897369febb7ed0c7ceeef5473da381a37d31da0e2"
+    },
+    {
+      "source": "runtime/semantic/native/cli_ui_core.h",
+      "target": "semantic/native/cli_ui_core.h",
+      "sha256": "402859211ccf428861a26b6a52a46ad62eb6c8ff8657e574bc83eeda490e9db1"
+    },
+    {
+      "source": "runtime/semantic/native/cli_ui_native.h",
+      "target": "semantic/native/cli_ui_native.h",
+      "sha256": "fed611ff27f48044c4ec842a029a6e757ef7b13a771dbf5ee8c75dc8c70f5ae6"
+    },
+    {
+      "source": "runtime/semantic/native/maps_snapshot.h",
+      "target": "semantic/native/maps_snapshot.h",
+      "sha256": "2abcc8faefbbfd9ff74398cb0d74ea9568210cf00c22d9629ae1b6c667d4a8e2"
+    },
+    {
+      "source": "runtime/semantic/native/metadata_v2.h",
+      "target": "semantic/native/metadata_v2.h",
+      "sha256": "a1e68e0e3db75896dbd48ad6a12a4f9322fbcb99456bca3c1f5c90374d68e345"
+    },
+    {
+      "source": "runtime/semantic/native/mod_category_bridge.h",
+      "target": "semantic/native/mod_category_bridge.h",
+      "sha256": "103b92941f93d78f38e11deec58f68652a3358a96ef876aee36b3dd540779ddd"
+    },
+    {
+      "source": "runtime/semantic/native/official_replay.h",
+      "target": "semantic/native/official_replay.h",
+      "sha256": "dcb14ff4f7167f155dc417ddc38e247c1ee51fcc09eb7737d4c78ee59afe37a4"
+    },
+    {
+      "source": "runtime/semantic/native/perf_aggregate.h",
+      "target": "semantic/native/perf_aggregate.h",
+      "sha256": "959d4a678821beac0374af89ca6d38d0c0528926d654ef0bdf604594f316c0f9"
+    },
+    {
+      "source": "runtime/semantic/native/sampler_read_probe.h",
+      "target": "semantic/native/sampler_read_probe.h",
+      "sha256": "a3aa1914cdce40fe776530204b320ca351bffda1ed768212792a32bac78b4bbd"
+    },
+    {
+      "source": "runtime/semantic/native/setting_toggle.h",
+      "target": "semantic/native/setting_toggle.h",
+      "sha256": "52ffd9b7ef318a4479c542913f74eebc938a36f054ff3dd4a4c83c5a5b200ff3"
+    },
+    {
+      "source": "runtime/semantic/navigation/navigation_controls.h",
+      "target": "semantic/navigation/navigation_controls.h",
+      "sha256": "41bee9deb6425e1d5225e75d39747814dfbe066d3362109a5ddd843ce7dae370"
+    },
+    {
+      "source": "runtime/semantic/overlays/overlay_state.h",
+      "target": "semantic/overlays/overlay_state.h",
+      "sha256": "ac03d6505fe4123c81f01f1f57059de7347a47032e2c283a988aac4c41470b05"
+    },
+    {
+      "source": "runtime/semantic/owned/dynamic_owned_store.h",
+      "target": "semantic/owned/dynamic_owned_store.h",
+      "sha256": "996d0221a9ee2ffcd3173acf22a4157139949da9902b69360871de8591eda806"
+    },
+    {
+      "source": "runtime/semantic/owned/news_owned.h",
+      "target": "semantic/owned/news_owned.h",
+      "sha256": "28d17237cb4fc648d049f76e3dc198e3374b78ca2dd7a534c14cce7741f1d05f"
+    },
+    {
+      "source": "runtime/semantic/owned/owned_pack_module.cpp",
+      "target": "semantic/owned/owned_pack_module.cpp",
+      "sha256": "6eddc3db4fed3c70c9373a31018d07e2133e24457e62046fba5af43cf94ae7eb"
+    },
+    {
+      "source": "runtime/semantic/play/play_controls.h",
+      "target": "semantic/play/play_controls.h",
+      "sha256": "52f8b0da3ed92768ea7935cb01ee467a10e1bce1133369ac606a49d4361d4ece"
+    },
+    {
+      "source": "runtime/semantic/result/result_state.h",
+      "target": "semantic/result/result_state.h",
+      "sha256": "e5d933f62df97ef4919d9e367a7b9629b4ea39ad8f4b2bc0e07d54f3fbb45ea9"
+    },
+    {
+      "source": "runtime/semantic/settings/settings_panel.h",
+      "target": "semantic/settings/settings_panel.h",
+      "sha256": "499ff855de134d7373ede4be8b55a391321cbc695fbdbfeb9aa6845ebc037ddb"
+    },
+    {
+      "source": "runtime/semantic/song/cli_song_native.h",
+      "target": "semantic/song/cli_song_native.h",
+      "sha256": "2b9b8a577c1177fb58e1b56cfd6a5cd0a68416b1795e2a3c834decc6b162b194"
+    },
+    {
+      "source": "runtime/semantic/update/bundle_controls.h",
+      "target": "semantic/update/bundle_controls.h",
+      "sha256": "872c97b00b7ed8c325f411d08fdde86fab97a8414a16353d40cb72eff83bc2fd"
+    },
+    {
+      "source": "runtime/tools/RawDexTool.java",
+      "target": "tools/RawDexTool.java",
+      "sha256": "252425dc1998486b945b933d1eb4bed4199ea34b59054c28ec3177e02b551bf5"
+    },
+    {
+      "source": "smali/low/moe/AkfcLoader.smali",
+      "target": "smali/low/moe/AkfcLoader.smali",
+      "sha256": "d6a090b6935a12383297544003b3013ba20cce1d5c16319961d517a3fc2bbd77"
+    },
+    {
+      "source": "smali/low/moe/AnomalyMonitor.smali",
+      "target": "smali/low/moe/AnomalyMonitor.smali",
+      "sha256": "81703b26931add119679079150757c8b23b941cdccc52887695790867529bce3"
+    },
+    {
+      "source": "smali/org/cocos2dx/lib/Cocos2dxRenderer_onDrawFrame.smali",
+      "target": "smali/org/cocos2dx/lib/Cocos2dxRenderer_onDrawFrame.smali",
+      "sha256": "9ce2e60e8b35cf36d9c4897f1ba3178a1d48ef9c7f039e46e9bd12399d5f5f9a"
+    },
+    {
+      "source": "smali/org/cocos2dx/lib/Cocos2dxRenderer_setAnimationInterval.smali",
+      "target": "smali/org/cocos2dx/lib/Cocos2dxRenderer_setAnimationInterval.smali",
+      "sha256": "1988ef1a0b00a47f77b3a7163116789fb171519ddb331410d3355493c76723c8"
+    },
+    {
+      "source": "smali/org/cocos2dx/lib/FileTaskHandler_response_guard.smali",
+      "target": "smali/org/cocos2dx/lib/FileTaskHandler_response_guard.smali",
+      "sha256": "9978d67018749208f6f07ae4011af46a9d2edd51ba5809342fee895698db3e19"
+    },
+    {
+      "source": "resources.py",
+      "target": "tools/StockResources.py",
+      "sha256": "0646fad2012b828ff8ad4eb257f2739b51b95856dd96dc6b191e0116556090b9"
+    },
+    {
+      "source": "smali/build.py",
+      "target": "tools/StockManagedBuild.py",
+      "sha256": "2a04651ad8461e82e5a2b0ca91edbf6d7833e20303beb338419c4b3d60eb2406"
+    },
+    {
+      "source": "native/akfc_loader.cpp",
+      "target": "native/akfc_loader.cpp",
+      "sha256": "52ec355ff72a62a64f8fc6bb48001ea62d43d5f2ca45d6f0eba137632e80e1b2"
+    },
+    {
+      "source": "assets/mod-divider.png",
+      "target": "assets/mod-divider.png",
+      "sha256": "5e53987e1f542ed1107e4eea73ec150475341a0f03616950dd0ac73c0ab1526f"
+    }
+  ]
+}

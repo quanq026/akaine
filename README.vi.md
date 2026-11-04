@@ -1,34 +1,33 @@
-# Akaine 7.0.255
+# Akaine 7.1
 
 [English](README.md) | Tiếng Việt
 
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Bản phát hành V36" src="https://img.shields.io/badge/Release-V36-A63B52?style=flat"></a>
-  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Arcaea 7.0.255" src="https://img.shields.io/badge/Arcaea-7.0.255-547EA8?style=flat"></a>
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
+  <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
+  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Arcaea 7.1.0" src="https://img.shields.io/badge/Arcaea-7.1.0-547EA8?style=flat"></a>
+  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python và C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
   <a href="README.md"><img alt="Hướng dẫn tiếng Anh và tiếng Việt" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
-  <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/stargazers"><img alt="Số sao GitHub" src="https://img.shields.io/github/stars/quanq026/akaine.svg?style=flat&amp;label=Stars&amp;color=D5A64E"></a>
   <a href="LICENSE"><img alt="Giấy phép MIT" src="https://img.shields.io/github/license/quanq026/akaine?style=flat&amp;color=6B7280"></a>
 </p>
 
 <p align="center">
-  <strong><a href="https://github.com/quanq026/akaine/releases/latest">Tải APK</a></strong> ·
+  <strong><a href="docs/guide/vi/06-build-android-client.md">Build client</a></strong> ·
   <a href="docs/guide/vi/README.md">Bắt đầu hướng dẫn</a> ·
   <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
 
 Akaine là bộ mã nguồn công khai kèm hướng dẫn dựng server và client Android
-dựa trên Arcaea 7.0.255. Hướng dẫn bắt đầu từ một máy Windows sạch và một tài
+dựa trên Arcaea 7.1.0. Hướng dẫn bắt đầu từ một máy Windows sạch và một tài
 khoản cloud mới. Bạn không cần biết trước về Linux, Cloudflare hay quy trình
 build Android.
 
-Toàn bộ hướng dẫn và patch client công khai chỉ dành cho phiên bản `7.0.255`,
-version code `1209852`. Các phiên bản Arcaea cũ hơn hoặc mới hơn có file và
+Toàn bộ hướng dẫn và patch client công khai chỉ dành cho phiên bản `7.1.0`,
+version code `1209907`. Các phiên bản Arcaea cũ hơn hoặc mới hơn có file và
 native offset khác, vì vậy không thể dùng chung các bước trong repository này.
 
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
@@ -89,11 +88,14 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 - một tên miền được Cloudflare bảo vệ
 - private-server API truy cập qua HTTPS
 - kho riêng để lưu bundle và file bài hát
-- client Android V36 được build từ gói APKPure gốc
+- client Android build từ gói APKPure gốc với các patch 7.1 hiện tại
 - Discord bot để quản lý tài khoản và công cụ score
 - quy trình sao lưu và khôi phục
 
-![Tổng quan nền tảng Akaine 7.0.255](docs/images/akaine-platform-overview.svg)
+Client dùng Akaine production host đi kèm. Muốn kết nối tên miền riêng cần
+route patch được kiểm chứng riêng; xem [chương 6](docs/guide/vi/06-build-android-client.md).
+
+![Tổng quan nền tảng Akaine 7.1.0](docs/images/akaine-platform-overview.svg)
 
 ## Trước khi bắt đầu
 
@@ -128,7 +130,7 @@ hệ thống sang nhà cung cấp VPS khác.
 4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
 5. [Cấu hình R2](docs/guide/vi/05-cloudflare-content.md), [cài game server](docs/guide/vi/05a-install-game-server.md), [chạy Discord bot tùy chọn](docs/guide/vi/05b-discord-bot.md) và [thiết lập backup](docs/guide/vi/05c-backup-recovery.md).
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
-7. [Build, xác minh và phát hành content bundle 7.0.255](docs/guide/vi/07-build-release-content-bundle.md).
+7. [Build, xác minh và phát hành content bundle 7.1.0](docs/guide/vi/07-build-release-content-bundle.md).
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
 9. [Thêm fan chart và đặt nó vào một pack](docs/guide/vi/09-add-fan-chart.md).
 

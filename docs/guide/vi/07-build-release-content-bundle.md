@@ -1,11 +1,11 @@
-# Build và phát hành content bundle 7.0.255
+# Build và phát hành content bundle 7.1.0
 
 [English](../07-build-release-content-bundle.md) | Tiếng Việt
 
 Chương này bắt đầu từ một full-root bundle đã được xác minh, áp dụng một lớp
 content overlay nhỏ, build release bất biến mới rồi đưa chính bộ byte đó từ staging
 lên production. Quy trình dùng `scripts/build_content_bundle.py`; các công cụ 6.14
-cũ trong `server/tools` không tạo đúng định dạng release 7.0.255.
+cũ trong `server/tools` không tạo đúng định dạng release 7.1.0.
 
 ![Hai lane staging và production của chương 07](../../images/guides/07-content-bundle-release-lanes.svg)
 
@@ -20,18 +20,18 @@ nguyên nhân.
 
 ## Phân biệt ba loại tên
 
-Application version là `7.0.255`. Nó xác định Android client và không đổi khi bạn phát
+Application version là `7.1.0`. Nó xác định Android client và không đổi khi bạn phát
 hành content mới.
 
-Content version có dạng `7.0.255.9`. Số cuối phải tăng sau mỗi release được chấp nhận
+Content version có dạng `7.1.0.9`. Số cuối phải tăng sau mỗi release được chấp nhận
 để server và client có thể so sánh phiên bản.
 
 Alias là tiền tố tên file của manifest và mọi part `.cb`, ví dụ
-`7.0.255-fan-album-r1`. Alias là bất biến: sau khi upload, không được đặt byte khác
+`7.1.0-fan-album-r1`. Alias là bất biến: sau khi upload, không được đặt byte khác
 vào cùng R2 key.
 
 Mỗi release có một manifest `<alias>.json` cùng số file
-`<alias>_<index>.cb` được khai báo trong `totalPartitions`. Baseline Akaine 7.0.255
+`<alias>_<index>.cb` được khai báo trong `totalPartitions`. Baseline Akaine 7.1.0
 đã kiểm chứng có bảy partition. Builder đọc số này từ source manifest thay vì tự
 đoán.
 
@@ -58,12 +58,12 @@ sang dạng văn bản hexadecimal hoặc Base64.
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
-$sourceRoot = (Get-Item (Read-Host "Full path to the verified 7.0.255 bundle source")).FullName
+$sourceRoot = (Get-Item (Read-Host "Full path to the verified 7.1.0 bundle source")).FullName
 $overlayRoot = [IO.Path]::GetFullPath((Read-Host "Full path for the new overlay directory"))
 $outputRoot = [IO.Path]::GetFullPath((Read-Host "Full path for the new bundle output"))
 $detailKey = (Get-Item (Read-Host "Full path to the private content-detail key")).FullName
-$alias = Read-Host "New immutable alias, for example 7.0.255-my-content-r1"
-$bundleVersion = Read-Host "New content version, for example 7.0.255.9"
+$alias = Read-Host "New immutable alias, for example 7.1.0-my-content-r1"
+$bundleVersion = Read-Host "New content version, for example 7.1.0.9"
 
 New-Item -ItemType Directory -Force $overlayRoot | Out-Null
 ```
@@ -73,7 +73,7 @@ Kiểm tra source manifest trước khi sửa bất cứ thứ gì:
 ```powershell
 $sourceManifest = Get-Content (Join-Path $sourceRoot "manifest.json") -Raw | ConvertFrom-Json
 
-if ($sourceManifest.applicationVersionNumber -ne "7.0.255") {
+if ($sourceManifest.applicationVersionNumber -ne "7.1.0") {
     throw "The source belongs to a different application version."
 }
 if ($null -ne $sourceManifest.previousVersionNumber) {
@@ -180,8 +180,9 @@ $report | Select-Object application_version, bundle_version, alias, entries, par
 $report.parts | Format-Table file, bytes, sha256
 ```
 
-Không gộp partition hoặc chuyển kết quả thành delta một part. Client 7.0.255 từng từ
-chối delta và layout một part chưa được kiểm chứng với lỗi `-1013`.
+Giữ full-root layout và số partition đã xác minh của source. Hướng dẫn này
+không tạo delta hay đổi layout partition. Archive nhỏ hơn không có ích nếu
+client không áp dụng được.
 
 ## Upload object bất biến lên staging
 
@@ -270,13 +271,26 @@ bundle đang hoạt động; các file `.cb` vẫn nằm trên R2. Đặt
 service và giữ lại đường dẫn backup mà shell đã in ra.
 
 Trong `class Config` hiện có của staging `config.py`, dùng public asset prefix mới và
-cho phép content version 7.0.255 cũ tiến lên full root mới nhất:
+cho phép content version 7.1.0 cũ tiến lên full root mới nhất:
 
 ```python
 BUNDLE_DOWNLOAD_LINK_PREFIX = "https://assets.example.com/bundle/"
 BUNDLE_STRICT_MODE = False
 FRESH_INSTALL_ONLY_BUNDLE_VERSION = ""
+BUNDLE_ASSETSET_PROFILES_ENABLED = True
+BUNDLE_ASSETSET_PROFILE_DEVICES = None
+BUNDLE_ASSETSET_PROFILES = {
+    "7.1.0": {"full": {
+        "target": "7.1.0.9",
+        "manifests": ["7.1.0-my-content-r1.json"]
+    }}
+}
 ```
+
+Thay `target` và tên manifest trong ví dụ bằng đúng `$bundleVersion` và
+`$alias.json` đã chọn. Nếu map đang có các phiên bản khác, giữ chúng và chỉ
+cập nhật entry 7.1. Profile áp dụng cho mọi thiết bị, kể cả APK 7.1 cài đè
+khi còn cache bundle cũ. Không dùng rule staging chỉ phục vụ khi header rỗng.
 
 Upload manifest, sao lưu thư mục đang hoạt động rồi kích hoạt candidate. Các lệnh sẽ
 hỏi đường dẫn remote thay vì giả định vị trí cài server:
@@ -322,9 +336,11 @@ if ($LASTEXITCODE -ne 0) {
 Server đang chạy phải parse `<alias>.json`, vì vậy tên file này phải khớp với các file
 `<alias>_<index>.cb` đã upload. Không được chỉ đổi tên manifest.
 Giữ các manifest cũ vì app version khác vẫn cần bundle route riêng. Content version mới
-phải cao hơn các bản 7.0.255 đang có để parser chọn nó làm target.
+phải cao hơn các bản 7.1.0 đang có. Full profile phải trỏ đúng target mới;
+chỉ thêm manifest mới không tự đổi một profile đang được pin.
 
-Kiểm tra API bằng content version rỗng và target version:
+Kiểm API với content version rỗng, header cache 7.0 còn giữ sau khi nâng APK,
+và target version. Mọi request vẫn dùng application version 7.1.0:
 
 ```powershell
 $stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com"
@@ -333,20 +349,21 @@ function Get-BundleResult([string]$contentVersion) {
     Invoke-RestMethod `
       -Uri "$stagingApi/game/content_bundle" `
       -Headers @{
-        AppVersion = "7.0.255"
+        AppVersion = "7.1.0"
         ContentBundle = $contentVersion
         DeviceId = "guide-bundle-check"
       }
 }
 
 $fromEmpty = Get-BundleResult "0.0.0"
+$fromPreviousApp = Get-BundleResult "7.0.255.28"
 $atTarget = Get-BundleResult $bundleVersion
 
-if ($fromEmpty.value.orderedResults.Count -ne 1) {
-    throw "A clean client did not receive exactly one bundle."
-}
-if ($fromEmpty.value.orderedResults[0].contentBundleVersion -ne $bundleVersion) {
-    throw "The server returned the wrong target version."
+foreach ($candidate in @($fromEmpty, $fromPreviousApp)) {
+    if (@($candidate.value.orderedResults).Count -ne 1 -or
+        $candidate.value.orderedResults[0].contentBundleVersion -ne $bundleVersion) {
+        throw "A clean or upgraded 7.1 client did not receive the full target bundle."
+    }
 }
 if ($fromEmpty.value.orderedResults[0].bundleParts.Count -ne $sourceManifest.totalPartitions) {
     throw "The API partition count differs from the manifest."
@@ -415,7 +432,7 @@ lỗi có thể khiến các Cloudflare cache trên thế giới giữ những b
 
 ## Checklist release
 
-- Source là full root 7.0.255 đã xác minh.
+- Source là full root 7.1.0 đã xác minh.
 - Content version đã tăng và alias chưa từng được dùng.
 - Catalogue qua kiểm tra song-pack và pack-parent.
 - `ready-manifest.json` xác nhận artifact đã được xác minh.

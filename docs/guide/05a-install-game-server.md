@@ -1,4 +1,4 @@
-# Install the 7.0.255 game server
+# Install the 7.1.0 game server
 
 This chapter turns the empty Lightsail instance from chapter 2 into a running
 game API. It uses the public server source and the content files verified in
@@ -17,9 +17,9 @@ The public server includes dynamic pack handling, shared content grants and
 atomic account provisioning for the bot. Identity and secret defaults are
 empty; supply your own private configuration. Catalogue and media come from
 the verified resource kit, not another operator's database or player records.
-Dynamic-pack and assetset-profile controls start disabled. Configure them only
-with the matching catalogue and client; installing a V36 APK does not configure
-the server or grant content by itself.
+The server defaults keep 7.1 disabled. The version-specific example below
+enables it only after you provide the matching full bundle and pack catalogue.
+Installing the APK does not configure the server or grant content by itself.
 
 ## 1. Prepare the Linux instance
 
@@ -74,7 +74,8 @@ From the verified private kit, locate:
 ```text
 server songlist              -> database/songs/songlist
 server song metadata         -> database/song_metadata.json
-7.0.255 full-root manifest   -> database/bundle/<alias>.json
+matching native packlist      -> database/client_catalogs/7.1.0/packlist
+7.1.0 full-root manifest      -> database/bundle/<alias>.json
 bundle parts                  -> R2 bundle/<alias>_0.cb ...
 ```
 
@@ -90,7 +91,8 @@ $sshKey = Get-Item (Read-Host "Full path to the Lightsail SSH private key")
 $serverIp = Read-Host "Lightsail static IPv4 address"
 $songlist = Get-Item (Read-Host "Full path to the verified server songlist")
 $songMetadata = Get-Item (Read-Host "Full path to the verified song_metadata.json")
-$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.0.255 bundle manifest")
+$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.1.0 bundle manifest")
+$packlist = Get-Item (Read-Host "Full path to the matching native packlist")
 
 ssh -i $sshKey.FullName "ubuntu@$serverIp" "install -d -m 700 /home/ubuntu/akaine-intake"
 if ($LASTEXITCODE -ne 0) { throw "Could not create the private intake folder." }
@@ -102,7 +104,11 @@ if ($LASTEXITCODE -ne 0) { throw "Song metadata upload failed." }
 scp -i $sshKey.FullName $bundleManifest.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/$($bundleManifest.Name)"
 if ($LASTEXITCODE -ne 0) { throw "Bundle manifest upload failed." }
 
+scp -i $sshKey.FullName $packlist.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/packlist"
+if ($LASTEXITCODE -ne 0) { throw "Packlist upload failed." }
+
 "Bundle manifest name: $($bundleManifest.Name)"
+"Packlist SHA256: $((Get-FileHash -Algorithm SHA256 $packlist.FullName).Hash.ToLowerInvariant())"
 ```
 
 Return to the Linux SSH terminal and enter the manifest filename that
@@ -116,6 +122,8 @@ case "$manifest_name" in
 esac
 test -f "/home/ubuntu/akaine-intake/$manifest_name"
 
+sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.1.0
+sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.1.0/packlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
@@ -125,27 +133,28 @@ from pathlib import Path
 root = Path('/srv/akaine/repo/server/database')
 manifest = root / 'bundle' / sys.argv[1]
 data = json.loads(manifest.read_text())
-assert data['applicationVersionNumber'] == '7.0.255'
+assert data['applicationVersionNumber'] == '7.1.0'
 assert data['previousVersionNumber'] is None
 assert data['totalPartitions'] > 0
 json.loads((root / 'songs/songlist').read_text(encoding='utf-8-sig'))
 json.loads((root / 'song_metadata.json').read_text())
-print('7.0.255 content files ready')
+assert json.loads((root / 'client_catalogs/7.1.0/packlist').read_text())['packs']
+print('7.1.0 content files ready')
 PY
 ```
 
 The server reads the songlist for unlock and download decisions, metadata for
 download filenames and checksums, and the manifest for bundle versions and
 part URLs. Installing only the bundle manifest will not make song downloads
-work. The last command must print `7.0.255 content files ready`.
+work. The last command must print `7.1.0 content files ready`.
 
-## 4. Configure the 7.0.255 server
+## 4. Configure the 7.1.0 server
 
 Copy the version-specific example. Keep credentials in the ignored `config.py`,
 inside its `class Config`:
 
 ```bash
-sudo -u akaine cp /srv/akaine/repo/server/config.7.0.255.example.py /srv/akaine/repo/server/config.py
+sudo -u akaine cp /srv/akaine/repo/server/config.7.1.0.example.py /srv/akaine/repo/server/config.py
 sudo chmod 0600 /srv/akaine/repo/server/config.py
 sudo -u akaine nano /srv/akaine/repo/server/config.py
 ```
@@ -158,10 +167,22 @@ existing IDs when editing this list. The template disables Link Play for the
 first server test. `chmod` limits the private configuration to its owner before
 you enter credentials.
 
+Set the full profile's `target` to the manifest's `versionNumber` and its
+`manifests` list to the exact uploaded manifest filename. Replace
+`<SHA256_OF_YOUR_7_1_PACKLIST>` with the hash printed by PowerShell. Keep
+`DYNAMIC_CLIENT_7_1_PACKLIST_PATH` pointed at the installed packlist and give its
+epoch a new value whenever the catalogue changes.
+
+The fresh-install template deliberately grants the complete verified pack
+catalogue (`DYNAMIC_PACKS_FULL_CATALOG = True`). Set it to false if packs should
+require separate ownership. Existing deployments must merge the 7.1 profile
+without deleting their 7.0 bundle profiles, catalogue pins or download prefixes.
+
 The template sets `GAME_API_PREFIX = '/'`, matching the current release's
 root paths such as `/auth/login` and `/game/content_bundle`. It allows only
-`7.0.255`, listens on `127.0.0.1:18080` behind nginx, and selects the newest
-full-root bundle for an older client. The older `config.example.py` is an
+`7.1.0`, listens on `127.0.0.1:18080` behind nginx, and serves the configured
+full-root target to a clean or older-content client. The older
+`config.example.py` is an
 upstream reference for other client versions; do not copy it for this setup.
 
 Check the edited file without printing your secrets:
@@ -169,14 +190,29 @@ Check the edited file without printing your secrets:
 ```bash
 cd /srv/akaine/repo/server
 sudo -u akaine /srv/akaine/repo/.venv/bin/python - <<'PY'
+import json
+from hashlib import sha256
+from pathlib import Path
 from config import Config
 assert Config.GAME_API_PREFIX == '/'
-assert Config.ALLOW_APPVERSION == ['7.0.255']
+assert Config.ALLOW_APPVERSION == ['7.1.0'] and Config.CLIENT_7_1_ENABLED is True
 assert Config.USERNAME and Config.PASSWORD and Config.SECRET_KEY
 assert 'example.com' not in Config.BUNDLE_DOWNLOAD_LINK_PREFIX
+assert 'example.com' not in Config.DOWNLOAD_LINK_PREFIX_7_1_0
 assert 'example.com' not in Config.ASSET_SIGNED_PREFIX
-print('7.0.255 server configuration ready')
+assert Config.BUNDLE_ASSETSET_PROFILES_ENABLED is True
+profile = Config.BUNDLE_ASSETSET_PROFILES['7.1.0']['full']
+for name in profile['manifests']:
+    manifest = json.loads((Path('database/bundle') / name).read_text())
+    assert manifest['applicationVersionNumber'] == '7.1.0'
+    assert manifest['versionNumber'] == profile['target']
+    assert manifest['previousVersionNumber'] is None
+assert Config.DYNAMIC_PACKS_ENABLED is True and Config.DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED is True
+assert sha256(Path(Config.DYNAMIC_CLIENT_7_1_PACKLIST_PATH).read_bytes()).hexdigest() == Config.DYNAMIC_CLIENT_7_1_PACKLIST_SHA256
+assert Config.DYNAMIC_CLIENT_7_1_CATALOG_EPOCH
+print('7.1.0 server configuration ready')
 PY
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/check_dynamic_pack_catalog.py
 ```
 
 If this prints a traceback, correct `config.py` and rerun the check. No server
@@ -282,7 +318,7 @@ In Windows PowerShell, set `$apiHost` to your own hostname:
 $apiHost = Read-Host "Game API hostname without https://"
 $bundleUrl = "https://$apiHost/game/content_bundle"
 $response = Invoke-WebRequest -Uri $bundleUrl -Headers @{
-  AppVersion = '7.0.255'
+  AppVersion = '7.1.0'
   ContentBundle = '0.0.0'
   DeviceId = 'guide-server-check'
 }
@@ -295,14 +331,14 @@ if ($response.Headers['Cache-Control'] -notmatch 'no-store') {
   throw "The content-bundle decision is missing no-store."
 }
 if (@($body.value.orderedResults).Count -ne 1) {
-  throw "A fresh 7.0.255 client did not receive one bundle."
+  throw "A fresh 7.1.0 client did not receive one bundle."
 }
 
 $body.value.orderedResults | Select-Object contentBundleVersion, appVersion, bundleSize
 
 $targetVersion = $body.value.orderedResults[0].contentBundleVersion
 $currentResponse = Invoke-RestMethod -Uri $bundleUrl -Headers @{
-  AppVersion = '7.0.255'
+  AppVersion = '7.1.0'
   ContentBundle = $targetVersion
   DeviceId = 'guide-server-check'
 }

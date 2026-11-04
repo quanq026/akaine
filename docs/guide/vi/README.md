@@ -1,9 +1,9 @@
-# Thiết lập Akaine 7.0.255 từ đầu
+# Thiết lập Akaine 7.1.0 từ đầu
 
 [English](../README.md) | Tiếng Việt
 
-Bộ hướng dẫn này giúp bạn build server Akaine và client Android cho Arcaea `7.0.255`
-(`1209852`) từ đầu. Các chương dùng chung một bộ tên ví dụ và phải được làm theo thứ tự,
+Bộ hướng dẫn này giúp bạn build server Akaine và client Android cho Arcaea `7.1.0`
+(`1209907`) từ đầu. Các chương dùng chung một bộ tên ví dụ và phải được làm theo thứ tự,
 vì mỗi chương sau dựa trên kết quả kiểm tra của chương trước. Không dùng hash hoặc APK
 patch trong hướng dẫn cho phiên bản client khác.
 
@@ -54,10 +54,10 @@ phối content, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
 
 ## Phần 2: Client Android
 
-6. [Build, ký và kiểm client Android V36](06-build-android-client.md).
+6. [Build, ký và kiểm client Android 7.1](06-build-android-client.md).
 
 Chương 6 bắt đầu từ XAPK APKPure gốc. Sau phần setup, một lệnh build sẽ merge
-các module gốc, áp dụng V36, biên dịch, căn chỉnh và ký. Sau đó là bước cài
+các module gốc, áp dụng 7.1, biên dịch, căn chỉnh và ký. Sau đó là bước cài
 đặt và kiểm semantic CLI. Catalogue, chart key và content tương ứng vẫn
 được cung cấp ngoài repository.
 
@@ -65,12 +65,12 @@ các module gốc, áp dụng V36, biên dịch, căn chỉnh và ký. Sau đó 
 
 7. [Build, xác minh và phát hành content bundle](07-build-release-content-bundle.md).
 
-Chương 7 bắt đầu từ full-root bundle 7.0.255 đã xác minh, áp dụng overlay có kiểm soát,
+Chương 7 bắt đầu từ full-root bundle 7.1.0 đã xác minh, áp dụng overlay có kiểm soát,
 kiểm thử trên staging rồi đưa đúng bộ byte bất biến đó lên production.
 
 ## Phần 4: kinh nghiệm vận hành
 
-8. [Kinh nghiệm và lỗi đã gặp khi xây dựng Akaine 7.0.255](08-lessons-and-failures.md).
+8. [Kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](08-lessons-and-failures.md).
 
 Chương 8 giải thích những sự cố đã tạo nên các bước kiểm tra trong guide: API đi sai
 route, bundle boot loop, selector gate, download contract, false positive từ emulator,

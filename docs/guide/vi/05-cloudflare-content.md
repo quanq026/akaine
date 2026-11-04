@@ -418,5 +418,5 @@ hồi token ngay nếu nó xuất hiện trong screenshot, terminal log hoặc r
 - Cache Reserve và Argo bị tắt.
 - Temporary upload token và local profile `akaine-r2` đã bị xóa.
 
-Tiếp theo: [Cài game server 7.0.255](05a-install-game-server.md). Chương đó kết nối
+Tiếp theo: [Cài game server 7.1.0](05a-install-game-server.md). Chương đó kết nối
 Worker với cùng asset signing secret của server.

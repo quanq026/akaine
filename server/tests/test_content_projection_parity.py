@@ -5,6 +5,8 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
+from core.client_compat import uses_current_contract
+
 
 SOURCE = Path(__file__).resolve().parents[1] / 'server/user.py'
 KEEP = {'CLIENT_PACK_PROJECTION_APP_VERSION', 'CLIENT_UNLOCK_PROJECTION_7_0_255',
@@ -18,7 +20,7 @@ def projection_methods():
     nodes = [node for node in ast.parse(SOURCE.read_bytes()).body
              if isinstance(node, ast.FunctionDef) and node.name in METHODS
              or isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id in KEEP for target in node.targets)]
-    namespace = {}
+    namespace = {'uses_current_contract': uses_current_contract}
     exec(compile(ast.Module(body=nodes, type_ignores=[]), str(SOURCE), 'exec'), namespace)
     return namespace
 

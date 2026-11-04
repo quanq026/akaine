@@ -8,6 +8,7 @@ from core.course import CoursePlay
 from core.error import InputError
 from core.rank import RankList
 from core.score import UserPlay
+from core.client_compat import character_row_for_app_version, uses_current_contract
 from core.sql import Connect
 from core.user import UserOnline
 
@@ -22,12 +23,11 @@ def canonical_score_song_id(song_id):
 
 
 def score_rows_for_app_version(rows, app_version):
-    if app_version == '7.0.255':
-        return rows
+    current = uses_current_contract(app_version)
     return [
-        dict(row, song_id='testify1')
-        if row.get('song_id') == 'testify'
-        else row
+        character_row_for_app_version(
+            dict(row, song_id='testify1') if not current and row.get('song_id') == 'testify' else row,
+            app_version)
         for row in rows
     ]
 

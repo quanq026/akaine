@@ -11,6 +11,9 @@ import tempfile
 from time import time
 from types import SimpleNamespace
 import unittest
+from unittest.mock import Mock, patch
+
+from core.client_compat import uses_current_contract
 
 HERE = Path(__file__).resolve().parents[1]
 APP, CAP, OTHER_CAP = '7.0.255', 'a' * 64, 'b' * 64
@@ -27,7 +30,8 @@ def load_classes(config, folder):
     classes = [node for node in parsed.body if isinstance(node, ast.ClassDef)
                and node.name in ('ContentBundle', 'BundleParser', 'BundleDownload')]
     namespace = {'json': json, 'os': os, 're': re, 'lru_cache': lru_cache, 'time': time,
-                 'Config': config, 'NoData': NoData, 'NoAccess': NoData, 'RateLimit': NoData,
+                 'Config': config, 'uses_current_contract': uses_current_contract,
+                 'NoData': NoData, 'NoAccess': NoData, 'RateLimit': NoData,
                  'ArcLimiter': lambda *unused: None,
                  'url_for': lambda *unused, **kwargs: 'https://fixture.invalid/token/' + kwargs['token'],
                  'Constant': SimpleNamespace(CONTENT_BUNDLE_FOLDER_PATH=str(folder),
@@ -246,6 +250,32 @@ class BundleProfileTests(unittest.TestCase):
                 self.assertEqual(row['bundleParts'][0]['url'], row['bundleUrl'])
         after = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in self.folder.glob('*.json')}
         self.assertEqual(before, after)
+
+    def test_app_cdn_override_does_not_require_global_prefix_or_db_tokens(self):
+        self.config.BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES = {APP: 'https://fixture.invalid/app-cdn/'}
+        self.namespace['Constant'].BUNDLE_DOWNLOAD_LINK_PREFIX = ''
+        cursor = Mock()
+        download = self.namespace['BundleDownload'](cursor)
+        download.set_client_info(APP, '0.0.0')
+        row, = download.get_bundle_list()
+        self.assertTrue(row['jsonUrl'].startswith('https://fixture.invalid/app-cdn/'))
+        self.assertTrue(row['bundleUrl'].endswith('.cb'))
+        cursor.execute.assert_not_called()
+        cursor.executemany.assert_not_called()
+
+    def test_empty_app_prefix_persists_tokens_despite_global_cdn_prefix(self):
+        self.config.BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES = {APP: ''}
+        self.namespace['Constant'].BUNDLE_DOWNLOAD_TIME_GAP_LIMIT = 60
+        cursor = Mock()
+        download = self.namespace['BundleDownload'](cursor)
+        download.set_client_info(APP, '0.0.0')
+        row, = download.get_bundle_list()
+        tokens = cursor.executemany.call_args.args[1]
+        self.assertEqual(len(tokens), 2)
+        self.assertEqual(row['jsonUrl'], 'https://fixture.invalid/token/' + tokens[0][0])
+        self.assertEqual(row['bundleUrl'], 'https://fixture.invalid/token/' + tokens[1][0])
+        self.assertEqual([item[1] for item in tokens], ['legacy20.json', 'legacy20.cb'])
+        cursor.execute.assert_called_once()
 
     def test_profile_manifest_versions_reject_noncanonical_numeric_identity(self):
         path = self.folder / 'thin20to21.json'

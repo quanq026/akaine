@@ -148,8 +148,7 @@ class Character(CollectionItemMixin):
 
     @property
     def is_base_character(self) -> bool:
-        # 应该是只有对立这样
-        return self.character_id == 1
+        return self.character_id == 1 or Config.CLIENT_7_1_ENABLED is True and self.character_id == 101
 
     def to_dict(self, has_cores=False) -> dict:
         # 用于API里，游戏内的数据不太一样，故不能super
@@ -344,6 +343,8 @@ class UserCharacter(Character):
             r['fatalis_is_limited'] = self.fatalis_is_limited
         if self.character_id in [1, 6, 7, 17, 18, 24, 32, 35, 52]:
             r['base_character_id'] = 1
+        elif self.character_id == 98:
+            r['base_character_id'] = 72
 
         x = self.skill_state
         if x:

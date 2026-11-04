@@ -1,0 +1,65 @@
+{
+  "schema": "akaine.character-seed-input.v1",
+  "application_version": "7.1.0",
+  "source_member": "assets/char/characters.json",
+  "source_sha256": "01f199b78a31bfdfc37354e25270bbf841d55c234136ed37ffcf83f50d91e36d",
+  "retained_character_ids": [98],
+  "new_character_ids": [100, 101],
+  "characters": [
+    {
+      "character_id": 98,
+      "base_character_id": 72,
+      "base_character": false,
+      "name": "insight_konzetsu",
+      "char_type": 4,
+      "base_frag": 63,
+      "base_prog": 92.5,
+      "base_over": 59.5,
+      "max_frag": 85,
+      "max_prog": 125,
+      "max_over": 80,
+      "skill_id": "skill_insight_konzetsu",
+      "skill_unlock_level": 0,
+      "version_from": "7.0.255",
+      "pack_id": "konzetsu"
+    },
+    {
+      "character_id": 100,
+      "base_character": false,
+      "name": "ilith_halloween",
+      "char_type": 2,
+      "base_frag": 39.5,
+      "base_prog": 67,
+      "base_over": 39.5,
+      "max_frag": 60,
+      "max_prog": 101,
+      "max_over": 60,
+      "skill_id": "skill_ilith_halloween",
+      "skill_unlock_level": 0,
+      "version_from": "7.1.0"
+    },
+    {
+      "character_id": 101,
+      "base_character": true,
+      "name": "silky6_nene",
+      "char_type": 0,
+      "base_frag": 45,
+      "base_prog": 39.5,
+      "base_over": 41.5,
+      "max_frag": 72,
+      "max_prog": 63,
+      "max_over": 66,
+      "skill_id": "skill_stream_palette",
+      "skill_unlock_level": 0,
+      "version_from": "7.1.0",
+      "pack_id": "diversesystem"
+    }
+  ],
+  "apply_policy": "Add character definitions only in a reviewed database transaction; ownership uses the existing additive grants policy.",
+  "acceptance_pending": [
+    "Native ability identity/effect",
+    "World Mode reward behavior",
+    "Existing user level/progress preservation",
+    "Character Select and Cloud Sync"
+  ]
+}

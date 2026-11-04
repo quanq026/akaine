@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, request
 
 from core.character import UserCharacter
 from core.config_manager import Config
+from core.client_compat import uses_current_contract
 from core.error import ArcError
 from core.item import ItemCore
 from core.operation import DeleteOneUser
@@ -164,7 +165,7 @@ def canonicalize_cloud_score_song_ids(save):
 
 def project_cloud_score_song_ids(save, app_version):
     canonicalize_cloud_score_song_ids(save)
-    if app_version != CLIENT_PACK_PROJECTION_APP_VERSION:
+    if not uses_current_contract(app_version):
         for field in TESTIFY_CLOUD_FIELDS:
             replace_cloud_score_song_id(
                 getattr(save, field), 'testify', 'testify1'
@@ -178,7 +179,7 @@ def client_pack_projection_for_app_version(app_version):
 
 
 def apply_client_unlock_projection(save, app_version):
-    if (app_version != CLIENT_PACK_PROJECTION_APP_VERSION
+    if (not uses_current_contract(app_version)
             or not isinstance(save.unlocklist_data, list)):
         return
     projected = set(CLIENT_UNLOCK_PROJECTION_7_0_255)
@@ -208,7 +209,7 @@ def apply_client_unlock_projection(save, app_version):
 
 
 def apply_client_story_projection(save, app_version):
-    if (app_version != CLIENT_PACK_PROJECTION_APP_VERSION
+    if (not uses_current_contract(app_version)
             or not isinstance(save.story_data, list)):
         return
     projected = {
@@ -256,7 +257,7 @@ def register():
 
 
 def apply_client_world_song_projection(result, app_version):
-    if app_version == CLIENT_PACK_PROJECTION_APP_VERSION and Config.WORLD_SONG_FULL_UNLOCK:
+    if uses_current_contract(app_version) and Config.WORLD_SONG_FULL_UNLOCK:
         result['world_songs'] = result['world_songs'] + [
             key for key in ('diein', 'diein4')
             if key not in result['world_songs']
@@ -271,10 +272,7 @@ def user_me(user_id):
         app_version = request.headers.get('AppVersion')
         if uses_dynamic_packs(request.headers):
             user = UserOnline(c, user_id)
-            result = user.to_dict(
-                client_pack_projection=client_pack_projection_for_app_version(app_version),
-                app_version=app_version,
-            )
+            result = user.to_dict(client_pack_projection=client_pack_projection_for_app_version(app_version), app_version=app_version)
             result['packs'] = pack_ids_for_dynamic_user(user, request.headers)
             apply_client_world_song_projection(result, app_version)
             return success_return(result)

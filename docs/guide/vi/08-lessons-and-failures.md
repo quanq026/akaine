@@ -1,10 +1,10 @@
-# Kinh nghiệm và lỗi đã gặp khi xây dựng Akaine 7.0.255
+# Kinh nghiệm và lỗi đã gặp khi xây dựng Akaine
 
 [English](../08-lessons-and-failures.md) | Tiếng Việt
 
-Chương này ghi lại các vấn đề đã gặp khi xây dựng và vận hành client, content bundle và
-server 7.0.255. Mục đích là giúp bạn không lặp lại cùng một cách chẩn đoán sai. Nó không
-thay thế quy trình build và release trong chương 6 và 7.
+Chương này ghi lại các sự cố của client, content bundle và server 7.0.255
+trước đây. Đây là ví dụ lịch sử; khi build hoặc phát hành hiện tại, dùng
+đầu vào và lệnh 7.1.0 trong chương 6 và 7.
 
 Những sai lầm tốn thời gian nhất thường đến từ việc sửa nhầm tầng. Akaine có Android
 wrapper, native game code, content bundle, kho bài remote, server metadata, account data

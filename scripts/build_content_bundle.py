@@ -1,4 +1,4 @@
-"""Build and verify a 7.0.255 full-root content bundle from a known-good root."""
+"""Build and verify a 7.1.0 full-root content bundle from a known-good root."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import base64
 import hashlib
 import hmac
 import json
+import re
 import secrets
 import shutil
 import tempfile
@@ -14,7 +15,7 @@ import time
 from pathlib import Path, PurePosixPath
 
 
-APP_VERSION = "7.0.255"
+APP_VERSION = "7.1.0"
 DEFAULT_MAX_PART_BYTES = 480 * 1024 * 1024
 CHUNK_SIZE = 1024 * 1024
 
@@ -127,6 +128,7 @@ def validate_catalog(source: Path, rows: dict[str, dict], overlay: dict[str, Pat
     require(len(pack_ids) == len(packs) and all(isinstance(x, str) and x for x in pack_ids), "pack-id-invalid")
     require(len(song_ids) == len(set(song_ids)), "song-id-duplicate")
     require(len(pack_ids) == len(set(pack_ids)), "pack-id-duplicate")
+    require(len(pack_ids) <= 100, "pack-count-exceeds-7.1-native-capacity")
     known_packs = set(pack_ids)
     for song in songs:
         pack = song.get("set")
@@ -202,7 +204,7 @@ def build(args: argparse.Namespace) -> dict:
     require(source.is_dir(), "source-directory-missing")
     require(not output.exists(), "output-already-exists")
     require(args.alias and "/" not in args.alias and "\\" not in args.alias, "alias-invalid")
-    require(args.version.startswith("7.0.255."), "bundle-version-must-be-7.0.255.x")
+    require(isinstance(args.version, str) and re.fullmatch(r"7[.]1[.]0[.][1-9][0-9]{0,8}", args.version), "bundle-version-must-be-7.1.0.x")
     manifest_path = source / "manifest.json"
     require(manifest_path.is_file(), "source-manifest-missing")
     source_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -306,7 +308,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--overlay", type=Path, required=True, help="replacement/addition tree using bundle-relative paths")
     parser.add_argument("--output", type=Path, required=True, help="new output directory; must not exist")
     parser.add_argument("--alias", required=True, help="immutable filename prefix for manifest and parts")
-    parser.add_argument("--version", required=True, help="new 7.0.255.x content version")
+    parser.add_argument("--version", required=True, help="new 7.1.0.x content version")
     parser.add_argument("--detail-key-file", type=Path, help="private raw HMAC key; required when a detail path changes")
     parser.add_argument("--max-part-bytes", type=int, default=DEFAULT_MAX_PART_BYTES)
     args = parser.parse_args()

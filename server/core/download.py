@@ -11,6 +11,7 @@ from urllib.parse import quote, urlencode, urlsplit, urlunsplit
 from flask import url_for, has_request_context, request
 
 from .config_manager import Config
+from .client_compat import song_download_prefix
 from .constant import Constant
 from .error import NoAccess
 from .limiter import ArcLimiter
@@ -76,13 +77,17 @@ def build_signed_asset_url(song_id: str, file_name: str, user_id: int, now: int 
 
     parsed = urlsplit(Constant.ASSET_SIGNED_PREFIX)
     path_prefix = parsed.path.rstrip('/')
-    path = f'{path_prefix}/{quote(song_id, safe="")}/{quote(file_name, safe="")}'
+    aliases = getattr(Config, 'ASSET_SIGNING_SONG_ALIASES', {})
+    asset_song_id = aliases.get(song_id, song_id) if isinstance(aliases, dict) else song_id
+    if not isinstance(asset_song_id, str) or not asset_song_id:
+        raise ValueError('Invalid signed asset song alias')
+    path = f'{path_prefix}/{quote(asset_song_id, safe="")}/{quote(file_name, safe="")}'
     user_id = str(user_id)
     payload = '\n'.join([
         'GET',
         path,
         user_id,
-        song_id,
+        asset_song_id,
         file_name,
         str(expires_at),
         nonce,
@@ -311,11 +316,8 @@ class DownloadList(UserDownload):
     '''
 
     def __init__(self, c_m=None, user=None, app_version=None) -> None:
-        download_link_prefix = (
-            Config.DOWNLOAD_LINK_PREFIX_7_0_255
-            if app_version == '7.0.255'
-            else Constant.DOWNLOAD_LINK_PREFIX
-        )
+        download_link_prefix = song_download_prefix(
+            app_version, Constant.DOWNLOAD_LINK_PREFIX)
         super().__init__(c_m, user, download_link_prefix)
 
         self.song_ids: list = None

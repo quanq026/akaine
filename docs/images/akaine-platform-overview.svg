@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img" aria-labelledby="title desc">
-  <title id="title">Akaine self-hosted Arcaea 7.0.255 platform</title>
+  <title id="title">Akaine self-hosted Arcaea 7.1.0 platform</title>
   <desc id="desc">The patched Android client connects through Cloudflare to a Python game server on Amazon Lightsail. Cloudflare R2 stores bundles and song assets. SQLite stores player data. Discord and B30 tools use the same server data.</desc>
   <defs>
     <linearGradient id="client-bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#edf8ff"/><stop offset="1" stop-color="#f9fcff"/></linearGradient>
@@ -40,7 +40,7 @@
   <rect width="1600" height="900" fill="#ffffff"/>
   <rect x="34" y="28" width="5" height="76" rx="2.5" fill="#ff596c"/>
   <text x="57" y="75" class="brand">Akaine</text>
-  <text x="304" y="68" class="product">Self-hosted Arcaea 7.0.255 platform</text>
+  <text x="304" y="68" class="product">Self-hosted Arcaea 7.1.0 platform</text>
   <text x="57" y="103" class="tagline">Play. Connect. Customize.</text>
   <text x="1008" y="46" class="summary">A patched Android client, a Python game server, protected</text>
   <text x="1008" y="69" class="summary">R2 content delivery, player data, Discord, and score tools—</text>
@@ -48,7 +48,7 @@
   <rect x="1008" y="108" width="112" height="25" rx="12.5" fill="#edf8ff" stroke="#78bfe8"/>
   <text x="1064" y="125" text-anchor="middle" class="small">SELF-HOSTED</text>
   <rect x="1132" y="108" width="150" height="25" rx="12.5" fill="#ecfbf5" stroke="#50bd96"/>
-  <text x="1207" y="125" text-anchor="middle" class="small">VERSION 7.0.255</text>
+  <text x="1207" y="125" text-anchor="middle" class="small">VERSION 7.1.0</text>
   <rect x="1294" y="108" width="166" height="25" rx="12.5" fill="#f5f1ff" stroke="#9b82eb"/>
   <text x="1377" y="125" text-anchor="middle" class="small">PROTECTED CONTENT</text>
 

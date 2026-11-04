@@ -1,4 +1,4 @@
-"""Encrypt one AFF as an AKFC container for the 7.0.255 client."""
+"""Encrypt one AFF as an AKFC container for the supported Akaine client."""
 
 from __future__ import annotations
 

@@ -1,4 +1,207 @@
-// One authored V36 ARM64 gate translation unit. Fixed linked sections are hash checked.
+// Route replacements use the original C++ string output object in x8.
+// Original native string assignment retains its own FDE and exception behavior.
+.section .routes,"ax",%progbits
+.p2align 4
+.global route_login_gate
+route_login_gate:
+    mov x0, x8
+    stp xzr, xzr, [x0]
+    str xzr, [x0, #0x10]
+    adr x1, route_login_uri
+    b native_string_assign
+.global route_aggregate_gate
+route_aggregate_gate:
+    mov x0, x8
+    stp xzr, xzr, [x0]
+    str xzr, [x0, #0x10]
+    adr x1, route_aggregate_uri
+    b native_string_assign
+.global route_bundle_gate
+route_bundle_gate:
+    mov x0, x8
+    stp xzr, xzr, [x0]
+    str xzr, [x0, #0x10]
+    adr x1, route_bundle_uri
+    b native_string_assign
+.global route_request_prefix_gate
+route_request_prefix_gate:
+    ldrb w8, [x1]
+    cmp w8, #0x30
+    b.ne .Lroute_original
+    ldrb w8, [x1, #1]
+    cmp w8, #0x7c
+    b.ne .Lroute_original
+    mov w8, #0x32
+    strb w8, [x1]
+.Lroute_original:
+    adrp x30, native_route_prefix_continue
+    add x30, x30, :lo12:native_route_prefix_continue
+    b native_string_assign
+.include "route_strings.inc"
+
+// Native condition calls retain their non-null behavior and native continuation.
+.section .classic_gates,"ax",%progbits
+.p2align 4
+.global aether_condition_gate
+aether_condition_gate:
+    adrp x30, native_aether_continue
+    add x30, x30, :lo12:native_aether_continue
+    cbz x0, .Laether_empty
+    b native_condition_evaluate
+.Laether_empty:
+    b native_aether_continue
+.global diein_condition_gate
+diein_condition_gate:
+    adrp x30, native_diein_continue
+    add x30, x30, :lo12:native_diein_continue
+    cbz x0, .Ldiein_empty
+    b native_condition_evaluate
+.Ldiein_empty:
+    mov w24, wzr
+    mov w0, #1
+    b native_diein_continue
+.global byd_registry_gate
+byd_registry_gate:
+    mov x16, x30
+    tbnz w0, #0, .Lbyd_owned
+    ldr w8, [x19, #0x124]
+    cmp w8, #3
+    b.ne .Lbyd_missing
+.macro BYD_ID label
+    adr x1, \label
+    bl .Lbyd_compare
+    cbz w0, .Lbyd_owned
+.endm
+    BYD_ID .Lbyd_pentiment
+    BYD_ID .Lbyd_arcanaeden
+    BYD_ID .Lbyd_worldender
+    BYD_ID .Lbyd_testify
+    BYD_ID .Lbyd_infinitestrife
+    BYD_ID .Lbyd_last
+    BYD_ID .Lbyd_lasteternity
+    BYD_ID .Lbyd_axiumcrisis
+.Lbyd_missing:
+    mov w19, wzr
+    mov x30, x16
+    b native_byd_continue
+.Lbyd_owned:
+    mov w19, #1
+    mov x30, x16
+    b native_byd_continue
+.Lbyd_compare:
+    add x0, x19, #0xb8
+    ldrb w8, [x0]
+    tbnz w8, #0, .Lbyd_long
+    add x0, x0, #1
+    b .Lbyd_chars
+.Lbyd_long:
+    ldr x0, [x0, #0x10]
+.Lbyd_chars:
+    ldrb w8, [x0], #1
+    ldrb w9, [x1], #1
+    cmp w8, w9
+    b.ne .Lbyd_different
+    cbnz w8, .Lbyd_chars
+    mov w0, wzr
+    ret
+.Lbyd_different:
+    mov w0, #1
+    ret
+.Lbyd_pentiment: .asciz "pentiment"
+.Lbyd_arcanaeden: .asciz "arcanaeden"
+.Lbyd_worldender: .asciz "worldender"
+.Lbyd_testify: .asciz "testify"
+.Lbyd_infinitestrife: .asciz "infinitestrife"
+.Lbyd_last: .asciz "last"
+.Lbyd_lasteternity: .asciz "lasteternity"
+.Lbyd_axiumcrisis: .asciz "axiumcrisis"
+.p2align 4
+.global class4_predicate_gate
+class4_predicate_gate:
+    mov w20, #1
+    b native_class4_cleanup
+
+// Mod UI invokes validated monitor callbacks only after they publish themselves.
+.section .mod_gates,"ax",%progbits
+.p2align 4
+.global mod_sidebar_gate
+mod_sidebar_gate:
+    adrp x8, toggle_mailbox
+    add x8, x8, :lo12:toggle_mailbox
+    ldr x8, [x8, #0x18]
+    cbz x8, .Lsidebar_native
+    br x8
+.Lsidebar_native:
+    b native_mod_sidebar_original
+.global mod_heading_gate
+mod_heading_gate:
+    adrp x8, toggle_mailbox
+    add x8, x8, :lo12:toggle_mailbox
+    ldr x8, [x8, #0x78]
+    cbz x8, .Lheading_native
+    br x8
+.Lheading_native:
+    b native_mod_heading_original
+.global mod_pack_geometry_gate
+mod_pack_geometry_gate:
+    cmp w8, #5
+    mov w8, #0x452a0000
+    b.ne .Lpack_geometry_ready
+    mov w8, #0x43870000
+.Lpack_geometry_ready:
+    b native_mod_pack_geometry_continue
+.global mod_heading_geometry_gate
+mod_heading_geometry_gate:
+    cmp w8, #3
+    mov w8, #0x452a0000
+    b.ne .Lheading_geometry_ready
+    mov w8, #0x43870000
+.Lheading_geometry_ready:
+    b native_mod_heading_geometry_continue
+.global mod_title_gate
+mod_title_gate:
+    cmp w1, #8
+    b.ne .Ltitle_native
+    mov w9, #0x6f4d
+    movk w9, #0x64, lsl #16
+    mov w8, #6
+    b native_mod_title_store
+.Ltitle_native:
+    mov w9, #0x3f3f
+    b native_mod_title_continue
+.global mod_end_dispatch_gate
+mod_end_dispatch_gate:
+    mov w1, #8
+    cmp w10, #5
+    mov w8, #2
+    csel w1, w1, w8, eq
+    b native_mod_scroll_dispatch
+.global mod_swipe_gate
+mod_swipe_gate:
+    cbz x0, .Lswipe_section
+    cset w8, ne
+    ldr x9, [x0]
+    add w8, w8, #4
+    ldr x8, [x9, x8, lsl #3]
+    blr x8
+.Lswipe_section:
+    sub w8, w21, #1
+    cmp w8, #3
+    b.hi .Lswipe_other_section
+    adrp x9, native_mod_swipe_section_table
+    add x9, x9, :lo12:native_mod_swipe_section_table
+    ldr w1, [x9, w8, sxtw #2]
+    b .Lswipe_select
+.Lswipe_other_section:
+    add w1, w21, w21, lsr #2
+    add w1, w1, #2
+.Lswipe_select:
+    mov x0, x19
+    bl native_mod_select_category
+    b native_mod_swipe_continue
+
+// 7.1 ARM64 gate translation unit. Feature hooks are enabled only by the guarded native plan.
+// The new native inline store has 100 entries; runtime callbacks remain capability gated.
 
 // semantic/owned/owned_gates.S
 // New RX extension only. All fallbacks keep original inline ownership bounded.
@@ -111,12 +314,12 @@ owned_reset_gate:
     SAVE
     // Clear exactly the real inline region, independent of stale persisted counts.
     add x9, x19, #0x88
-    mov x10, #64
+    mov x10, #100
 .Lclear:
     str xzr, [x9], #8
     subs x10, x10, #1
     b.ne .Lclear
-    str xzr, [x19, #0x288]
+    str xzr, [x19, #0x3a8]
     mov x0, x19
     CALLBACK 16, .Lreset_done
 .Lreset_done:
@@ -131,14 +334,14 @@ owned_append_gate:
     mov w2, wzr
     CALLBACK 24, .Lappend_shadow
 .Lappend_shadow:
-    // Always mirror at most64; callback failure cannot re-enter an unsafe append.
-    ldr x8, [x19, #0x288]
-    cmp x8, #64
+    // Always mirror at most100; callback failure cannot re-enter an unsafe append.
+    ldr x8, [x19, #0x3a8]
+    cmp x8, #100
     b.hs .Lappend_done
     add x9, x8, #1
     add x8, x19, x8, lsl #3
     str x23, [x8, #0x88]
-    str x9, [x19, #0x288]
+    str x9, [x19, #0x3a8]
 .Lappend_done:
     RESTORE
     b native_append_continue
@@ -155,11 +358,11 @@ owned_reserved_gate:
     RESTORE
     ret
 .Lreserved_legacy:
-    // Original helper is safe only below64; it retains native ID dedup semantics.
+    // Original helper is safe only below100; it retains native ID dedup semantics.
     ldr x0, [sp]
     ldr x8, [x0]
-    ldr x8, [x8, #0x288]
-    cmp x8, #64
+    ldr x8, [x8, #0x3a8]
+    cmp x8, #100
     b.hs .Lreserved_drop
     RESTORE
     sub sp, sp, #0x90
@@ -175,10 +378,10 @@ owned_finish_gate:
     CALLBACK 32, .Lfinish_done
 .Lfinish_done:
     RESTORE
-    ldr x8, [x19, #0x2a8]
+    ldr x8, [x19, #0x3c8]
     b native_finish_continue
 
-// Returns native-compatible pointer membership, using a bounded64 fallback.
+// Returns native-compatible pointer membership, using a bounded100 fallback.
 .macro POINTER_GATE destination, continuation
 .global \destination
 \destination:
@@ -198,8 +401,8 @@ owned_finish_gate:
     .else
         ldp x0, x1, [sp]
     .endif
-    ldr x8, [x0, #0x288]
-    mov x9, #64
+    ldr x8, [x0, #0x3a8]
+    mov x9, #100
     cmp x8, x9
     csel x8, x8, x9, lo
     add x9, x0, #0x88
@@ -241,8 +444,8 @@ owned_id_member_gate:
 .Lid_legacy:
     ldr x21, [sp, #0x98] // originalmanagerx19
     ldr x23, [sp, #0xa0] // originalstringx20
-    ldr x22, [x21, #0x288]
-    mov x9, #64
+    ldr x22, [x21, #0x3a8]
+    mov x9, #100
     cmp x22, x9
     csel x22, x22, x9, lo
     mov x24, xzr
@@ -352,24 +555,24 @@ original_refresh:
 .global download_success_size_gate
 .type download_success_size_gate,%function
 download_success_size_gate:
-    // x25 is the callback-id map task; global callback capture x24 may belong to another transfer.
+    // x25 is the callback-id map task; capture x20 can refer to another transfer.
     ldr x8, [x25, #0x18]
     cmp x8, #1
     b.lt .Loriginal
     bl native_fileutils_singleton
     ldr x8, [x0]
     ldr x8, [x8, #0x158]
-    add x1, sp, #0x18
+    sub x1, x29, #0x70
     blr x8
     ldr x9, [x25, #0x18]
     cmp x0, x9
     b.eq .Loriginal
-    // Existing failure cleanup expects an empty digest string at SP+0x38.
-    stp xzr, xzr, [sp, #0x38]
-    str xzr, [sp, #0x48]
+    // The 7.1 failure cleanup expects an empty digest at FP-0x58.
+    stp xzr, xzr, [x29, #-0x58]
+    stur xzr, [x29, #-0x48]
     b native_download_digest_failure
 .Loriginal:
-    ldrb w8, [x24, #0x70]
+    ldrb w8, [x20, #0x70]
     b native_download_skiphash_dispatch
 .size download_success_size_gate, .-download_success_size_gate
 
@@ -383,7 +586,7 @@ download_run_once_gate:
     cbnz x8, .Lalready_started
     ldrb w8, [x0, #0xe8]
     cbnz w8, .Lalready_started
-    sub sp, sp, #0xe0
+    sub sp, sp, #0x110
     b native_download_run_body
 .Lalready_started:
     ret

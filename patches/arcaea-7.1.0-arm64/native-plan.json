@@ -1,0 +1,828 @@
+{
+  "schema": "akaine.native-7.1.v1",
+  "application_version": "7.1.0",
+  "version_code": 1209907,
+  "architecture": "arm64-v8a",
+  "source_core_sha256": "849a7b1418ba389c007b0b2793510eb8e163b1268e8734b561a83b6c11c0773c",
+  "source_core_bytes": 29277160,
+  "layout": {
+    "insert_file_offset": "0x1a8b350",
+    "insert_size": 16384,
+    "rx_va": 0,
+    "rx_bytes": "0x1a8b350",
+    "next_load_va": "0x1a8f350",
+    "bss_va": "0x1bf32e0",
+    "bss_bytes": "0x1e7f0",
+    "rw_va": "0x1bb3210",
+    "rw_memory_bytes": "0x5e8c0",
+    "toggle_mailbox_va": "0x1c11ad0",
+    "owned_mailbox_va": "0x1c11b50",
+    "mailbox_total_bytes": 256
+  },
+  "sections": [
+    {
+      "name": ".routes",
+      "offset": "0x0",
+      "maximum_bytes": 1024,
+      "bytes": 248,
+      "sha256": "04a4ba0565e08bce36d2b7d89d555f943744592bc7bfc55c475b87ffc58de6b3"
+    },
+    {
+      "name": ".owned_gates",
+      "offset": "0x800",
+      "maximum_bytes": 4096,
+      "bytes": 4012,
+      "sha256": "2f7e95e1dcbddd0eb6a58cbe88749c56cb22683bfb97af10c244321266270d99"
+    },
+    {
+      "name": ".reset_gate",
+      "offset": "0x1800",
+      "maximum_bytes": 256,
+      "bytes": 192,
+      "sha256": "c7f5286c08f7fc191bd425a14c8fa6338bbf46808a7d132d9db10c3d1c4a2c8e"
+    },
+    {
+      "name": ".download_size_gate",
+      "offset": "0x1900",
+      "maximum_bytes": 128,
+      "bytes": 64,
+      "sha256": "ddccebb462aee0e03c7178c19da1548eff3dc627156392d1d92bfbee6f79e2c8"
+    },
+    {
+      "name": ".download_run_once_gate",
+      "offset": "0x1980",
+      "maximum_bytes": 64,
+      "bytes": 28,
+      "sha256": "ea4c2a73ea646b244384b1105c0941d8c9ea6619152bd0b95f8e8ca18876e116"
+    },
+    {
+      "name": ".child_order_gate",
+      "offset": "0x19c0",
+      "maximum_bytes": 128,
+      "bytes": 68,
+      "sha256": "6be719b54466295de5bf5f8e586dd96526db6a3c969cdbadf3d72bd28e934bd7"
+    },
+    {
+      "name": ".news_gates",
+      "offset": "0x1a40",
+      "maximum_bytes": 256,
+      "bytes": 180,
+      "sha256": "92fae24ac794f8cd03c7d20c76815957a9d0c574421ac239178b07bb15777d55"
+    },
+    {
+      "name": ".classic_gates",
+      "offset": "0x400",
+      "maximum_bytes": 1024,
+      "bytes": 344,
+      "sha256": "afed7e42a3a46c3669aab5d9094854c9b3d919ad63d91394932304e54bac4f02"
+    },
+    {
+      "name": ".mod_gates",
+      "offset": "0x1c00",
+      "maximum_bytes": 1024,
+      "bytes": 212,
+      "sha256": "dbb1b8155b59b9c546084843d19bf5fd6772761070b3a88bfa4c55758551d321"
+    },
+    {
+      "name": ".replay_gates",
+      "offset": "0x2000",
+      "maximum_bytes": 1024,
+      "bytes": 816,
+      "sha256": "f1f387314b23c79e89f233d65a666bcfa33cdb6328db387692944e4576905555"
+    }
+  ],
+  "link_symbols": {
+    "native_string_assign": "0x1a7ba20",
+    "native_route_prefix_continue": "0x1374a40",
+    "native_constructor_continue": "0xbe4cf4",
+    "native_reset_continue": "0x14daa18",
+    "native_append_continue": "0x14daa70",
+    "native_reserved_continue": "0x80c6b8",
+    "native_finish_continue": "0x14dac30",
+    "native_song_member_continue": "0x16138f8",
+    "native_id_member_missing": "0xfcc154",
+    "native_id_member_owned": "0xfcc3f0",
+    "native_string_equal": "0x942ddc",
+    "native_header_continue": "0x9ba598",
+    "reset_call_return": "0xc92fbc",
+    "native_persistence_tail": "0x10ba498",
+    "native_refresh_continue": "0x10ba2c0",
+    "native_fileutils_singleton": "0x7e9f9c",
+    "native_download_digest_failure": "0x1094eb8",
+    "native_download_skiphash_dispatch": "0x1094dec",
+    "native_download_run_body": "0x97bc3c",
+    "native_child_sort": "0x131b0b4",
+    "native_news_sort": "0xe0ab60",
+    "native_news_resume": "0xeca4b8",
+    "native_condition_evaluate": "0x10dc118",
+    "native_aether_continue": "0x85a38c",
+    "native_diein_continue": "0x125e8bc",
+    "native_byd_continue": "0xc8ded8",
+    "native_class4_cleanup": "0xb92008",
+    "native_mod_sidebar_original": "0x142d9d8",
+    "native_mod_heading_original": "0x15921b0",
+    "native_mod_pack_geometry_continue": "0x17dcb6c",
+    "native_mod_heading_geometry_continue": "0xa38ffc",
+    "native_mod_title_store": "0x81233c",
+    "native_mod_title_continue": "0x812334",
+    "native_mod_scroll_dispatch": "0xfbfe20",
+    "native_mod_swipe_section_table": "0x59e530",
+    "native_mod_select_category": "0x16ef6c0",
+    "native_mod_swipe_continue": "0x14dd44c",
+    "native_modifier_factory": "0x8c14b8",
+    "native_online_global_got": "0x1ba4828",
+    "native_axium_visuals": "0x97d144",
+    "native_axium_continue": "0x97d08c",
+    "native_ether_continue": "0x8cfb94",
+    "native_last_player_write": "0x174d288",
+    "native_last_player_persist": "0x89a574",
+    "native_last_story_write": "0x18a5c04",
+    "native_last_story_persist": "0x154a110",
+    "native_last_reject_resume": "0x8f5200",
+    "native_last_reject_progress_continue": "0x8f535c",
+    "native_tempest_continue": "0x813354",
+    "native_render_failed_resume": "0x80eba4",
+    "native_render_continue": "0x80eba0",
+    "native_intro_continue": "0x148b72c",
+    "native_testify_factory_choice": "0x8c19a4",
+    "native_testify_factory_continue": "0x8c1988",
+    "native_testify_challenge_vtable": "0x1b872d0",
+    "native_testify_supplied_release": "0x8c1510",
+    "native_testify_supplied_continue": "0x8c17dc",
+    "native_testify_supplied_absent": "0x8c1550"
+  },
+  "routes": {
+    "login": "https://auth.akai.id.vn/t/auth/login",
+    "aggregate": "https://arcapi-v3.akai.id.vn/t/compose/aggregate?calls=",
+    "bundle": "https://arcapi-v3.akai.id.vn/t/game/content_bundle",
+    "shared": "https://arcapi-v3.akai.id.vn/t/"
+  },
+  "shared_api": {
+    "va": "0x1bef170",
+    "bytes": 54,
+    "before": "4d364c763854641402f720ac96b696198cb932c28bde8280cad46122473eeadc2d6bf8249fbeabeda8dc9ab0ee9705e5562a1c677a5d",
+    "staging_after_sha256": "b565ae7b62b50ba4ae2fcc1350aa0a431177563cebeb3cccc5792b216b915565"
+  },
+  "branch_operations": [
+    {
+      "label": "login",
+      "feature": "routes",
+      "va": "0xbe9684",
+      "before": "a1971e94",
+      "branch_symbol": "route_login_gate",
+      "link": true
+    },
+    {
+      "label": "aggregate",
+      "feature": "routes",
+      "va": "0x122abf4",
+      "before": "45920594",
+      "branch_symbol": "route_aggregate_gate",
+      "link": true
+    },
+    {
+      "label": "request_prefix",
+      "feature": "routes",
+      "va": "0x1374a3c",
+      "before": "f91b1c94",
+      "branch_symbol": "route_request_prefix_gate",
+      "link": false
+    },
+    {
+      "label": "bundle",
+      "feature": "routes",
+      "va": "0x16f90e0",
+      "before": "0a59f297",
+      "branch_symbol": "route_bundle_gate",
+      "link": true
+    },
+    {
+      "label": "aether-null-condition",
+      "feature": "classic",
+      "va": "0x85a388",
+      "before": "64072294",
+      "branch_symbol": "aether_condition_gate",
+      "link": false
+    },
+    {
+      "label": "diein-null-condition",
+      "feature": "classic",
+      "va": "0x125e8b8",
+      "before": "18f6f997",
+      "branch_symbol": "diein_condition_gate",
+      "link": false
+    },
+    {
+      "label": "byd-eight-id-fallback",
+      "feature": "classic",
+      "va": "0xc8ded4",
+      "before": "f303002a",
+      "branch_symbol": "byd_registry_gate",
+      "link": false
+    },
+    {
+      "label": "class4-predicate-override",
+      "feature": "classic",
+      "va": "0xb91d70",
+      "before": "e8e30091",
+      "branch_symbol": "class4_predicate_gate",
+      "link": false
+    },
+    {
+      "label": "mod-sidebar",
+      "feature": "mod",
+      "va": "0xd6bf18",
+      "before": "b0061b94",
+      "branch_symbol": "mod_sidebar_gate",
+      "link": true
+    },
+    {
+      "label": "mod-heading",
+      "feature": "mod",
+      "va": "0xa3717c",
+      "before": "0d6c2d94",
+      "branch_symbol": "mod_heading_gate",
+      "link": true
+    },
+    {
+      "label": "mod-pack-geometry",
+      "feature": "mod",
+      "va": "0x17dcb68",
+      "before": "48a5a852",
+      "branch_symbol": "mod_pack_geometry_gate",
+      "link": false
+    },
+    {
+      "label": "mod-heading-geometry",
+      "feature": "mod",
+      "va": "0xa38ff8",
+      "before": "48a5a852",
+      "branch_symbol": "mod_heading_geometry_gate",
+      "link": false
+    },
+    {
+      "label": "mod-title",
+      "feature": "mod",
+      "va": "0x812330",
+      "before": "e9e78752",
+      "branch_symbol": "mod_title_gate",
+      "link": false
+    },
+    {
+      "label": "mod-end-dispatch",
+      "feature": "mod",
+      "va": "0xd81c6c",
+      "before": "41008052",
+      "branch_symbol": "mod_end_dispatch_gate",
+      "link": false
+    },
+    {
+      "label": "mod-swipe",
+      "feature": "mod",
+      "va": "0x14dd404",
+      "before": "80000054",
+      "branch_symbol": "mod_swipe_gate",
+      "link": false
+    },
+    {
+      "label": "owned_constructor_gate",
+      "feature": "packs",
+      "va": "0xbe4cf0",
+      "before": "fd7bbfa9",
+      "branch_symbol": "owned_constructor_gate",
+      "link": false
+    },
+    {
+      "label": "owned_reset_gate",
+      "feature": "packs",
+      "va": "0x14daa00",
+      "before": "68d641f9",
+      "branch_symbol": "owned_reset_gate",
+      "link": false
+    },
+    {
+      "label": "owned_append_gate",
+      "feature": "packs",
+      "va": "0x14daa5c",
+      "before": "68d641f9",
+      "branch_symbol": "owned_append_gate",
+      "link": false
+    },
+    {
+      "label": "owned_reserved_gate",
+      "feature": "packs",
+      "va": "0x80c6b4",
+      "before": "ff4302d1",
+      "branch_symbol": "owned_reserved_gate",
+      "link": false
+    },
+    {
+      "label": "owned_finish_gate",
+      "feature": "packs",
+      "va": "0x14dac2c",
+      "before": "68e641f9",
+      "branch_symbol": "owned_finish_gate",
+      "link": false
+    },
+    {
+      "label": "owned_pointer_member_gate",
+      "feature": "packs",
+      "va": "0x17b737c",
+      "before": "ff4300d1",
+      "branch_symbol": "owned_pointer_member_gate",
+      "link": false
+    },
+    {
+      "label": "owned_song_member_gate",
+      "feature": "packs",
+      "va": "0x16137b4",
+      "before": "68d641f9",
+      "branch_symbol": "owned_song_member_gate",
+      "link": false
+    },
+    {
+      "label": "owned_id_member_gate",
+      "feature": "packs",
+      "va": "0xfcc05c",
+      "before": "68d641f9",
+      "branch_symbol": "owned_id_member_gate",
+      "link": false
+    },
+    {
+      "label": "owned_header_gate",
+      "feature": "packs",
+      "va": "0x9ba594",
+      "before": "818a48a9",
+      "branch_symbol": "owned_header_gate",
+      "link": false
+    },
+    {
+      "label": "reset_default_second_refresh_gate",
+      "feature": "menu",
+      "va": "0x10ba2bc",
+      "before": "e00e00b4",
+      "branch_symbol": "reset_default_second_refresh_gate",
+      "link": false
+    },
+    {
+      "label": "download_success_size_gate",
+      "feature": "downloads",
+      "va": "0x1094de8",
+      "before": "88c24139",
+      "branch_symbol": "download_success_size_gate",
+      "link": false
+    },
+    {
+      "label": "download_run_once_gate",
+      "feature": "downloads",
+      "va": "0x97bc38",
+      "before": "ff4304d1",
+      "branch_symbol": "download_run_once_gate",
+      "link": false
+    },
+    {
+      "label": "child_order_gate",
+      "feature": "menu",
+      "va": "0x12413ac",
+      "before": "42670394",
+      "branch_symbol": "child_order_gate",
+      "link": true
+    },
+    {
+      "label": "news_sort_gate",
+      "feature": "menu",
+      "va": "0xeca4ac",
+      "before": "ad01fd97",
+      "branch_symbol": "news_sort_gate",
+      "link": true
+    },
+    {
+      "label": "news_end_gate",
+      "feature": "menu",
+      "va": "0xeca4b4",
+      "before": "9bce41f9",
+      "branch_symbol": "news_end_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:official_finish",
+      "feature": "replay",
+      "va": "0xa212ec",
+      "before": "00013fd6",
+      "branch_symbol": "official_finish_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:official_factory",
+      "feature": "replay",
+      "va": "0x124aca8",
+      "before": "04dad997",
+      "branch_symbol": "official_factory_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:intro_mark_gate + testify-replay:testify-normal-intro-hook",
+      "feature": "replay",
+      "va": "0x148b728",
+      "before": "09031b0a",
+      "branch_symbol": "replay_intro_mark_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:axium_gate",
+      "feature": "replay",
+      "va": "0x97d088",
+      "before": "379100f0",
+      "branch_symbol": "axium_scope_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:tempest_gate",
+      "feature": "replay",
+      "va": "0x813350",
+      "before": "88460c39",
+      "branch_symbol": "tempest_scope_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:ether_gate",
+      "feature": "replay",
+      "va": "0x8cfb90",
+      "before": "6802142a",
+      "branch_symbol": "ether_scope_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:last_accept_story",
+      "feature": "replay",
+      "va": "0x11d1d54",
+      "before": "ac4f1b94",
+      "branch_symbol": "last_accept_story_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:last_accept_story_persist",
+      "feature": "replay",
+      "va": "0x11d1d60",
+      "before": "ece00d94",
+      "branch_symbol": "last_accept_story_persist_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:last_reject_story",
+      "feature": "replay",
+      "va": "0x8f520c",
+      "before": "7ec23e94",
+      "branch_symbol": "last_reject_story_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:last_reject_story_persist",
+      "feature": "replay",
+      "va": "0x8f5218",
+      "before": "be533194",
+      "branch_symbol": "last_reject_story_persist_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:last_reject_progress",
+      "feature": "replay",
+      "va": "0x8f5358",
+      "before": "006940f9",
+      "branch_symbol": "last_reject_progress_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:last_accept_player",
+      "feature": "replay",
+      "va": "0x1276170",
+      "before": "465c1394",
+      "branch_symbol": "last_accept_player_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:last_accept_persist",
+      "feature": "replay",
+      "va": "0x127617c",
+      "before": "fe90d897",
+      "branch_symbol": "last_accept_persist_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:official_init",
+      "feature": "replay",
+      "va": "0x80eb70",
+      "before": "00013fd6",
+      "branch_symbol": "official_init_gate",
+      "link": true
+    },
+    {
+      "label": "official-replay-lifecycle:replay_render_guard",
+      "feature": "replay",
+      "va": "0x80eb9c",
+      "before": "08a542f9",
+      "branch_symbol": "replay_render_gate",
+      "link": false
+    },
+    {
+      "label": "anomaly-toggle:testify-toggle-supplied-modifier-hook",
+      "feature": "replay",
+      "va": "0x8c154c",
+      "before": "931400b5",
+      "branch_symbol": "testify_supplied_gate",
+      "link": false
+    },
+    {
+      "label": "anomaly-toggle:testify-toggle-late-factory-hook + testify-replay:testify-normal-replay-factory-hook",
+      "feature": "replay",
+      "va": "0x8c1984",
+      "before": "889a41f9",
+      "branch_symbol": "testify_factory_gate",
+      "link": false
+    },
+    {
+      "label": "official-replay-lifecycle:official_update",
+      "feature": "replay",
+      "va": "0x1637350",
+      "before": "00013fd6",
+      "branch_symbol": "official_update_gate",
+      "link": true
+    }
+  ],
+  "feature_readiness": {
+    "routes": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false
+    },
+    "classic": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false
+    },
+    "mod": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "requires_runtime_module": "mod",
+      "runtime_accepted": false
+    },
+    "packs": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false,
+      "requires_runtime_module": "packs"
+    },
+    "downloads": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false
+    },
+    "cli": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "requires_runtime_module": "cli",
+      "source_surface": "Semantic monitor bridge; no additional core byte operation",
+      "runtime_accepted": false
+    },
+    "skill": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "requires_runtime_module": "skill",
+      "source_surface": "Semantic monitor observer/seal controls; native ability behavior retained",
+      "runtime_accepted": false
+    },
+    "replay": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false,
+      "requires_runtime_module": "replay"
+    },
+    "menu": {
+      "authored": true,
+      "hook_activation_reviewed": true,
+      "runtime_accepted": false,
+      "requires_runtime_module": "menu"
+    }
+  },
+  "remaining_v36_features": [
+    "classic",
+    "mod",
+    "packs",
+    "downloads",
+    "cli",
+    "skill",
+    "replay",
+    "menu"
+  ],
+  "compiled_gate_hooks_enabled_by_default": false,
+  "source_evidence": "2026-10-30 exact 7.1 artifact/RELA/FDE/native analysis; output controls require the first reviewed build.",
+  "complete_v36_equivalent": false,
+  "runtime_accepted": false,
+  "direct_operations": [
+    {
+      "label": "divine-reveal-index",
+      "feature": "classic",
+      "va": "0x9bb004",
+      "before": "f503002a",
+      "after": "b5008052"
+    },
+    {
+      "label": "divine-packed-cell-a",
+      "feature": "classic",
+      "va": "0x9bb358",
+      "before": "2800c0d22a00a052",
+      "after": "e8031faaea031f2a"
+    },
+    {
+      "label": "divine-packed-cell-b",
+      "feature": "classic",
+      "va": "0x9bb408",
+      "before": "2800c0d22a00a052",
+      "after": "e8031faaea031f2a"
+    },
+    {
+      "label": "native-crash-reporting-suppression",
+      "feature": "classic",
+      "va": "0x15ceb58",
+      "before": "28004039",
+      "after": "28008052"
+    },
+    {
+      "label": "mod-pack-consumers:click_cmp",
+      "feature": "mod",
+      "va": "0x16ef6f4",
+      "before": "ff120071",
+      "after": "ff160071"
+    },
+    {
+      "label": "mod-pack-consumers:click_default",
+      "feature": "mod",
+      "va": "0x16ef710",
+      "before": "e8031faa",
+      "after": "e8029f9a"
+    },
+    {
+      "label": "mod-pack-consumers:click_ordinal",
+      "feature": "mod",
+      "va": "0x16ef84c",
+      "before": "e8031f2a",
+      "after": "e8029f1a"
+    },
+    {
+      "label": "mod-pack-consumers:selected_default",
+      "feature": "mod",
+      "va": "0x14b3c00",
+      "before": "e8031faa",
+      "after": "08019f9a"
+    },
+    {
+      "label": "mod-pack-consumers:scroll_cmp",
+      "feature": "mod",
+      "va": "0xfbfe50",
+      "before": "1f110071",
+      "after": "1f150071"
+    },
+    {
+      "label": "mod-pack-consumers:scroll_previous + mod-pack-consumers:scroll_index",
+      "feature": "mod",
+      "va": "0xfbfea4",
+      "before": "f4031f2af6031f2a",
+      "after": "f4179f1a16019f1a"
+    },
+    {
+      "label": "mod-swipe-recognizer:swipe_bound",
+      "feature": "mod",
+      "va": "0x14dd388",
+      "before": "bf120071",
+      "after": "bf160071"
+    },
+    {
+      "label": "mod-pack-consumers:include_section8_in_sorted_pack_flattening",
+      "feature": "mod",
+      "va": "0x15d47a0",
+      "before": "bf220071",
+      "after": "bf260071"
+    },
+    {
+      "label": "mod-click-guard",
+      "feature": "mod",
+      "va": "0x16ef6fc",
+      "before": "a8000054",
+      "after": "a2000054"
+    },
+    {
+      "label": "mod-selected-guard",
+      "feature": "mod",
+      "va": "0x14b3bec",
+      "before": "a8000054",
+      "after": "a2000054"
+    },
+    {
+      "label": "mod-scroll-guard",
+      "feature": "mod",
+      "va": "0xfbfe60",
+      "before": "28020054",
+      "after": "22020054"
+    },
+    {
+      "label": "mod-selected-compare",
+      "feature": "mod",
+      "va": "0x14b3be8",
+      "before": "1f110071",
+      "after": "1f150071"
+    },
+    {
+      "label": "mod-dedicated-sidebar-resource",
+      "feature": "mod",
+      "va": "0x56bba1",
+      "before": "6c61796f7574732f736f6e6773656c6563742f5061636b4c697374536964656261722e63736200",
+      "after": "6c61796f7574732f736f6e6773656c6563742f5061636b4c6973744d6f644d656e752e63736200"
+    },
+    {
+      "label": "incoming-assets-actual-read-sha256",
+      "feature": "downloads",
+      "va": "0x10872f4",
+      "before": "152440f9",
+      "after": "0e000014"
+    },
+    {
+      "label": "anomaly-toggle:local-pref-ui-setter-binding",
+      "feature": "replay",
+      "va": "0xb73c0",
+      "before": "e841100100000000",
+      "pointer_symbol": "replay_setting_setter_gate"
+    },
+    {
+      "label": "anomaly-toggle:local-pref-ui-getter-binding",
+      "feature": "replay",
+      "va": "0x19d730",
+      "before": "58049e0100000000",
+      "pointer_symbol": "replay_setting_getter_gate"
+    },
+    {
+      "label": "anomaly-toggle:local-pref-ui-text-description",
+      "feature": "replay",
+      "va": "0x54b9b5",
+      "before": "52656365697665206e6f74696669636174696f6e730a7768656e20696e766974656420746f204c696e6b20506c617900",
+      "after": "5265706c6179204d562c20696e74726f20616e640a616e6f6d616c7920696e20737570706f7274656420736f6e677300"
+    },
+    {
+      "label": "anomaly-toggle:local-pref-ui-text-title",
+      "feature": "replay",
+      "va": "0x573147",
+      "before": "496e76697465204e6f74696669636174696f6e00",
+      "after": "416e6f6d616c79205265706c6179000000000000"
+    },
+    {
+      "label": "anomaly-toggle:local-pref-two-choice-ui",
+      "feature": "replay",
+      "va": "0x18326a0",
+      "before": "c0e646f9",
+      "after": "06000014"
+    }
+  ],
+  "authored_address_symbols": {
+    "0x782a50": "mod_heading_gate",
+    "0x782e10": "mod_sidebar_gate",
+    "0x782be8": "mod_pack_geometry_gate",
+    "0x782e2c": "mod_heading_geometry_gate",
+    "0x782ed8": "mod_title_gate",
+    "0x782cf8": "mod_end_dispatch_gate",
+    "0x1c03140": "toggle_mailbox",
+    "0x1c031c0": "owned_mailbox",
+    "0x1a7d4d0": "owned_constructor_gate",
+    "0x1a7e480": "reset_default_second_refresh_gate",
+    "0x1a7e540": "download_success_size_gate",
+    "0x1a7e580": "download_run_once_gate",
+    "0x1a7e5a0": "child_order_gate",
+    "0x1a7e5f0": "news_sort_gate",
+    "0x782b30": "official_factory_gate",
+    "0x782b44": "official_init_gate",
+    "0x782b5c": "official_update_gate",
+    "0x782b74": "official_finish_gate",
+    "0x782b8c": "axium_scope_gate",
+    "0x782bbc": "ether_scope_gate",
+    "0x782c2c": "last_accept_player_gate",
+    "0x782c48": "last_accept_persist_gate",
+    "0x782c64": "last_accept_story_gate",
+    "0x782c80": "last_accept_story_persist_gate",
+    "0x782c9c": "last_reject_story_gate",
+    "0x782cb8": "last_reject_story_persist_gate",
+    "0x782cd4": "last_reject_progress_gate",
+    "0x782e40": "tempest_scope_gate",
+    "0x782e88": "replay_render_gate",
+    "0x782ea8": "replay_intro_mark_gate",
+    "0x782f20": "replay_intro_gate",
+    "0x782f40": "replay_intro_native_tail",
+    "0x782f48": "testify_factory_gate",
+    "0x782f78": "replay_setting_getter_gate",
+    "0x782f90": "replay_setting_setter_gate",
+    "0x782fa4": "testify_supplied_gate"
+  },
+  "assembly_sha256": "fafc49051c37b5c5fe6ab09b63d577af3562a3380de91d3b3f4ee8de7b4ea0fd",
+  "output_sha256_by_features": {
+    "classic+downloads+replay+routes": "701078366a4a6f6ac3a0f10d5898448880987572557a1bbf4e1321749086e26b",
+    "classic+cli+downloads+menu+mod+packs+replay+routes+skill": "56635579f80b975a017188822cf14ce82af3c7916bbde520c6adc56a2df8f845"
+  },
+  "replay_assembly_sha256": "6a067db627bab4ca0ef139fdb0a4b49887c5715141571522b27d780fc51c7c9a"
+}

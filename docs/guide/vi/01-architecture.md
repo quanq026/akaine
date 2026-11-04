@@ -11,7 +11,7 @@ những tên gọi này.
 ### 1. Client Android
 
 Đây là game cài trên điện thoại hoặc emulator. Hướng dẫn sử dụng bản arm64 Arcaea
-`7.0.255` (`1209852`). Client hiển thị menu, phát nhạc và chart, đồng thời gửi request
+`7.1.0` (`1209907`). Client hiển thị menu, phát nhạc và chart, đồng thời gửi request
 đăng nhập hoặc score tới server của bạn. APK phải được cấu hình để dùng domain của bạn.
 
 ### 2. Game server
@@ -64,7 +64,7 @@ Các thuật ngữ lặp lại khác:
 
 | Thuật ngữ | Ý nghĩa |
 | --- | --- |
-| App version | Phiên bản Android client. Repository này hỗ trợ `7.0.255`. |
+| App version | Phiên bản Android client. Repository này hỗ trợ `7.1.0`. |
 | Content version | Phiên bản downloadable bundle. Nó có thể đổi mà không đổi APK. |
 | Bundle | Manifest cùng các partition file chứa catalogue và selector resource. |
 | Remote song | Bài có playable file được request sau khi bundle đã cài. |

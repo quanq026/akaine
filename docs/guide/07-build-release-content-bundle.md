@@ -1,9 +1,9 @@
-# Build and release a 7.0.255 content bundle
+# Build and release a 7.1.0 content bundle
 
 This chapter starts with a verified full-root bundle, applies a small content
 overlay, builds a new immutable release and promotes the same bytes through
 staging to production. It uses `scripts/build_content_bundle.py`; the older
-6.14 tools under `server/tools` do not produce the 7.0.255 release format.
+6.14 tools under `server/tools` do not produce the 7.1.0 release format.
 
 ![Chapter 07 staging and production release lanes](../images/guides/07-content-bundle-release-lanes.svg)
 
@@ -19,19 +19,19 @@ understood.
 
 ## Understand the three names
 
-The application version is `7.0.255`. It identifies the Android client and
+The application version is `7.1.0`. It identifies the Android client and
 does not change when you publish content.
 
-The content version looks like `7.0.255.9`. The final number must increase for
+The content version looks like `7.1.0.9`. The final number must increase for
 each accepted release so the server and client can compare versions.
 
 The alias is the filename prefix used by the manifest and every `.cb` part,
-for example `7.0.255-fan-album-r1`. An alias is immutable: once uploaded, do
+for example `7.1.0-fan-album-r1`. An alias is immutable: once uploaded, do
 not put different bytes at the same R2 key.
 
 A release contains one `<alias>.json` manifest and the number of
 `<alias>_<index>.cb` files declared by `totalPartitions`. The proven Akaine
-7.0.255 baseline has seven partitions. The builder reads the count from the
+7.1.0 baseline has seven partitions. The builder reads the count from the
 source manifest instead of assuming a number.
 
 ## Prepare a known-good source
@@ -57,12 +57,12 @@ convert it to hexadecimal or Base64 text.
 
 ```powershell
 $repoRoot = [Environment]::GetEnvironmentVariable("AKAINE_REPO_ROOT", "User")
-$sourceRoot = (Get-Item (Read-Host "Full path to the verified 7.0.255 bundle source")).FullName
+$sourceRoot = (Get-Item (Read-Host "Full path to the verified 7.1.0 bundle source")).FullName
 $overlayRoot = [IO.Path]::GetFullPath((Read-Host "Full path for the new overlay directory"))
 $outputRoot = [IO.Path]::GetFullPath((Read-Host "Full path for the new bundle output"))
 $detailKey = (Get-Item (Read-Host "Full path to the private content-detail key")).FullName
-$alias = Read-Host "New immutable alias, for example 7.0.255-my-content-r1"
-$bundleVersion = Read-Host "New content version, for example 7.0.255.9"
+$alias = Read-Host "New immutable alias, for example 7.1.0-my-content-r1"
+$bundleVersion = Read-Host "New content version, for example 7.1.0.9"
 
 New-Item -ItemType Directory -Force $overlayRoot | Out-Null
 ```
@@ -72,7 +72,7 @@ Check the source manifest before editing anything:
 ```powershell
 $sourceManifest = Get-Content (Join-Path $sourceRoot "manifest.json") -Raw | ConvertFrom-Json
 
-if ($sourceManifest.applicationVersionNumber -ne "7.0.255") {
+if ($sourceManifest.applicationVersionNumber -ne "7.1.0") {
     throw "The source belongs to a different application version."
 }
 if ($null -ne $sourceManifest.previousVersionNumber) {
@@ -184,9 +184,9 @@ $report | Select-Object application_version, bundle_version, alias, entries, par
 $report.parts | Format-Table file, bytes, sha256
 ```
 
-Do not merge partitions or convert this result into a one-part delta. The
-7.0.255 client has rejected unproven delta and single-part layouts with
-`-1013`.
+Keep the verified full-root layout and source partition count. This guide
+does not produce deltas or change the partition layout. A smaller archive
+is not useful if the client cannot apply it.
 
 ## Publish immutable objects to staging
 
@@ -276,14 +276,28 @@ manifest in the active bundle directory; the `.cb` files remain on R2. Set
 staging service, and keep the backup path printed by your shell.
 
 Inside the existing `class Config` in staging `config.py`, set the public asset
-prefix and allow an older 7.0.255 content version to advance to the latest
+prefix and allow an older 7.1.0 content version to advance to the latest
 full root:
 
 ```python
 BUNDLE_DOWNLOAD_LINK_PREFIX = "https://assets.example.com/bundle/"
 BUNDLE_STRICT_MODE = False
 FRESH_INSTALL_ONLY_BUNDLE_VERSION = ""
+BUNDLE_ASSETSET_PROFILES_ENABLED = True
+BUNDLE_ASSETSET_PROFILE_DEVICES = None
+BUNDLE_ASSETSET_PROFILES = {
+    "7.1.0": {"full": {
+        "target": "7.1.0.9",
+        "manifests": ["7.1.0-my-content-r1.json"]
+    }}
+}
 ```
+
+Replace the example `target` and manifest name above with your exact
+`$bundleVersion` and `$alias.json`. Merge the 7.1 entry into an existing map
+when it contains other application versions. The profile applies to all
+devices, including a 7.1 APK installed over an older bundle cache. Do not
+copy a staging rule that serves content only when the header is empty.
 
 Upload the manifest, back up the active directory and activate the candidate.
 The commands prompt for remote paths instead of assuming where you installed
@@ -330,10 +344,12 @@ if ($LASTEXITCODE -ne 0) {
 The active server must parse `<alias>.json`, so its filename must stay aligned
 with the uploaded `<alias>_<index>.cb` files. Never rename only the manifest.
 Keep existing manifests: other app versions still need their own bundle routes.
-The new content version must be higher than the existing 7.0.255 versions so
-the parser selects it as the target.
+The new content version must be higher than existing 7.1.0 versions. The
+configured full profile must name that exact target; adding a newer manifest
+alone does not advance a pinned profile.
 
-Test the API with an empty content version and with the target version:
+Test the API with an empty content version, a retained 7.0 cache header and
+the target version. All requests still use application version 7.1.0:
 
 ```powershell
 $stagingApi = Read-Host "Staging API base URL, for example https://staging-api.example.com"
@@ -342,20 +358,21 @@ function Get-BundleResult([string]$contentVersion) {
     Invoke-RestMethod `
       -Uri "$stagingApi/game/content_bundle" `
       -Headers @{
-        AppVersion = "7.0.255"
+        AppVersion = "7.1.0"
         ContentBundle = $contentVersion
         DeviceId = "guide-bundle-check"
       }
 }
 
 $fromEmpty = Get-BundleResult "0.0.0"
+$fromPreviousApp = Get-BundleResult "7.0.255.28"
 $atTarget = Get-BundleResult $bundleVersion
 
-if ($fromEmpty.value.orderedResults.Count -ne 1) {
-    throw "A clean client did not receive exactly one bundle."
-}
-if ($fromEmpty.value.orderedResults[0].contentBundleVersion -ne $bundleVersion) {
-    throw "The server returned the wrong target version."
+foreach ($candidate in @($fromEmpty, $fromPreviousApp)) {
+    if (@($candidate.value.orderedResults).Count -ne 1 -or
+        $candidate.value.orderedResults[0].contentBundleVersion -ne $bundleVersion) {
+        throw "A clean or upgraded 7.1 client did not receive the full target bundle."
+    }
 }
 if ($fromEmpty.value.orderedResults[0].bundleParts.Count -ne $sourceManifest.totalPartitions) {
     throw "The API partition count differs from the manifest."
@@ -427,7 +444,7 @@ Cloudflare caches around the world.
 
 ## Release checklist
 
-- The source is a verified 7.0.255 full root.
+- The source is a verified 7.1.0 full root.
 - The content version increased and the alias has never been used.
 - Catalogues pass song-pack and pack-parent checks.
 - `ready-manifest.json` says the artifact is verified.

@@ -1,9 +1,8 @@
-# Lessons and failures from building Akaine 7.0.255
+# Lessons and failures from building Akaine
 
-This chapter records problems encountered while building and operating the
-7.0.255 client, content bundle and server. It is meant to save you from
-repeating the same diagnosis, not to replace the build and release procedures
-in chapters 6 and 7.
+This chapter records past incidents from the 7.0.255 client, content bundle
+and server. These are historical examples; use the current 7.1.0 inputs and
+commands in chapters 6 and 7 to build and release today.
 
 The most expensive mistakes came from changing the wrong layer. Akaine has an
 Android wrapper, native game code, a content bundle, remote song storage,

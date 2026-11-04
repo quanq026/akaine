@@ -1,4 +1,4 @@
-# Binary releases belong in GitHub Releases, not Git history.
+# Generated Android packages stay outside Git history.
 /apk/*.apk
 /apk/*.idsig
 

@@ -5,6 +5,7 @@ from flask import current_app, g, jsonify
 
 from core.bundle import BundleParser
 from core.config_manager import Config
+from core.client_compat import uses_current_contract
 from core.error import ArcError, LowVersion, NoAccess
 
 has_arc_hash = False
@@ -107,6 +108,10 @@ def arc_try(view):
 def header_check(request) -> ArcError:
     '''检查请求头是否合法'''
     headers = request.headers
+    try:
+        uses_current_contract(headers.get('AppVersion'))
+    except LowVersion as error:
+        return error
     if Config.ALLOW_APPVERSION:  # 版本检查
         if 'AppVersion' not in headers or headers['AppVersion'] not in Config.ALLOW_APPVERSION:
             return LowVersion('Invalid app version', 5)

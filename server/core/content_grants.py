@@ -2,6 +2,21 @@
 CONTENT_TYPES = ('pack', 'single', 'character', 'course_banner', 'world_song', 'world_unlock')
 
 
+def grant_missing_full_characters(cur, user_id):
+    """Fill full-unlock rows without replacing any existing character progress."""
+    if not cur.connection.in_transaction:
+        raise RuntimeError('Character grants require a caller-owned transaction')
+    if type(user_id) is not int or user_id < 0:
+        raise ValueError('Invalid character recipient identity')
+    if cur.execute("SELECT 1 FROM character WHERE typeof(max_level)!='integer' LIMIT 1").fetchone():
+        raise ValueError('Invalid full-character maximum level')
+    cur.execute('''INSERT OR IGNORE INTO user_char_full
+        (user_id,character_id,level,exp,is_uncapped,is_uncapped_override,skill_flag)
+        SELECT ?,character_id,max_level,CASE WHEN max_level=30 THEN 25000 ELSE 10000 END,
+        is_uncapped,0,0 FROM character''', (user_id,))
+    return cur.rowcount
+
+
 def expected_content(cur):
     placeholders = ','.join('?' for _ in CONTENT_TYPES)
     rows = cur.execute(

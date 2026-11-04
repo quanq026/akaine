@@ -197,7 +197,7 @@ if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 
 Workstation cơ bản đã chuẩn bị sẽ in `OK` cho `git` và `python`. Lệnh cũng
 báo các công cụ Android tùy chọn tìm thấy trên máy. Chương 6 chọn tường minh
-compiler và đầu vào công cụ DEX của V36.
+compiler và đầu vào công cụ DEX của 7.1.
 
 Danh sách công cụ Android hoàn chỉnh là:
 

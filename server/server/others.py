@@ -5,9 +5,10 @@ from flask import Blueprint, current_app, jsonify, request
 from werkzeug.datastructures import ImmutableMultiDict
 
 from core.bundle import BundleDownload
+from core.character import UserCharacter
 from core.config_manager import Config
 from core.download import DownloadList
-from core.error import RateLimit, ArcError
+from core.error import RateLimit, ArcError, NoData
 from core.item import ItemCharacter
 from core.notification import NotificationFactory
 from core.sql import Connect
@@ -171,17 +172,38 @@ def unlock_me(user_id, unlock_id):
                 f"Successfully unlocked Saya (Absolution) (ID 97) for user {user_id}")
         elif unlock_id.startswith('awaken_'):
             char_name = unlock_id[7:]
-            c.execute('select character_id from character where lower(name) = ?', (char_name.lower(),))
-            row = c.fetchone()
-            if row:
-                char_id = row[0]
+            try:
+                c.execute('BEGIN IMMEDIATE')
+                rows = c.execute('select character_id, skill_id_uncap from character where lower(name) = ?',
+                                 (char_name.lower(),)).fetchall()
+                if len(rows) != 1 or not rows[0][1]:
+                    raise NoData('No such awakening character.', api_error_code=-130)
+                char_id = rows[0][0]
+                if not c.execute('select 1 from user where user_id = ?', (user_id,)).fetchone():
+                    raise NoData('No user.', api_error_code=-3)
                 item = ItemCharacter(c)
                 item.set_id(str(char_id))
                 item.user_claim_item(UserOnline(c, user_id))
                 c.execute('update user_char set is_uncapped = 1, is_uncapped_override = 0 where user_id = ? and character_id = ?', (user_id, char_id))
+                if Config.CHARACTER_FULL_UNLOCK:
+                    c.execute('''insert or ignore into user_char_full
+                        (user_id,character_id,level,exp,is_uncapped,is_uncapped_override,skill_flag)
+                        select ?,character_id,max_level,case when max_level=30 then 25000 else 10000 end,
+                        1,0,0 from character where character_id=?''', (user_id, char_id))
+                    c.execute('update user_char_full set is_uncapped = 1, is_uncapped_override = 0 where user_id = ? and character_id = ?', (user_id, char_id))
+                c.execute('''update user set is_char_uncapped=1,is_char_uncapped_override=0
+                             where user_id=? and character_id=?''', (user_id, char_id))
+                character = UserCharacter(c, char_id, UserOnline(c, user_id))
+                # Native awakening success consumes the same stats rows as /user/me.
+                response = success_return({'updated_characters': [character.to_dict()]})
                 current_app.logger.info(f"Successfully awakened character {char_name} (ID {char_id}) for user {user_id}")
-            else:
-                current_app.logger.warning(f"unlock_me: character {char_name} not found")
+                return response
+            except Exception as error:
+                # Connect commits ArcError and suppresses other failures after rollback.
+                c.connection.rollback()
+                if not isinstance(error, ArcError):
+                    raise ArcError('Character awakening transaction failed.', status=503) from error
+                raise
         else:
             current_app.logger.info(f"unlock_me: unhandled generic unlock_id = {unlock_id}")
     return success_return({})

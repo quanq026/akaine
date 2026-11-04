@@ -92,7 +92,7 @@ maintenance script merely because it is present in the archive.
 
 Do not proceed if the verification reports a missing or mismatched file.
 
-## Check the V36 client inputs
+## Check the 7.1 client inputs
 
 Before chapter 6, identify these verified files in the kit instructions:
 

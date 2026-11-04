@@ -3,10 +3,10 @@
 [English](../09-add-fan-chart.md) | Tiếng Việt
 
 Chương này đưa một fan chart từ source folder thành bài có thể tải, chơi và lưu score
-trong Akaine 7.0.255. Chương cũng giải thích cách tạo một pack hiển thị được. Hãy thực
+trong Akaine 7.1.0. Chương cũng giải thích cách tạo một pack hiển thị được. Hãy thực
 hiện lần import đầu tiên trên staging và chỉ dùng asset mà bạn có quyền host.
 
-Hoàn thành chương 3 đến 7 trước. Bạn cần client 7.0.255 hoạt động, AKFC public key tương
+Hoàn thành chương 3 đến 7 trước. Bạn cần client 7.1.0 hoạt động, AKFC public key tương
 ứng, verified full-root bundle source, quyền upload R2, staging server và test account.
 
 ![Hai pipeline fan chart hội tụ trong chương 09](../../images/guides/09-fan-chart-dual-pipeline.svg)
@@ -67,20 +67,20 @@ thiếu hoặc không bấm được.
 
 ## Quyết định có thật sự cần pack mới không
 
-V36 hỗ trợ catalogue pack động khi server bật và kiểm profile tương ứng.
-Client cũ giữ response legacy giới hạn 62 pack entitlement. Không áp giới hạn
-slot legacy đó cho V36, và không bật response động cho client chưa có native
-support tương ứng.
+Client 7.1 hỗ trợ catalogue pack động khi server bật và kiểm profile tương
+ứng. Native storage hiện nhận tối đa 100 pack ID. Response cố định legacy
+vẫn có giới hạn 62 entry riêng; không tăng slot cũ hoặc bật response động
+cho client chưa hỗ trợ.
 
 Dùng lại `xd_fan_album` là thay đổi nhỏ nhất nếu không cần collection khác.
-Một pack V36 mới cần đủ các thay đổi sau:
+Một pack 7.1 mới cần đủ các thay đổi sau:
 
 1. thêm pack object vào `packlist` của bundle;
 2. thêm selector cover của pack vào bundle;
 3. gán ít nhất một bài cho pack;
 4. thêm pack vào custom/free entitlement configuration của server;
 5. pin đúng byte `packlist` cuối và epoch trong profile server động;
-6. xác minh catalogue rồi kiểm ownership và điều hướng pack thực tế trong V36.
+6. xác minh catalogue rồi kiểm ownership và điều hướng pack thực tế trong 7.1.
 
 Không bỏ official pack chỉ để lấy chỗ. Nếu vẫn hỗ trợ client legacy,
 kiểm response riêng của nó trong giới hạn 62 entry.
@@ -142,6 +142,13 @@ Mở AFF trong text editor. Nó phải có dòng `AudioOffset:`, một dòng ch�
 và chart event thật. Placeholder rất nhỏ hoặc metadata file bị đổi tên thành `.aff`
 không phải playable chart.
 
+Allowlist WAV được tạo từ `songlist.additional_files` khi build APK. Vì vậy,
+chart native có thêm file `.wav` mới cần build lại APK với native songlist
+đã cập nhật, cùng metadata và file download tương ứng. Chỉ cập nhật bundle
+không mở rộng allowlist đã biên dịch. Tính năng riêng của ArcCreate runtime
+hay scene control cần kiểm tương thích riêng; có file AFF chưa chứng minh
+client hỗ trợ chúng.
+
 Cài FFmpeg một lần nếu `ffprobe` chưa có:
 
 ```powershell
@@ -163,7 +170,8 @@ if ($LASTEXITCODE -ne 0) { throw "The source audio could not be decoded." }
 ```
 
 Codec nên là Vorbis và duration phải dương. MP3 byte bị đổi đuôi thành `.ogg`, attached
-video hoặc timestamp hỏng cần được normalize ở bước sau.
+video hoặc timestamp hỏng cần file tương thích từ tác giả hoặc chuyển đổi
+được chấp nhận rõ trong bước 6.
 
 ## Bước 3: chọn ID ổn định và index chưa dùng
 
@@ -237,7 +245,7 @@ phía trước còn object khác:
 
 `id` là relationship key nội bộ. `name_localized` và `description_localized` được hiển
 thị cho người chơi. `custom_banner` yêu cầu selector dùng custom pack image.
-`section: variety` đặt pack trong nhóm Variety. Mod bridge hiện có của V36
+`section: variety` đặt pack trong nhóm Variety. Mod bridge hiện có
 đưa `xd_fan_album` vào Mod; nó không tự hỗ trợ pack ID mới bất kỳ hay field
 `section: mod`. Dùng fan pack hiện có để đặt bài trong Mod, trừ khi bạn
 triển khai và kiểm native category mapping tương ứng cho pack mới.
@@ -292,7 +300,7 @@ difficulty còn lại:
   "side": 0,
   "bg": "base_light",
   "date": 1789491600,
-  "version": "7.0",
+  "version": "7.1",
   "remote_dl": true,
   "world_unlock": false,
   "difficulties": [
@@ -336,43 +344,91 @@ $addedSong = @($editedSonglist.songs | Where-Object id -eq $songId)
 if ($addedSong.Count -ne 1 -or $addedSong[0].set -ne $packId) { throw "Song-to-pack relationship is invalid." }
 ```
 
-## Bước 6: normalize audio và tạo preview
+## Bước 6: giữ nguyên audio gameplay và chọn preview
 
-Tạo một Vorbis file sạch cho gameplay:
+Với Vorbis OGG tương thích, copy file của tác giả mà không đổi sample rate,
+channel, bitrate hay timestamp. So sánh hash để xác nhận bản dùng cho gameplay
+giống từng byte với source:
 
 ```powershell
 $audio = Join-Path $protected "base.ogg"
-ffmpeg -hide_banner -y -fflags +genpts -i $audioSource.FullName `
-  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
-  -af "aresample=async=1:first_pts=0,asetpts=N/SR/TB" `
-  -c:a libvorbis -ar 44100 -ac 2 -q:a 4 $audio
-if ($LASTEXITCODE -ne 0) { throw "Gameplay audio normalization failed." }
+$audioInfoRaw = ffprobe -v error -show_entries format=format_name,duration:stream=codec_type,codec_name `
+  -of json $audioSource.FullName
+if ($LASTEXITCODE -ne 0) { throw "Source audio could not be read." }
+$audioInfo = $audioInfoRaw | ConvertFrom-Json
+if ($audioInfo.format.format_name -ne "ogg" -or @($audioInfo.streams).Count -ne 1 -or
+    $audioInfo.streams[0].codec_name -ne "vorbis" -or [double]$audioInfo.format.duration -le 0) {
+  throw "Obtain compatible Vorbis OGG from the author, or review the optional conversion section."
+}
+if (Test-Path -LiteralPath $audio) { throw "Gameplay output already exists; inspect it before continuing." }
+Copy-Item -LiteralPath $audioSource.FullName -Destination $audio
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $audio).Hash -ne
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $audioSource.FullName).Hash) {
+  throw "Gameplay audio copy changed bytes."
+}
 ```
 
-`-map 0:a:0` chọn audio stream đầu tiên. Các flag `-vn/-sn/-dn` bỏ video, subtitle và
-data. Audio filter tạo lại timestamp từ zero. Các option cuối tạo stereo Vorbis 44,1
-kHz.
+### Chỉ khi source không tương thích và bạn chấp nhận chuyển đổi
 
-Tạo selector preview dài 20 giây khớp window 30–50 giây trong ví dụ:
+Bỏ qua phần này nếu Vorbis OGG đã hợp lệ. Ưu tiên file sửa đúng do tác giả
+cung cấp. Chuyển đổi sẽ mã hóa lại audio, có thể giảm chất lượng và đổi timing;
+đây không phải cách giảm dung lượng cho file vốn đã tương thích. Chỉ chạy
+block tùy chọn sau khi chấp nhận những thay đổi đó. Lệnh tạo file mới, không
+ghi đè source:
+
+```powershell
+$convertedAudio = Join-Path $work "base-converted.ogg"
+ffmpeg -hide_banner -n -fflags +genpts -i $audioSource.FullName `
+  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
+  -af "aresample=async=1:first_pts=0,asetpts=N/SR/TB" `
+  -c:a libvorbis -ar 44100 -ac 2 -q:a 8 $convertedAudio
+if ($LASTEXITCODE -ne 0) { throw "Optional audio conversion failed." }
+$audioSource = Get-Item -LiteralPath $convertedAudio
+```
+
+Quay lại block copy/kiểm phía trên với `$audioSource` thay thế này. Nghe và
+kiểm timing trên staging trước khi phát hành.
+
+### Giữ preview của tác giả nếu đã có
+
+Block sau copy Vorbis `preview.ogg` có sẵn mà không đổi byte. Chỉ khi tác giả
+không cung cấp preview, nó mới tạo một đoạn nghe thử mới dài 20 giây cho
+khoảng 30–50 giây trong ví dụ. Đây là asset phát sinh riêng với audio gameplay
+được giữ nguyên; không ghi đè tài nguyên gốc.
 
 ```powershell
 $preview = Join-Path $work "preview.ogg"
-ffmpeg -hide_banner -y -ss 30 -t 20 -i $audio `
-  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
-  -c:a libvorbis -ar 44100 -ac 2 -q:a 3 $preview
-if ($LASTEXITCODE -ne 0) { throw "Preview generation failed." }
-
+$authorPreview = Join-Path $source "preview.ogg"
+if (Test-Path -LiteralPath $preview) { throw "Preview output already exists; do not overwrite it." }
+if (Test-Path -LiteralPath $authorPreview) {
+  $previewCodec = ffprobe -v error -select_streams a:0 -show_entries stream=codec_name `
+    -of default=noprint_wrappers=1:nokey=1 $authorPreview
+  if ($LASTEXITCODE -ne 0 -or $previewCodec -ne "vorbis") { throw "Author preview is not compatible Vorbis audio." }
+  Copy-Item -LiteralPath $authorPreview -Destination $preview
+  if ((Get-FileHash -Algorithm SHA256 -LiteralPath $preview).Hash -ne
+      (Get-FileHash -Algorithm SHA256 -LiteralPath $authorPreview).Hash) {
+    throw "Author preview copy changed bytes."
+  }
+} else {
+  ffmpeg -hide_banner -n -ss 30 -t 20 -i $audio `
+    -map 0:a:0 -vn -sn -dn -map_metadata -1 `
+    -c:a libvorbis -ar 44100 -ac 2 -q:a 8 $preview
+  if ($LASTEXITCODE -ne 0) { throw "New preview generation failed." }
+}
 ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 $preview
+if ($LASTEXITCODE -ne 0) { throw "Preview could not be read." }
 ```
 
-Nếu chọn preview window khác, hãy cập nhật cả `audioPreview` và `audioPreviewEnd` trong
-`songlist`. Nghe output trước khi tiếp tục.
+Khi copy preview có sẵn, đặt `audioPreview` và `audioPreviewEnd` theo đúng
+khoảng nghe thử của tác giả. Với đoạn mới tạo, đặt theo khoảng đã chọn. Nghe
+preview trước khi tiếp tục.
 
-## Bước 7: chuẩn bị jacket và selector folder
+## Bước 7: giữ nguyên jacket và chuẩn bị selector folder
 
-Chọn một jacket image vuông. Verified 1080 layout dùng `768 x 768` cho jacket lớn và
-`384 x 384` cho variant `_256`. Dùng image editor crop source thành hình vuông trước
-khi resize; không kéo giãn hình chữ nhật.
+Layout 1080 đã kiểm dùng `768 x 768` cho jacket lớn và `384 x 384` cho variant
+`_256`. Copy file đúng kích thước do tác giả cung cấp, không resize hay nén
+lại. Nếu kích thước không khớp, xin đúng variant từ tác giả; không tự crop,
+kéo giãn hoặc giảm chất lượng bản gốc.
 
 Đặt file trong cả hai selector path để tương thích:
 
@@ -385,28 +441,39 @@ overlay/songs/dl_my_fan_song/1080_base_256.jpg
 overlay/songs/dl_my_fan_song/preview.ogg
 ```
 
-Tạo folder và copy asset đã chuẩn bị:
+Kiểm kích thước trước, rồi copy asset và so sánh hash:
 
 ```powershell
-$jacketLarge = Get-Item (Read-Host "Full path to the prepared 768x768 JPEG")
-$jacketSmall = Get-Item (Read-Host "Full path to the prepared 384x384 JPEG")
+$jacketLarge = Get-Item (Read-Host "Full path to the author's 768x768 JPEG")
+$jacketSmall = Get-Item (Read-Host "Full path to the author's 384x384 JPEG")
+& $python -c "from PIL import Image; import sys; expected=[(768,768),(384,384)]; actual=[Image.open(p).size for p in sys.argv[1:]]; assert actual==expected,(actual,expected); print(actual)" $jacketLarge.FullName $jacketSmall.FullName
+if ($LASTEXITCODE -ne 0) { throw "Jacket dimensions are invalid; obtain matching assets from the author." }
+
 $selectorA = Join-Path $overlaySongs $songId
 $selectorB = Join-Path $overlaySongs "dl_$songId"
 New-Item -ItemType Directory -Force $selectorA, $selectorB | Out-Null
-
-foreach ($folder in @($selectorA, $selectorB)) {
-  Copy-Item $jacketLarge.FullName (Join-Path $folder "1080_base.jpg")
-  Copy-Item $jacketSmall.FullName (Join-Path $folder "1080_base_256.jpg")
-  Copy-Item $preview (Join-Path $folder "preview.ogg")
+$selectorFiles = @{
+  "1080_base.jpg" = $jacketLarge.FullName
+  "1080_base_256.jpg" = $jacketSmall.FullName
+  "preview.ogg" = $preview
 }
-
-& $python -c "from PIL import Image; import sys; expected=[(768,768),(384,384)]; actual=[Image.open(p).size for p in sys.argv[1:]]; assert actual==expected,(actual,expected); print(actual)" $jacketLarge.FullName $jacketSmall.FullName
-if ($LASTEXITCODE -ne 0) { throw "Jacket dimensions are invalid." }
+foreach ($folder in @($selectorA, $selectorB)) {
+  foreach ($name in $selectorFiles.Keys) {
+    $destination = Join-Path $folder $name
+    if (Test-Path -LiteralPath $destination) { throw "Selector output already exists; do not overwrite it." }
+    Copy-Item -LiteralPath $selectorFiles[$name] -Destination $destination
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $destination).Hash -ne
+        (Get-FileHash -Algorithm SHA256 -LiteralPath $selectorFiles[$name]).Hash) {
+      throw "Selector asset copy changed bytes."
+    }
+  }
+}
 ```
 
-Nếu difficulty dùng `audioOverride: true`, hãy tạo thêm
-`<ratingClass>_preview.ogg` tương ứng trong `songs/dl_<song_id>/`. Nó tách biệt với
-downloadable `<ratingClass>.ogg`.
+Nếu difficulty dùng `audioOverride: true`, dùng
+`<ratingClass>_preview.ogg` tương ứng do tác giả cung cấp trong
+`songs/dl_<song_id>/`; chỉ tạo preview riêng khi tác giả chưa có. Giữ nguyên
+`<ratingClass>.ogg` dùng cho gameplay nếu file đã tương thích.
 
 ## Bước 8: mã hóa từng AFF bằng AKFC
 
@@ -462,7 +529,7 @@ Với ví dụ FTR, thêm member này vào `song_metadata.json`:
   ],
   "hashes": {
     "2.aff": "PLAINTEXT_AFF_MD5_FROM_AKFC_RECEIPT",
-    "base.ogg": "NORMALIZED_AUDIO_MD5"
+    "base.ogg": "GAMEPLAY_AUDIO_MD5"
   }
 }
 ```
@@ -544,11 +611,12 @@ FREE_PACKS = ["my_fan_pack"]
 CLIENT_PACK_LIMIT = 62  # Legacy clients only.
 
 DYNAMIC_PACKS_ENABLED = True
-DYNAMIC_PACKS_NATIVE_ACCEPTED = True
+CLIENT_7_1_ENABLED = True
+DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED = True
 DYNAMIC_PACKS_FULL_CATALOG = False
-DYNAMIC_CLIENT_PACKLIST_PATH = "./database/client_catalogs/7.0.255/packlist"
-DYNAMIC_CLIENT_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
-DYNAMIC_CLIENT_CATALOG_EPOCH = "my-fan-pack-v1"
+DYNAMIC_CLIENT_7_1_PACKLIST_PATH = "./database/client_catalogs/7.1.0/packlist"
+DYNAMIC_CLIENT_7_1_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
+DYNAMIC_CLIENT_7_1_CATALOG_EPOCH = "my-fan-pack-v1"
 ```
 
 Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. Giữ nguyên
@@ -556,11 +624,15 @@ Giữ các entry hiện có nếu list đã chứa song hoặc pack khác. Giữ
 chung của các fan pack hiện có. `FREE_PACKS` là entitlement
 staging đơn giản nhất: mọi account nhận pack mà không cần tạo purchase row.
 
-Chỉ bật profile này sau khi kiểm client V36. Nó chọn representation động cho
-request có `AppVersion: 7.0.255` và `Akaine-Packs: dynamic1`; header không cấp
+Chỉ bật profile này sau khi kiểm client 7.1. Nó chọn representation động cho
+request có `AppVersion: 7.1.0` và `Akaine-Packs: dynamic1`; header không cấp
 ownership. Giữ `DYNAMIC_PACKS_FULL_CATALOG` false trừ khi chủ động muốn cấp
 toàn bộ catalogue. Không sửa tuple legacy `CLIENT_PACK_PROJECTION_7_0_255`
-để thêm pack V36.
+để thêm pack 7.1. Giữ các field catalogue 7.0 riêng nếu vẫn hỗ trợ client đó.
+
+Setup cài mới trong chương 5a cấp toàn bộ catalogue. Ví dụ này đặt chính sách
+đó thành false và chỉ cấp các pack được liệt kê. Chọn chính sách phù hợp;
+capability header không thay thế ownership.
 
 In hash của đúng bundle packlist đã chỉnh trên Windows:
 
@@ -570,7 +642,7 @@ $packlistForServer = Get-Item (Join-Path $overlaySongs "packlist")
 ```
 
 Thay hash placeholder trong private config bằng toàn bộ giá trị chữ thường
-đó. Cài đúng byte packlist tại `DYNAMIC_CLIENT_PACKLIST_PATH`, giữ ownership
+đó. Cài đúng byte packlist tại `DYNAMIC_CLIENT_7_1_PACKLIST_PATH`, giữ ownership
 của service user. Đổi epoch khi phát hành catalogue mới. Từ staging server
 root, sau khi kích hoạt Python environment của nó, chạy:
 
@@ -581,7 +653,7 @@ python tools/check_dynamic_pack_catalog.py
 Lệnh phải báo số ID đã xác minh mà không có lỗi. Đây là read-only check
 trong process riêng; nó không reload serving worker. Restart hoặc reload
 staging theo quy trình service thông thường, rồi kiểm account response
-V36 và điều hướng pack thực tế.
+7.1 và điều hướng pack thực tế.
 
 Server cần đúng edited songlist mà bundle sử dụng tại `database/songs/songlist`. Nó cũng
 cần edited `database/song_metadata.json`. Sao lưu hai staging file, cài bản mới, giữ
@@ -650,7 +722,7 @@ Test theo thứ tự:
 4. Jacket và preview render mà không có FMOD error.
 5. Download hoàn thành và icon biến mất.
 6. DownloadList chứa chính xác `2.aff` và `base.ogg` với plaintext MD5 dự kiến.
-7. Signed URL trả encrypted AFF cùng normalized OGG; direct `/private/` request và
+7. Signed URL trả encrypted AFF cùng OGG gameplay đã xác minh; direct `/private/` request và
    unsigned `/protected/` request vẫn trả `403`.
 8. Chart vào gameplay và audio giữ đồng bộ.
 9. Play hợp lệ tạo score row có play rating dương.
@@ -681,11 +753,11 @@ riêng.
 - Bạn có quyền host mọi asset được cung cấp.
 - Source hash và author credit đã được ghi lại.
 - Song và pack ID ổn định, không trùng.
-- Hash/epoch catalogue động V36 và ownership policy khớp bundle;
+- Hash/epoch catalogue động 7.1 và ownership policy khớp bundle;
   response legacy được hỗ trợ vẫn giữ giới hạn riêng 62 entry.
 - Chỉ difficulty thật được hiển thị và xếp hạng.
 - AKFC receipt identity khớp song ID và filename cuối.
-- Metadata plaintext hash khớp source AFF và normalized audio.
+- Metadata plaintext hash khớp source AFF và audio gameplay đã xác minh.
 - Protected allowlist bao phủ chính xác metadata file set.
 - Staging bundle, server metadata và R2 object dùng cùng ID.
 - Cold download, gameplay, score và restart đều pass.

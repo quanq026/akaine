@@ -14,7 +14,7 @@ from discord_bot_core import validate_password, validate_username
 SERVER_ROOT = Path(__file__).resolve().parents[1]
 if str(SERVER_ROOT) not in sys.path:
     sys.path.insert(0, str(SERVER_ROOT))
-from core.content_grants import grant_missing_content, missing_content_count
+from core.content_grants import grant_missing_content, grant_missing_full_characters, missing_content_count
 
 FALLBACK_DEFAULT_MEMORIES = 67
 FALLBACK_BOOTSTRAP_MISSIONS = (
@@ -101,21 +101,7 @@ def initialize_default_characters(cur, user_id):
         (user_id, 1, 1, 0, 0, 0, 0),
     )
 
-    cur.execute("SELECT character_id, max_level, is_uncapped FROM character")
-    full_count = 0
-    for row in cur.fetchall():
-        max_level = int(row["max_level"])
-        exp = 25000 if max_level == 30 else 10000
-        cur.execute(
-            """
-            INSERT OR REPLACE INTO user_char_full
-            (user_id, character_id, level, exp, is_uncapped, is_uncapped_override, skill_flag)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (user_id, row["character_id"], max_level, exp, row["is_uncapped"], 0, 0),
-        )
-        full_count += 1
-    return full_count
+    return grant_missing_full_characters(cur, user_id)
 
 
 def initialize_bootstrap_missions(cur, user_id):

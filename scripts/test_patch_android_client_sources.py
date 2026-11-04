@@ -1,43 +1,74 @@
-"""Focused source/asset boundary checks for the current versioned patchset."""
-import struct
+"""Focused source and trust-boundary checks for the public 7.1 build."""
+import importlib.util
+import json
+from pathlib import Path
+import sys
+import tempfile
 import unittest
+
 import build_android_client as client
 
-resources = client.load_patch_module('resource_tests', client.PATCH / 'resources.py')
-native = client.load_patch_module('native_tests', client.PATCH / 'native/build.py')
-managed = client.load_patch_module('managed_tests', client.PATCH / 'smali/build.py')
+ROOT = Path(__file__).resolve().parents[1]
+engine = client.load_patch_module('engine71_tests', client.PATCH / 'build.py')
+native = engine.engine('native')
+managed = engine.engine('managed')
+sys.path.insert(0, str(ROOT / 'scripts/akaine_cli'))
+import akaine
+import catalogue
 
 
 class CurrentPatchTests(unittest.TestCase):
-    def test_resource_string_pools_round_trip_without_losing_unicode(self):
-        values = ['', 'AkaineXD', 'Tiếng Việt', '🎵', 'x' * 140]
-        for flags in (0, 0x100):
-            encoded = resources.write_pool(values, flags)
-            actual, actual_flags = resources.read_pool(encoded)
-            self.assertEqual(actual, values)
-            self.assertEqual(actual_flags, flags)
+    def test_shared_sources_are_locked_and_generated_only_outside_repo(self):
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / 'sources'
+            hashes = engine.prepare_sources(output)
+            self.assertEqual(len(hashes), 49)
+            self.assertEqual(json.loads((output / 'SOURCE_INPUTS.json').read_bytes()), hashes)
+            self.assertTrue((output / 'tools/StockManagedBuild.py').is_file())
+            self.assertTrue((output / 'tools/StockResources.py').is_file())
+            self.assertEqual(len(engine.source_hashes()), 66)
+            with self.assertRaisesRegex(ValueError, 'Fresh external'):
+                engine.prepare_sources(output)
+        with self.assertRaisesRegex(ValueError, 'Fresh external'):
+            engine.prepare_sources(ROOT / 'generated-runtime')
+        for name in ('../outside', '/absolute', 'C:/absolute', 'a\\b'):
+            with self.assertRaisesRegex(ValueError, 'Unsafe'):
+                engine.relative(name)
 
-    def test_wrong_resource_and_asset_preimages_are_rejected(self):
-        for transform in (resources.patch_manifest, resources.patch_resources):
+    def test_wrong_native_provider_and_managed_preimages_fail_closed(self):
+        for raw in (b'', b'not the supported native library'):
             with self.assertRaises(ValueError):
-                transform(b'not the supported APK')
+                engine.engine('provider').build(raw)
         with self.assertRaises(ValueError):
-            native.apply_stock_plan(b'not a native library')
-        with self.assertRaises((ValueError, AssertionError, struct.error)):
-            resources.Reader(b'bad').u32(0)
-
-    def test_managed_patches_never_guess_missing_or_repeated_source(self):
+            managed.cache_source('unreviewed Java source', ())
+        baseline = client.load_patch_module('baseline_managed_test', engine.BASELINE / 'smali/build.py')
         for text in ('absent', 'fixture fixture'):
             with self.assertRaises(ValueError):
-                managed.replace_once(text, 'fixture', 'changed')
-        with self.assertRaises(ValueError):
-            managed.patch_renderer('unrelated method', '', '')
+                baseline.replace_once(text, 'fixture', 'changed')
+        profile = json.loads((client.PATCH / 'production-profile.json').read_bytes())
+        with self.assertRaisesRegex(ValueError, 'profile'):
+            native.identity(dict(profile, package='akai.arc.lmao.staging'))
 
-    def test_native_branch_requires_valid_instruction_alignment_and_range(self):
-        self.assertEqual(native.branch(0x1000, 0x1004), bytes.fromhex('01000014'))
-        for target in (0x1001, 0x1000 + (1 << 27)):
-            with self.assertRaises(ValueError):
-                native.branch(0x1000, target)
+    def test_cli_selects_version_from_live_bridge_identity(self):
+        metadata = {'protocol': 1, 'environment': 'production', 'package': 'akai.arc.lmao',
+                    'pid': 123, 'session': 'a' * 32, 'commands': ['status']}
+        self.assertEqual(akaine.validate_identity(metadata, '123')['application_version'], '7.0.255')
+        metadata['application_version'] = '7.1.0'
+        self.assertEqual(akaine.validate_identity(metadata, '123')['application_version'], '7.1.0')
+        for value in (None, '7.1.1', '7.0.260', 7):
+            with self.assertRaises(akaine.CliError):
+                akaine.validate_identity(dict(metadata, application_version=value), '123')
+        with self.assertRaises(akaine.CliError):
+            akaine.validate_identity(metadata, '124')
+        self.assertTrue(akaine.UI_TOKEN.fullmatch('partner_hint_continue.' + 'a' * 16))
+
+    def test_cli_bundle_contract_rejects_other_versions_and_noncanonical_suffixes(self):
+        pattern = catalogue.bundle_version_pattern('akai.arc.lmao', '7.1.0')
+        import re
+        for version in ('7.1.0.1', '7.1.0.999999999'):
+            self.assertTrue(re.fullmatch(pattern, version))
+        for version in ('7.0.255.28', '7.1.0.0', '7.1.0.01', '7.1.0.1000000000', '7.1.0.1\n'):
+            self.assertFalse(re.fullmatch(pattern, version))
 
 
 if __name__ == '__main__':
