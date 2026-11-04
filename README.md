@@ -1,4 +1,4 @@
-# Akaine 7.0.255
+# Akaine 7.0.255 (Version 7.1 is currently under development and will be released asap)
 
 English | [Tiếng Việt](README.vi.md)
 ![Akaine](docs/images/akaine-hero.png)
