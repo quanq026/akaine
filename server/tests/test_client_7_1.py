@@ -23,8 +23,12 @@ from core.score import rating_ptt_for_app_version
 from core.sql import Connect
 from server import others
 from server.func import header_check
-from test_bundle_profiles import load_classes, manifest
-from test_content_projection_parity import projection_methods
+if __package__:
+    from .test_bundle_profiles import load_classes, manifest
+    from .test_content_projection_parity import projection_methods
+else:
+    from test_bundle_profiles import load_classes, manifest
+    from test_content_projection_parity import projection_methods
 
 
 INIT = Path(__file__).resolve().parents[1] / 'database/init'
