@@ -1,19 +1,20 @@
-# Build V36 from the original APKPure package
+# Build 7.1 from the original APKPure package
 
 English | [Tiếng Việt](vi/06-build-android-client.md)
 
 Prepare the inputs once, then run one build command. It verifies and merges
-the original APKPure package, applies the current V36 changes, compiles the
+the original APKPure package, applies the current 7.1 changes, compiles the
 runtime, and aligns and signs your APK. No prepatched Akaine APK is an input.
 
-This chapter supports only Arcaea **7.0.255 (`1209852`), arm64-v8a**.
+This chapter supports only Arcaea **7.1.0 (`1209907`), arm64-v8a**.
 Do not substitute another version or the armeabi-v7a download.
 
 ![Chapter 06 Android client assembly line](../images/guides/06-android-client-assembly.svg)
 
-V36 includes the semantic CLI, first-run guide handling, character-skill fixes,
-anomaly replay controls, Mod, dynamic packs, latest-ten news and guarded bundle
-partial caching. Original music and jackets are preserved. Content bundles
+7.1 includes the semantic CLI, first-run guide handling, character-skill fixes,
+anomaly replay controls, Mod, dynamic packs and latest-ten news.
+Declared additional WAV samples resolve through the private
+song cache. Original music, jackets and effects are preserved. Content bundles
 remain separate from the APK; this command does not publish or activate them.
 
 The included routes still use the published Akaine production hosts. Your own
@@ -42,15 +43,15 @@ used below. Stop and finish workstation setup if a required tool is missing.
 ## 2. Download and verify the original package
 
 Download the **arm64-v8a XAPK** from the
-[APKPure 7.0.255 page](https://apkpure.net/arcaea/moe.low.arc/download/7.0.255).
+[APKPure 7.1.0 page](https://apkpure.net/arcaea/moe.low.arc/download/7.1.0).
 XAPK is the complete download: base, arcassets, arm64, English and mdpi modules.
 Do not extract and supply only `moe.low.arc.apk`; that base APK is incomplete.
 
 ```powershell
-$source = Get-Item -LiteralPath (Read-Host "Full path to the original APKPure 7.0.255 arm64 XAPK")
-$expectedSourceHash = "459bb01f8357dde82b13a817d4dd5dbf81e7a70d0805cc0d5f1aebde36fa2b7a"
+$source = Get-Item -LiteralPath (Read-Host "Full path to the original APKPure 7.1.0 arm64 XAPK")
+$expectedSourceHash = "c86b2e4b7e4e4448ed056d4ce9a8a850ea245686eefacdd0c9b4d6139909da31"
 $sourceHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $source.FullName).Hash.ToLowerInvariant()
-if ($source.Length -ne 1219427332 -or $sourceHash -ne $expectedSourceHash) {
+if ($source.Length -ne 1224818295 -or $sourceHash -ne $expectedSourceHash) {
     throw "Wrong APKPure package. Stop here; do not change the expected hash."
 }
 $source | Select-Object Name, Length
@@ -58,9 +59,9 @@ $sourceHash
 ```
 
 Both size and SHA-256 must match. The builder checks them again and merges the
-modules itself. Its verified merged APK is 1,206,740,473 bytes, SHA-256
-`746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e`.
-This is the intermediate APK the builder produces, before applying V36.
+modules itself. Its verified merged APK is 1,212,123,246 bytes, SHA-256
+`1290b99ef6ef9d15f1c26183147ae10c7878cf5bd0f52e2119172e8ac8fc45da`.
+This is the intermediate APK the builder produces, before applying 7.1.
 
 ## 3. Select tools, content keys and signing identity
 
@@ -193,16 +194,16 @@ $arguments = @(
     "--build-tools", $buildTools.FullName
 )
 & $python scripts\build_android_client.py @arguments
-if ($LASTEXITCODE -ne 0) { throw "V36 build failed. Keep the first error; do not install its output." }
-$signedApk = Join-Path $buildOutput "Akaine-V36.apk"
+if ($LASTEXITCODE -ne 0) { throw "7.1 build failed. Keep the first error; do not install its output." }
+$signedApk = Join-Path $buildOutput "Akaine-7.1.0.apk"
 $receipt = Get-Content (Join-Path $buildOutput "BUILD_RECEIPT.json") -Raw | ConvertFrom-Json
-if ($receipt.status -ne "APKPURE_TO_V36_SOURCE_BUILD_VERIFIED" -or $receipt.signed -ne $true) {
+if ($receipt.status -ne "APKPURE_TO_7_1_SOURCE_BUILD_VERIFIED" -or $receipt.signed -ne $true) {
     throw "The build did not complete and sign successfully."
 }
 Get-Item -LiteralPath $signedApk | Select-Object Name, Length
 ```
 
-The command produces `Akaine-V36.apk` and `BUILD_RECEIPT.json`. It checks the
+The command produces `Akaine-7.1.0.apk` and `BUILD_RECEIPT.json`. It checks the
 original input and patch preimages, compiles current native/Android code,
 preserves unrelated APK files, then aligns and signs with your key. You do not
 run individual native, DEX or checkpoint scripts.
@@ -224,8 +225,8 @@ Get-FileHash -Algorithm SHA256 -LiteralPath $signedApk
 ```
 
 The signature check must succeed, including APK Signature Scheme v2. Badging
-must show package `akai.arc.lmao`, label `AkaineXD`, version `7.0.255`, code
-`1209852` and activity `low.moe.AppActivity`. Record the signer certificate
+must show package `akai.arc.lmao`, label `AkaineXD`, version `7.1.0`, code
+`1209907` and activity `low.moe.AppActivity`. Record the signer certificate
 digest for later updates. Your own signer produces a different final APK hash.
 
 ## 5. Install and check the app

@@ -427,5 +427,5 @@ log or repository.
 - Cache Reserve and Argo are disabled.
 - The temporary upload token and local `akaine-r2` profile are removed.
 
-Next: [Install the 7.0.255 game server](05a-install-game-server.md). That
+Next: [Install the 7.1.0 game server](05a-install-game-server.md). That
 chapter connects this Worker to the game server's signing secret.

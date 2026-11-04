@@ -1,4 +1,4 @@
-# Cài game server 7.0.255
+# Cài game server 7.1.0
 
 [English](../05a-install-game-server.md) | Tiếng Việt
 
@@ -18,9 +18,10 @@ phát hành kết nối tới `api.example.com`.
 Public server có xử lý pack động, content grant dùng chung và atomic account
 provisioning cho bot. Giá trị identity/secret mặc định được để trống; hãy cấp
 private config của bạn. Catalogue và media đến từ resource kit đã xác minh,
-không phải database hay hồ sơ người chơi của operator khác. Control pack động
-và assetset profile mặc định tắt. Chỉ cấu hình chúng với catalogue và client
-tương ứng; cài APK V36 không tự cấu hình server hay tự cấp content.
+không phải database hay hồ sơ người chơi của operator khác. Mặc định server
+chưa bật 7.1. Example dành riêng cho phiên bản này sẽ bật sau khi bạn cung cấp
+full bundle và pack catalogue tương ứng. Cài APK không tự cấu hình server
+hay tự cấp content.
 
 ## 1. Chuẩn bị Linux instance
 
@@ -73,7 +74,8 @@ minh, hãy tìm:
 ```text
 server songlist              -> database/songs/songlist
 server song metadata         -> database/song_metadata.json
-7.0.255 full-root manifest   -> database/bundle/<alias>.json
+matching native packlist      -> database/client_catalogs/7.1.0/packlist
+7.1.0 full-root manifest      -> database/bundle/<alias>.json
 bundle parts                  -> R2 bundle/<alias>_0.cb ...
 ```
 
@@ -89,7 +91,8 @@ $sshKey = Get-Item (Read-Host "Full path to the Lightsail SSH private key")
 $serverIp = Read-Host "Lightsail static IPv4 address"
 $songlist = Get-Item (Read-Host "Full path to the verified server songlist")
 $songMetadata = Get-Item (Read-Host "Full path to the verified song_metadata.json")
-$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.0.255 bundle manifest")
+$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.1.0 bundle manifest")
+$packlist = Get-Item (Read-Host "Full path to the matching native packlist")
 
 ssh -i $sshKey.FullName "ubuntu@$serverIp" "install -d -m 700 /home/ubuntu/akaine-intake"
 if ($LASTEXITCODE -ne 0) { throw "Could not create the private intake folder." }
@@ -101,7 +104,11 @@ if ($LASTEXITCODE -ne 0) { throw "Song metadata upload failed." }
 scp -i $sshKey.FullName $bundleManifest.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/$($bundleManifest.Name)"
 if ($LASTEXITCODE -ne 0) { throw "Bundle manifest upload failed." }
 
+scp -i $sshKey.FullName $packlist.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/packlist"
+if ($LASTEXITCODE -ne 0) { throw "Packlist upload failed." }
+
 "Bundle manifest name: $($bundleManifest.Name)"
+"Packlist SHA256: $((Get-FileHash -Algorithm SHA256 $packlist.FullName).Hash.ToLowerInvariant())"
 ```
 
 Quay lại Linux SSH terminal và nhập manifest filename mà PowerShell vừa in:
@@ -114,6 +121,8 @@ case "$manifest_name" in
 esac
 test -f "/home/ubuntu/akaine-intake/$manifest_name"
 
+sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.1.0
+sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.1.0/packlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
@@ -123,27 +132,28 @@ from pathlib import Path
 root = Path('/srv/akaine/repo/server/database')
 manifest = root / 'bundle' / sys.argv[1]
 data = json.loads(manifest.read_text())
-assert data['applicationVersionNumber'] == '7.0.255'
+assert data['applicationVersionNumber'] == '7.1.0'
 assert data['previousVersionNumber'] is None
 assert data['totalPartitions'] > 0
 json.loads((root / 'songs/songlist').read_text(encoding='utf-8-sig'))
 json.loads((root / 'song_metadata.json').read_text())
-print('7.0.255 content files ready')
+assert json.loads((root / 'client_catalogs/7.1.0/packlist').read_text())['packs']
+print('7.1.0 content files ready')
 PY
 ```
 
 Server đọc songlist để quyết định unlock và download, metadata để lấy download filename
 và checksum, manifest để lấy bundle version và part URL. Chỉ cài manifest sẽ không làm
 song download hoạt động.
-Lệnh cuối phải in `7.0.255 content files ready`.
+Lệnh cuối phải in `7.1.0 content files ready`.
 
-## 4. Cấu hình server 7.0.255
+## 4. Cấu hình server 7.1.0
 
 Copy example dành riêng cho phiên bản này. Credential nằm trong `config.py` được Git
 ignore, bên trong `class Config`:
 
 ```bash
-sudo -u akaine cp /srv/akaine/repo/server/config.7.0.255.example.py /srv/akaine/repo/server/config.py
+sudo -u akaine cp /srv/akaine/repo/server/config.7.1.0.example.py /srv/akaine/repo/server/config.py
 sudo chmod 0600 /srv/akaine/repo/server/config.py
 sudo -u akaine nano /srv/akaine/repo/server/config.py
 ```
@@ -155,9 +165,21 @@ Với protected song, lấy đúng song ID từ private R2 `asset-manifest.json`
 `ASSET_SIGNING_SONG_IDS`; giữ các ID hiện có khi sửa list. Template tắt Link Play cho
 lần kiểm tra server đầu tiên.
 
+Đặt `target` của full profile bằng `versionNumber` trong manifest, và list
+`manifests` bằng đúng tên file manifest đã upload. Thay
+`<SHA256_OF_YOUR_7_1_PACKLIST>` bằng hash PowerShell vừa in. Giữ
+`DYNAMIC_CLIENT_7_1_PACKLIST_PATH` trỏ đến packlist đã cài, đổi epoch mỗi lần
+phát hành catalogue mới.
+
+Template cài mới chủ động cấp toàn bộ pack trong catalogue đã xác minh
+(`DYNAMIC_PACKS_FULL_CATALOG = True`). Đặt false nếu muốn yêu cầu ownership
+riêng. Với server đang chạy, gộp profile 7.1 vào cấu hình hiện có; giữ các
+profile bundle, hash catalogue và download prefix 7.0.
+
 Template đặt `GAME_API_PREFIX = '/'`, khớp root path của release hiện tại như
-`/auth/login` và `/game/content_bundle`. Nó chỉ nhận `7.0.255`, lắng nghe
-`127.0.0.1:18080` sau nginx và chọn full-root bundle mới nhất cho client cũ. File
+`/auth/login` và `/game/content_bundle`. Nó chỉ nhận `7.1.0`, lắng nghe
+`127.0.0.1:18080` sau nginx và phục vụ đúng full-root target đã cấu hình cho client mới hoặc
+client có content cũ. File
 `config.example.py` cũ là upstream reference cho client version khác; đừng copy nó cho
 setup này.
 
@@ -166,14 +188,29 @@ Kiểm tra file đã sửa mà không in secret:
 ```bash
 cd /srv/akaine/repo/server
 sudo -u akaine /srv/akaine/repo/.venv/bin/python - <<'PY'
+import json
+from hashlib import sha256
+from pathlib import Path
 from config import Config
 assert Config.GAME_API_PREFIX == '/'
-assert Config.ALLOW_APPVERSION == ['7.0.255']
+assert Config.ALLOW_APPVERSION == ['7.1.0'] and Config.CLIENT_7_1_ENABLED is True
 assert Config.USERNAME and Config.PASSWORD and Config.SECRET_KEY
 assert 'example.com' not in Config.BUNDLE_DOWNLOAD_LINK_PREFIX
+assert 'example.com' not in Config.DOWNLOAD_LINK_PREFIX_7_1_0
 assert 'example.com' not in Config.ASSET_SIGNED_PREFIX
-print('7.0.255 server configuration ready')
+assert Config.BUNDLE_ASSETSET_PROFILES_ENABLED is True
+profile = Config.BUNDLE_ASSETSET_PROFILES['7.1.0']['full']
+for name in profile['manifests']:
+    manifest = json.loads((Path('database/bundle') / name).read_text())
+    assert manifest['applicationVersionNumber'] == '7.1.0'
+    assert manifest['versionNumber'] == profile['target']
+    assert manifest['previousVersionNumber'] is None
+assert Config.DYNAMIC_PACKS_ENABLED is True and Config.DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED is True
+assert sha256(Path(Config.DYNAMIC_CLIENT_7_1_PACKLIST_PATH).read_bytes()).hexdigest() == Config.DYNAMIC_CLIENT_7_1_PACKLIST_SHA256
+assert Config.DYNAMIC_CLIENT_7_1_CATALOG_EPOCH
+print('7.1.0 server configuration ready')
 PY
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/check_dynamic_pack_catalog.py
 ```
 
 Nếu có traceback, sửa `config.py` rồi kiểm tra lại. Server chưa chạy nên chưa cần restart.
@@ -276,7 +313,7 @@ Trong Windows PowerShell, đặt `$apiHost` là hostname của bạn:
 $apiHost = Read-Host "Game API hostname without https://"
 $bundleUrl = "https://$apiHost/game/content_bundle"
 $response = Invoke-WebRequest -Uri $bundleUrl -Headers @{
-  AppVersion = '7.0.255'
+  AppVersion = '7.1.0'
   ContentBundle = '0.0.0'
   DeviceId = 'guide-server-check'
 }
@@ -289,14 +326,14 @@ if ($response.Headers['Cache-Control'] -notmatch 'no-store') {
   throw "The content-bundle decision is missing no-store."
 }
 if (@($body.value.orderedResults).Count -ne 1) {
-  throw "A fresh 7.0.255 client did not receive one bundle."
+  throw "A fresh 7.1.0 client did not receive one bundle."
 }
 
 $body.value.orderedResults | Select-Object contentBundleVersion, appVersion, bundleSize
 
 $targetVersion = $body.value.orderedResults[0].contentBundleVersion
 $currentResponse = Invoke-RestMethod -Uri $bundleUrl -Headers @{
-  AppVersion = '7.0.255'
+  AppVersion = '7.1.0'
   ContentBundle = $targetVersion
   DeviceId = 'guide-server-check'
 }

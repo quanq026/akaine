@@ -90,7 +90,7 @@ maintenance script chỉ vì nó có mặt trong file nén.
 
 Không tiếp tục nếu quá trình xác minh báo cáo file bị thiếu hoặc không khớp.
 
-## Kiểm đầu vào client V36
+## Kiểm đầu vào client 7.1
 
 Trước chương 6, xác định những file đã kiểm này trong hướng dẫn của kit:
 

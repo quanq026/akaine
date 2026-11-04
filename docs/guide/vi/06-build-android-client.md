@@ -1,19 +1,20 @@
-# Build V36 từ gói APKPure gốc
+# Build 7.1 từ gói APKPure gốc
 
 [English](../06-build-android-client.md) | Tiếng Việt
 
 Chuẩn bị đầu vào một lần, rồi chạy một lệnh build. Lệnh sẽ xác minh và merge
-gói APKPure gốc, áp dụng thay đổi V36 hiện hành, biên dịch runtime, căn chỉnh
+gói APKPure gốc, áp dụng thay đổi 7.1 hiện hành, biên dịch runtime, căn chỉnh
 và ký APK của bạn. Không dùng APK Akaine đã patch làm đầu vào.
 
-Chương này chỉ hỗ trợ Arcaea **7.0.255 (`1209852`), arm64-v8a**.
+Chương này chỉ hỗ trợ Arcaea **7.1.0 (`1209907`), arm64-v8a**.
 Không thay bằng phiên bản khác hoặc bản tải armeabi-v7a.
 
 ![Quy trình build client Android trong chương 06](../../images/guides/06-android-client-assembly.svg)
 
-V36 gồm semantic CLI, xử lý hướng dẫn đầu game, sửa skill nhân vật,
-điều khiển anomaly replay, Mod, dynamic pack, mười news mới nhất và cache
-bundle dở có kiểm soát. Nhạc và ảnh bài hát gốc được giữ nguyên. Content bundle
+7.1 gồm semantic CLI, xử lý hướng dẫn đầu game, sửa skill nhân vật,
+điều khiển anomaly replay, Mod, dynamic pack và mười news mới nhất.
+WAV bổ sung đã khai báo được đọc qua cache bài hát
+riêng của ứng dụng. Nhạc, ảnh bài hát và hiệu ứng gốc được giữ nguyên. Content bundle
 vẫn tách khỏi APK; lệnh này không đăng hoặc kích hoạt bundle.
 
 Route đi kèm vẫn dùng các Akaine production host đã phát hành. Domain riêng
@@ -42,15 +43,15 @@ dùng phía dưới. Nếu thiếu công cụ bắt buộc, dừng và hoàn t�
 ## 2. Tải và xác minh gói gốc
 
 Tải **XAPK arm64-v8a** từ
-[trang APKPure 7.0.255](https://apkpure.net/arcaea/moe.low.arc/download/7.0.255).
+[trang APKPure 7.1.0](https://apkpure.net/arcaea/moe.low.arc/download/7.1.0).
 XAPK là gói đầy đủ: base, arcassets, arm64, tiếng Anh và mdpi.
 Không giải nén rồi chỉ đưa `moe.low.arc.apk` vào builder; base APK đó chưa đủ.
 
 ```powershell
-$source = Get-Item -LiteralPath (Read-Host "Full path to the original APKPure 7.0.255 arm64 XAPK")
-$expectedSourceHash = "459bb01f8357dde82b13a817d4dd5dbf81e7a70d0805cc0d5f1aebde36fa2b7a"
+$source = Get-Item -LiteralPath (Read-Host "Full path to the original APKPure 7.1.0 arm64 XAPK")
+$expectedSourceHash = "c86b2e4b7e4e4448ed056d4ce9a8a850ea245686eefacdd0c9b4d6139909da31"
 $sourceHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $source.FullName).Hash.ToLowerInvariant()
-if ($source.Length -ne 1219427332 -or $sourceHash -ne $expectedSourceHash) {
+if ($source.Length -ne 1224818295 -or $sourceHash -ne $expectedSourceHash) {
     throw "Wrong APKPure package. Stop here; do not change the expected hash."
 }
 $source | Select-Object Name, Length
@@ -59,8 +60,8 @@ $sourceHash
 
 Cả kích thước và SHA-256 phải khớp. Builder kiểm lại chúng rồi tự merge các
 module. APK merge đã xác minh có 1.206.740.473 byte, SHA-256
-`746dd90c2efac21fc88ffd032e5a71c78c0955766477382c7f48ece87e23026e`.
-Đây là APK trung gian do builder tạo ra trước khi áp dụng V36.
+`1290b99ef6ef9d15f1c26183147ae10c7878cf5bd0f52e2119172e8ac8fc45da`.
+Đây là APK trung gian do builder tạo ra trước khi áp dụng 7.1.
 
 ## 3. Chọn công cụ, key content và danh tính ký
 
@@ -193,16 +194,16 @@ $arguments = @(
     "--build-tools", $buildTools.FullName
 )
 & $python scripts\build_android_client.py @arguments
-if ($LASTEXITCODE -ne 0) { throw "V36 build failed. Keep the first error; do not install its output." }
-$signedApk = Join-Path $buildOutput "Akaine-V36.apk"
+if ($LASTEXITCODE -ne 0) { throw "7.1 build failed. Keep the first error; do not install its output." }
+$signedApk = Join-Path $buildOutput "Akaine-7.1.0.apk"
 $receipt = Get-Content (Join-Path $buildOutput "BUILD_RECEIPT.json") -Raw | ConvertFrom-Json
-if ($receipt.status -ne "APKPURE_TO_V36_SOURCE_BUILD_VERIFIED" -or $receipt.signed -ne $true) {
+if ($receipt.status -ne "APKPURE_TO_7_1_SOURCE_BUILD_VERIFIED" -or $receipt.signed -ne $true) {
     throw "The build did not complete and sign successfully."
 }
 Get-Item -LiteralPath $signedApk | Select-Object Name, Length
 ```
 
-Lệnh tạo `Akaine-V36.apk` và `BUILD_RECEIPT.json`. Nó kiểm đầu vào gốc và
+Lệnh tạo `Akaine-7.1.0.apk` và `BUILD_RECEIPT.json`. Nó kiểm đầu vào gốc và
 byte trước patch, biên dịch native/Android code hiện hành, giữ nguyên các file
 APK ngoài phạm vi thay đổi, rồi căn chỉnh và ký bằng key của bạn. Bạn không
 cần chạy riêng từng script native, DEX hoặc checkpoint.
@@ -224,7 +225,7 @@ Get-FileHash -Algorithm SHA256 -LiteralPath $signedApk
 ```
 
 Kiểm chữ ký phải đạt, gồm APK Signature Scheme v2. Badging phải hiển thị
-package `akai.arc.lmao`, label `AkaineXD`, version `7.0.255`, code `1209852`
+package `akai.arc.lmao`, label `AkaineXD`, version `7.1.0`, code `1209907`
 và activity `low.moe.AppActivity`. Lưu signer certificate digest cho lần cập
 nhật sau. Signer riêng của bạn tạo ra final APK hash khác.
 

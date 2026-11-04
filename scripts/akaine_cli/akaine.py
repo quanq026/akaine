@@ -22,20 +22,20 @@ PACKAGE = "akai.arc.lmao"
 DIRECTORY = "files/akaine-cli-v1"
 HEX_ID = re.compile(r"[0-9a-f]{32}\Z")
 UI_CONTEXT = re.compile(r"[0-9a-f]{16}\Z")
-UI_TOKEN = re.compile(r"(start_continue|main_music|pack_open|pack_hint_continue|main_hint_continue|notification_hint_continue|onboarding_setup|onboarding_cancel|onboarding_skip)\.([0-9a-f]{16})\Z")
+UI_TOKEN = re.compile(r"(start_continue|main_music|pack_open|pack_hint_continue|partner_hint_continue|main_hint_continue|notification_hint_continue|onboarding_setup|onboarding_cancel|onboarding_skip)\.([0-9a-f]{16})\Z")
 UI_LABELS = {"start_continue": "Continue", "main_music": "Music", "pack_open": "Pack Select",
-             "pack_hint_continue": "Continue pack selection guide", "main_hint_continue": "Continue main menu guide", "notification_hint_continue": "Continue notification guide (requests Android permission)", "onboarding_setup": "Setup",
+             "pack_hint_continue": "Continue pack selection guide", "partner_hint_continue": "Continue partner selection guide", "main_hint_continue": "Continue main menu guide", "notification_hint_continue": "Continue notification guide (requests Android permission)", "onboarding_setup": "Setup",
              "onboarding_cancel": "Cancel offset setup", "onboarding_skip": "Confirm skip offset setup"}
 UI_REASONS = {None, "unsupported_modal", "loading", "unsupported_scene", "unavailable", "unsupported_ui_tree", "not_ready",
               "input_blocked", "tutorial_active", "overlay_scan_incomplete", "native_bundle_error"}
 OVERLAY_LIMIT = 16
-OVERLAY_IDS = {"tutorial": ("pack_selection_hint", "main_menu_hint", "notification_permission_guide", "unknown_progression_guide", "note_speed_setup")}
+OVERLAY_IDS = {"tutorial": ("pack_selection_hint", "partner_selection_hint", "main_menu_hint", "notification_permission_guide", "unknown_progression_guide", "note_speed_setup")}
 OVERLAY_COVERAGE = ("progression_guide", "note_speed_setup")
 GUIDE_FIELDS = {"step_index", "pending_steps", "advance_ready", "can_advance", "can_set_speed",
                 "owner_validated", "callback_owned", "listener_registered", "listener_paused",
                 "listener_enabled", "listener_swallow"}
 GUIDE_ACTIONS = {"onboarding_setup", "onboarding_cancel", "onboarding_skip", "main_hint_continue",
-                 "notification_hint_continue", "pack_hint_continue"}
+                 "notification_hint_continue", "pack_hint_continue", "partner_hint_continue"}
 SERIAL = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}\Z")
 MAX_JSON = 16384
 LOG_TAGS = ("AkaineAnomalyMonitor:I", "AkaineCLI:I", "AndroidRuntime:E", "libc:F", "DEBUG:F", "*:S")
@@ -141,7 +141,15 @@ def validate_identity(metadata, live_pid):
         raise CliError("PROTOCOL_ERROR", "Bridge identity is malformed.")
     if live_pid != str(metadata["pid"]):
         raise CliError("STALE_BRIDGE", "Bridge metadata does not match the live app PID.")
-    return metadata
+    # V36 predates this field; never infer a newer contract from its bundle files.
+    version = metadata.get("application_version", "7.0.255")
+    if not isinstance(version, str):
+        raise CliError("PROTOCOL_ERROR", "Bridge application version is malformed.")
+    try:
+        catalogue.bundle_version_pattern(PACKAGE, version)
+    except ValueError:
+        raise CliError("PROTOCOL_ERROR", "Bridge application version is unsupported.") from None
+    return {**metadata, "application_version": version}
 
 
 def redact_logs(raw):
@@ -168,11 +176,13 @@ def redact_logs(raw):
     return ("\n".join(lines) + ("\n" if lines else "")).encode("utf-8")
 
 
-def validate_overlays(ui):
+def validate_overlays(ui, application_version="7.0.255"):
+    catalogue.bundle_version_pattern(PACKAGE, application_version)
     overlays, coverage = ui.get("overlays"), ui.get("overlay_coverage")
+    expected_coverage = OVERLAY_COVERAGE + (("category_tutorial", "partner_tutorial") if application_version == "7.1.0" else ())
     if (type(ui.get("overlay_scan_complete")) is not bool or not isinstance(overlays, list)
             or len(overlays) > OVERLAY_LIMIT or not isinstance(coverage, list)
-            or coverage != list(OVERLAY_COVERAGE)):
+            or coverage != list(expected_coverage)):
         raise CliError("PROTOCOL_ERROR", "UI overlay scan does not match its bounded coverage contract.")
     seen = set()
     for overlay in overlays:
@@ -186,7 +196,8 @@ def validate_overlays(ui):
                 raise CliError("PROTOCOL_ERROR", "Native guide workflow fields are malformed.")
         kind, identifier = overlay["kind"], overlay["id"]
         if (not isinstance(kind, str) or kind not in OVERLAY_IDS or not isinstance(identifier, str)
-                or identifier not in OVERLAY_IDS[kind] or (kind, identifier) in seen):
+                or identifier not in OVERLAY_IDS[kind] or (kind, identifier) in seen
+                or identifier == "partner_selection_hint" and application_version != "7.1.0"):
             raise CliError("PROTOCOL_ERROR", "UI overlay identity is unknown or duplicated.")
         seen.add((kind, identifier))
         if (any(overlay[key] is not None and type(overlay[key]) is not bool for key in ("active", "visible", "blocks_input"))
@@ -195,7 +206,7 @@ def validate_overlays(ui):
     return overlays
 
 
-def validate_ui(state):
+def validate_ui(state, application_version="7.0.255"):
     ui = state.get("ui")
     if (not isinstance(ui, dict) or not isinstance(ui.get("context"), str) or
             not UI_CONTEXT.fullmatch(ui["context"]) or not isinstance(ui.get("actions"), list) or
@@ -214,20 +225,29 @@ def validate_ui(state):
                           "offset_skip_confirmation": "onboarding_skip"}
     if onboarding is not None and (not isinstance(onboarding, str) or onboarding not in onboarding_actions):
         raise CliError("PROTOCOL_ERROR", "Unknown onboarding stage.")
-    if ui["modal_present"] and ui["actions"]:
+    overlays = validate_overlays(ui, application_version)
+    partner_hint = (application_version == "7.1.0" and state.get("screen") == "song_select"
+        and ui["modal_present"] and ui["overlay_scan_complete"] and len(overlays) == 1
+        and overlays[0]["kind"] == "tutorial" and overlays[0]["id"] == "partner_selection_hint"
+        and all(overlays[0].get(key) is True for key in ("active", "blocks_input", "can_advance",
+            "advance_ready", "owner_validated", "callback_owned"))
+        and isinstance(state.get("character"), dict) and state["character"].get("dialog_open") is True)
+    partner_action = (partner_hint and onboarding is None and reason == "input_blocked" and len(ui["actions"]) == 1
+        and isinstance(ui["actions"][0], dict)
+        and ui["actions"][0].get("token") == "partner_hint_continue." + ui["context"])
+    if ui["modal_present"] and ui["actions"] and not partner_action:
         expected = onboarding_actions.get(onboarding)
         if (not expected or state.get("screen") != "main_menu" or reason is not None
                 or len(ui["actions"]) != 1 or not isinstance(ui["actions"][0], dict)
                 or ui["actions"][0].get("token") != expected + "." + ui["context"]):
             raise CliError("PROTOCOL_ERROR", "Unsupported modal must block underlying scene actions.")
-    overlays = validate_overlays(ui)
     blocking = any(overlay["blocks_input"] is True for overlay in overlays)
     known_hint = any(overlay["kind"] == "tutorial" and overlay["id"] == "pack_selection_hint"
                      and overlay["active"] is True for overlay in overlays)
     unknown_blocker = any(overlay["blocks_input"] is True and
                           (overlay["kind"], overlay["id"]) != ("tutorial", "pack_selection_hint") for overlay in overlays)
     if blocking and any(not isinstance(action, dict) or not isinstance(action.get("token"), str)
-                        or not action["token"].startswith(("pack_hint_continue.", "main_hint_continue.", "notification_hint_continue.")) for action in ui["actions"]):
+                        or not action["token"].startswith(("pack_hint_continue.", "partner_hint_continue.", "main_hint_continue.", "notification_hint_continue.")) for action in ui["actions"]):
         raise CliError("PROTOCOL_ERROR", "A native input interceptor must block underlying scene actions.")
     main_hint = any(overlay["kind"] == "tutorial" and overlay["id"] == "main_menu_hint"
                     and overlay["active"] is True for overlay in overlays)
@@ -257,6 +277,8 @@ def validate_ui(state):
             raise CliError("PROTOCOL_ERROR", "Main menu continuation requires its exact active native guide.")
         if token[1] == "pack_hint_continue" and (not known_hint or unknown_blocker or not ui["overlay_scan_complete"]):
             raise CliError("PROTOCOL_ERROR", "Guide continuation requires the exact active native pack hint.")
+        if token[1] == "partner_hint_continue" and not partner_action:
+            raise CliError("PROTOCOL_ERROR", "Partner continuation requires its exact owned modal and active native guide.")
         seen.add(token[1])
     return ui
 
@@ -289,9 +311,9 @@ def validate_advanced_guide(state):
     return value
 
 
-def guide_status(state):
+def guide_status(state, application_version="7.0.255"):
     """Choose at most one known guide callback; no consent, download or Play action."""
-    ui = validate_ui(state)
+    ui = validate_ui(state, application_version)
     if ui.get("guide_metadata_version") != 1 or any(not GUIDE_FIELDS <= set(item) for item in ui["overlays"]):
         raise CliError("UNSUPPORTED_GUIDE_METADATA", "This guide command requires explicit native guide metadata.")
     advanced = validate_advanced_guide(state)
@@ -494,14 +516,15 @@ def confirm_terms():
     return ticket
 
 
-def validate_domain_response(state, command, argument):
+def validate_domain_response(state, command, argument, application_version="7.0.255"):
     if command == "bundle":
         value = state.get("bundle")
+        version_pattern = catalogue.bundle_version_pattern(PACKAGE, application_version)
         if (not isinstance(value, dict) or set(value) != {"available", "phase", "can_confirm", "pending_versions", "pending_bytes", "reason"}
                 or any(type(value.get(key)) is not bool for key in ("available", "can_confirm"))
                 or value.get("phase") not in ("unavailable", "ready", "confirmation", "downloading", "failed")
                 or not isinstance(value.get("pending_versions"), list) or len(value["pending_versions"]) > 16
-                or any(not isinstance(version, str) or not re.fullmatch(r"7\.0\.255\.[0-9]{1,9}", version) for version in value["pending_versions"])
+                or any(not isinstance(version, str) or not re.fullmatch(version_pattern, version) for version in value["pending_versions"])
                 or value.get("pending_bytes") is not None and (type(value["pending_bytes"]) is not int or not 0 <= value["pending_bytes"] <= 2**63 - 1)
                 or value.get("reason") is not None and not isinstance(value["reason"], str)):
             raise CliError("PROTOCOL_ERROR", "Native bundle state does not match its bounded public contract.")
@@ -584,18 +607,18 @@ def validate_domain_response(state, command, argument):
         if type(state.get("anomaly_replay")) is not bool or state["anomaly_replay"] != (argument == "1"):
             raise CliError("PROTOCOL_ERROR", "Native response did not confirm Anomaly Replay.")
     elif command == "play_set_speed":
-        ui = validate_ui(state)
+        ui = validate_ui(state, application_version)
         if ui["overlay_scan_complete"] is not True or any(overlay["id"] == "note_speed_setup" for overlay in ui["overlays"]):
             raise CliError("PROTOCOL_ERROR", "Native note-speed setup is still present or its scan is incomplete.")
         if state.get("gameplay") is True:
-            validate_domain_response(state, "play", argument)
+            validate_domain_response(state, "play", argument, application_version)
         else:
             song = state.get("song_selection")
             if (state.get("screen") != "song_select" or not isinstance(song, dict) or song.get("song_id") != argument
                     or type(song.get("difficulty")) is not int or not 0 <= song["difficulty"] <= 4):
                 raise CliError("PROTOCOL_ERROR", "Native note-speed setup did not confirm the expected song.")
     elif command == "play_guide" and state.get("gameplay") is True:
-        validate_domain_response(state, "play", argument)
+        validate_domain_response(state, "play", argument, application_version)
     elif command in ("play_download", "play_guide"):
         song, ui = state.get("song_selection"), state.get("ui")
         if (state.get("screen") != "song_select" or not isinstance(song, dict) or song.get("song_id") != argument
@@ -734,7 +757,7 @@ class Client:
         except UnicodeDecodeError:
             raise CliError("STALE_BRIDGE", "The live app PID is invalid.") from None
         metadata = validate_identity(metadata, live_pid)
-        if self.identity and any(metadata[key] != self.identity[key] for key in ("pid", "session")):
+        if self.identity and any(metadata[key] != self.identity[key] for key in ("pid", "session", "application_version")):
             raise CliError("BRIDGE_RESTARTED", "The production bridge restarted during the operation.")
         return metadata
 
@@ -796,7 +819,7 @@ class Client:
                     name = "mod" if argument == "8" else "variety"
                     if not isinstance(category, dict) or category.get("section") != int(argument) or category.get("name") != name:
                         raise CliError("PROTOCOL_ERROR", "Successful category response did not confirm the selected category.")
-                ui = validate_ui(response["state"]) if "ui" in response["state"] else None
+                ui = validate_ui(response["state"], self.identity["application_version"]) if "ui" in response["state"] else None
                 validate_advanced_guide(response["state"])
                 if response["ok"] and command == "ui":
                     if ui is None:
@@ -804,13 +827,13 @@ class Client:
                     if argument != "list" and ui["context"] == argument.rsplit(".", 1)[1]:
                         raise CliError("PROTOCOL_ERROR", "UI activation did not confirm a changed action context.")
                 if response["ok"] and command in DOMAIN_COMMANDS:
-                    validate_domain_response(response["state"], command, argument)
+                    validate_domain_response(response["state"], command, argument, self.identity["application_version"])
                 if "account" in response["state"]:
-                    validate_domain_response(response["state"], "account", "status")
+                    validate_domain_response(response["state"], "account", "status", self.identity["application_version"])
                 if "sync" in response["state"]:
-                    validate_domain_response(response["state"], "sync", "status")
+                    validate_domain_response(response["state"], "sync", "status", self.identity["application_version"])
                 if "bundle" in response["state"]:
-                    validate_domain_response(response["state"], "bundle", "status")
+                    validate_domain_response(response["state"], "bundle", "status", self.identity["application_version"])
                 if not response["ok"] and response["error"]["code"] == "ACCOUNT_LOGIN_FAILED":
                     account = response["state"].get("account", {})
                     if (command != "account" or argument != "submit" or account.get("can_submit") is not True or account.get("blocked") is not False
@@ -865,7 +888,7 @@ class Client:
                 if not current["ok"]:
                     result = current
                     return result
-                ui = validate_ui(current["state"])
+                ui = validate_ui(current["state"], self.identity["application_version"])
                 if argument.rsplit(".", 1)[1] != ui["context"]:
                     raise CliError("STALE_UI_CONTEXT", "Run ui list again; the action context changed.")
                 if not any(action["token"] == argument and action["enabled"] for action in ui["actions"]):
@@ -875,7 +898,7 @@ class Client:
                 if not current["ok"]:
                     result = current
                     return result
-                guide = guide_status(current["state"])
+                guide = guide_status(current["state"], self.identity["application_version"])
                 guide.update(operation=argument, performed=None)
                 current["guide"] = guide
                 if argument == "status" or guide["action"] is None:
@@ -885,21 +908,22 @@ class Client:
                 if not fresh["ok"]:
                     result = fresh
                     return result
-                confirmed = guide_status(fresh["state"])
+                confirmed = guide_status(fresh["state"], self.identity["application_version"])
                 if fresh["state"]["ui"]["context"] != current["state"]["ui"]["context"]:
                     raise CliError("STALE_UI_CONTEXT", "The guide changed before dispatch; inspect guide status.")
                 if confirmed != {key: guide[key] for key in confirmed}:
                     raise CliError("GUIDE_STATE_CHANGED", "Guide eligibility changed before dispatch; inspect guide status.")
                 action = guide["action"]
                 result = self.request(action["command"], action["argument"])
-                after = guide_status(result["state"])
+                after = guide_status(result["state"], self.identity["application_version"])
                 after.update(operation=argument, attempted=action, performed=action if result["ok"] else None)
                 after["may_continue_play"] = guide["may_continue_play"]
                 after["effect"] = guide["effect"]
                 result["guide"] = after
             elif catalogue_command:
                 try:
-                    installed = catalogue.load(self.adb, self.deadline)
+                    installed = catalogue.load(self.adb, self.deadline, package=PACKAGE,
+                                               application_version=self.identity["application_version"])
                     self.inspect()
                     result = catalogue.query(installed, "songs" if command == "song-catalogue" else "packs", options)
                 except (ValueError, UnicodeError) as error:

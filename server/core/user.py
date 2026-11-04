@@ -5,11 +5,13 @@ import time
 from os import urandom
 from random import randint
 from json import dumps, loads
+from flask import has_request_context, request
 
 from .character import UserCharacter, UserCharacterList
 from .config_manager import Config
-from .content_grants import grant_missing_content
-from .client_packs import pack_ids_for_dynamic_user
+from .client_compat import (character_row_for_app_version,
+                           character_visible_for_app_version, uses_current_contract)
+from .content_grants import grant_missing_content, grant_missing_full_characters
 from .constant import Constant
 from .error import (ArcError, DataExist, FriendError, InputError, NoAccess,
                     NoData, RateLimit, UserBan)
@@ -17,12 +19,12 @@ from .item import UserItemList
 from .limiter import ArcLimiter
 from .mission import UserMissionList
 from .pack_contract import build_client_pack_list, build_effective_pack_list
+from .client_packs import pack_ids_for_dynamic_user
 from .score import Score, rating_ptt_for_app_version
 from .sql import Query, Sql, UserKVTable
 from .world import Map, MapParser, UserMap, UserStamina
 
 
-CURRENT_CLIENT_VERSION = '7.0.255'
 CURRENT_ONLY_BANNERS = {
     'online_banner_2026_07',
     'online_banner_2026_08',
@@ -31,7 +33,7 @@ CURRENT_ONLY_BANNERS = {
 
 
 def score_rows_for_app_version(rows: list, app_version: str = None) -> list:
-    if app_version == CURRENT_CLIENT_VERSION:
+    if uses_current_contract(app_version):
         return rows
     return [
         dict(row, song_id='testify1')
@@ -162,14 +164,7 @@ class UserRegister(User):
                        (self.user_id, 0, 1, 0, 0, 0))
         self.c.execute('''insert into user_char values(?,?,?,?,?,?,0)''',
                        (self.user_id, 1, 1, 0, 0, 0))
-        self.c.execute(
-            '''select character_id, max_level, is_uncapped from character''')
-        x = self.c.fetchall()
-        if x:
-            for i in x:
-                exp = 25000 if i[1] == 30 else 10000
-                self.c.execute('''insert or replace into user_char_full values(?,?,?,?,?,?,0)''',
-                               (self.user_id, i[0], i[1], exp, i[2], 0))
+        grant_missing_full_characters(self.c, self.user_id)
 
     def register(self, device_id: str = None, ip: str = None):
         if device_id is not None and not self.limiter_device.hit(device_id):
@@ -449,6 +444,7 @@ class UserInfo(User):
 
         return self.__packs
 
+
     @property
     def pick_ticket(self) -> int:
         x = UserItemList(self.c, self).select_from_type('pick_ticket')
@@ -585,41 +581,35 @@ class UserInfo(User):
         if self.name is None:
             self.select_user()
 
-        packs = self.packs if client_pack_projection is None else \
-            self._build_client_pack_list(client_pack_projection)
+        if app_version == '7.1.0':
+            if not has_request_context() or request.headers.get('AppVersion') != app_version:
+                raise NoAccess('The 7.1 account serializer requires its request profile.', status=503)
+            packs = pack_ids_for_dynamic_user(self, request.headers)
+        else:
+            packs = self.packs if client_pack_projection is None else \
+                self._build_client_pack_list(client_pack_projection)
 
         # 这是考虑有可能favourite_character设置了用户未拥有的角色，同时提前计算角色列表
         if self.characters is None:
             self.select_characters()
         character_objects = self.characters.characters
-        if app_version != CURRENT_CLIENT_VERSION:
-            character_objects = [
-                character for character in character_objects
-                if character.character_id not in (97, 98)
-            ]
+        character_objects = [character for character in character_objects
+                             if character_visible_for_app_version(character.character_id, app_version)]
         character_list = [character.character_id for character in character_objects]
         if self.favorite_character and self.favorite_character.character_id in character_list:
             favorite_character_id = self.favorite_character.character_id
         else:
             favorite_character_id = -1
 
-        if self.character.character_id not in character_list:
-            self.character.character_id = 0
-
-        character_stats = []
-        for character in character_objects:
-            character_data = character.to_dict()
-            if character.character_id == 98:
-                character_data['base_character_id'] = 72
-            character_stats.append(character_data)
+        character_id = self.character.character_id if self.character.character_id in character_list else 0
 
         friends = [dict(
-            friend,
+            character_row_for_app_version(friend, app_version),
             recent_score=score_rows_for_app_version(
                 friend.get('recent_score', []), app_version
             ),
         ) for friend in self.friends]
-        if app_version == '7.0.255':
+        if uses_current_contract(app_version):
             friends = [dict(friend, rating=rating_ptt_for_app_version(
                 friend['rating'], app_version)) for friend in friends]
 
@@ -628,7 +618,7 @@ class UserInfo(User):
         )
         course_banners = self.course_banners
         custom_banner = self.custom_banner
-        if app_version != CURRENT_CLIENT_VERSION:
+        if not uses_current_contract(app_version):
             course_banners = [
                 banner for banner in course_banners
                 if banner not in CURRENT_ONLY_BANNERS
@@ -639,7 +629,7 @@ class UserInfo(User):
         return {
             "is_aprilfools": Config.IS_APRILFOOLS,
             "curr_available_maps": self.curr_available_maps_list,
-            "character_stats": character_stats,
+            "character_stats": [x.to_dict() for x in character_objects],
             "friends": friends,
             "settings": {
                 "favorite_character": favorite_character_id,
@@ -655,7 +645,7 @@ class UserInfo(User):
             "frag": self.fragment,
             "fragment": self.fragment,
             "fragments": self.fragment,
-            "character": self.character.character_id,
+            "character": character_id,
             "is_locked_name_duplicate": False,
             "is_skill_sealed": self.is_skill_sealed,
             "current_map": self.current_map.map_id,
@@ -686,7 +676,8 @@ class UserInfo(User):
             # 'custom_banner': 'online_banner_2024_06',
             'custom_banner': custom_banner,
             'is_profile_public': self.is_profile_public,
-            'showcase_characters': self.showcase_characters,
+            'showcase_characters': [character_id if character_visible_for_app_version(character_id, app_version) else -1
+                                    for character_id in self.showcase_characters],
             # 'subscription_multiplier': 114,
             # 'memory_boost_ticket': 5,
             'insight_state': self.insight_state,  # 0~2 不可选，3 技能激活，4 未激活，5 激活可选，6 未激活可选

@@ -3,8 +3,10 @@ import base64
 import hashlib
 import json
 import re
+import shlex
 import unicodedata
 
+PACKAGE_VERSIONS = {'akai.arc.lmao': '7.0.255', 'akai.arc.lmao.staging': '7.1.0'}
 CLASSES = {'pst': 0, 'prs': 1, 'ftr': 2, 'byd': 3, 'etr': 4}
 ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
 LEVEL = re.compile(r'(?:[0-9]|1[0-2])\+?\Z')
@@ -27,31 +29,50 @@ def text_values(value):
     return []
 
 
-def read_file(adb, deadline, key):
+def read_file(adb, deadline, key, package='akai.arc.lmao'):
+    if not isinstance(package, str) or package not in PACKAGE_VERSIONS:
+        raise ValueError('Unsupported catalogue package.')
     path, limit = FILES[key]
     # Control/status uses shell v2. Raw file bytes use exec-out without a shell,
     # avoiding the trailing newline introduced by this device's shell channel.
     parents = path.split('/')[:-1]
     checks = ['test -d ' + '/'.join(parents[:n]) + ' && test ! -L ' + '/'.join(parents[:n])
               for n in range(1, len(parents) + 1)]
-    adb.shell(' && '.join(checks + [f'test -f {path}', f'test ! -L {path}']), deadline)
-    data = adb.call(['exec-out', 'run-as', 'akai.arc.lmao', 'head', '-c', str(limit + 1), path], deadline.remaining()).stdout
+    script = ' && '.join(checks + [f'test -f {path}', f'test ! -L {path}'])
+    adb.call(['shell', '-T', 'run-as', package, 'sh', '-c', shlex.quote(script)], deadline.remaining())
+    data = adb.call(['exec-out', 'run-as', package, 'head', '-c', str(limit + 1), path], deadline.remaining()).stdout
     if not data or len(data) > limit:
         raise ValueError('Catalogue file is missing or exceeds its size limit.')
     return data
 
 
-def load(adb, deadline):
-    raw_meta = read_file(adb, deadline, 'meta')
+def bundle_version_pattern(package, application_version=None):
+    if not isinstance(package, str) or package not in PACKAGE_VERSIONS:
+        raise ValueError('Unsupported catalogue package.')
+    if application_version is None:
+        application_version = PACKAGE_VERSIONS[package]
+    allowed = ('7.0.255', '7.1.0') if package == 'akai.arc.lmao' else ('7.1.0',)
+    if not isinstance(application_version, str) or application_version not in allowed:
+        raise ValueError('Unsupported catalogue application version for this package.')
+    return r'7\.1\.0\.[1-9][0-9]{0,8}' if application_version == '7.1.0' else r'7\.0\.255\.[0-9]{1,9}'
+
+
+def load(adb, deadline, package='akai.arc.lmao', *, application_version=None):
+    if not isinstance(package, str) or package not in PACKAGE_VERSIONS:
+        raise ValueError('Unsupported catalogue package.')
+    version_pattern = bundle_version_pattern(package, application_version)
+    if application_version is None:
+        application_version = PACKAGE_VERSIONS[package]
+    raw_meta = read_file(adb, deadline, 'meta', package=package)
     meta = json.loads(raw_meta)
-    if (not isinstance(meta, dict) or meta.get('applicationVersionNumber') != '7.0.255' or
+    if (not isinstance(meta, dict) or meta.get('applicationVersionNumber') != application_version or
             not isinstance(meta.get('versionNumber'), str) or
-            not re.fullmatch(r'7\.0\.255\.[0-9]+', meta['versionNumber']) or
+            not re.fullmatch(version_pattern, meta['versionNumber']) or
             not isinstance(meta.get('pathToHash'), dict)):
-        raise ValueError('The installed catalogue manifest is not a supported 7.0.255 bundle.')
+        raise ValueError(f'The installed catalogue manifest is not a supported {application_version} bundle.')
     hashes, objects = {}, {}
     for key, asset in (('songs', 'songs/songlist'), ('packs', 'songs/packlist')):
-        raw = read_file(adb, deadline, key)
+        raw = read_file(adb, deadline, key, package=package)
         expected = meta['pathToHash'].get(asset)
         if not isinstance(expected, str) or len(expected) != 44:
             raise ValueError('Catalogue hash is missing from the active manifest.')
@@ -60,7 +81,7 @@ def load(adb, deadline):
             raise ValueError('Catalogue bytes do not match the active manifest; wait for the bundle transaction.')
         hashes[asset] = digest.hex()
         objects[key] = json.loads(raw.decode('utf-8-sig'))
-    if read_file(adb, deadline, 'meta') != raw_meta:
+    if read_file(adb, deadline, 'meta', package=package) != raw_meta:
         raise ValueError('The active content manifest changed during the query.')
     if not all(isinstance(value, dict) for value in objects.values()):
         raise ValueError('Invalid catalogue document shape.')

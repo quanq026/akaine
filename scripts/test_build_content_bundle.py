@@ -7,6 +7,9 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+
+import build_content_bundle as builder
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,7 +57,7 @@ class ContentBundleBuilderTests(unittest.TestCase):
                 ).decode("ascii")
         manifest = {
             "added": rows,
-            "applicationVersionNumber": "7.0.255",
+            "applicationVersionNumber": "7.1.0",
             "generatedUnixTimestamp": 1,
             "pathToDetails": details,
             "pathToHash": path_hashes,
@@ -62,7 +65,7 @@ class ContentBundleBuilderTests(unittest.TestCase):
             "removed": [],
             "totalPartitions": 2,
             "uuid": "source00",
-            "versionNumber": "7.0.255.1",
+            "versionNumber": "7.1.0.1",
         }
         (source / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
         for index, data in enumerate(parts):
@@ -91,7 +94,7 @@ class ContentBundleBuilderTests(unittest.TestCase):
                 "--alias",
                 "guide-test",
                 "--version",
-                "7.0.255.2",
+                "7.1.0.2",
                 "--detail-key-file",
                 str(root / "detail.key"),
                 "--max-part-bytes",
@@ -111,8 +114,8 @@ class ContentBundleBuilderTests(unittest.TestCase):
             output = root / "output"
             manifest = json.loads((output / "guide-test.json").read_text())
             ready = json.loads((output / "ready-manifest.json").read_text())
-            self.assertEqual(manifest["applicationVersionNumber"], "7.0.255")
-            self.assertEqual(manifest["versionNumber"], "7.0.255.2")
+            self.assertEqual(manifest["applicationVersionNumber"], "7.1.0")
+            self.assertEqual(manifest["versionNumber"], "7.1.0.2")
             self.assertIsNone(manifest["previousVersionNumber"])
             self.assertEqual(manifest["totalPartitions"], 2)
             self.assertEqual({row["path"] for row in manifest["added"]}, {
@@ -120,6 +123,23 @@ class ContentBundleBuilderTests(unittest.TestCase):
             })
             self.assertEqual(ready["status"], "ready")
             self.assertTrue(ready["artifact_verified"])
+
+    def test_rejects_versions_outside_the_native_7_1_contract(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for version in ('7.0.255.2', '7.1.0.0', '7.1.0.01', '7.1.0.x', '7.1.0.1000000000'):
+                args = SimpleNamespace(source=root, output=root / 'out', alias='test', version=version)
+                with self.subTest(version=version), self.assertRaisesRegex(ValueError, 'bundle-version-must'):
+                    builder.build(args)
+
+    def test_rejects_catalogues_exceeding_the_native_pack_capacity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            songlist, packlist = root / 'songlist', root / 'packlist'
+            songlist.write_text(json.dumps({'songs': [{'id': 'song', 'set': 'pack0'}]}))
+            packlist.write_text(json.dumps({'packs': [{'id': 'pack' + str(i)} for i in range(101)]}))
+            with self.assertRaisesRegex(ValueError, 'native-capacity'):
+                builder.validate_catalog(root, {}, {'songs/songlist': songlist, 'songs/packlist': packlist})
 
     def test_rejects_a_song_that_references_a_missing_pack(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -144,7 +164,7 @@ class ContentBundleBuilderTests(unittest.TestCase):
                     "--alias",
                     "guide-test",
                     "--version",
-                    "7.0.255.2",
+                    "7.1.0.2",
                     "--detail-key-file",
                     str(root / "detail.key"),
                 ],

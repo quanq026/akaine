@@ -1,0 +1,23 @@
+{
+  "schema": "akaine.native-7.1-production-overlay.v1",
+  "application_version": "7.1.0",
+  "version_code": 1209907,
+  "architecture": "arm64-v8a",
+  "environment": "production",
+  "package": "akai.arc.lmao",
+  "base_plan_sha256": "f0d98bebc71b0a70d0b12c0cc67f174f36901237641cb8a126805bd3bf1881ec",
+  "routes": {
+    "login": "https://auth.akai.id.vn/auth/login",
+    "aggregate": "https://arcapi-v3.akai.id.vn/compose/aggregate?calls=",
+    "bundle": "https://arcapi-v3.akai.id.vn/game/content_bundle",
+    "shared": "https://arcapi-v3.akai.id.vn/"
+  },
+  "shared_after_sha256": "27f4952e9d56c2242271d05f5ed4ea4f0f4438096e7442c2b67697195fca7e7f",
+  "route_section": {
+    "bytes": 242,
+    "sha256": "3ad7385f3a50346eb901a99090358be644b453cf0f1ef3c8d6b298eacf4a1b1c"
+  },
+  "output_sha256_by_features": {
+    "classic+cli+downloads+menu+mod+packs+replay+routes+skill": "5657e85d98b36d49aa02e9f3098cf52e1503ab892650a0944a6832e0280bf780"
+  }
+}

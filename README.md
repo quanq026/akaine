@@ -4,9 +4,9 @@ English | [Tiếng Việt](README.vi.md)
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Release V36" src="https://img.shields.io/badge/Release-V36-A63B52?style=flat"></a>
-  <a href="docs/guide/06-build-android-client.md"><img alt="Arcaea 7.0.255" src="https://img.shields.io/badge/Arcaea-7.0.255-547EA8?style=flat"></a>
-  <a href="https://github.com/quanq026/akaine/releases/latest"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
+  <a href="https://discord.gg/9BBXhX7DkN"><img alt="Join Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
+  <a href="docs/guide/06-build-android-client.md"><img alt="Arcaea 7.1.0" src="https://img.shields.io/badge/Arcaea-7.1.0-547EA8?style=flat"></a>
+  <a href="docs/guide/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python and C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
   <a href="README.vi.md"><img alt="Documentation in English and Vietnamese" src="https://img.shields.io/badge/Docs-EN%20%2F%20VI-547EA8?style=flat"></a>
@@ -15,18 +15,18 @@ English | [Tiếng Việt](README.vi.md)
 </p>
 
 <p align="center">
-  <strong><a href="https://github.com/quanq026/akaine/releases/latest">Download APK</a></strong> ·
+  <strong><a href="docs/guide/06-build-android-client.md">Build the client</a></strong> ·
   <a href="docs/guide/README.md">Start the guide</a> ·
   <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
 
 Akaine is a setup guide and public source repository for a server and Android
-client based on Arcaea 7.0.255. The guide starts with a clean Windows computer
+client based on Arcaea 7.1.0. The guide starts with a clean Windows computer
 and a new cloud account. You do not need previous experience with Linux,
 Cloudflare or Android builds.
 
-The guide and public client patches target only version `7.0.255` with version
-code `1209852`. Older and newer Arcaea releases use different files and native
+The guide and public client patches target only version `7.1.0` with version
+code `1209907`. Older and newer Arcaea releases use different files and native
 offsets, so they are outside this repository's instructions.
 
 The repository contains the guide, server and build tools. Download the
@@ -34,6 +34,7 @@ original client from APKPure; matching content and chart-key inputs are
 supplied separately when the guide needs them.
 
 Discord: kuan.026 if you have any questions!
+
 ## Features
 
 ### Server
@@ -89,11 +90,14 @@ By the end of the guide, you will have:
 - a domain protected by Cloudflare
 - a private-server API reachable over HTTPS
 - a private resource store for bundles and song files
-- a V36 Android client built from the original APKPure package
+- an Android client built from the original APKPure package with the current 7.1 patches
 - a Discord bot for accounts and score tools
 - a backup and recovery routine
 
-![Akaine 7.0.255 platform overview](docs/images/akaine-platform-overview.svg)
+The client uses the included Akaine production hosts. Your own hostname needs
+a separately verified route patch; see [chapter 6](docs/guide/06-build-android-client.md).
+
+![Akaine 7.1.0 platform overview](docs/images/akaine-platform-overview.svg)
 
 ## Before you start
 
@@ -127,7 +131,7 @@ the installation to another VPS provider.
 4. [Get and verify the private resource kit](docs/guide/04-private-resources.md).
 5. [Configure R2](docs/guide/05-cloudflare-content.md), [install the game server](docs/guide/05a-install-game-server.md), [run the optional Discord bot](docs/guide/05b-discord-bot.md), and [set up backups](docs/guide/05c-backup-recovery.md).
 6. [Build, sign and test the Android client](docs/guide/06-build-android-client.md).
-7. [Build, verify and release a 7.0.255 content bundle](docs/guide/07-build-release-content-bundle.md).
+7. [Build, verify and release a 7.1.0 content bundle](docs/guide/07-build-release-content-bundle.md).
 8. [Learn from the failures encountered while building Akaine](docs/guide/08-lessons-and-failures.md).
 9. [Add a fan chart and place it in a pack](docs/guide/09-add-fan-chart.md).
 

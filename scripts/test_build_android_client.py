@@ -14,27 +14,20 @@ def digest(path: Path) -> str:
 
 
 class AndroidClientBuilderTests(unittest.TestCase):
-    def test_published_native_plan_is_well_formed(self):
-        plan_path = (
-            Path(__file__).resolve().parents[1]
-            / "patches"
-            / "arcaea-7.0.255-arm64"
-            / "native-plan.json"
-        )
-        plan = build_android_client.load_plan(plan_path)
-        self.assertEqual(len(plan["binary_patches"]), 2)
-        self.assertEqual(
-            sum(len(row["operations"]) for row in plan["binary_patches"]),
-            61,
-        )
-        labels = {
-            operation["label"]
-            for row in plan["binary_patches"]
-            for operation in row["operations"]
-        }
-        self.assertTrue(any("production-shared-api-base" in label for label in labels))
+    def test_published_native_profile_binds_exact_7_1_production(self):
+        root = Path(__file__).resolve().parents[1]
+        native = build_android_client.load_patch_module('native71_test', root / 'patches/arcaea-7.1.0-arm64/native.py')
+        profile = json.loads((root / 'patches/arcaea-7.1.0-arm64/production-profile.json').read_bytes())
+        plan = native.load_plan(environment='production')
+        self.assertEqual(native.identity(profile), 'production')
+        self.assertEqual(profile['version_code'], 1209907)
+        self.assertEqual(profile['package'], 'akai.arc.lmao')
+        self.assertEqual(plan['routes'], profile['routes'])
+        features = native.requested_features(profile, plan, {'reviewed_modules': ['mod','packs','cli','skill','replay','menu']})
+        self.assertEqual(set(features), {'routes','classic','mod','packs','downloads','cli','skill','replay','menu'})
+        self.assertIn('+'.join(sorted(features)), plan['output_sha256_by_features'])
 
-    def test_guide_uses_current_v36_source_build(self):
+    def test_guide_uses_current_7_1_source_build(self):
         root = Path(__file__).resolve().parents[1]
         guide = (root / "docs/guide/06-build-android-client.md").read_text(
             encoding="utf-8"
@@ -128,14 +121,14 @@ class AndroidClientBuilderTests(unittest.TestCase):
                 self.assertEqual(arguments[:3], [str(root / 'java.exe'), '-Dfile.encoding=UTF-8', '-jar'])
                 self.assertIn('owner&release', arguments)
                 self.assertNotIn('test-only-store', arguments)
-                self.assertEqual(kwargs['input'], 'test-only-store-việt\ntest-only-key\n'.encode())
-                shutil.copy2(root / 'aligned.apk', root / 'Akaine-V36.apk')
+                self.assertEqual(kwargs['input'], 'test-only-store-viá»‡t\ntest-only-key\n'.encode())
+                shutil.copy2(root / 'aligned.apk', root / 'Akaine-7.1.0.apk')
                 return SimpleNamespace(returncode=0)
             with patch.object(build_android_client, 'run_tool', side_effect=run), \
                  patch.object(build_android_client.subprocess, 'run', side_effect=sign), \
-                 patch.object(build_android_client.getpass, 'getpass', side_effect=['test-only-store-việt', 'test-only-key']):
+                 patch.object(build_android_client.getpass, 'getpass', side_effect=['test-only-store-viá»‡t', 'test-only-key']):
                 result = build_android_client.sign_apk(root, root, root / 'operator.p12', 'owner&release', root / 'java.exe')
-            self.assertEqual(result.name, 'Akaine-V36.apk')
+            self.assertEqual(result.name, 'Akaine-7.1.0.apk')
 
     def test_rejects_wrong_source_hash(self):
         with tempfile.TemporaryDirectory() as directory:

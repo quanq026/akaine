@@ -5,13 +5,16 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
+from core.client_compat import uses_current_contract
+
 
 SOURCE = Path(__file__).resolve().parents[1] / 'server/user.py'
 
 
 def route_namespace(source, dynamic, app_version, full_unlock, worlds):
     tree = ast.parse(source.read_bytes())
-    namespace = {'CLIENT_PACK_PROJECTION_APP_VERSION': '7.0.255',
+    namespace = {'uses_current_contract': uses_current_contract,
+                 'CLIENT_PACK_PROJECTION_APP_VERSION': '7.0.255',
                  'CLIENT_PACK_PROJECTION_7_0_255': ('legacy-base', 'legacy-fan'),
                  'Config': SimpleNamespace(WORLD_SONG_FULL_UNLOCK=full_unlock),
                  'request': SimpleNamespace(headers={'AppVersion': app_version}),

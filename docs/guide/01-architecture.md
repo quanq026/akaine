@@ -9,7 +9,7 @@ appear throughout the setup instructions.
 ### 1. Android client
 
 This is the game application installed on a phone or emulator. This guide uses
-the arm64 build of Arcaea `7.0.255` (`1209852`) throughout. The client displays
+the arm64 build of Arcaea `7.1.0` (`1209907`) throughout. The client displays
 the menus, plays music and charts, and sends login or score requests to your
 server. It must be configured to use your domain instead of somebody else's
 server.
@@ -67,7 +67,7 @@ Other repeated terms:
 
 | Term | Meaning |
 | --- | --- |
-| App version | Android client version. This repository supports `7.0.255`. |
+| App version | Android client version. This repository supports `7.1.0`. |
 | Content version | Version of the downloadable bundle. It changes without changing the APK. |
 | Bundle | Manifest plus partition files containing catalogues and selector resources. |
 | Remote song | A song whose playable files are requested after the bundle is installed. |

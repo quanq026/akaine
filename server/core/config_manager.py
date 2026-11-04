@@ -17,6 +17,7 @@ class Config:
     OLD_GAME_API_PREFIX = []  # str | list[str]
 
     ALLOW_APPVERSION = []  # list[str]
+    CLIENT_7_1_ENABLED = False
 
     BUNDLE_STRICT_MODE = True
     BUNDLE_ASSETSET_PROFILES_ENABLED = False
@@ -28,12 +29,18 @@ class Config:
     DYNAMIC_CLIENT_PACKLIST_PATH = './database/client_catalogs/7.0.255/packlist'
     DYNAMIC_CLIENT_PACKLIST_SHA256 = ''
     DYNAMIC_CLIENT_CATALOG_EPOCH = ''
+    DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED = False
+    DYNAMIC_CLIENT_7_1_PACKLIST_PATH = ''
+    DYNAMIC_CLIENT_7_1_PACKLIST_SHA256 = ''
+    DYNAMIC_CLIENT_7_1_CATALOG_EPOCH = ''
     DYNAMIC_CLIENT_HIDDEN_PACK_IDS = []
     DYNAMIC_PACK_ENTITLEMENT_EXPANSIONS = {}
     # When set, only a client with no content bundle receives this root bundle.
     # Every non-empty client bundle version receives no content bundle result.
     FRESH_INSTALL_ONLY_BUNDLE_VERSION = ''
     FRESH_INSTALL_DEVICE_BUNDLE_OVERRIDES = {}
+    FRESH_INSTALL_APP_BUNDLE_OVERRIDES = {}
+    BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES = {}
 
     SET_LINKPLAY_SERVER_AS_SUB_PROCESS = True
 
@@ -62,6 +69,7 @@ class Config:
 
     DOWNLOAD_LINK_PREFIX = ''  # http(s)://host(:port)/download/
     DOWNLOAD_LINK_PREFIX_7_0_255 = ''
+    DOWNLOAD_LINK_PREFIX_7_1_0 = ''
     BUNDLE_DOWNLOAD_LINK_PREFIX = ''  # http(s)://host(:port)/bundle_download/
 
     ASSET_SIGNING_ENABLED = False
@@ -69,6 +77,7 @@ class Config:
     ASSET_SIGNING_SECRET = ''
     ASSET_SIGNING_PROTECT_ALL_SONGS = False
     ASSET_SIGNING_SONG_IDS = []  # list[str]
+    ASSET_SIGNING_SONG_ALIASES = {}
     ASSET_SIGNED_TTL_AUDIO = 1800
     ASSET_SIGNED_TTL_CHART = 600
 

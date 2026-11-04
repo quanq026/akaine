@@ -7,6 +7,7 @@ from time import time
 from flask import url_for
 
 from .config_manager import Config
+from .client_compat import uses_current_contract
 from .constant import Constant
 from .error import NoAccess, NoData, RateLimit
 from .limiter import ArcLimiter
@@ -229,7 +230,8 @@ class BundleParser:
         specs = {}
         if (getattr(Config, 'BUNDLE_ASSETSET_PROFILES_ENABLED', False)
                 and (Config.BUNDLE_STRICT_MODE or getattr(Config, 'FRESH_INSTALL_ONLY_BUNDLE_VERSION', '')
-                     or getattr(Config, 'FRESH_INSTALL_DEVICE_BUNDLE_OVERRIDES', {}))):
+                     or getattr(Config, 'FRESH_INSTALL_DEVICE_BUNDLE_OVERRIDES', {})
+                     or getattr(Config, 'FRESH_INSTALL_APP_BUNDLE_OVERRIDES', {}))):
             raise ValueError('Asset profiles conflict with strict or fresh-install bundle controls')
         devices = getattr(Config, 'BUNDLE_ASSETSET_PROFILE_DEVICES', [])
         if devices is not None and (not isinstance(devices, (list, tuple))
@@ -298,6 +300,7 @@ class BundleParser:
 
     @staticmethod
     def resolve_compat_app_version(app_ver: str) -> str:
+        uses_current_contract(app_ver)
         # Temporary compatibility for Akaine PS 6.15.0 while the live
         # content remains on the current 6.14.11 fan bundle line.
         # Also map 6.14.12 (sideloaded IPA) to 6.14.11 bundle line.
@@ -322,7 +325,9 @@ class BundleParser:
         device_bundle_version = (
             overrides.get(device_id, '')
             if isinstance(overrides, dict) and device_id else '')
-        fresh_bundle_version = device_bundle_version or getattr(
+        app_overrides = getattr(Config, 'FRESH_INSTALL_APP_BUNDLE_OVERRIDES', {})
+        app_bundle_version = app_overrides.get(app_ver, '') if isinstance(app_overrides, dict) else ''
+        fresh_bundle_version = device_bundle_version or app_bundle_version or getattr(
             Config, 'FRESH_INSTALL_ONLY_BUNDLE_VERSION', '')
         if fresh_bundle_version:
             client_version = b_ver if b_ver else '0.0.0'
@@ -334,6 +339,9 @@ class BundleParser:
                 raise NoData(
                     f'Fresh-install bundle is unavailable: {fresh_bundle_version}',
                     status=404)
+            if (app_ver == '7.1.0' or fresh_bundle.app_version == '7.1.0'
+                    or app_bundle_version) and fresh_bundle.app_version != app_ver:
+                raise NoData('Fresh-install bundle does not match the client profile.', status=404)
             return [fresh_bundle]
         if Config.BUNDLE_STRICT_MODE:
             return BundleParser.bundles.get(app_ver, [])
@@ -391,11 +399,12 @@ class BundleDownload:
 
     def set_client_info(self, app_version: str, bundle_version: str, device_id: str = None, assetset: str = None) -> None:
         self.client_app_version = app_version
-        self.client_bundle_version = bundle_version
+        self.client_bundle_version = bundle_version or '0.0.0'
         self.device_id = device_id
         self.assetset = assetset if isinstance(assetset, str) and re.fullmatch('[0-9a-f]{64}', assetset) else None
 
     def get_bundle_list(self) -> list:
+        uses_current_contract(self.client_app_version)
         bundles: 'list[ContentBundle]' = BundleParser.get_bundles(
             self.client_app_version, self.client_bundle_version, self.device_id, self.assetset)
 
@@ -404,8 +413,12 @@ class BundleDownload:
 
         now = time()
 
-        if Constant.BUNDLE_DOWNLOAD_LINK_PREFIX:
-            prefix = Constant.BUNDLE_DOWNLOAD_LINK_PREFIX
+        prefix_overrides = getattr(Config, 'BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES', {})
+        prefix = (prefix_overrides.get(self.client_app_version, Constant.BUNDLE_DOWNLOAD_LINK_PREFIX)
+                  if isinstance(prefix_overrides, dict) else Constant.BUNDLE_DOWNLOAD_LINK_PREFIX)
+        if not isinstance(prefix, str):
+            raise NoData('Invalid bundle download prefix for client profile.', status=503)
+        if prefix:
             if prefix[-1] != '/':
                 prefix += '/'
 
@@ -421,7 +434,7 @@ class BundleDownload:
                 continue
             part_paths = x.bundle_paths if x.bundle_paths else [x.bundle_path]
 
-            if Constant.BUNDLE_DOWNLOAD_LINK_PREFIX:
+            if prefix:
                 x.json_url = url_func(x.json_path)
                 x.bundle_urls = [url_func(path) for path in part_paths]
             else:
@@ -441,7 +454,7 @@ class BundleDownload:
                 bundle_dict['appVersion'] = '6.15.0'
             r.append(bundle_dict)
 
-        if not Constant.BUNDLE_DOWNLOAD_LINK_PREFIX:
+        if not prefix:
             if not sql_list:
                 return []
 

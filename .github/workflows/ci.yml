@@ -31,7 +31,7 @@ jobs:
       - run: python scripts/test_vietnamese_guide.py
       - name: Run reproducible server and bot tests
         working-directory: server
-        run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tests.test_content_bundle_cache tools.test_discord_bot
+        run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tests.test_content_bundle_cache tests.test_bundle_profiles tests.test_client_7_1 tests.test_content_projection_parity tests.test_diein_world_projection tools.test_discord_bot
 
   b30-web-tool:
     runs-on: ubuntu-latest

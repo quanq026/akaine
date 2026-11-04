@@ -1,11 +1,11 @@
 # Add a fan chart and place it in a pack
 
 This chapter follows one fan chart from a source folder to a downloadable,
-playable and score-enabled song in Akaine 7.0.255. It also explains how to
+playable and score-enabled song in Akaine 7.1.0. It also explains how to
 create a visible pack. Perform the first import on staging and use files you
 have permission to host.
 
-Complete chapters 3 through 7 first. You need the working 7.0.255 client, its
+Complete chapters 3 through 7 first. You need the working 7.1.0 client, its
 matching AKFC public key, the verified full-root bundle source, R2 upload
 access, a staging server and a test account.
 
@@ -69,20 +69,20 @@ produce a missing or unclickable BYD tile.
 
 ## Decide whether a new pack is necessary
 
-V36 supports a dynamic pack catalogue when the server enables and validates
-the matching profile. Older clients retain the legacy response limited to
-62 pack entitlements. Do not apply that legacy slot count to V36, and do not
-enable the dynamic response for a client that lacks its native support.
+The 7.1 client supports a dynamic pack catalogue when the server enables and
+validates its matching profile. Its current native storage accepts up to 100
+pack IDs. Legacy fixed responses retain their separate 62-entry limit. Do not
+raise that old slot count or enable a dynamic response for an unsupported client.
 
 Reusing `xd_fan_album` is the smallest change when another collection is not
-needed. A new V36 pack requires all of these changes:
+needed. A new pack requires all of these changes:
 
 1. add the pack object to bundle `packlist`;
 2. add its selector cover to the bundle;
 3. assign at least one song to the pack;
 4. add the pack to the server's custom/free entitlement configuration;
 5. pin the exact final `packlist` bytes and epoch in the dynamic server profile;
-6. validate the catalogue and test actual pack ownership and navigation in V36.
+6. validate the catalogue and test actual pack ownership and navigation in the 7.1 client.
 
 Do not remove an official pack merely to make room. If you also support legacy
 clients, test their separate response within its 62-entry limit.
@@ -145,6 +145,13 @@ Open the AFF in a text editor. It must contain an `AudioOffset:` line, a line
 with `-`, timing data and actual chart events. A tiny placeholder or metadata
 file renamed to `.aff` is not a playable chart.
 
+The WAV sample allowlist is generated from `songlist.additional_files` when
+the APK is built. A native chart introducing new `.wav` files therefore needs
+an APK rebuild with the updated native songlist as well as the matching
+download metadata and files. Updating only the bundle does not extend that
+compiled allowlist. Extra ArcCreate runtime or scene-control features need
+separate compatibility work; an AFF file alone does not establish support.
+
 Install FFmpeg once if `ffprobe` is unavailable:
 
 ```powershell
@@ -166,8 +173,8 @@ if ($LASTEXITCODE -ne 0) { throw "The source audio could not be decoded." }
 ```
 
 The codec should be Vorbis, with a positive duration. MP3 bytes renamed to
-`.ogg`, attached video or broken timestamps should be normalized in the next
-step.
+`.ogg`, attached video or broken timestamps need a compatible replacement
+from the author or an explicitly approved conversion in step 6.
 
 ## Step 3: choose stable IDs and an unused index
 
@@ -243,7 +250,7 @@ it when another object precedes it:
 `id` is the internal relationship key. `name_localized` and
 `description_localized` are displayed to the player. `custom_banner` tells the
 selector to use the custom pack image. `section: variety` places the pack with
-the Variety group. V36's existing Mod bridge projects `xd_fan_album` into Mod;
+the Variety group. The existing Mod bridge projects `xd_fan_album` into Mod;
 that does not make arbitrary new pack IDs or a `section: mod` field supported.
 Use the existing fan pack for Mod placement unless you implement and verify
 the corresponding native category mapping for a new pack.
@@ -298,7 +305,7 @@ invent the other four difficulties:
   "side": 0,
   "bg": "base_light",
   "date": 1789491600,
-  "version": "7.0",
+  "version": "7.1",
   "remote_dl": true,
   "world_unlock": false,
   "difficulties": [
@@ -342,45 +349,91 @@ $addedSong = @($editedSonglist.songs | Where-Object id -eq $songId)
 if ($addedSong.Count -ne 1 -or $addedSong[0].set -ne $packId) { throw "Song-to-pack relationship is invalid." }
 ```
 
-## Step 6: normalize audio and create the preview
+## Step 6: preserve gameplay audio and select a preview
 
-Create one clean Vorbis file for gameplay:
+For compatible Vorbis OGG, copy the author's file without changing its sample
+rate, channels, bitrate or timestamps. The hash check proves the gameplay copy
+is byte-identical:
 
 ```powershell
 $audio = Join-Path $protected "base.ogg"
-ffmpeg -hide_banner -y -fflags +genpts -i $audioSource.FullName `
-  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
-  -af "aresample=async=1:first_pts=0,asetpts=N/SR/TB" `
-  -c:a libvorbis -ar 44100 -ac 2 -q:a 4 $audio
-if ($LASTEXITCODE -ne 0) { throw "Gameplay audio normalization failed." }
+$audioInfoRaw = ffprobe -v error -show_entries format=format_name,duration:stream=codec_type,codec_name `
+  -of json $audioSource.FullName
+if ($LASTEXITCODE -ne 0) { throw "Source audio could not be read." }
+$audioInfo = $audioInfoRaw | ConvertFrom-Json
+if ($audioInfo.format.format_name -ne "ogg" -or @($audioInfo.streams).Count -ne 1 -or
+    $audioInfo.streams[0].codec_name -ne "vorbis" -or [double]$audioInfo.format.duration -le 0) {
+  throw "Obtain compatible Vorbis OGG from the author, or review the optional conversion section."
+}
+if (Test-Path -LiteralPath $audio) { throw "Gameplay output already exists; inspect it before continuing." }
+Copy-Item -LiteralPath $audioSource.FullName -Destination $audio
+if ((Get-FileHash -Algorithm SHA256 -LiteralPath $audio).Hash -ne
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $audioSource.FullName).Hash) {
+  throw "Gameplay audio copy changed bytes."
+}
 ```
 
-`-map 0:a:0` selects the first audio stream. The `-vn/-sn/-dn` flags remove
-video, subtitles and data. The audio filter rebuilds timestamps from zero.
-The final options produce stereo 44.1 kHz Vorbis.
+### Only if the source is incompatible and a conversion is approved
 
-Create a 20-second selector preview matching the example's 30–50 second
-window:
+Skip this section for valid Vorbis OGG. Prefer a corrected file supplied by the
+author. Conversion re-encodes audio, can reduce quality and can alter timing;
+it is not a size optimization for an already compatible file. Run this optional
+block only after deciding to accept those changes. It writes a new file and
+never overwrites the source:
+
+```powershell
+$convertedAudio = Join-Path $work "base-converted.ogg"
+ffmpeg -hide_banner -n -fflags +genpts -i $audioSource.FullName `
+  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
+  -af "aresample=async=1:first_pts=0,asetpts=N/SR/TB" `
+  -c:a libvorbis -ar 44100 -ac 2 -q:a 8 $convertedAudio
+if ($LASTEXITCODE -ne 0) { throw "Optional audio conversion failed." }
+$audioSource = Get-Item -LiteralPath $convertedAudio
+```
+
+Return to the copy/check block above with this replacement `$audioSource`.
+Listen and verify timing on staging before publishing it.
+
+### Keep the author's preview when supplied
+
+The following block copies an existing Vorbis `preview.ogg` without changing
+bytes. Only when the author supplied no preview does it create a new derived
+20-second excerpt for the example's 30–50 second window. This new preview is
+separate from the unchanged gameplay audio; no original asset is overwritten.
 
 ```powershell
 $preview = Join-Path $work "preview.ogg"
-ffmpeg -hide_banner -y -ss 30 -t 20 -i $audio `
-  -map 0:a:0 -vn -sn -dn -map_metadata -1 `
-  -c:a libvorbis -ar 44100 -ac 2 -q:a 3 $preview
-if ($LASTEXITCODE -ne 0) { throw "Preview generation failed." }
-
+$authorPreview = Join-Path $source "preview.ogg"
+if (Test-Path -LiteralPath $preview) { throw "Preview output already exists; do not overwrite it." }
+if (Test-Path -LiteralPath $authorPreview) {
+  $previewCodec = ffprobe -v error -select_streams a:0 -show_entries stream=codec_name `
+    -of default=noprint_wrappers=1:nokey=1 $authorPreview
+  if ($LASTEXITCODE -ne 0 -or $previewCodec -ne "vorbis") { throw "Author preview is not compatible Vorbis audio." }
+  Copy-Item -LiteralPath $authorPreview -Destination $preview
+  if ((Get-FileHash -Algorithm SHA256 -LiteralPath $preview).Hash -ne
+      (Get-FileHash -Algorithm SHA256 -LiteralPath $authorPreview).Hash) {
+    throw "Author preview copy changed bytes."
+  }
+} else {
+  ffmpeg -hide_banner -n -ss 30 -t 20 -i $audio `
+    -map 0:a:0 -vn -sn -dn -map_metadata -1 `
+    -c:a libvorbis -ar 44100 -ac 2 -q:a 8 $preview
+  if ($LASTEXITCODE -ne 0) { throw "New preview generation failed." }
+}
 ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 $preview
+if ($LASTEXITCODE -ne 0) { throw "Preview could not be read." }
 ```
 
-If you choose a different preview window, update both `audioPreview` and
-`audioPreviewEnd` in `songlist`. Listen to the output before continuing.
+Use the author's preview window in `audioPreview` and `audioPreviewEnd` when
+copying their preview. For a generated excerpt, set those values to the chosen
+window. Listen to the preview before continuing.
 
-## Step 7: prepare jackets and selector folders
+## Step 7: preserve jackets and prepare selector folders
 
-Choose a square jacket image. The verified 1080 layout uses `768 x 768` for the
-large jacket and `384 x 384` for the `_256` variant. Use an image editor to
-crop the source to a square before resizing; do not stretch a rectangular
-image.
+The verified 1080 layout uses `768 x 768` for the large jacket and `384 x 384`
+for the `_256` variant. Copy valid author-supplied files without resizing or
+recompressing them. If dimensions do not match, obtain the correct variants
+from the author; do not automatically crop, stretch or downgrade the originals.
 
 Place the files in both selector paths for compatibility:
 
@@ -393,28 +446,39 @@ overlay/songs/dl_my_fan_song/1080_base_256.jpg
 overlay/songs/dl_my_fan_song/preview.ogg
 ```
 
-Create the folders and copy the prepared assets:
+Validate dimensions first, then copy the assets and compare their hashes:
 
 ```powershell
-$jacketLarge = Get-Item (Read-Host "Full path to the prepared 768x768 JPEG")
-$jacketSmall = Get-Item (Read-Host "Full path to the prepared 384x384 JPEG")
+$jacketLarge = Get-Item (Read-Host "Full path to the author's 768x768 JPEG")
+$jacketSmall = Get-Item (Read-Host "Full path to the author's 384x384 JPEG")
+& $python -c "from PIL import Image; import sys; expected=[(768,768),(384,384)]; actual=[Image.open(p).size for p in sys.argv[1:]]; assert actual==expected,(actual,expected); print(actual)" $jacketLarge.FullName $jacketSmall.FullName
+if ($LASTEXITCODE -ne 0) { throw "Jacket dimensions are invalid; obtain matching assets from the author." }
+
 $selectorA = Join-Path $overlaySongs $songId
 $selectorB = Join-Path $overlaySongs "dl_$songId"
 New-Item -ItemType Directory -Force $selectorA, $selectorB | Out-Null
-
-foreach ($folder in @($selectorA, $selectorB)) {
-  Copy-Item $jacketLarge.FullName (Join-Path $folder "1080_base.jpg")
-  Copy-Item $jacketSmall.FullName (Join-Path $folder "1080_base_256.jpg")
-  Copy-Item $preview (Join-Path $folder "preview.ogg")
+$selectorFiles = @{
+  "1080_base.jpg" = $jacketLarge.FullName
+  "1080_base_256.jpg" = $jacketSmall.FullName
+  "preview.ogg" = $preview
 }
-
-& $python -c "from PIL import Image; import sys; expected=[(768,768),(384,384)]; actual=[Image.open(p).size for p in sys.argv[1:]]; assert actual==expected,(actual,expected); print(actual)" $jacketLarge.FullName $jacketSmall.FullName
-if ($LASTEXITCODE -ne 0) { throw "Jacket dimensions are invalid." }
+foreach ($folder in @($selectorA, $selectorB)) {
+  foreach ($name in $selectorFiles.Keys) {
+    $destination = Join-Path $folder $name
+    if (Test-Path -LiteralPath $destination) { throw "Selector output already exists; do not overwrite it." }
+    Copy-Item -LiteralPath $selectorFiles[$name] -Destination $destination
+    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $destination).Hash -ne
+        (Get-FileHash -Algorithm SHA256 -LiteralPath $selectorFiles[$name]).Hash) {
+      throw "Selector asset copy changed bytes."
+    }
+  }
+}
 ```
 
-If a difficulty uses `audioOverride: true`, also create the matching
-`<ratingClass>_preview.ogg` in `songs/dl_<song_id>/`. It is separate from the
-downloadable `<ratingClass>.ogg`.
+If a difficulty uses `audioOverride: true`, use its matching supplied
+`<ratingClass>_preview.ogg` in `songs/dl_<song_id>/`, or generate a separate
+preview only when none was supplied. Keep the downloadable
+`<ratingClass>.ogg` unchanged when it is already compatible.
 
 ## Step 8: encrypt each AFF with AKFC
 
@@ -471,7 +535,7 @@ For the FTR example, add this member to `song_metadata.json`:
   ],
   "hashes": {
     "2.aff": "PLAINTEXT_AFF_MD5_FROM_AKFC_RECEIPT",
-    "base.ogg": "NORMALIZED_AUDIO_MD5"
+    "base.ogg": "GAMEPLAY_AUDIO_MD5"
   }
 }
 ```
@@ -556,11 +620,12 @@ FREE_PACKS = ["my_fan_pack"]
 CLIENT_PACK_LIMIT = 62  # Legacy clients only.
 
 DYNAMIC_PACKS_ENABLED = True
-DYNAMIC_PACKS_NATIVE_ACCEPTED = True
+CLIENT_7_1_ENABLED = True
+DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED = True
 DYNAMIC_PACKS_FULL_CATALOG = False
-DYNAMIC_CLIENT_PACKLIST_PATH = "./database/client_catalogs/7.0.255/packlist"
-DYNAMIC_CLIENT_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
-DYNAMIC_CLIENT_CATALOG_EPOCH = "my-fan-pack-v1"
+DYNAMIC_CLIENT_7_1_PACKLIST_PATH = "./database/client_catalogs/7.1.0/packlist"
+DYNAMIC_CLIENT_7_1_PACKLIST_SHA256 = "<verified-lowercase-packlist-sha256>"
+DYNAMIC_CLIENT_7_1_CATALOG_EPOCH = "my-fan-pack-v1"
 ```
 
 Preserve existing entries when the lists already contain other songs or packs.
@@ -570,12 +635,16 @@ fan packs.
 `FREE_PACKS` is the simplest staging entitlement: every account receives the
 pack without creating purchase rows.
 
-Enable this profile only after verifying the V36 client. It selects the
-dynamic representation for requests carrying `AppVersion: 7.0.255` and
+Enable this profile only after verifying the 7.1 client. It selects the
+dynamic representation for requests carrying `AppVersion: 7.1.0` and
 `Akaine-Packs: dynamic1`; a header does not grant ownership. Keep
 `DYNAMIC_PACKS_FULL_CATALOG` false unless granting the entire catalogue is an
 explicit policy. Do not edit the legacy `CLIENT_PACK_PROJECTION_7_0_255` tuple
-to add a V36 pack.
+to add a 7.1 pack. Keep any existing 7.0 catalogue fields separate.
+
+The setup in chapter 5a grants the whole catalogue for a fresh installation.
+This example sets that policy to false and grants only the listed packs.
+Choose the intended policy explicitly; a capability header is not ownership.
 
 Print the hash of the exact edited bundle packlist on Windows:
 
@@ -585,7 +654,7 @@ $packlistForServer = Get-Item (Join-Path $overlaySongs "packlist")
 ```
 
 Replace the hash placeholder in private config with that full lowercase value.
-Install the same packlist bytes at `DYNAMIC_CLIENT_PACKLIST_PATH`, preserving
+Install the same packlist bytes at `DYNAMIC_CLIENT_7_1_PACKLIST_PATH`, preserving
 the service user's ownership. Change the epoch when releasing a new catalogue.
 From the staging server root, with its Python environment active, run:
 
@@ -595,7 +664,7 @@ python tools/check_dynamic_pack_catalog.py
 
 It must report the validated ID count with no error. This is a read-only check
 in a separate process; it does not reload the serving worker. Restart or reload
-staging using its normal service procedure, then verify the actual V36 account
+staging using its normal service procedure, then verify the actual 7.1 account
 response and pack navigation.
 
 The server needs the same edited songlist used by the bundle at
@@ -668,7 +737,7 @@ Test in this order:
 5. Download finishes and the icon disappears.
 6. The DownloadList contains exactly `2.aff` and `base.ogg` with the expected
    plaintext MD5 values.
-7. The signed URLs return the encrypted AFF and normalized OGG; a direct
+7. The signed URLs return the encrypted AFF and verified gameplay OGG; a direct
    `/private/` request and an unsigned `/protected/` request still return `403`.
 8. The chart reaches gameplay and audio remains synchronized.
 9. A legitimate play creates a score row with positive play rating.
@@ -699,11 +768,11 @@ are separate gates.
 - You have permission to host every supplied asset.
 - Source hashes and author credits are recorded.
 - Song and pack IDs are stable and unique.
-- The V36 dynamic catalogue hash/epoch and ownership policy match the bundle;
+- The 7.1 dynamic catalogue hash/epoch and ownership policy match the bundle;
   any supported legacy response remains within its separate 62-entry limit.
 - Only real difficulties are visible and ranked.
 - AKFC receipt identity matches the final song ID and filename.
-- Metadata plaintext hashes match the source AFF and normalized audio.
+- Metadata plaintext hashes match the source AFF and verified gameplay audio.
 - Protected allowlist exactly covers the metadata file set.
 - The staging bundle, server metadata and R2 objects use the same IDs.
 - Cold download, gameplay, score and restart all pass.

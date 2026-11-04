@@ -5,6 +5,7 @@ from time import time
 
 from .bgtask import BGTask, logdb_execute
 from .config_manager import Config
+from .client_compat import uses_current_contract
 from .constant import Constant
 from .course import CoursePlay
 from .error import NoData, StaminaNotEnough
@@ -16,7 +17,7 @@ from .world import BeyondWorldPlay, BreachedWorldPlay, WorldPlay
 
 
 def rating_ptt_for_app_version(rating_ptt: int, app_version: str = None) -> int:
-    if app_version == '7.0.255' and rating_ptt >= 0:
+    if uses_current_contract(app_version) and rating_ptt >= 0:
         return rating_ptt * 10
     return rating_ptt
 

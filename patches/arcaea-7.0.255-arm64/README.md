@@ -1,25 +1,12 @@
-# Current 7.0.255 patch set
+# Shared source baseline
 
-Follow [chapter 6](../../docs/guide/06-build-android-client.md). The single user
-entry point is `scripts/build_android_client.py`; it starts from the original
-APKPure arm64 XAPK and produces V36. Do not run individual internal stages.
+These files are the byte-locked source baseline reused by the current 7.1
+builder. They contain the AKFC loader, managed/resource helpers and semantic
+runtime modules. Their `7.0.255` directory name records the version they were
+first reviewed against; it is not another supported build choice.
 
-This directory holds the current changes for that exact version:
-
-- `native-plan.json` checks original bytes before applying the native changes.
-- Native assembly/runtime source is compiled for the current V36 behavior.
-- Managed source patches update Android code, package resources and the Mod UI.
-- Version-specific guard data is checked against freshly built code.
-
-The build merges the original package, applies the guarded changes, compiles
-native and managed code, and verifies unrelated APK members are unchanged.
-It does not use an older Akaine APK, an accepted final library, generated
-private pin headers or a maintainer's disk/path map as a build input.
-
-The AKFC loader uses the matching external key header and prefixed static
-BoringSSL archive. A different operator key produces a different loader hash;
-existing encrypted charts require their matching key. Keep keys, APKs and build
-outputs outside Git.
-
-Historical releases and development experiments belong in the private
-development repository. This public patch set follows the current guide.
+Run only `scripts/build_android_client.py` as described in
+[chapter 6](../../docs/guide/06-build-android-client.md). The current
+[7.1 engine](../arcaea-7.1.0-arm64/README.md) adapts these sources and generates
+all guards against the rebuilt 7.1 native core. No historical native pipeline,
+patched APK, copied final library or private input map is needed.

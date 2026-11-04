@@ -1,6 +1,6 @@
 # Semantic CLI: first-run playing flow
 
-The V36 client exposes native UI actions with short-lived context tokens. List the current state before activating a token. A token is valid only for the exact current scene, owned UI object, and registered callback.
+The 7.1.0 client exposes native UI actions with short-lived context tokens. List the current state before activating a token. A token is valid only for the exact current scene, owned UI object, and registered callback.
 
 ```powershell
 & $python scripts/akaine_cli/akaine.py --serial $serial ui list
@@ -17,6 +17,8 @@ The V36 client exposes native UI actions with short-lived context tokens. List t
 | Settings | `settings close` | Settings closes through native Done callback |
 | Main Menu Music guide | Offered `main_hint_continue` token | One ordinary native guide step completes |
 | Notification guide | Offered `notification_hint_continue` token | Guide closes and Android notification permission is requested |
+| Pack/category guide | Offered `pack_hint_continue` token | One owned Pack Select guide step completes |
+| Partner guide | Offered `partner_hint_continue` token | One owned partner-selection guide step completes |
 
 Refresh `ui list` after every guide step. The notification action requests Android permission; the Android prompt remains a separate OS choice. Unknown guides remain blocked.
 
@@ -39,7 +41,12 @@ at most one known callback. It returns the remaining guide state and the
 `ui.overlays` now exposes native step/pending counts, readiness, validated
 ownership and listener flags. Invisible swallowing listeners remain blockers.
 Welcome, offset cancellation, Settings close and the known Main Menu,
-notification and Pack Select steps reuse their existing typed callbacks.
+notification, Pack Select and partner steps reuse their typed callbacks.
+7.1 reports four overlay coverage kinds: progression guide, note-speed setup,
+category tutorial and partner tutorial. The partner action requires its exact
+open character dialog and validated owner/callback; hidden input blockers
+remain visible in CLI state. Bridge metadata fixes the application version,
+so an old 7.0 bridge cannot acquire the 7.1 contract from a cached catalogue.
 
 An exact Advanced Tutorial prompt is exposed as `advanced_guide`, including
 selected chart, Skip eligibility and priority. Skip and Note Speed Set can run

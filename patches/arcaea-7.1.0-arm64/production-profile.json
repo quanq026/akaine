@@ -1,0 +1,71 @@
+{
+  "schema": "akaine.client-profile.v1",
+  "application_version": "7.1.0",
+  "version_code": 1209907,
+  "architecture": "arm64-v8a",
+  "package": "akai.arc.lmao",
+  "environment": "production",
+  "source_xapk": {
+    "bytes": 1224818295,
+    "sha256": "c86b2e4b7e4e4448ed056d4ce9a8a850ea245686eefacdd0c9b4d6139909da31"
+  },
+  "source_merged": {
+    "bytes": 1212123246,
+    "sha256": "1290b99ef6ef9d15f1c26183147ae10c7878cf5bd0f52e2119172e8ac8fc45da"
+  },
+  "source_core_sha256": "849a7b1418ba389c007b0b2793510eb8e163b1268e8734b561a83b6c11c0773c",
+  "source_provider_sha256": "c05377995a79030c66f75d2775ac3cec3ebbbc9aa680d952781e9372863fa17a",
+  "routes": {
+    "login": "https://auth.akai.id.vn/auth/login",
+    "aggregate": "https://arcapi-v3.akai.id.vn/compose/aggregate?calls=",
+    "bundle": "https://arcapi-v3.akai.id.vn/game/content_bundle",
+    "shared": "https://arcapi-v3.akai.id.vn/"
+  },
+  "bundle_urls": [],
+  "required_features": [
+    "android",
+    "routes",
+    "akfc",
+    "classic",
+    "mod",
+    "packs",
+    "downloads",
+    "cli",
+    "skill",
+    "replay",
+    "menu",
+    "placement",
+    "server",
+    "content"
+  ],
+  "release_ready": false,
+  "runtime_accepted": false,
+  "native": {
+    "enabled_features": [
+      "routes",
+      "classic",
+      "mod",
+      "packs",
+      "downloads",
+      "cli",
+      "skill",
+      "replay",
+      "menu"
+    ],
+    "routes": {
+      "login": "https://auth.akai.id.vn/auth/login",
+      "aggregate": "https://arcapi-v3.akai.id.vn/compose/aggregate?calls=",
+      "bundle": "https://arcapi-v3.akai.id.vn/game/content_bundle",
+      "shared": "https://arcapi-v3.akai.id.vn/",
+      "shared_base": "https://arcapi-v3.akai.id.vn/"
+    },
+    "shared_base_encoding": {
+      "file_offset": 29258096,
+      "virtual_address": "0x1bef170",
+      "extent_bytes": 54,
+      "before": "4d364c763854641402f720ac96b696198cb932c28bde8280cad46122473eeadc2d6bf8249fbeabeda8dc9ab0ee9705e5562a1c677a5d",
+      "after": "4d364c763854641402f720ac96b696198bb93fc69ddede8680997821475d85b24e0e9650eddfdf88c9aafbd982f6678822042f4e4648",
+      "decoded": "https://arcapi-v3.akai.id.vn/"
+    }
+  }
+}

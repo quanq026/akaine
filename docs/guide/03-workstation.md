@@ -197,7 +197,7 @@ if ($LASTEXITCODE -ne 0) { throw "Core workstation check failed." }
 
 A prepared core workstation prints `OK` for `git` and `python`. The command
 also reports the optional Android tools it can find. Chapter 6 selects the
-V36 compiler and DEX tool inputs explicitly.
+7.1 compiler and DEX tool inputs explicitly.
 
 The complete Android tool list is:
 
