@@ -17,7 +17,6 @@ English | [Tiếng Việt](README.vi.md)
 <p align="center">
   <strong><a href="docs/guide/06-build-android-client.md">Build the client</a></strong> ·
   <a href="docs/guide/README.md">Start the guide</a> ·
-  <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
 
 Akaine is a setup guide and public source repository for a server and Android
