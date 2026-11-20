@@ -20,7 +20,7 @@ English | [Tiếng Việt](README.vi.md)
 </p>
 
 Akaine provides public source and a beginner's guide for setting up a game server
-and building an Android client.
+and preparing the Android client inputs.
 
 | What you want to do | Where to start |
 | --- | --- |
@@ -28,10 +28,11 @@ and building an Android client.
 | Set up your own server | [Start from a clean machine](docs/guide/) |
 | Browse the 7.3.1 port | [Native patches, Android bindings and CLI source](patches/arcaea-7.3.1-arm64/). The standalone 7.3.1 build is still pending. |
 
-Download the original client from APKPure. The guide explains when to supply
-matching content and chart-key inputs.
+**Starting from scratch? Check these inputs before renting a VPS.**
 
-Discord: kuan.026 if you have any questions!
+1. **To prepare the stock client:** download the 7.3.1 ARM64 XAPK and follow the client chapter. The output is a stock `merged.apk`.
+2. **To self-host:** obtain an authorized [prepared 7.3.1 content kit](docs/guide/04-private-resources.md). It must include the manifest, bundle parts, catalogue and individual song files.
+3. **To play:** you need a patched, signed Akaine 7.3.1 APK configured for your hostname. This repo provides patch source and stock preparation. A complete public APK build command is pending.
 
 ## Features
 
@@ -40,7 +41,7 @@ Discord: kuan.026 if you have any questions!
 | Feature | Supported capabilities |
 | --- | --- |
 | Accounts | Registration, login, sessions and login/registration rate limits. |
-| Scores and Potential | Score submission/checks, play history, Best 30, Recent 10 and chart rankings. |
+| Scores and Potential | Score submission/checks, play history, Best 50 Potential and chart rankings. |
 | Friends | Friend lists, adding/removing friends and score comparisons. |
 | Cloud Sync | Upload/download of saves and shared content-unlock policies. |
 | World Mode | Maps, stamina, progression and rewards. |
@@ -95,30 +96,6 @@ By the end of the guide, you will have:
 To connect a client to your server, supply a compatible APK built for your hostname; see [chapter 6](docs/guide/06-build-android-client.md).
 
 ![Akaine platform overview](docs/images/akaine-platform-overview.svg)
-
-## Before you start
-
-Set aside an uninterrupted afternoon for the first setup. You need:
-
-- a Windows 10 or Windows 11 computer with at least 30 GB free
-- an Android phone or a computer capable of running an Android emulator
-- a payment card accepted by AWS and your domain registrar
-- an email address you control and can protect with two-factor authentication
-- the private Akaine resource kit and its expected SHA-256 value
-
-New AWS customers may receive up to USD 200 in credits for six months, enough
-to cover the Lightsail server during the initial setup period. Vietnamese
-citizens aged 18 to 23 may also qualify for one free `.id.vn` domain for two
-years through participating `.vn` registrars such as iNET. Promotional domains
-can start at roughly 40,000 VND, but check the renewal price before buying.
-
-Cloudflare DNS, CDN and SSL use the Free plan. R2 includes 10 GB of Standard
-storage each month, and extra storage costs USD 0.015 per GB-month. For a small
-installation, the R2 bill is usually below USD 1 per month unless you keep many
-duplicate releases or serve unusually heavy traffic.
-
-When the AWS credits expire, you can pay for the same Lightsail server or move
-the installation to another VPS provider.
 
 ## Repository layout
 

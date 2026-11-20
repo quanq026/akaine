@@ -4,9 +4,7 @@
 
 # Large/private content is intentionally offloaded.
 /assets/**
-!/assets/.gitkeep
 /bundle/**
-!/bundle/.gitkeep
 /server/assets/**
 !/server/assets/.gitkeep
 /server/database/bundle/**

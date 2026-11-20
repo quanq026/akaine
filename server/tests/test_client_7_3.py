@@ -15,9 +15,11 @@ from core.client_compat import character_row_for_app_version, song_download_pref
 from core.client_packs import pack_ids_for_dynamic_user
 from core.config_manager import Config
 from core.constant import Constant
-from core.download import DownloadList, SonglistParser
+from core.download import DownloadList, SonglistParser, UserDownload
 from core.error import NoAccess
-from main import validate_runtime_config
+from main import app as server_app, validate_runtime_config
+from core.sql import Connect, MemoryDatabase
+from tools.check_content import check_song_files
 from server import auth, others
 
 
@@ -65,6 +67,30 @@ class Client73Test(TestCase):
         if bundle is not None:
             headers['ContentBundle'] = bundle
         return self.client.get('/game/content_bundle', headers=headers)
+
+    def test_checked_song_files_are_served_by_tokenized_route(self):
+        songs = self.root / 'songs'
+        song = songs / 'fixture'
+        song.mkdir(parents=True)
+        local_file = song / 'base.ogg'
+        metadata = {'fixture': {'files': ['base.ogg']}}
+        with self.assertRaisesRegex(ValueError, 'fixture/base.ogg'):
+            check_song_files(songs, metadata, is_remote=lambda _: False)
+        local_file.write_bytes(b'test-only audio')
+        self.assertEqual(check_song_files(songs, metadata, is_remote=lambda _: False), 1)
+        MemoryDatabase()
+        with Connect(in_memory=True) as cursor:
+            download = UserDownload(cursor, SimpleNamespace(user_id=784501))
+            download.song_id, download.file_name = 'fixture', 'base.ogg'
+            download.generate_token()
+            download.insert_download_token()
+        with patch.object(Constant, 'SONG_FILE_FOLDER_PATH', str(songs)), \
+                patch.object(Config, 'DOWNLOAD_USE_NGINX_X_ACCEL_REDIRECT', False):
+            client = server_app.test_client()
+            self.assertEqual(client.get('/download/fixture/base.ogg').status_code, 403)
+            with client.get(f'/download/fixture/base.ogg?t={download.token}') as response:
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.data, local_file.read_bytes())
 
     def test_opt_in_required_even_with_permissive_legacy_configuration(self):
         for flag, allowed in ((False, []), (True, []), (False, ['7.3.1'])):

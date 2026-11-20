@@ -9,7 +9,8 @@ import sys
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from akaine_build import android as build_android_client
+from akaine_build import android as stock
+from akaine_build import apk as build_android_client
 
 
 def digest(path: Path) -> str:
@@ -25,7 +26,7 @@ class AndroidClientBuilderTests(unittest.TestCase):
             java = root / 'java.exe'
             editor.write_bytes(b'editor')
             java.write_bytes(b'java')
-            modules = build_android_client.MODULES_73
+            modules = stock.MODULES_73
             with zipfile.ZipFile(source, 'w') as archive:
                 archive.writestr('manifest.json', json.dumps({
                     'package_name': 'moe.low.arc',
@@ -36,11 +37,11 @@ class AndroidClientBuilderTests(unittest.TestCase):
                 }))
                 for name in modules:
                     archive.writestr(name, b'test module')
-            with patch.object(build_android_client, 'XAPK_73', (source.stat().st_size, digest(source))), \
-                 patch.object(build_android_client, 'EDITOR', (editor.stat().st_size, digest(editor))), \
-                 patch.object(build_android_client.subprocess, 'run') as run:
+            with patch.object(stock, 'XAPK_73', (source.stat().st_size, digest(source))), \
+                 patch.object(stock, 'EDITOR', (editor.stat().st_size, digest(editor))), \
+                 patch.object(stock.subprocess, 'run') as run:
                 with self.assertRaisesRegex(ValueError, 'package/version/split identity'):
-                    build_android_client.prepare_input(source, java, editor, root / 'out')
+                    stock.prepare_input(source, java, editor, root / 'out')
                 run.assert_not_called()
                 self.assertFalse((root / 'out').exists())
 

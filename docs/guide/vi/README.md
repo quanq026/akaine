@@ -2,10 +2,7 @@
 
 [English](../README.md) | Tiếng Việt
 
-Bộ hướng dẫn này giúp bạn build server Akaine và client Android cho Arcaea `7.3.1`
-(`1210500`) từ đầu. Các chương dùng chung một bộ tên ví dụ và phải được làm theo thứ tự,
-vì mỗi chương sau dựa trên kết quả kiểm tra của chương trước. Không dùng hash hoặc APK
-patch trong hướng dẫn cho phiên bản client khác.
+Chương này hướng dẫn dựng server và chuẩn bị APK gốc Arcaea 7.3.1. Trước khi bắt đầu, kiểm [bộ nội dung riêng](04-private-resources.md) và [điều kiện phía client](06-build-android-client.md).
 
 ## Ví dụ được sử dụng trong hướng dẫn
 

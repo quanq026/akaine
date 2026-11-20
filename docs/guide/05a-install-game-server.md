@@ -55,6 +55,7 @@ From the verified private kit, locate:
 ```text
 server songlist              -> database/songs/songlist
 server song metadata         -> database/song_metadata.json
+individual song files        -> database/songs/<song-id>/<file>
 matching native packlist      -> database/client_catalogs/7.3.1/packlist
 7.3.1 full-root manifest      -> database/bundle/<alias>.json
 bundle parts                  -> R2 bundle/<alias>_0.cb ...
@@ -74,6 +75,8 @@ $songlist = Get-Item (Read-Host "Full path to the verified server songlist")
 $songMetadata = Get-Item (Read-Host "Full path to the verified song_metadata.json")
 $bundleManifest = Get-Item (Read-Host "Full path to the verified 7.3.1 bundle manifest")
 $packlist = Get-Item (Read-Host "Full path to the matching native packlist")
+$songFiles = Get-Item (Read-Host "Full path to the verified songs folder from your content kit")
+if (-not $songFiles.PSIsContainer -or $songFiles.Name -ne "songs") { throw "Choose the songs folder containing the song ID folders." }
 
 ssh -i $sshKey.FullName "ubuntu@$serverIp" "install -d -m 700 /home/ubuntu/akaine-intake"
 if ($LASTEXITCODE -ne 0) { throw "Could not create the private intake folder." }
@@ -87,6 +90,8 @@ if ($LASTEXITCODE -ne 0) { throw "Bundle manifest upload failed." }
 
 scp -i $sshKey.FullName $packlist.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/packlist"
 if ($LASTEXITCODE -ne 0) { throw "Packlist upload failed." }
+scp -r -i $sshKey.FullName $songFiles.FullName "ubuntu@${serverIp}:/home/ubuntu/akaine-intake/"
+if ($LASTEXITCODE -ne 0) { throw "Song file upload failed." }
 
 "Bundle manifest name: $($bundleManifest.Name)"
 "Packlist SHA256: $((Get-FileHash -Algorithm SHA256 $packlist.FullName).Hash.ToLowerInvariant())"
@@ -105,6 +110,9 @@ test -f "/home/ubuntu/akaine-intake/$manifest_name"
 
 sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.3.1
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.3.1/packlist
+sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/songs
+sudo cp -R /home/ubuntu/akaine-intake/songs/. /srv/akaine/repo/server/database/songs/
+sudo chown -R akaine:akaine /srv/akaine/repo/server/database/songs
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
@@ -150,9 +158,10 @@ The sample serves individual songs from the server. For Worker-based song delive
 
 ```bash
 cd /srv/akaine/repo/server
-sudo -u akaine /srv/akaine/repo/.venv/bin/python -c 'import main; main.validate_runtime_config(); print("Server configuration ready")'
-sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/check_dynamic_pack_catalog.py
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.check_content
 ```
+
+The command should print `7.3.1 content ready` with pack and local song file counts. If files are missing, copy them under `database/songs/<song-id>/` and recheck before starting the service. With a compatible client, download and play one song marked Download.
 
 ## 5. Start the service and check its local HTTP response
 

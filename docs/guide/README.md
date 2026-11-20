@@ -1,10 +1,6 @@
 # Set up Akaine from scratch
 
-This walkthrough builds an Akaine server and Android client for Arcaea
-`7.3.1` (`1210500`). It starts with the basics and uses the same example names
-in each chapter. Read it in order: later commands assume that the earlier
-checks have passed. Do not use its APK hashes or patches with another client
-version.
+Use this guide to set up the server and prepare the stock Arcaea 7.3.1 APK. Before starting, check the [content kit](04-private-resources.md) and [client requirements](06-build-android-client.md).
 
 ## Example used in the guide
 
