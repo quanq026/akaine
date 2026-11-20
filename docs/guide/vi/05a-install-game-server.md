@@ -347,6 +347,18 @@ Request thứ hai chứng minh client ở target version không tải lại. API
 được có Cloudflare cache `HIT` cho route này. Bundle part và
 song object còn cần kiểm tra R2/CDN cùng client riêng ở chương 5, 7 và 9.
 
+## Cập nhật PTT trên server đã có người chơi
+
+Bỏ qua bước này nếu cài mới. Server tính PTT theo Best 50, trong đó 10 bài đầu được tính hai lần. Lệnh đầu xem trước thay đổi. Lệnh sau sao lưu SQLite vào file riêng trước khi ghi.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database/arcaea_database.db
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database/arcaea_database.db --backup /srv/akaine/pre-b50.db
+```
+
+Script in số tài khoản được cập nhật. Nếu chạy lại sau khi có điểm mới, hãy dùng tên file sao lưu mới.
+
 ## Điểm dừng về client host
 
 Native plan trong public repository này nhúng sẵn các Akaine API host đã phát hành.

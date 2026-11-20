@@ -3,6 +3,7 @@ from os import urandom
 from random import choices
 from time import time
 
+from .ptt_v7 import best_potential, stored_potential
 from .bgtask import BGTask, logdb_execute
 from .config_manager import Config
 from .client_compat import uses_current_contract
@@ -548,7 +549,7 @@ class UserPlay(UserScore):
 
         # 总PTT更新
         user_rating_ptt = self.ptt.value
-        self.user.rating_ptt = int(user_rating_ptt * 100)
+        self.user.rating_ptt = stored_potential(user_rating_ptt)
         BGTask(self.record_rating_ptt, user_rating_ptt)  # 记录总PTT变换
         self.c.execute('''update user set rating_ptt = :a where user_id = :b''', {
             'a': self.user.rating_ptt, 'b': self.user.user_id})
@@ -589,7 +590,7 @@ class Potential:
     @property
     def value(self) -> float:
         '''计算用户潜力值'''
-        return self.best_30 * Constant.BEST30_WEIGHT + self.recent_10 * Constant.RECENT10_WEIGHT
+        return best_potential(self.c, self.user.user_id)
 
     @property
     def best_30(self) -> float:

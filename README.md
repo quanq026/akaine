@@ -130,6 +130,9 @@ the installation to another VPS provider.
 
 ## Start the guide
 
+- [Build the Android APK](docs/guide/06-build-android-client.md) if you already have the tools and build inputs.
+- [Set up your own server](docs/guide/) if you are starting from scratch.
+
 1. [See how the system works](docs/guide/01-architecture.md).
 2. [Create the cloud server and connect a domain](docs/guide/02-cloud-domain.md).
 3. [Prepare your Windows computer](docs/guide/03-workstation.md).

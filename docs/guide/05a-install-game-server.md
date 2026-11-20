@@ -353,6 +353,18 @@ not download it again. The API hostname must never show a Cloudflare cache
 `HIT` for this route. The bundle parts and song objects still need the
 separate R2/CDN and client checks in chapters 5, 7 and 9.
 
+## Updating PTT on an existing server
+
+Skip this step on a fresh install. The server calculates PTT from Best 50, counting the top ten twice. The first command previews the change and the second saves a private SQLite backup before applying it.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database/arcaea_database.db
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database/arcaea_database.db --backup /srv/akaine/pre-b50.db
+```
+
+The script prints how many accounts changed. Use a fresh backup filename if you run it again after new scores arrive.
+
 ## Client host checkpoint
 
 The native plan in this public repository embeds the published Akaine API

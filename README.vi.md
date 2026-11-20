@@ -130,6 +130,9 @@ hệ thống sang nhà cung cấp VPS khác.
 
 ## Bắt đầu hướng dẫn
 
+- [Build APK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
+- [Tự dựng server](docs/guide/vi/) nếu bạn bắt đầu từ đầu.
+
 1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).
 2. [Tạo cloud server và kết nối tên miền](docs/guide/vi/02-cloud-domain.md).
 3. [Chuẩn bị máy Windows](docs/guide/vi/03-workstation.md).

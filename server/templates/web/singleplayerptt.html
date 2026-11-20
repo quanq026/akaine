@@ -29,8 +29,7 @@
         <div class="join-date">注册于 Registered in: {{user['join_date']}}</div>
         <div class="ptt">Memories: {{user['ticket']}}</div>
         <div class="ptt">PTT: {{'%0.2f'|format(user['rating_ptt']/100|float)}}</div>
-        <div class="ptt">Best 30 PTT: {{bestptt}}</div>
-        <div class="ptt">Recent 10 PTT: {{recentptt}}</div>
+        <div class="ptt">Best 50 PTT: {{'%0.2f'|format(bestptt)}}</div>
         <div>
             <div>Recent plays: </div>
             <div>
@@ -92,7 +91,7 @@
     </div>
     <hr />
     {% if posts %}
-    <div class="title">Best 30</div>
+    <div class="title">Best 50</div>
     {% endif %}
     {% for post in posts %}
     <div class="score-item">
@@ -109,6 +108,9 @@
         <span class="difficulty_byd">BYD</span>
         {% endif %}
         <span class='rank'>{{'#' ~ post['rank']}}</span>
+        {% if post['rank'] <= 10 and post['rating'] > 0 %}
+        <strong>×2</strong>
+        {% endif %}
 
         <div class="song-detail">
             <br />
@@ -164,7 +166,7 @@
     <hr />
 
     {% if recent %}
-    <div class="title">Recent 30</div>
+    <div class="title">Recent 30 · Play history</div>
     {% for i in recent %}
 
     {% if i %}
