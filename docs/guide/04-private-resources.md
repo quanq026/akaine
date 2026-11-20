@@ -92,27 +92,9 @@ maintenance script merely because it is present in the archive.
 
 Do not proceed if the verification reports a missing or mismatched file.
 
-## Check the 7.1 client inputs
+## Check the 7.3.1 inputs
 
-Before chapter 6, identify these verified files in the kit instructions:
-
-- The native `songlist` JSON matching the content catalogue. Server metadata
-  is a different file and cannot replace it.
-- The private AKFC key header matching the protected charts. It remains
-  outside the repository and is passed directly to the native compiler.
-- The arm64 BoringSSL static archive with `akfc_`-prefixed symbols, or the
-  instructions for building it with the public helper.
-- The matching jadx all-in-one JAR and Android Build-Tools `d8.jar`, with their
-  verification information. Java 17 and NDK `28.2.13676358` are selected in
-  chapter 6.
-
-The original APKPure XAPK and APKEditor are obtained separately in chapter 6;
-that chapter includes their exact hashes. The kit does not need an Akaine APK,
-a developer's local path map, copied SDK directory, patched final `.so`/`.dex`
-payloads or another operator's Android keystore. Chapter 6 takes explicit
-input paths and builds from the original client and public source.
-Do not generate a new AKFC key when using an existing catalogue: that client
-would not decode the already encrypted charts.
+Check that the kit contains the bundle manifest, its .cb parts, songlist, packlist and song_metadata.json from the same content release. [Chapter 6](06-build-android-client.md) obtains the stock XAPK and merge tool separately.
 
 ## Keep the kit private
 

@@ -1,3 +1,4 @@
+from hashlib import sha256
 import json
 import os
 import re
@@ -106,6 +107,26 @@ class BundleParser:
     profile_anchors = {}
 
     @staticmethod
+    def has_catalogue_tags(manifest):
+        from base64 import b64decode, b64encode
+        from binascii import Error
+
+        details = manifest.get('pathToDetails')
+        paths = {'songs/songlist', 'songs/packlist', 'songs/unlocks'}
+        if not isinstance(details, dict) or set(details) != paths:
+            return False
+        for tag in details.values():
+            if not isinstance(tag, str) or len(tag) != 44:
+                return False
+            try:
+                value = b64decode(tag, validate=True)
+            except (Error, ValueError):
+                return False
+            if len(value) != 32 or b64encode(value).decode('ascii') != tag:
+                return False
+        return True
+
+    @staticmethod
     def canonical_profile_version(value):
         return isinstance(value, str) and re.fullmatch(r'(?:0|[1-9][0-9]*)(?:\.(?:0|[1-9][0-9]*)){3}', value) is not None
 
@@ -135,7 +156,20 @@ class BundleParser:
 
                 json_path = os.path.join(root, file)
                 with open(json_path, 'rb') as f:
-                    data = json.load(f)
+                    raw_manifest = f.read()
+                data = json.loads(raw_manifest)
+                is_73 = data.get('applicationVersionNumber') == '7.3.1'
+                if is_73:
+                    if Config.CLIENT_7_3_ENABLED is not True:
+                        continue
+                    target = Config.FRESH_INSTALL_APP_BUNDLE_OVERRIDES.get('7.3.1')
+                    if data.get('versionNumber') != target:
+                        continue
+                    if (data.get('previousVersionNumber', '') is not None
+                            or sha256(raw_manifest).hexdigest() != Config.BUNDLE_MANIFEST_7_3_SHA256):
+                        raise ValueError('The 7.3.1 full-root manifest differs from its reviewed pin')
+                    if not self.has_catalogue_tags(data):
+                        raise ValueError('The 7.3.1 full-root manifest lacks catalogue authentication tags')
 
                 bundle_paths = []
                 total_partitions = data.get('totalPartitions', 1)
@@ -161,7 +195,9 @@ class BundleParser:
                 x.bundle_path = x.bundle_paths[0]
 
                 missing = [p for p in bundle_paths if not os.path.isfile(p)]
-                if missing and Config.BUNDLE_DOWNLOAD_LINK_PREFIX:
+                remote = (Config.BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES.get('7.3.1', '')
+                          if is_73 else Config.BUNDLE_DOWNLOAD_LINK_PREFIX)
+                if missing and remote:
                     # Bundle parts are served from a remote origin (nginx
                     # reverse-proxy to the home PC). The .cb files are not
                     # present on this host, so derive part sizes from the
@@ -202,9 +238,13 @@ class BundleParser:
                     continue
                 self.bundles.setdefault(x.app_version, []).append(x)
 
-                self.version_tuple_bundles[(x.version, x.prev_version)] = x
-                self.next_versions.setdefault(
-                    x.prev_version, []).append(x.version)
+                identity = (x.version, x.prev_version)
+                existing = self.version_tuple_bundles.get(identity)
+                if existing and (is_73 or existing.app_version == '7.3.1'):
+                    raise ValueError('Duplicate 7.3.1 bundle identity')
+                self.version_tuple_bundles[identity] = x
+                if not is_73:
+                    self.next_versions.setdefault(x.prev_version, []).append(x.version)
 
         # sort by version
         for k, v in self.bundles.items():
@@ -315,6 +355,17 @@ class BundleParser:
             app_ver: str, b_ver: str, device_id: str = None, assetset: str = None
     ) -> 'list[ContentBundle]':
         app_ver = BundleParser.resolve_compat_app_version(app_ver)
+        if app_ver == '7.3.1':
+            target = Config.FRESH_INSTALL_APP_BUNDLE_OVERRIDES.get(app_ver, '')
+            if not isinstance(target, str) or not re.fullmatch(r'7\.3\.1\.[1-9][0-9]{0,8}', target):
+                raise NoData('The 7.3.1 full-root bundle is not configured.', status=503)
+            root = BundleParser.version_tuple_bundles.get((target, '0.0.0'))
+            if root is None or root.app_version != app_ver:
+                raise NoData('The reviewed 7.3.1 full-root bundle is unavailable.', status=503)
+            current = b_ver or '0.0.0'
+            if not isinstance(current, str) or not re.fullmatch(r'[0-9]{1,9}(?:\.[0-9]{1,9}){2,3}', current):
+                raise NoData('Invalid content bundle version.', status=400)
+            return [] if ContentBundle.parse_version(current) >= ContentBundle.parse_version(target) else [root]
         devices = getattr(Config, 'BUNDLE_ASSETSET_PROFILE_DEVICES', [])
         if (getattr(Config, 'BUNDLE_ASSETSET_PROFILES_ENABLED', False)
                 and (devices is None or isinstance(device_id, str) and device_id in devices)
@@ -339,8 +390,7 @@ class BundleParser:
                 raise NoData(
                     f'Fresh-install bundle is unavailable: {fresh_bundle_version}',
                     status=404)
-            if (app_ver == '7.1.0' or fresh_bundle.app_version == '7.1.0'
-                    or app_bundle_version) and fresh_bundle.app_version != app_ver:
+            if (fresh_bundle.app_version == '7.3.1' or app_bundle_version) and fresh_bundle.app_version != app_ver:
                 raise NoData('Fresh-install bundle does not match the client profile.', status=404)
             return [fresh_bundle]
         if Config.BUNDLE_STRICT_MODE:
@@ -404,6 +454,8 @@ class BundleDownload:
         self.assetset = assetset if isinstance(assetset, str) and re.fullmatch('[0-9a-f]{64}', assetset) else None
 
     def get_bundle_list(self) -> list:
+        from copy import copy
+
         uses_current_contract(self.client_app_version)
         bundles: 'list[ContentBundle]' = BundleParser.get_bundles(
             self.client_app_version, self.client_bundle_version, self.device_id, self.assetset)
@@ -414,8 +466,8 @@ class BundleDownload:
         now = time()
 
         prefix_overrides = getattr(Config, 'BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES', {})
-        prefix = (prefix_overrides.get(self.client_app_version, Constant.BUNDLE_DOWNLOAD_LINK_PREFIX)
-                  if isinstance(prefix_overrides, dict) else Constant.BUNDLE_DOWNLOAD_LINK_PREFIX)
+        default = '' if self.client_app_version == '7.3.1' else Constant.BUNDLE_DOWNLOAD_LINK_PREFIX
+        prefix = prefix_overrides.get(self.client_app_version, default) if isinstance(prefix_overrides, dict) else default
         if not isinstance(prefix, str):
             raise NoData('Invalid bundle download prefix for client profile.', status=503)
         if prefix:
@@ -432,6 +484,7 @@ class BundleDownload:
         for x in bundles:
             if x.version_tuple <= ContentBundle.parse_version(self.client_bundle_version):
                 continue
+            x = copy(x)  # BundleParser returns shared cached objects.
             part_paths = x.bundle_paths if x.bundle_paths else [x.bundle_path]
 
             if prefix:
@@ -454,10 +507,7 @@ class BundleDownload:
                 bundle_dict['appVersion'] = '6.15.0'
             r.append(bundle_dict)
 
-        if not prefix:
-            if not sql_list:
-                return []
-
+        if sql_list:
             self.clear_expired_token()
 
             self.c_m.executemany(

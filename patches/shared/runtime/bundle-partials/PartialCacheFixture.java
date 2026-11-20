@@ -10,7 +10,7 @@ import java.util.Set;
 
 /** Actual helper, real disposable files; only the Android app root is adapted. */
 public final class PartialCacheFixture {
-    private static final String URL = "https://cdn.akai.id.vn/bundle/7.0.255-prod-original-base25-20261027_0.cb";
+    private static final String URL = "https://assets.example.com/bundle/7.3.1-fixture_0.cb";
     private static final byte[] PREFIX = {19, 2, 91, 17, -8, 23};
     private static Method select;
     private static int cases;
@@ -51,7 +51,7 @@ public final class PartialCacheFixture {
         select.setAccessible(true);
         File directory = new File(args[0]).getCanonicalFile();
         File root = fresh(directory, "restart");
-        String name = "7.0.255.25_0.bundle";
+        String name = "7.3.1.1_0.bundle";
         File destination = new File(root, "dltemp/" + name);
         File temporary = new File(destination.getPath() + ".tmp");
 
@@ -72,9 +72,9 @@ public final class PartialCacheFixture {
         check(choose(root, URL, destination, temporary).equals(first));
         File delta = choose(root, URL.replace("prod-original-base25-20261027_0", "prod-collapse-from14-20261022"), name);
         check(!delta.equals(first) && delta.length() == 0);
-        File version = choose(root, URL, "7.0.255.26_0.bundle");
+        File version = choose(root, URL, "7.3.1.2_0.bundle");
         check(!version.equals(first) && version.length() == 0);
-        File part = choose(root, URL, "7.0.255.25_1.bundle");
+        File part = choose(root, URL, "7.3.1.1_1.bundle");
         check(!part.equals(first) && part.length() == 0);
 
         cases++;

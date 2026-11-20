@@ -17,46 +17,6 @@ def digest(path: Path) -> str:
 
 
 class AndroidClientBuilderTests(unittest.TestCase):
-    def test_published_native_profile_binds_exact_7_1_production(self):
-        root = Path(__file__).resolve().parents[1]
-        native = build_android_client.load_patch_module('native71_test', root / 'patches/arcaea-7.1.0-arm64/native.py')
-        profile = json.loads((root / 'patches/arcaea-7.1.0-arm64/production-profile.json').read_bytes())
-        plan = native.load_plan(environment='production')
-        self.assertEqual(native.identity(profile), 'production')
-        self.assertEqual(profile['version_code'], 1209907)
-        self.assertEqual(profile['package'], 'akai.arc.lmao')
-        self.assertEqual(plan['routes'], profile['routes'])
-        features = native.requested_features(profile, plan, {'reviewed_modules': ['mod','packs','cli','skill','replay','menu']})
-        self.assertEqual(set(features), {'routes','classic','mod','packs','downloads','cli','skill','replay','menu'})
-        self.assertIn('+'.join(sorted(features)), plan['output_sha256_by_features'])
-
-    def test_guide_uses_current_7_1_source_build(self):
-        root = Path(__file__).resolve().parents[1]
-        guide = (root / "docs/guide/06-build-android-client.md").read_text(
-            encoding="utf-8"
-        )
-        self.assertIn("-m akaine_build.android", guide)
-        self.assertIn(build_android_client.XAPK[1], guide)
-        self.assertIn("--songlist", guide)
-        self.assertNotIn("production-checkpoint.md", guide)
-        self.assertNotIn("--base-apk", guide)
-
-    def test_beginner_guide_uses_verified_tools_and_stop_gates(self):
-        root = Path(__file__).resolve().parents[1]
-        guide = (root / "docs/guide/06-build-android-client.md").read_text(
-            encoding="utf-8"
-        )
-        for required in (
-            '$python = Join-Path $repoRoot ".venv\\Scripts\\python.exe"',
-            '& $python -m akaine_build.android --help',
-            'Wrong APKPure package. Stop here;',
-            'BUILD_RECEIPT.json',
-            '--keystore',
-            'APK signature verification failed',
-            '$serial = Read-Host "Exact device serial shown above"',
-        ):
-            self.assertIn(required, guide)
-
     def test_7_3_input_rejects_an_xapk_with_the_wrong_version(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -80,7 +40,7 @@ class AndroidClientBuilderTests(unittest.TestCase):
                  patch.object(build_android_client, 'EDITOR', (editor.stat().st_size, digest(editor))), \
                  patch.object(build_android_client.subprocess, 'run') as run:
                 with self.assertRaisesRegex(ValueError, 'package/version/split identity'):
-                    build_android_client.prepare_input(source, java, editor, root / 'out', app_version='7.3.1')
+                    build_android_client.prepare_input(source, java, editor, root / 'out')
                 run.assert_not_called()
                 self.assertFalse((root / 'out').exists())
 
@@ -152,13 +112,13 @@ class AndroidClientBuilderTests(unittest.TestCase):
                 self.assertIn('owner&release', arguments)
                 self.assertNotIn('test-only-store', arguments)
                 self.assertEqual(kwargs['input'], 'test-only-store-viá»‡t\ntest-only-key\n'.encode())
-                shutil.copy2(root / 'aligned.apk', root / 'Akaine-7.1.0.apk')
+                shutil.copy2(root / 'aligned.apk', root / 'Akaine-7.3.1.apk')
                 return SimpleNamespace(returncode=0)
             with patch.object(build_android_client, 'run_tool', side_effect=run), \
                  patch.object(build_android_client.subprocess, 'run', side_effect=sign), \
                  patch.object(build_android_client.getpass, 'getpass', side_effect=['test-only-store-viá»‡t', 'test-only-key']):
                 result = build_android_client.sign_apk(root, root, root / 'operator.p12', 'owner&release', root / 'java.exe')
-            self.assertEqual(result.name, 'Akaine-7.1.0.apk')
+            self.assertEqual(result.name, 'Akaine-7.3.1.apk')
 
     def test_rejects_wrong_source_hash(self):
         with tempfile.TemporaryDirectory() as directory:

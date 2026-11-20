@@ -18,11 +18,7 @@ if __name__ == '__main__':
         ConfigManager.load(import_module('config').Config)
     if not Config.DYNAMIC_PACKS_ENABLED:
         raise SystemExit('Dynamic pack profile is disabled; no catalog loaded.')
-    versions = ['7.0.255']
-    if Config.CLIENT_7_1_ENABLED:
-        versions.append('7.1.0')
-        if Config.ALLOW_APPVERSION:
-            versions = [version for version in versions if version in Config.ALLOW_APPVERSION]
-    for version in versions:
-        ids = reload_dynamic_pack_catalog(version)
-        print('%s catalog validated: %d IDs; no DB/server files modified.' % (version, len(ids)))
+    if Config.CLIENT_7_3_ENABLED is not True:
+        raise SystemExit('Enable the 7.3.1 profile before checking its packlist.')
+    ids = reload_dynamic_pack_catalog('7.3.1')
+    print('7.3.1 packlist validated: %d IDs.' % len(ids))

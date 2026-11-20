@@ -1,7 +1,7 @@
 # Set up Akaine from scratch
 
 This walkthrough builds an Akaine server and Android client for Arcaea
-`7.1.0` (`1209907`). It starts with the basics and uses the same example names
+`7.3.1` (`1210500`). It starts with the basics and uses the same example names
 in each chapter. Read it in order: later commands assume that the earlier
 checks have passed. Do not use its APK hashes or patches with another client
 version.
@@ -57,20 +57,13 @@ content delivery, Cloudflare DNS and the required Windows tools.
 
 ## Part 2: Android client
 
-6. [Build, sign and test the 7.1 Android client](06-build-android-client.md).
+6. [Prepare the original 7.3.1 Android package](06-build-android-client.md).
 
-Chapter 6 starts from the original APKPure XAPK. After setup, one build
-command merges the original modules, applies 7.1, compiles, aligns and signs.
-It then continues through installation and semantic CLI checks. The matching
-catalogue, chart key and content remain separate from the repository.
+Chapter 6 prepares the merged stock 7.3.1 APK. Applying the patches and signing an Akaine APK requires a separate build.
 
-## Part 3: content releases
+## Part 3: Content releases
 
-7. [Build, verify and release a content bundle](07-build-release-content-bundle.md).
-
-Chapter 7 starts from a verified 7.1.0 full-root bundle, applies a controlled
-overlay, tests it on staging and promotes the same immutable bytes to
-production.
+7. [Publish a prepared 7.3.1 bundle](07-build-release-content-bundle.md).
 
 ## Part 4: lessons from operation
 

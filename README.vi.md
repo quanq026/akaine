@@ -1,4 +1,4 @@
-# Akaine
+# Akaine 7.3.1
 
 [English](README.md) | Tiếng Việt
 
@@ -6,7 +6,6 @@
 
 <p align="center">
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Hướng dẫn build 7.1.0" src="https://img.shields.io/badge/Build-7.1.0-547EA8?style=flat"></a>
   <a href="patches/arcaea-7.3.1-arm64/"><img alt="Mã patch 7.3.1" src="https://img.shields.io/badge/Patch_source-7.3.1-547EA8?style=flat"></a>
   <a href="docs/guide/vi/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python và C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
@@ -17,7 +16,7 @@
 </p>
 
 <p align="center">
-  <strong><a href="docs/guide/vi/06-build-android-client.md">Build client</a></strong> ·
+  <strong><a href="docs/guide/vi/06-build-android-client.md">Chuẩn bị file client</a></strong> ·
   <a href="docs/guide/vi/README.md">Bắt đầu hướng dẫn</a> ·
   <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
@@ -27,7 +26,7 @@ game server và build client Android.
 
 | Bạn muốn làm gì | Bắt đầu ở đâu |
 | --- | --- |
-| Build APK để cài | [Hướng dẫn build Arcaea 7.1.0 ARM64 (1209907)](docs/guide/vi/06-build-android-client.md) |
+| Chuẩn bị client gốc | [Kiểm và gộp XAPK Arcaea 7.3.1 ARM64](docs/guide/vi/06-build-android-client.md) |
 | Tự dựng server | [Hướng dẫn từ máy trắng](docs/guide/vi/) |
 | Xem phần chuyển sang 7.3.1 | [Mã patch native, Android và CLI](patches/arcaea-7.3.1-arm64/). Bản build độc lập 7.3.1 vẫn đang chờ hoàn thiện. |
 
@@ -89,7 +88,7 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 - một tên miền được Cloudflare bảo vệ
 - private-server API truy cập qua HTTPS
 - kho riêng để lưu bundle và file bài hát
-- client Android build từ gói APKPure gốc với các patch 7.1 hiện tại
+- gói Android gốc 7.3.1 đã được xác minh và gộp từ APKPure
 - Discord bot để quản lý tài khoản và công cụ score
 - quy trình sao lưu và khôi phục
 
@@ -125,13 +124,13 @@ hệ thống sang nhà cung cấp VPS khác.
 
 ## Cấu trúc repo
 
-- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để build client. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
+- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để chuẩn bị file gốc và tham khảo source port. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
 - [Semantic CLI](akaine_cli/) điều khiển client đã cài.
 - [Server](server/) cung cấp API game. Xem cách cài trong [hướng dẫn](docs/guide/vi/).
 
 ## Bắt đầu hướng dẫn
 
-- [Build APK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
+- [Chuẩn bị XAPK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
 - [Tự dựng server](docs/guide/vi/) nếu bạn bắt đầu từ đầu.
 
 1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).
@@ -140,7 +139,7 @@ hệ thống sang nhà cung cấp VPS khác.
 4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
 5. [Cấu hình R2](docs/guide/vi/05-cloudflare-content.md), [cài game server](docs/guide/vi/05a-install-game-server.md), [chạy Discord bot tùy chọn](docs/guide/vi/05b-discord-bot.md) và [thiết lập backup](docs/guide/vi/05c-backup-recovery.md).
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
-7. [Build, xác minh và phát hành content bundle 7.1.0](docs/guide/vi/07-build-release-content-bundle.md).
+7. [Phát hành bundle 7.3.1 đã chuẩn bị](docs/guide/vi/07-build-release-content-bundle.md).
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
 9. [Thêm fan chart và đặt nó vào một pack](docs/guide/vi/09-add-fan-chart.md).
 

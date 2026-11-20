@@ -1,0 +1,41 @@
+"""Copy to config.py, then set the inputs from the server guide."""
+
+
+class Config:
+    HOST = '127.0.0.1'
+    PORT = 18080
+    GAME_API_PREFIX = '/'
+    OLD_GAME_API_PREFIX = []
+    ALLOW_APPVERSION = ['7.3.1']
+    CLIENT_7_3_ENABLED = True
+
+    USERNAME = ''
+    PASSWORD = ''
+    SECRET_KEY = ''
+    API_TOKEN = ''
+
+    BUNDLE_STRICT_MODE = True
+    FRESH_INSTALL_APP_BUNDLE_OVERRIDES = {'7.3.1': '7.3.1.1'}
+    BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES = {'7.3.1': 'https://assets.example.com/bundle/'}
+    BUNDLE_MANIFEST_7_3_SHA256 = ''
+    SONGLIST_7_3_SHA256 = ''
+    SONG_METADATA_7_3_SHA256 = ''
+    DOWNLOAD_LINK_PREFIX_7_3_1 = 'https://api.example.com/download/'
+    SONG_FILE_HASH_PRE_CALCULATE = False
+    DOWNLOAD_FORBID_WHEN_NO_ITEM = True
+    ALLOW_SCORE_WITH_NO_SONG = False
+
+    DYNAMIC_PACKS_ENABLED = True
+    DYNAMIC_PACKS_7_3_NATIVE_ACCEPTED = True
+    DYNAMIC_PACKS_FULL_CATALOG = True
+    DYNAMIC_CLIENT_7_3_PACKLIST_PATH = './database/client_catalogs/7.3.1/packlist'
+    DYNAMIC_CLIENT_7_3_PACKLIST_SHA256 = ''
+    DYNAMIC_CLIENT_7_3_CATALOG_EPOCH = '7.3.1.1'
+
+    CHARACTER_FULL_UNLOCK = True
+    WORLD_SONG_FULL_UNLOCK = True
+    WORLD_SCENERY_FULL_UNLOCK = True
+    SAVE_FULL_UNLOCK = True
+    LOGIN_DEVICE_NUMBER_LIMIT = 0
+    SET_LINKPLAY_SERVER_AS_SUB_PROCESS = False
+    LINKPLAY_HOST = ''

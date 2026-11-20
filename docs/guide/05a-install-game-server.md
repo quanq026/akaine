@@ -1,25 +1,6 @@
-# Install the 7.1.0 game server
+# Install the 7.3.1 game server
 
-This chapter turns the empty Lightsail instance from chapter 2 into a running
-game API. It uses the public server source and the content files verified in
-chapter 4. Complete the R2 and Worker setup in chapter 5 first. The new
-database starts without a game account. Chapter 5b explains how the optional
-Discord bot creates one; the game also has its normal registration endpoint.
-
-The public Android patch in chapter 6 contains the release's fixed API hosts.
-For a different domain, its native routes must also be patched and verified for
-that host. Running this chapter at `api.example.com` proves the server works;
-it does not make the published AkaineXD APK connect to `api.example.com`.
-
-## Server and client configuration
-
-The public server includes dynamic pack handling, shared content grants and
-atomic account provisioning for the bot. Identity and secret defaults are
-empty; supply your own private configuration. Catalogue and media come from
-the verified resource kit, not another operator's database or player records.
-The server defaults keep 7.1 disabled. The version-specific example below
-enables it only after you provide the matching full bundle and pack catalogue.
-Installing the APK does not configure the server or grant content by itself.
+This chapter runs the Akaine 7.3.1 API on Linux. Prepare [the bundle and R2 content](05-cloudflare-content.md) before setup. A fresh installation starts with an empty player database. To connect from the game, use an Akaine 7.3.1 APK built for your server hostname.
 
 ## 1. Prepare the Linux instance
 
@@ -74,8 +55,8 @@ From the verified private kit, locate:
 ```text
 server songlist              -> database/songs/songlist
 server song metadata         -> database/song_metadata.json
-matching native packlist      -> database/client_catalogs/7.1.0/packlist
-7.1.0 full-root manifest      -> database/bundle/<alias>.json
+matching native packlist      -> database/client_catalogs/7.3.1/packlist
+7.3.1 full-root manifest      -> database/bundle/<alias>.json
 bundle parts                  -> R2 bundle/<alias>_0.cb ...
 ```
 
@@ -91,7 +72,7 @@ $sshKey = Get-Item (Read-Host "Full path to the Lightsail SSH private key")
 $serverIp = Read-Host "Lightsail static IPv4 address"
 $songlist = Get-Item (Read-Host "Full path to the verified server songlist")
 $songMetadata = Get-Item (Read-Host "Full path to the verified song_metadata.json")
-$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.1.0 bundle manifest")
+$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.3.1 bundle manifest")
 $packlist = Get-Item (Read-Host "Full path to the matching native packlist")
 
 ssh -i $sshKey.FullName "ubuntu@$serverIp" "install -d -m 700 /home/ubuntu/akaine-intake"
@@ -122,8 +103,8 @@ case "$manifest_name" in
 esac
 test -f "/home/ubuntu/akaine-intake/$manifest_name"
 
-sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.1.0
-sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.1.0/packlist
+sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.3.1
+sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.3.1/packlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
@@ -133,121 +114,47 @@ from pathlib import Path
 root = Path('/srv/akaine/repo/server/database')
 manifest = root / 'bundle' / sys.argv[1]
 data = json.loads(manifest.read_text())
-assert data['applicationVersionNumber'] == '7.1.0'
+assert data['applicationVersionNumber'] == '7.3.1'
 assert data['previousVersionNumber'] is None
 assert data['totalPartitions'] > 0
 json.loads((root / 'songs/songlist').read_text(encoding='utf-8-sig'))
 json.loads((root / 'song_metadata.json').read_text())
-assert json.loads((root / 'client_catalogs/7.1.0/packlist').read_text())['packs']
-print('7.1.0 content files ready')
+assert json.loads((root / 'client_catalogs/7.3.1/packlist').read_text())['packs']
+print('7.3.1 content files ready')
 PY
 ```
 
 The server reads the songlist for unlock and download decisions, metadata for
 download filenames and checksums, and the manifest for bundle versions and
 part URLs. Installing only the bundle manifest will not make song downloads
-work. The last command must print `7.1.0 content files ready`.
+work. The last command must print `7.3.1 content files ready`.
 
-## 4. Configure the 7.1.0 server
+## 4. Configure the 7.3.1 server
 
-Copy the version-specific example. Keep credentials in the ignored `config.py`,
-inside its `class Config`:
+Copy the sample and enter your settings in your private `config.py`.
 
 ```bash
-sudo -u akaine cp /srv/akaine/repo/server/config.7.1.0.example.py /srv/akaine/repo/server/config.py
+sudo -u akaine cp /srv/akaine/repo/server/config.7.3.1.example.py /srv/akaine/repo/server/config.py
 sudo chmod 0600 /srv/akaine/repo/server/config.py
 sudo -u akaine nano /srv/akaine/repo/server/config.py
 ```
 
-Generate three distinct values in your password manager and set `USERNAME`,
-`PASSWORD` and `SECRET_KEY` in the editor. Set every `assets.example.com` URL
-to your real R2 custom domain. For protected songs, add the exact song IDs
-from the private R2 `asset-manifest.json` to `ASSET_SIGNING_SONG_IDS` and keep
-existing IDs when editing this list. The template disables Link Play for the
-first server test. `chmod` limits the private configuration to its owner before
-you enter credentials.
-
-Set the full profile's `target` to the manifest's `versionNumber` and its
-`manifests` list to the exact uploaded manifest filename. Replace
-`<SHA256_OF_YOUR_7_1_PACKLIST>` with the hash printed by PowerShell. Keep
-`DYNAMIC_CLIENT_7_1_PACKLIST_PATH` pointed at the installed packlist and give its
-epoch a new value whenever the catalogue changes.
-
-The fresh-install template deliberately grants the complete verified pack
-catalogue (`DYNAMIC_PACKS_FULL_CATALOG = True`). Set it to false if packs should
-require separate ownership. Existing deployments must merge the 7.1 profile
-without deleting their 7.0 bundle profiles, catalogue pins or download prefixes.
-
-The template sets `GAME_API_PREFIX = '/'`, matching the current release's
-root paths such as `/auth/login` and `/game/content_bundle`. It allows only
-`7.1.0`, listens on `127.0.0.1:18080` behind nginx, and serves the configured
-full-root target to a clean or older-content client. The older
-`config.example.py` is an
-upstream reference for other client versions; do not copy it for this setup.
-
-Check the edited file without printing your secrets:
+Set your admin name, password and secret key. Set the R2 bundle URL and your server HTTPS song download URL. The sample uses local port 18080. Replace `7.3.1.1` in both the target and epoch with the manifest’s `versionNumber`. Copy the SHA-256 for each of these four files into its matching config field.
 
 ```bash
 cd /srv/akaine/repo/server
-sudo -u akaine /srv/akaine/repo/.venv/bin/python - <<'PY'
-import json
-from hashlib import sha256
-from pathlib import Path
-from config import Config
-assert Config.GAME_API_PREFIX == '/'
-assert Config.ALLOW_APPVERSION == ['7.1.0'] and Config.CLIENT_7_1_ENABLED is True
-assert Config.USERNAME and Config.PASSWORD and Config.SECRET_KEY
-assert 'example.com' not in Config.BUNDLE_DOWNLOAD_LINK_PREFIX
-assert 'example.com' not in Config.DOWNLOAD_LINK_PREFIX_7_1_0
-assert 'example.com' not in Config.ASSET_SIGNED_PREFIX
-assert Config.BUNDLE_ASSETSET_PROFILES_ENABLED is True
-profile = Config.BUNDLE_ASSETSET_PROFILES['7.1.0']['full']
-for name in profile['manifests']:
-    manifest = json.loads((Path('database/bundle') / name).read_text())
-    assert manifest['applicationVersionNumber'] == '7.1.0'
-    assert manifest['versionNumber'] == profile['target']
-    assert manifest['previousVersionNumber'] is None
-assert Config.DYNAMIC_PACKS_ENABLED is True and Config.DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED is True
-assert sha256(Path(Config.DYNAMIC_CLIENT_7_1_PACKLIST_PATH).read_bytes()).hexdigest() == Config.DYNAMIC_CLIENT_7_1_PACKLIST_SHA256
-assert Config.DYNAMIC_CLIENT_7_1_CATALOG_EPOCH
-print('7.1.0 server configuration ready')
-PY
+sha256sum database/songs/songlist database/song_metadata.json database/client_catalogs/7.3.1/packlist database/bundle/*.json
+```
+
+The sample serves individual songs from the server. For Worker-based song delivery, see [Cloudflare and R2 setup](05-cloudflare-content.md). Verify the configuration before starting.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -c 'import main; main.validate_runtime_config(); print("Server configuration ready")'
 sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/check_dynamic_pack_catalog.py
 ```
 
-If this prints a traceback, correct `config.py` and rerun the check. No server
-restart is needed because it has not started yet.
-
-## 5. Give the server the same Worker signing secret
-
-Use the secret file created in chapter 5. In Windows PowerShell, send the value
-over SSH standard input; the command does not display it:
-
-```powershell
-$secretFile = Get-Item (Read-Host "Full path to the signing-secret file from chapter 5")
-$secretValue = (Get-Content -LiteralPath $secretFile.FullName -Raw).Trim()
-if ([Convert]::FromBase64String($secretValue).Length -ne 32) {
-  throw "The signing secret is not 32 bytes."
-}
-
-("ASSET_SIGNING_SECRET=" + $secretValue) |
-  ssh -i $sshKey.FullName "ubuntu@$serverIp" "umask 077; cat > /home/ubuntu/akaine-intake/asset-signing.env"
-if ($LASTEXITCODE -ne 0) { throw "Signing-secret transfer failed." }
-```
-
-In the Linux terminal:
-
-```bash
-set -e
-sudo install -o akaine -g akaine -m 0600 /home/ubuntu/akaine-intake/asset-signing.env /srv/akaine/repo/server/.asset-signing.env
-sudo stat -c '%a %U %G %n' /srv/akaine/repo/server/.asset-signing.env
-```
-
-The result must begin `600 akaine akaine`. The systemd service reads this
-environment file; the public `config.py` template intentionally contains no
-signing secret. Never print the environment file.
-
-## 6. Start the service and check its local HTTP response
+## 5. Start the service and check its local HTTP response
 
 In the Linux terminal:
 
@@ -266,7 +173,7 @@ Missing content, invalid JSON, empty credentials and permission problems should
 be fixed at their source. The service must be healthy locally before nginx is
 configured.
 
-## 7. Put nginx and HTTPS in front of the service
+## 6. Put nginx and HTTPS in front of the service
 
 Keep the `api` DNS record **DNS only** until a certificate works. In the Linux
 terminal, enter only the registered domain, without `api.` or `https://`:
@@ -310,7 +217,7 @@ include a valid certificate on the origin. Certbot's
 [nginx instructions](https://certbot.eff.org/instructions?os=snap&ws=nginx)
 describe the certificate and renewal commands.
 
-## 8. Verify the bundle API through the public hostname
+## 7. Verify the bundle API through the public hostname
 
 In Windows PowerShell, set `$apiHost` to your own hostname:
 
@@ -318,7 +225,7 @@ In Windows PowerShell, set `$apiHost` to your own hostname:
 $apiHost = Read-Host "Game API hostname without https://"
 $bundleUrl = "https://$apiHost/game/content_bundle"
 $response = Invoke-WebRequest -Uri $bundleUrl -Headers @{
-  AppVersion = '7.1.0'
+  AppVersion = '7.3.1'
   ContentBundle = '0.0.0'
   DeviceId = 'guide-server-check'
 }
@@ -331,14 +238,14 @@ if ($response.Headers['Cache-Control'] -notmatch 'no-store') {
   throw "The content-bundle decision is missing no-store."
 }
 if (@($body.value.orderedResults).Count -ne 1) {
-  throw "A fresh 7.1.0 client did not receive one bundle."
+  throw "A fresh 7.3.1 client did not receive one bundle."
 }
 
 $body.value.orderedResults | Select-Object contentBundleVersion, appVersion, bundleSize
 
 $targetVersion = $body.value.orderedResults[0].contentBundleVersion
 $currentResponse = Invoke-RestMethod -Uri $bundleUrl -Headers @{
-  AppVersion = '7.1.0'
+  AppVersion = '7.3.1'
   ContentBundle = $targetVersion
   DeviceId = 'guide-server-check'
 }
@@ -382,16 +289,9 @@ sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database
 
 The script prints how many accounts changed. Use a fresh backup filename if you run it again after new scores arrive.
 
-## Client host checkpoint
+## Connect a client
 
-The native plan in this public repository embeds the published Akaine API
-hosts. A server on your own hostname passes the HTTP tests above, but that APK
-will keep calling its embedded hosts. Before testing a client against your
-server, inspect its native route destinations and build a version-guarded route
-patch for your hostname, including the encrypted shared API base. Chapter 6
-explains why login alone does not prove all routes changed. This repository
-does not yet provide a general host-replacement command; stop at server
-verification until that patch has been built and tested.
+To sign in from the game, use an Akaine 7.3.1 APK configured for your server hostname. If you do not have that APK yet, use the HTTP checks above to verify the server.
 
 Next: [Run the optional Discord bot](05b-discord-bot.md), then
 [back up the server](05c-backup-recovery.md).

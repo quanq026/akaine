@@ -1,11 +1,5 @@
-# Shared source baseline
+# Shared patch source
 
-These files are the byte-locked source baseline reused by the current 7.1
-builder. They contain the AKFC loader, managed/resource helpers and semantic
-runtime modules. The version-specific patch directory selects the supported build.
+These reusable runtime and build inputs support the [7.3.1 port](../arcaea-7.3.1-arm64/). The port owns its version-specific addresses and Android bindings.
 
-Run only `python -m akaine_build.android` as described in
-[chapter 6](../../docs/guide/06-build-android-client.md). The current
-[7.1 engine](../arcaea-7.1.0-arm64/README.md) adapts these sources and generates
-all guards against the rebuilt 7.1 native core. No historical native pipeline,
-patched APK, copied final library or private input map is needed.
+The AKFC loader uses prefixed static crypto. Build it with [build_boringssl_android.py](../../scripts/build_boringssl_android.py) when assembling the native loader.

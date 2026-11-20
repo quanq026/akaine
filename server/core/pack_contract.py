@@ -150,7 +150,7 @@ def validated_catalog_pack_ids(pack_rows):
 
 def dynamic_pack_profile_enabled(app_version, feature_header, enabled=False):
     """Representation selection only; this never authorizes a pack grant."""
-    return (enabled is True and app_version in ('7.0.255', '7.1.0')
+    return (enabled is True and app_version in ('7.0.255', '7.3.1')
             and feature_header == 'dynamic1')
 
 

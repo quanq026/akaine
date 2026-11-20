@@ -1,4 +1,4 @@
-"""Build Akaine 7.1.0 from the verified original APKPure package."""
+"""Verify Arcaea 7.3.1 input and provide guarded Android packaging helpers."""
 
 from __future__ import annotations
 
@@ -268,13 +268,7 @@ def build(source: Path, plan_path: Path, kit_root: Path, output: Path) -> dict:
 
 
 
-XAPK = (1224818295, 'c86b2e4b7e4e4448ed056d4ce9a8a850ea245686eefacdd0c9b4d6139909da31')
-MERGED = (1212123246, '1290b99ef6ef9d15f1c26183147ae10c7878cf5bd0f52e2119172e8ac8fc45da')
 EDITOR = (7733037, 'a9cd40df818845456be6d696de6110c89edf4b0a0580cb83438ed6b25a366e67')
-MODULES = {'moe.low.arc.apk': 'base', 'arcassets.apk': 'arcassets',
-           'config.arm64_v8a.apk': 'config.arm64_v8a', 'config.en.apk': 'config.en',
-           'config.mdpi.apk': 'config.mdpi'}
-
 XAPK_73 = (1282543787, 'b996a23570e927f907a096da950f4347c818a388fc610a84fd0b8f58a7faa91e')
 MERGED_73 = (1270354570, 'c622e705c5818d5773b61ca57bd3ea712e49668e984d38f6ae49003978f6908b')
 MODULES_73 = {
@@ -302,16 +296,11 @@ def checked_path(value, *, fresh=False):
     return path
 
 
-def prepare_input(source, java, apkeditor, outputdir, *, app_version='7.1.0'):
-    """Return a verified merged APK; accept the pinned XAPK or its pinned merge only."""
-    if app_version == '7.1.0':
-        xapk, merged, modules, version_code = XAPK, MERGED, MODULES, '1209907'
-        metadata = {'icon.png', 'manifest.json'}
-    elif app_version == '7.3.1':
-        xapk, merged, modules, version_code = XAPK_73, MERGED_73, MODULES_73, '1210500'
-        metadata = {'manifest.json'}
-    else:
-        raise ValueError(f'Unsupported Android input version: {app_version}')
+def prepare_input(source, java, apkeditor, outputdir):
+    """Verify and merge the original Arcaea 7.3.1 ARM64 input."""
+    xapk, merged, modules = XAPK_73, MERGED_73, MODULES_73
+    app_version, version_code = '7.3.1', '1210500'
+    metadata = {'manifest.json'}
     source = checked_path(source)
     outputdir = checked_path(outputdir, fresh=True)
     size = source.stat().st_size
@@ -320,7 +309,7 @@ def prepare_input(source, java, apkeditor, outputdir, *, app_version='7.1.0'):
     source_hash = sha256_file(source)
     kind = 'xapk' if (size, source_hash) == xapk else 'merged' if (size, source_hash) == merged else None
     if kind is None:
-        raise ValueError(f'Input does not match the verified APKPure {app_version} arm64 input; V9/staging APKs are not accepted')
+        raise ValueError(f'Input does not match the verified APKPure {app_version} arm64 input')
     if kind == 'xapk':
         java, apkeditor = checked_path(java), checked_path(apkeditor)
         if (apkeditor.stat().st_size, sha256_file(apkeditor)) != EDITOR:
@@ -380,71 +369,6 @@ def verify_unchanged_members(base, output, replacements):
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PATCH = ROOT / 'patches/arcaea-7.1.0-arm64'
-
-
-def build_current(args):
-    """Prepare stock, compile every patch, verify unrelated bytes, then sign."""
-    llvm = args.ndk / 'toolchains/llvm/prebuilt/windows-x86_64/bin'
-    for name, path in (('Java', args.java), ('javac', args.java.with_name('javac.exe')),
-                       ('jadx', args.jadx), ('D8', args.d8), ('static crypto', args.crypto),
-                       ('songlist', args.songlist), ('opaque key header', args.key_header),
-                       ('NDK compiler', llvm / 'clang++.exe')):
-        checked_path(path)
-    if bool(args.keystore) != bool(args.key_alias):
-        raise ValueError('--keystore and --key-alias must be supplied together')
-    if args.keystore and (args.build_tools is None or not (args.build_tools / 'zipalign.exe').is_file()
-                          or not (args.build_tools / 'lib/apksigner.jar').is_file()):
-        raise ValueError('--build-tools with zipalign and apksigner is required for signing')
-    output = checked_path(args.output, fresh=True)
-    if output.resolve().is_relative_to(ROOT.resolve()):
-        raise ValueError('Build output must remain outside the repository')
-    source_hashes = {path.relative_to(ROOT).as_posix(): sha256_file(path)
-                     for path in (Path(__file__), *PATCH.rglob('*'))
-                     if path.is_file() and '__pycache__' not in path.parts}
-    output.mkdir(parents=True)
-    print('1/4 Verifying and merging the original APKPure 7.1.0 input...', flush=True)
-    stock = prepare_input(args.source, args.java, args.apkeditor, output / 'input')
-    print('2/4 Compiling guarded native, Android and Mod changes...', flush=True)
-    engine = load_patch_module('client71', PATCH / 'build.py')
-    replacements, patch_receipt = engine.build(stock, llvm, output / 'client',
-        java=args.java, javac=args.java.with_name('javac.exe'), jadx=args.jadx,
-        d8=args.d8, songlist=args.songlist)
-    # The chart key is supplied privately; no prebuilt loader is a source input.
-    loader = engine.build_loader(args.key_header, args.crypto, output / 'loader/libakfcloader.so', llvm)
-    replacements['lib/arm64-v8a/libakfcloader.so'] = loader
-    source_hashes.update(patch_receipt['source_sha256'])
-    print('3/4 Assembling and checking every undeclared original APK member...', flush=True)
-    rows = []
-    for name, path in replacements.items():
-        target = output / 'payloads' / name
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, target)
-        rows.append({'archive_path': name, 'file': 'payloads/' + name, 'sha256': sha256_file(target)})
-    plan = {'schema': SCHEMA, 'source_sha256': MERGED[1], 'replacements': rows, 'binary_patches': []}
-    plan_path = output / 'BUILD_PLAN.json'
-    plan_path.write_text(json.dumps(plan, indent=2) + '\n', encoding='utf-8')
-    assembly = build(stock, plan_path, output, output / 'unsigned.apk')
-    verify_unchanged_members(stock, output / 'unsigned.apk', replacements)
-    verify_sources(source_hashes)
-    receipt = {'schema': 'akaine.stock-7.1.v1', 'status': 'APKPURE_TO_7_1_SOURCE_BUILD_VERIFIED',
-        'application_version': '7.1.0', 'version_code': 1209907, 'package': 'akai.arc.lmao',
-        'input_sha256': sha256_file(Path(args.source)), 'stock_merged_sha256': MERGED[1],
-        'payload_sha256': {name: sha256_file(path) for name, path in replacements.items()},
-        'source_sha256': source_hashes, 'patches': patch_receipt, 'assembly': assembly,
-        'prepatched_APK_or_native_inputs': False, 'undeclared_apk_members_unchanged': True,
-        'signed': False, 'device_or_server_actions': False, 'runtime_accepted': False}
-    receipt_path = output / 'BUILD_RECEIPT.json'
-    receipt_path.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
-    if args.keystore:
-        print('4/4 Aligning and signing with your Android key...', flush=True)
-        signed = sign_apk(output, args.build_tools, args.keystore, args.key_alias, args.java)
-        verify_sources(source_hashes)
-        receipt.update(signed=True, signed_apk_sha256=sha256_file(signed))
-        receipt_path.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
-        return {'status': receipt['status'], 'apk': str(signed), 'signed': True}
-    print('4/4 Unsigned build verified; signing was not requested.', flush=True)
-    return {'status': receipt['status'], 'apk': str(output / 'unsigned.apk'), 'signed': False}
 
 
 def verify_sources(hashes):
@@ -466,7 +390,7 @@ def sign_apk(output, build_tools, keystore, key_alias, java):
     signer = Path(build_tools) / 'lib/apksigner.jar'
     if not align.is_file() or not signer.is_file():
         raise ValueError('Android Build-Tools with zipalign and apksigner are required')
-    aligned, signed = output / 'aligned.apk', output / 'Akaine-7.1.0.apk'
+    aligned, signed = output / 'aligned.apk', output / 'Akaine-7.3.1.apk'
     run_tool([align, '-P', '16', '-f', '4', output / 'unsigned.apk', aligned])
     run_tool([align, '-c', '-P', '16', '4', aligned])
     store_password = getpass.getpass('Keystore password: ')
@@ -505,20 +429,19 @@ def run_tool(arguments):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Build Akaine 7.1.0 directly from the verified original APKPure arm64 APK/XAPK.')
-    for name in ('source', 'songlist', 'ndk', 'java', 'apkeditor', 'jadx', 'd8', 'crypto', 'key-header', 'output'):
-        parser.add_argument('--' + name, type=Path, required=True)
-    parser.add_argument('--keystore', type=Path, help='Optional existing operator signing key; never copied into Git')
-    parser.add_argument('--key-alias', help='Required with --keystore; passwords are requested privately')
-    parser.add_argument('--build-tools', type=Path, help='Android Build-Tools directory, required with --keystore')
+    parser = argparse.ArgumentParser(description='Verify and merge the original Arcaea 7.3.1 ARM64 XAPK.')
+    parser.add_argument('--source', type=Path, required=True, help='Original ARM64 XAPK or its verified merge')
+    parser.add_argument('--java', type=Path, required=True, help='Java executable')
+    parser.add_argument('--apkeditor', type=Path, required=True, help='APKEditor 1.4.9 JAR')
+    parser.add_argument('--output', type=Path, required=True, help='New directory outside the repository')
     args = parser.parse_args()
     try:
-        print(json.dumps(build_current(args)))
-    except Exception as error:
-        # External tool diagnostics can quote private include paths or key lines.
-        if isinstance(error, ValueError):
-            raise SystemExit(str(error)) from None
-        raise SystemExit('Build stopped; compiler diagnostics were suppressed. Keep the input and inspect the failed phase.') from None
+        if args.output.resolve().is_relative_to(ROOT):
+            raise ValueError('Output must remain outside the repository')
+        apk = prepare_input(args.source, args.java, args.apkeditor, args.output)
+    except (OSError, RuntimeError, ValueError, zipfile.BadZipFile) as error:
+        parser.exit(1, f'{error}\n')
+    print(f'Verified original APK: {apk}')
 
 
 if __name__ == '__main__':

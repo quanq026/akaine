@@ -1,27 +1,8 @@
-# Cài game server 7.1.0
+# Cài game server 7.3.1
 
 [English](../05a-install-game-server.md) | Tiếng Việt
 
-Chương này biến Lightsail instance còn rỗng từ chương 2 thành game API đang chạy.
-Nó dùng public server source và content file đã xác minh ở chương 4. Hãy hoàn thành
-thiết lập R2 và Worker trong chương 5 trước. Database mới bắt đầu khi chưa có game
-account. Chương 5b giải thích cách tạo account bằng Discord bot tùy chọn; game cũng có
-registration endpoint thông thường.
-
-Android patch công khai ở chương 6 chứa các API host cố định của bản release. Nếu dùng
-domain khác, các native route cũng phải được patch và kiểm chứng cho host đó. Chạy chương
-này ở `api.example.com` chứng minh server hoạt động; việc đó chưa làm APK AkaineXD đã
-phát hành kết nối tới `api.example.com`.
-
-## Cấu hình server và client
-
-Public server có xử lý pack động, content grant dùng chung và atomic account
-provisioning cho bot. Giá trị identity/secret mặc định được để trống; hãy cấp
-private config của bạn. Catalogue và media đến từ resource kit đã xác minh,
-không phải database hay hồ sơ người chơi của operator khác. Mặc định server
-chưa bật 7.1. Example dành riêng cho phiên bản này sẽ bật sau khi bạn cung cấp
-full bundle và pack catalogue tương ứng. Cài APK không tự cấu hình server
-hay tự cấp content.
+Chương này hướng dẫn chạy API Akaine 7.3.1 trên máy Linux. Hãy chuẩn bị [bundle và nội dung trên R2](05-cloudflare-content.md) trước khi cài. DB mới khởi tạo chưa có người chơi. Để chơi từ game, bạn cần APK Akaine 7.3.1 phù hợp hostname của server.
 
 ## 1. Chuẩn bị Linux instance
 
@@ -74,8 +55,8 @@ minh, hãy tìm:
 ```text
 server songlist              -> database/songs/songlist
 server song metadata         -> database/song_metadata.json
-matching native packlist      -> database/client_catalogs/7.1.0/packlist
-7.1.0 full-root manifest      -> database/bundle/<alias>.json
+matching native packlist      -> database/client_catalogs/7.3.1/packlist
+7.3.1 full-root manifest      -> database/bundle/<alias>.json
 bundle parts                  -> R2 bundle/<alias>_0.cb ...
 ```
 
@@ -91,7 +72,7 @@ $sshKey = Get-Item (Read-Host "Full path to the Lightsail SSH private key")
 $serverIp = Read-Host "Lightsail static IPv4 address"
 $songlist = Get-Item (Read-Host "Full path to the verified server songlist")
 $songMetadata = Get-Item (Read-Host "Full path to the verified song_metadata.json")
-$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.1.0 bundle manifest")
+$bundleManifest = Get-Item (Read-Host "Full path to the verified 7.3.1 bundle manifest")
 $packlist = Get-Item (Read-Host "Full path to the matching native packlist")
 
 ssh -i $sshKey.FullName "ubuntu@$serverIp" "install -d -m 700 /home/ubuntu/akaine-intake"
@@ -121,8 +102,8 @@ case "$manifest_name" in
 esac
 test -f "/home/ubuntu/akaine-intake/$manifest_name"
 
-sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.1.0
-sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.1.0/packlist
+sudo install -d -o akaine -g akaine /srv/akaine/repo/server/database/client_catalogs/7.3.1
+sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/packlist /srv/akaine/repo/server/database/client_catalogs/7.3.1/packlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/songlist /srv/akaine/repo/server/database/songs/songlist
 sudo install -o akaine -g akaine -m 0644 /home/ubuntu/akaine-intake/song_metadata.json /srv/akaine/repo/server/database/song_metadata.json
 sudo install -o akaine -g akaine -m 0644 "/home/ubuntu/akaine-intake/$manifest_name" "/srv/akaine/repo/server/database/bundle/$manifest_name"
@@ -132,118 +113,47 @@ from pathlib import Path
 root = Path('/srv/akaine/repo/server/database')
 manifest = root / 'bundle' / sys.argv[1]
 data = json.loads(manifest.read_text())
-assert data['applicationVersionNumber'] == '7.1.0'
+assert data['applicationVersionNumber'] == '7.3.1'
 assert data['previousVersionNumber'] is None
 assert data['totalPartitions'] > 0
 json.loads((root / 'songs/songlist').read_text(encoding='utf-8-sig'))
 json.loads((root / 'song_metadata.json').read_text())
-assert json.loads((root / 'client_catalogs/7.1.0/packlist').read_text())['packs']
-print('7.1.0 content files ready')
+assert json.loads((root / 'client_catalogs/7.3.1/packlist').read_text())['packs']
+print('7.3.1 content files ready')
 PY
 ```
 
 Server đọc songlist để quyết định unlock và download, metadata để lấy download filename
 và checksum, manifest để lấy bundle version và part URL. Chỉ cài manifest sẽ không làm
 song download hoạt động.
-Lệnh cuối phải in `7.1.0 content files ready`.
+Lệnh cuối phải in `7.3.1 content files ready`.
 
-## 4. Cấu hình server 7.1.0
+## 4. Cấu hình server 7.3.1
 
-Copy example dành riêng cho phiên bản này. Credential nằm trong `config.py` được Git
-ignore, bên trong `class Config`:
+Sao chép cấu hình mẫu rồi nhập thông tin trong file `config.py` riêng của bạn.
 
 ```bash
-sudo -u akaine cp /srv/akaine/repo/server/config.7.1.0.example.py /srv/akaine/repo/server/config.py
+sudo -u akaine cp /srv/akaine/repo/server/config.7.3.1.example.py /srv/akaine/repo/server/config.py
 sudo chmod 0600 /srv/akaine/repo/server/config.py
 sudo -u akaine nano /srv/akaine/repo/server/config.py
 ```
 
-Tạo ba giá trị khác nhau trong password manager rồi đặt `USERNAME`, `PASSWORD` và
-`SECRET_KEY` trong editor. Lệnh `chmod` chỉ cho chủ file đọc cấu hình trước khi bạn
-nhập credential. Thay mọi URL `assets.example.com` bằng R2 custom domain thật.
-Với protected song, lấy đúng song ID từ private R2 `asset-manifest.json` và thêm vào
-`ASSET_SIGNING_SONG_IDS`; giữ các ID hiện có khi sửa list. Template tắt Link Play cho
-lần kiểm tra server đầu tiên.
-
-Đặt `target` của full profile bằng `versionNumber` trong manifest, và list
-`manifests` bằng đúng tên file manifest đã upload. Thay
-`<SHA256_OF_YOUR_7_1_PACKLIST>` bằng hash PowerShell vừa in. Giữ
-`DYNAMIC_CLIENT_7_1_PACKLIST_PATH` trỏ đến packlist đã cài, đổi epoch mỗi lần
-phát hành catalogue mới.
-
-Template cài mới chủ động cấp toàn bộ pack trong catalogue đã xác minh
-(`DYNAMIC_PACKS_FULL_CATALOG = True`). Đặt false nếu muốn yêu cầu ownership
-riêng. Với server đang chạy, gộp profile 7.1 vào cấu hình hiện có; giữ các
-profile bundle, hash catalogue và download prefix 7.0.
-
-Template đặt `GAME_API_PREFIX = '/'`, khớp root path của release hiện tại như
-`/auth/login` và `/game/content_bundle`. Nó chỉ nhận `7.1.0`, lắng nghe
-`127.0.0.1:18080` sau nginx và phục vụ đúng full-root target đã cấu hình cho client mới hoặc
-client có content cũ. File
-`config.example.py` cũ là upstream reference cho client version khác; đừng copy nó cho
-setup này.
-
-Kiểm tra file đã sửa mà không in secret:
+Điền tên admin, mật khẩu và khóa bí mật riêng. Đặt URL R2 cho bundle và URL HTTPS của server cho đường tải từng bài. Mẫu dùng cổng nội bộ 18080. Đổi `7.3.1.1` thành `versionNumber` trong manifest của bạn, ở cả mục target và epoch. Tính SHA-256 cho bốn file rồi chép từng hash vào đúng dòng trong cấu hình.
 
 ```bash
 cd /srv/akaine/repo/server
-sudo -u akaine /srv/akaine/repo/.venv/bin/python - <<'PY'
-import json
-from hashlib import sha256
-from pathlib import Path
-from config import Config
-assert Config.GAME_API_PREFIX == '/'
-assert Config.ALLOW_APPVERSION == ['7.1.0'] and Config.CLIENT_7_1_ENABLED is True
-assert Config.USERNAME and Config.PASSWORD and Config.SECRET_KEY
-assert 'example.com' not in Config.BUNDLE_DOWNLOAD_LINK_PREFIX
-assert 'example.com' not in Config.DOWNLOAD_LINK_PREFIX_7_1_0
-assert 'example.com' not in Config.ASSET_SIGNED_PREFIX
-assert Config.BUNDLE_ASSETSET_PROFILES_ENABLED is True
-profile = Config.BUNDLE_ASSETSET_PROFILES['7.1.0']['full']
-for name in profile['manifests']:
-    manifest = json.loads((Path('database/bundle') / name).read_text())
-    assert manifest['applicationVersionNumber'] == '7.1.0'
-    assert manifest['versionNumber'] == profile['target']
-    assert manifest['previousVersionNumber'] is None
-assert Config.DYNAMIC_PACKS_ENABLED is True and Config.DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED is True
-assert sha256(Path(Config.DYNAMIC_CLIENT_7_1_PACKLIST_PATH).read_bytes()).hexdigest() == Config.DYNAMIC_CLIENT_7_1_PACKLIST_SHA256
-assert Config.DYNAMIC_CLIENT_7_1_CATALOG_EPOCH
-print('7.1.0 server configuration ready')
-PY
+sha256sum database/songs/songlist database/song_metadata.json database/client_catalogs/7.3.1/packlist database/bundle/*.json
+```
+
+Cấu hình mẫu dùng thư mục nhạc trên server cho tải từng bài. Nếu dùng Worker cho nhạc, xem [Cấu hình Cloudflare và R2](05-cloudflare-content.md). Xác minh cấu hình trước khi khởi động.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python -c 'import main; main.validate_runtime_config(); print("Server configuration ready")'
 sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/check_dynamic_pack_catalog.py
 ```
 
-Nếu có traceback, sửa `config.py` rồi kiểm tra lại. Server chưa chạy nên chưa cần restart.
-
-## 5. Dùng cùng Worker signing secret
-
-Dùng secret file đã tạo ở chương 5. Trong Windows PowerShell, chuyển giá trị qua SSH
-standard input; lệnh không hiển thị nội dung:
-
-```powershell
-$secretFile = Get-Item (Read-Host "Full path to the signing-secret file from chapter 5")
-$secretValue = (Get-Content -LiteralPath $secretFile.FullName -Raw).Trim()
-if ([Convert]::FromBase64String($secretValue).Length -ne 32) {
-  throw "The signing secret is not 32 bytes."
-}
-
-("ASSET_SIGNING_SECRET=" + $secretValue) |
-  ssh -i $sshKey.FullName "ubuntu@$serverIp" "umask 077; cat > /home/ubuntu/akaine-intake/asset-signing.env"
-if ($LASTEXITCODE -ne 0) { throw "Signing-secret transfer failed." }
-```
-
-Trong Linux terminal:
-
-```bash
-set -e
-sudo install -o akaine -g akaine -m 0600 /home/ubuntu/akaine-intake/asset-signing.env /srv/akaine/repo/server/.asset-signing.env
-sudo stat -c '%a %U %G %n' /srv/akaine/repo/server/.asset-signing.env
-```
-
-Kết quả phải bắt đầu bằng `600 akaine akaine`. Systemd service đọc environment file
-này; public `config.py` template không chứa signing secret. Không in environment file.
-
-## 6. Khởi động service và kiểm tra HTTP local
+## 5. Khởi động service và kiểm tra HTTP local
 
 Trong Linux terminal:
 
@@ -261,7 +171,7 @@ Service phải báo `active` và lệnh cuối trả `Hello World!`. Nếu khôn
 JSON lỗi, credential trống hoặc permission tại nguồn. Service phải khỏe ở local trước
 khi cấu hình nginx.
 
-## 7. Đặt nginx và HTTPS trước service
+## 6. Đặt nginx và HTTPS trước service
 
 Giữ `api` DNS record ở chế độ **DNS only** cho tới khi certificate hoạt động. Trong
 Linux terminal, chỉ nhập domain đã đăng ký, không kèm `api.` hay `https://`:
@@ -313,7 +223,7 @@ Trong Windows PowerShell, đặt `$apiHost` là hostname của bạn:
 $apiHost = Read-Host "Game API hostname without https://"
 $bundleUrl = "https://$apiHost/game/content_bundle"
 $response = Invoke-WebRequest -Uri $bundleUrl -Headers @{
-  AppVersion = '7.1.0'
+  AppVersion = '7.3.1'
   ContentBundle = '0.0.0'
   DeviceId = 'guide-server-check'
 }
@@ -326,14 +236,14 @@ if ($response.Headers['Cache-Control'] -notmatch 'no-store') {
   throw "The content-bundle decision is missing no-store."
 }
 if (@($body.value.orderedResults).Count -ne 1) {
-  throw "A fresh 7.1.0 client did not receive one bundle."
+  throw "A fresh 7.3.1 client did not receive one bundle."
 }
 
 $body.value.orderedResults | Select-Object contentBundleVersion, appVersion, bundleSize
 
 $targetVersion = $body.value.orderedResults[0].contentBundleVersion
 $currentResponse = Invoke-RestMethod -Uri $bundleUrl -Headers @{
-  AppVersion = '7.1.0'
+  AppVersion = '7.3.1'
   ContentBundle = $targetVersion
   DeviceId = 'guide-server-check'
 }
@@ -376,15 +286,9 @@ sudo -u akaine /srv/akaine/repo/.venv/bin/python -m tools.recompute_ptt database
 
 Script in số tài khoản được cập nhật. Nếu chạy lại sau khi có điểm mới, hãy dùng tên file sao lưu mới.
 
-## Điểm dừng về client host
+## Kết nối client
 
-Native plan trong public repository này nhúng sẵn các Akaine API host đã phát hành.
-Server trên hostname riêng có thể pass toàn bộ HTTP test ở trên, nhưng APK đó vẫn gọi
-host đã nhúng. Trước khi test client với server của bạn, hãy kiểm tra native route đích
-và build một route patch có guard theo phiên bản cho hostname riêng, gồm encrypted
-shared API base. Chương 6 giải thích vì sao login thành công chưa chứng minh mọi route
-đã đổi. Repository hiện chưa có command tổng quát để thay host; dừng tại mức xác minh
-server cho tới khi patch đó được build và test.
+Để đăng nhập từ game, APK Akaine 7.3.1 phải được build cho đúng hostname của server bạn. Nếu chưa có APK phù hợp, dùng các lệnh HTTP ở trên để kiểm server.
 
 Tiếp theo: [Chạy Discord bot tùy chọn](05b-discord-bot.md), rồi
 [sao lưu server](05c-backup-recovery.md).

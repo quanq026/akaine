@@ -6,7 +6,10 @@ import re
 import shlex
 import unicodedata
 
-PACKAGE_VERSIONS = {'akai.arc.lmao': '7.0.255', 'akai.arc.lmao.staging': '7.1.0'}
+QA73_PACKAGE = 'akai.arc.qa73'
+QA73_VERSION = '7.3.1'
+PACKAGE_VERSIONS = {'akai.arc.lmao': QA73_VERSION, QA73_PACKAGE: QA73_VERSION}
+BUNDLE_PATTERNS = {QA73_VERSION: r'7\.3\.1\.[1-9][0-9]{0,8}'}
 CLASSES = {'pst': 0, 'prs': 1, 'ftr': 2, 'byd': 3, 'etr': 4}
 ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
 LEVEL = re.compile(r'(?:[0-9]|1[0-2])\+?\Z')
@@ -39,7 +42,14 @@ def read_file(adb, deadline, key, package='akai.arc.lmao'):
     checks = ['test -d ' + '/'.join(parents[:n]) + ' && test ! -L ' + '/'.join(parents[:n])
               for n in range(1, len(parents) + 1)]
     script = ' && '.join(checks + [f'test -f {path}', f'test ! -L {path}'])
-    adb.call(['shell', '-T', 'run-as', package, 'sh', '-c', shlex.quote(script)], deadline.remaining())
+    if key == 'meta':
+        script = f'if test ! -e {path} && test ! -L {path}; then exit 42; fi; ' + script
+    status = adb.call(['shell', '-T', 'run-as', package, 'sh', '-c', shlex.quote(script)],
+                      deadline.remaining(), allow_failure=True)
+    if key == 'meta' and status.returncode == 42:
+        raise ValueError('The catalogue is unavailable until a bundle has been applied.')
+    if status.returncode:
+        raise ValueError('Could not validate the installed catalogue path.')
     data = adb.call(['exec-out', 'run-as', package, 'head', '-c', str(limit + 1), path], deadline.remaining()).stdout
     if not data or len(data) > limit:
         raise ValueError('Catalogue file is missing or exceeds its size limit.')
@@ -51,10 +61,10 @@ def bundle_version_pattern(package, application_version=None):
         raise ValueError('Unsupported catalogue package.')
     if application_version is None:
         application_version = PACKAGE_VERSIONS[package]
-    allowed = ('7.0.255', '7.1.0') if package == 'akai.arc.lmao' else ('7.1.0',)
+    allowed = (PACKAGE_VERSIONS[package],)
     if not isinstance(application_version, str) or application_version not in allowed:
         raise ValueError('Unsupported catalogue application version for this package.')
-    return r'7\.1\.0\.[1-9][0-9]{0,8}' if application_version == '7.1.0' else r'7\.0\.255\.[0-9]{1,9}'
+    return BUNDLE_PATTERNS[application_version]
 
 
 def load(adb, deadline, package='akai.arc.lmao', *, application_version=None):
@@ -73,16 +83,22 @@ def load(adb, deadline, package='akai.arc.lmao', *, application_version=None):
     hashes, objects = {}, {}
     for key, asset in (('songs', 'songs/songlist'), ('packs', 'songs/packlist')):
         raw = read_file(adb, deadline, key, package=package)
-        expected = meta['pathToHash'].get(asset)
-        if not isinstance(expected, str) or len(expected) != 44:
-            raise ValueError('Catalogue hash is missing from the active manifest.')
-        digest = hashlib.sha256(raw).digest()
-        if base64.b64encode(digest).decode('ascii') != expected:
-            raise ValueError('Catalogue bytes do not match the active manifest; wait for the bundle transaction.')
-        hashes[asset] = digest.hex()
-        objects[key] = json.loads(raw.decode('utf-8-sig'))
+        hashes[asset], objects[key] = verify_catalogue_file(raw, meta['pathToHash'].get(asset))
     if read_file(adb, deadline, 'meta', package=package) != raw_meta:
         raise ValueError('The active content manifest changed during the query.')
+    return validated_catalogue(meta['versionNumber'], hashes, objects)
+
+
+def verify_catalogue_file(raw, expected):
+    if not isinstance(expected, str) or len(expected) != 44:
+        raise ValueError('Catalogue hash is missing from the active manifest.')
+    digest = hashlib.sha256(raw).digest()
+    if base64.b64encode(digest).decode('ascii') != expected:
+        raise ValueError('Catalogue bytes do not match the active manifest; wait for the bundle transaction.')
+    return digest.hex(), json.loads(raw.decode('utf-8-sig'))
+
+
+def validated_catalogue(version, hashes, objects):
     if not all(isinstance(value, dict) for value in objects.values()):
         raise ValueError('Invalid catalogue document shape.')
     songs, packs = objects['songs'].get('songs'), objects['packs'].get('packs')
@@ -95,7 +111,7 @@ def load(adb, deadline, package='akai.arc.lmao', *, application_version=None):
                     not ID.fullmatch(row['id']) or row['id'] in seen):
                 raise ValueError('Invalid or duplicate catalogue identifier.')
             seen.add(row['id'])
-    return {'version': meta['versionNumber'], 'hashes': hashes, 'songs': songs, 'packs': packs}
+    return {'version': version, 'hashes': hashes, 'songs': songs, 'packs': packs}
 
 
 def charts(song):

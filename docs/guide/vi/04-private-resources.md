@@ -90,26 +90,9 @@ maintenance script chỉ vì nó có mặt trong file nén.
 
 Không tiếp tục nếu quá trình xác minh báo cáo file bị thiếu hoặc không khớp.
 
-## Kiểm đầu vào client 7.1
+## Kiểm bộ đầu vào 7.3.1
 
-Trước chương 6, xác định những file đã kiểm này trong hướng dẫn của kit:
-
-- Native `songlist` JSON khớp catalogue content. Server metadata là file khác,
-  không thay thế được nó.
-- Private AKFC key header tương ứng với protected chart. Giữ header ngoài
-  repository; nó được truyền trực tiếp cho native compiler.
-- Static BoringSSL archive arm64 có symbol prefix `akfc_`, hoặc hướng dẫn
-  build nó bằng public helper.
-- Đúng jadx all-in-one JAR và Android Build-Tools `d8.jar`, cùng thông tin
-  xác minh của chúng. Java 17 và NDK `28.2.13676358` được chọn ở chương 6.
-
-XAPK APKPure gốc và APKEditor được tải riêng theo chương 6; chương đó có
-hash chính xác của chúng. Kit không cần APK Akaine, local path map của người
-phát triển, SDK directory được copy, payload `.so`/`.dex` cuối đã patch hay
-Android keystore của operator khác. Chương 6 nhận đường dẫn đầu vào tường
-minh rồi build từ client gốc và source công khai.
-Không tạo AKFC key mới khi dùng catalogue hiện có: client đó sẽ không giải mã
-được những chart đã mã hóa.
+Kiểm bộ tài nguyên có manifest bundle, các phần .cb, songlist, packlist và song_metadata.json của cùng bản nội dung. [Chương 6](06-build-android-client.md) tải XAPK gốc và công cụ gộp riêng.
 
 ## Giữ bộ tài nguyên riêng tư
 

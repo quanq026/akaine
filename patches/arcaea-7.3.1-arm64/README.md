@@ -12,5 +12,4 @@ The input verifier in [akaine_build](../../akaine_build/android.py) checks the
 XAPK, merges its five modules and verifies the merged APK hash.
 
 This is a source checkpoint. The native modules still need generated ABI
-headers and a public packaging step. For a complete build command, use the
-[7.1.0 guide](../../docs/guide/06-build-android-client.md).
+headers and a public packaging step. See the [client input guide](../../docs/guide/06-build-android-client.md) to prepare the original package.
