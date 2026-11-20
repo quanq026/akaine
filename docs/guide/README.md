@@ -1,4 +1,4 @@
-# Set up Akaine 7.1.0 from scratch
+# Set up Akaine from scratch
 
 This walkthrough builds an Akaine server and Android client for Arcaea
 `7.1.0` (`1209907`). It starts with the basics and uses the same example names

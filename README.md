@@ -1,11 +1,12 @@
-# Akaine 7.1
+# Akaine
 
 English | [Tiếng Việt](README.vi.md)
 ![Akaine](docs/images/akaine-hero.png)
 
 <p align="center">
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Join Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="docs/guide/06-build-android-client.md"><img alt="Arcaea 7.1.0" src="https://img.shields.io/badge/Arcaea-7.1.0-547EA8?style=flat"></a>
+  <a href="docs/guide/06-build-android-client.md"><img alt="Build guide for 7.1.0" src="https://img.shields.io/badge/Build-7.1.0-547EA8?style=flat"></a>
+  <a href="patches/arcaea-7.3.1-arm64/"><img alt="Patch source for 7.3.1" src="https://img.shields.io/badge/Patch_source-7.3.1-547EA8?style=flat"></a>
   <a href="docs/guide/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python and C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
@@ -19,22 +20,19 @@ English | [Tiếng Việt](README.vi.md)
   <a href="docs/guide/README.md">Start the guide</a>
 </p>
 
-Akaine is a setup guide and public source repository for a server and Android
-client based on Arcaea 7.1.0. The guide starts with a clean Windows computer
-and a new cloud account. You do not need previous experience with Linux,
-Cloudflare or Android builds.
+Akaine provides public source and a beginner's guide for setting up a game server
+and building an Android client.
 
-The guide and public client patches target only version `7.1.0` with version
-code `1209907`. Older and newer Arcaea releases use different files and native
-offsets, so they are outside this repository's instructions.
+| What you want to do | Where to start |
+| --- | --- |
+| Build an installable APK | [Build guide for Arcaea 7.1.0 ARM64 (1209907)](docs/guide/06-build-android-client.md) |
+| Set up your own server | [Start from a clean machine](docs/guide/) |
+| Browse the 7.3.1 port | [Native patches, Android bindings and CLI source](patches/arcaea-7.3.1-arm64/). The standalone 7.3.1 build is still pending. |
 
-The repository contains the guide, server and build tools. Download the
-original client from APKPure; matching content and chart-key inputs are
-supplied separately when the guide needs them.
+Download the original client from APKPure. The guide explains when to supply
+matching content and chart-key inputs.
 
 Discord: kuan.026 if you have any questions!
-
-The [7.3.1 ARM64 source checkpoint](patches/arcaea-7.3.1-arm64/) covers the native patch, Android bindings and CLI. The one-command build below targets 7.1.0.
 
 ## Features
 
@@ -98,7 +96,7 @@ By the end of the guide, you will have:
 The client uses the included Akaine production hosts. Your own hostname needs
 a separately verified route patch; see [chapter 6](docs/guide/06-build-android-client.md).
 
-![Akaine 7.1.0 platform overview](docs/images/akaine-platform-overview.svg)
+![Akaine platform overview](docs/images/akaine-platform-overview.svg)
 
 ## Before you start
 

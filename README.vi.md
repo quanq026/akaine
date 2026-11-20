@@ -1,4 +1,4 @@
-# Akaine 7.1
+# Akaine
 
 [English](README.md) | Tiếng Việt
 
@@ -6,7 +6,8 @@
 
 <p align="center">
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Arcaea 7.1.0" src="https://img.shields.io/badge/Arcaea-7.1.0-547EA8?style=flat"></a>
+  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Hướng dẫn build 7.1.0" src="https://img.shields.io/badge/Build-7.1.0-547EA8?style=flat"></a>
+  <a href="patches/arcaea-7.3.1-arm64/"><img alt="Mã patch 7.3.1" src="https://img.shields.io/badge/Patch_source-7.3.1-547EA8?style=flat"></a>
   <a href="docs/guide/vi/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python và C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
   <br>
@@ -21,19 +22,17 @@
   <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
 
-Akaine là bộ mã nguồn công khai kèm hướng dẫn dựng server và client Android
-dựa trên Arcaea 7.1.0. Hướng dẫn bắt đầu từ một máy Windows sạch và một tài
-khoản cloud mới. Bạn không cần biết trước về Linux, Cloudflare hay quy trình
-build Android.
+Akaine cung cấp mã nguồn công khai và hướng dẫn cho người mới muốn tự dựng
+game server và build client Android.
 
-Toàn bộ hướng dẫn và patch client công khai chỉ dành cho phiên bản `7.1.0`,
-version code `1209907`. Các phiên bản Arcaea cũ hơn hoặc mới hơn có file và
-native offset khác, vì vậy không thể dùng chung các bước trong repository này.
+| Bạn muốn làm gì | Bắt đầu ở đâu |
+| --- | --- |
+| Build APK để cài | [Hướng dẫn build Arcaea 7.1.0 ARM64 (1209907)](docs/guide/vi/06-build-android-client.md) |
+| Tự dựng server | [Hướng dẫn từ máy trắng](docs/guide/vi/) |
+| Xem phần chuyển sang 7.3.1 | [Mã patch native, Android và CLI](patches/arcaea-7.3.1-arm64/). Bản build độc lập 7.3.1 vẫn đang chờ hoàn thiện. |
 
-Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
-từ APKPure; content và đầu vào chart key tương ứng được cung cấp riêng khi cần.
-
-[Mã patch ARM64 của 7.3.1](patches/arcaea-7.3.1-arm64/) gồm phần native, Android và CLI. Lệnh build trong hướng dẫn bên dưới dùng cho 7.1.0.
+Tải client gốc từ APKPure. Hướng dẫn chỉ rõ khi nào cần bộ nội dung và khóa
+chart tương ứng.
 
 ## Tính năng
 
@@ -97,7 +96,7 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 Client dùng Akaine production host đi kèm. Muốn kết nối tên miền riêng cần
 route patch được kiểm chứng riêng; xem [chương 6](docs/guide/vi/06-build-android-client.md).
 
-![Tổng quan nền tảng Akaine 7.1.0](docs/images/akaine-platform-overview.svg)
+![Tổng quan nền tảng Akaine](docs/images/akaine-platform-overview.svg)
 
 ## Trước khi bắt đầu
 
