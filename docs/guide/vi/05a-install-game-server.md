@@ -347,6 +347,23 @@ Request thứ hai chứng minh client ở target version không tải lại. API
 được có Cloudflare cache `HIT` cho route này. Bundle part và
 song object còn cần kiểm tra R2/CDN cùng client riêng ở chương 5, 7 và 9.
 
+## Tạo tài khoản và kiểm quyền
+
+Nếu dùng Discord, qua [chương bot](05b-discord-bot.md) rồi gõ `/create`. Nếu cài server không kèm bot, tạo acc thử trên terminal Linux. Mật khẩu nhập khi chương trình hỏi.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/create_user_cli.py TestPlayer
+```
+
+Acc mới nhận pack, bài lẻ, nhân vật và các quyền mở khóa có trong DB của bạn. Sau khi đăng nhập, chọn **Cloud Sync → Download** trong game. Nếu cần kiểm các acc đã có sau khi thêm nội dung, chạy lệnh này để xem trước.
+
+```bash
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/create_user_cli.py --repair-existing all --dry-run
+```
+
+Xem `expected_content` để biết số quyền mà DB của bạn có. `inserted`, `raised_null_or_zero_to_one` và `full_characters_added` là số mục còn thiếu trước khi bù. Sao lưu DB theo [chương 5c](05c-backup-recovery.md) rồi bỏ `--dry-run` nếu muốn áp dụng. Có thể thay `all` bằng `user_id` để kiểm một acc.
+
 ## Cập nhật PTT trên server đã có người chơi
 
 Bỏ qua bước này nếu cài mới. Server tính PTT theo Best 50, trong đó 10 bài đầu được tính hai lần. Lệnh đầu xem trước thay đổi. Lệnh sau sao lưu SQLite vào file riêng trước khi ghi.

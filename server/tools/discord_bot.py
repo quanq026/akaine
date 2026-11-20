@@ -33,7 +33,7 @@ LOGGER = logging.getLogger("lygus_bot")
 BRAND_COLOR = discord.Color.from_rgb(204, 67, 116)
 SUCCESS_COLOR = discord.Color.from_rgb(73, 185, 124)
 ERROR_COLOR = discord.Color.from_rgb(218, 68, 83)
-ACCOUNT_SETUP_NOTE = "**7.0 setup:** In Akaine, use **Cloud Sync → Download** to receive current unlock and content data."
+ACCOUNT_SETUP_NOTE = "Sign in to Akaine, then use **Cloud Sync → Download** to sync the unlocks available on this server."
 RANKING_PAGE_SIZE = 5
 DISCORD_MENTION_PATTERN = re.compile(r"^<@!?(\d{15,20})>$")
 

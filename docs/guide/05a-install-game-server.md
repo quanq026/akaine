@@ -353,6 +353,23 @@ not download it again. The API hostname must never show a Cloudflare cache
 `HIT` for this route. The bundle parts and song objects still need the
 separate R2/CDN and client checks in chapters 5, 7 and 9.
 
+## Create an account and check access
+
+For Discord, follow [the bot chapter](05b-discord-bot.md) and run `/create`. For a server without the bot, create a test account in the Linux terminal. Enter the password when prompted.
+
+```bash
+cd /srv/akaine/repo/server
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/create_user_cli.py TestPlayer
+```
+
+New accounts receive the packs, single songs, characters and unlocks defined in your database. Sign in and choose **Cloud Sync → Download**. To check existing accounts after adding content, preview the repair.
+
+```bash
+sudo -u akaine /srv/akaine/repo/.venv/bin/python tools/create_user_cli.py --repair-existing all --dry-run
+```
+
+Read `expected_content` for the number of grants available in your database. The fields `inserted`, `raised_null_or_zero_to_one` and `full_characters_added` show what would be filled. Back up SQLite as shown in [chapter 5c](05c-backup-recovery.md) before removing `--dry-run` to apply. Replace `all` with a `user_id` to check one account.
+
 ## Updating PTT on an existing server
 
 Skip this step on a fresh install. The server calculates PTT from Best 50, counting the top ten twice. The first command previews the change and the second saves a private SQLite backup before applying it.

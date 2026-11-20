@@ -72,7 +72,9 @@ def verify_created_account(cur, user_id):
     """Fail the transaction instead of committing a partially provisioned account."""
     expected_characters = cur.execute("SELECT COUNT(*) FROM character").fetchone()[0]
     actual_characters = cur.execute(
-        "SELECT COUNT(*) FROM user_char_full WHERE user_id = ?", (user_id,)
+        """SELECT COUNT(*) FROM user_char_full AS owned
+           JOIN character AS catalog ON catalog.character_id = owned.character_id
+           WHERE owned.user_id = ?""", (user_id,)
     ).fetchone()[0]
     missing_entitlements = missing_content_count(cur, user_id)
     if actual_characters != expected_characters or missing_entitlements:
@@ -205,11 +207,18 @@ def repair_existing_users(cur, target):
         cur.execute("SELECT user_id, name FROM user WHERE user_id = ?", (int(target),))
 
     users = cur.fetchall()
+    if not users and target != "all":
+        raise ValueError("No account with that user_id")
     results = {}
     for user in users:
-        results[str(user["user_id"])] = {
+        user_id = user["user_id"]
+        entitlements = grant_current_entitlements(cur, user_id)
+        characters_added = grant_missing_full_characters(cur, user_id)
+        results[str(user_id)] = {
             "username": user["name"],
-            "entitlements": grant_current_entitlements(cur, user["user_id"]),
+            "entitlements": entitlements,
+            "full_characters_added": characters_added,
+            "verification": verify_created_account(cur, user_id),
         }
     return results
 
@@ -224,7 +233,7 @@ def main():
     parser.add_argument("--email", help="Optional email (defaults to username@example.local)")
     parser.add_argument("--database", help="Explicit database path for isolated staging tests")
     parser.add_argument("--dry-run", action="store_true", help="Run all DB work and then roll it back")
-    parser.add_argument("--repair-existing", help="Repair entitlements for an existing user_id or 'all'")
+    parser.add_argument("--repair-existing", help="Fill missing content and full character rows for a user_id or 'all'")
     args = parser.parse_args()
 
     try:

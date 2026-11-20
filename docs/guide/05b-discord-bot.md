@@ -56,13 +56,7 @@ not use `LYGUS_CREATE_CLI`; remove that obsolete setting from an older private
 environment file. No account-creation subprocess or password command-line
 argument is required.
 
-Account creation calls the accepted `create_user_cli.provision_account` helper
-directly. It creates the game account and Discord mapping in one transaction
-across the attached SQLite files. Both databases must use a rollback journal
-mode (`delete`, `truncate` or `persist`); incompatible modes are rejected before
-creation. If that check fails on an existing installation, inspect its database
-configuration and backup before changing modes. The bot applies the shared
-additive nonconsumable policy; it does not copy a production player database.
+If you are importing an existing SQLite database that uses WAL, Discord account creation will stop. Use the account command in chapter 5a or have an administrator review the database before changing its journal mode. A fresh setup from chapter 5a does not need that change.
 
 ## Start and verify
 
@@ -74,17 +68,15 @@ sudo systemctl enable --now lygus-bot.service
 sudo systemctl is-active lygus-bot.service
 ```
 
-The service must say `active`. Open Discord and confirm the bot is online.
-Its slash commands are synchronized when it starts; they may take time to
-appear. Test `/help` and `/ranking`, then create or link a test account and
-request `/profile`. Ranking pages contain five players and the Previous/Next
-buttons can only be controlled by the Discord user who opened the ranking.
-`/profile` and `/recent` accept either an Akaine username or a Discord user in
-the `discord_profile` option. A pasted `<@mention>` in the username option is
-also recognized. Successful profile and recent-play results are posted to the
-channel for everyone to see; another player's private profile remains hidden.
-For a new account, follow the bot's note to use **Cloud Sync → Download** in
-the game.
+The service should report `active`. Open Discord and confirm the bot is online. If commands are missing, wait for synchronization and try `/help`.
+
+### Create your first account
+
+1. Complete [the content setup in chapter 5a](05a-install-game-server.md#3-supply-the-verified-content-files). The bot grants items from the catalogue installed on your server. This guide uses 7.1.0 content. The 7.3.1 source in the repository is a port reference.
+2. In Discord, run `/create` and enter a username and password in the private dialog. Save the details the bot returns and try `/profile` for your new account.
+3. Sign in to the game, choose **Cloud Sync → Download**, then check a pack and a character from your content set. If either is missing, review the content setup. See [how to check account access](05a-install-game-server.md#create-an-account-and-check-access) for an administrator preview.
+
+Use `/link` if you already have an account. `/profile` and `/recent` accept an Akaine username or the `discord_profile` option. `/ranking` shows five players per page.
 
 If the service is not active, inspect only its recent status and logs:
 
