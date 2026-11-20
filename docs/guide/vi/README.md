@@ -1,4 +1,4 @@
-# Thiết lập Akaine 7.1.0 từ đầu
+# Thiết lập Akaine từ đầu
 
 [English](../README.md) | Tiếng Việt
 
