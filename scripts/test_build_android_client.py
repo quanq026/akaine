@@ -5,8 +5,11 @@ import unittest
 import zipfile
 from pathlib import Path
 
-import build_android_client
+import sys
 from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from akaine_build import android as build_android_client
 
 
 def digest(path: Path) -> str:
@@ -32,7 +35,7 @@ class AndroidClientBuilderTests(unittest.TestCase):
         guide = (root / "docs/guide/06-build-android-client.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("scripts\\build_android_client.py", guide)
+        self.assertIn("-m akaine_build.android", guide)
         self.assertIn(build_android_client.XAPK[1], guide)
         self.assertIn("--songlist", guide)
         self.assertNotIn("production-checkpoint.md", guide)
@@ -45,7 +48,7 @@ class AndroidClientBuilderTests(unittest.TestCase):
         )
         for required in (
             '$python = Join-Path $repoRoot ".venv\\Scripts\\python.exe"',
-            '& $python scripts\\build_android_client.py --help',
+            '& $python -m akaine_build.android --help',
             'Wrong APKPure package. Stop here;',
             'BUILD_RECEIPT.json',
             '--keystore',

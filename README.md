@@ -122,6 +122,12 @@ duplicate releases or serve unusually heavy traffic.
 When the AWS credits expire, you can pay for the same Lightsail server or move
 the installation to another VPS provider.
 
+## Repository layout
+
+- [Android builder](akaine_build/) and [versioned patches](patches/) build the client. Shared patch source lives in [patches/shared](patches/shared/).
+- [Semantic CLI](akaine_cli/) operates an installed client.
+- [Server](server/) serves the game API. Setup instructions are in [the guide](docs/guide/).
+
 ## Start the guide
 
 1. [See how the system works](docs/guide/01-architecture.md).

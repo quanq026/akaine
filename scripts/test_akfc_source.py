@@ -59,7 +59,7 @@ class AKFCSourceTests(unittest.TestCase):
     def test_loader_source_has_release_hardening(self):
         source = (
             ROOT
-            / "patches/arcaea-7.0.255-arm64/native/akfc_loader.cpp"
+            / "patches/shared/native/akfc_loader.cpp"
         ).read_text(encoding="utf-8")
         self.assertNotIn("Java_low_moe_AkfcLoader_decryptFile", source)
         self.assertIn("Java_low_moe_AkfcLoader_installHooks", source)
@@ -75,7 +75,7 @@ class AKFCSourceTests(unittest.TestCase):
         self.assertNotIn("Copy-Item $crypto", guide)
         self.assertEqual(len(build_boringssl_android.REVISION), 40)
         source = (
-            ROOT / "patches/arcaea-7.0.255-arm64/native/akfc_loader.cpp"
+            ROOT / "patches/shared/native/akfc_loader.cpp"
         ).read_text(encoding="utf-8")
         self.assertIn("p_EVP_AEAD_CTX_open = akfc_EVP_AEAD_CTX_open", source)
         self.assertNotIn('dlopen("libcrypto.so"', source)

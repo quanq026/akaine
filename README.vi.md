@@ -122,6 +122,12 @@ release trùng nhau hoặc phục vụ lượng tải lớn.
 Khi AWS credit hết hạn, bạn có thể tiếp tục trả phí cho Lightsail hoặc chuyển
 hệ thống sang nhà cung cấp VPS khác.
 
+## Cấu trúc repo
+
+- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để build client. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
+- [Semantic CLI](akaine_cli/) điều khiển client đã cài.
+- [Server](server/) cung cấp API game. Xem cách cài trong [hướng dẫn](docs/guide/vi/).
+
 ## Bắt đầu hướng dẫn
 
 1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).

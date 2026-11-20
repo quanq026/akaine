@@ -6,15 +6,13 @@ import sys
 import tempfile
 import unittest
 
-import build_android_client as client
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from akaine_build import android as client
+from akaine_cli import __main__ as akaine, catalogue
 engine = client.load_patch_module('engine71_tests', client.PATCH / 'build.py')
 native = engine.engine('native')
 managed = engine.engine('managed')
-sys.path.insert(0, str(ROOT / 'scripts/akaine_cli'))
-import akaine
-import catalogue
 
 
 class CurrentPatchTests(unittest.TestCase):

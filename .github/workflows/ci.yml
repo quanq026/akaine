@@ -22,7 +22,7 @@ jobs:
       - run: python -m pip install -r server/requirements.txt
       - run: python scripts/doctor.py --ci
       - run: python scripts/ci_public_repo_check.py
-      - run: python -m compileall -q server scripts
+      - run: python -m compileall -q server scripts akaine_build akaine_cli
       - run: python scripts/test_build_android_client.py
       - run: python scripts/test_build_content_bundle.py
       - run: python scripts/test_encrypt_akfc_aff.py

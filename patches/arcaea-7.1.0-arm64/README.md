@@ -18,6 +18,6 @@ hashes are recorded. The operator's external AKFC header and static crypto
 archive produce the loader from public C++ source. Keys and build outputs stay
 outside Git.
 
-The older version directory holds only the shared, locked source baseline.
+The [shared directory](../shared/) holds the locked source baseline.
 It is reused rather than copied into this folder. No staging build, one-time
 operator script, deployment backup or binary payload is included here.
