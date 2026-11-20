@@ -11,6 +11,7 @@ from core.operation import (DeleteUserScore, RefreshAllScoreRating,
                             RefreshBundleCache, RefreshSongFileCache,
                             SaveUpdateScore, UnlockUserItem)
 from core.rank import RankList
+from core.ptt_v7 import BEST_COUNT
 from core.score import Potential
 from core.sql import Connect
 from core.user import User
@@ -99,20 +100,15 @@ def single_player_ptt():
                 if user_id:
                     user_id = user_id[0]
                     user = web.webscore.get_user(c, user_id)
-                    posts = web.webscore.get_user_score(c, user_id, 30)
+                    posts = web.webscore.get_user_score(c, user_id, BEST_COUNT)
                     u = User()
                     u.user_id = user_id
                     p = Potential(c, u)
-                    recentptt = p.recent_10 / 10
                     recent = p.recent_30_to_dict_list()
                     if not posts:
                         error = '无成绩 No score.'
                     else:
-                        bestptt = 0
-                        for i in posts:
-                            if i['rating']:
-                                bestptt += i['rating']
-                        bestptt = bestptt / 30
+                        bestptt = p.value
                 else:
                     error = '玩家不存在 The player does not exist.'
 
@@ -122,7 +118,7 @@ def single_player_ptt():
         if error:
             flash(error)
         else:
-            return render_template('web/singleplayerptt.html', posts=posts, user=user, recent=recent, recentptt=recentptt, bestptt=bestptt)
+            return render_template('web/singleplayerptt.html', posts=posts, user=user, recent=recent, bestptt=bestptt)
 
     return render_template('web/singleplayerptt.html')
 

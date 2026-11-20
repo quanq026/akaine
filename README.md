@@ -34,6 +34,8 @@ supplied separately when the guide needs them.
 
 Discord: kuan.026 if you have any questions!
 
+The [7.3.1 ARM64 source checkpoint](patches/arcaea-7.3.1-arm64/) covers the native patch, Android bindings and CLI. The one-command build below targets 7.1.0.
+
 ## Features
 
 ### Server
@@ -122,7 +124,16 @@ duplicate releases or serve unusually heavy traffic.
 When the AWS credits expire, you can pay for the same Lightsail server or move
 the installation to another VPS provider.
 
+## Repository layout
+
+- [Android builder](akaine_build/) and [versioned patches](patches/) build the client. Shared patch source lives in [patches/shared](patches/shared/).
+- [Semantic CLI](akaine_cli/) operates an installed client.
+- [Server](server/) serves the game API. Setup instructions are in [the guide](docs/guide/).
+
 ## Start the guide
+
+- [Build the Android APK](docs/guide/06-build-android-client.md) if you already have the tools and build inputs.
+- [Set up your own server](docs/guide/) if you are starting from scratch.
 
 1. [See how the system works](docs/guide/01-architecture.md).
 2. [Create the cloud server and connect a domain](docs/guide/02-cloud-domain.md).

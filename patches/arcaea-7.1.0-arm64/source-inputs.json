@@ -2,7 +2,7 @@
   "schema": "akaine.port71.source-inputs.v1",
   "baseline_repository": "https://github.com/quanq026/akaine",
   "baseline_commit": "0bddaef45c485d4b0b0643b7fa1280d1b05fd051",
-  "baseline_patch": "patches/arcaea-7.0.255-arm64",
+  "baseline_patch": "patches/shared",
   "files": [
     {
       "source": "runtime/bundle-partials/AkaineBundlePartialCache.java",

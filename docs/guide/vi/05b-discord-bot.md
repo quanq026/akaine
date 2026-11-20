@@ -56,13 +56,7 @@ Các path setting được hỗ trợ là `LYGUS_SERVER_ROOT`, `LYGUS_GAME_DB`,
 `LYGUS_CREATE_CLI`; hãy bỏ setting cũ đó khỏi private environment file nếu còn.
 Không cần subprocess tạo account hay truyền password qua tham số dòng lệnh.
 
-Tạo account gọi trực tiếp helper `create_user_cli.provision_account` đã được
-chấp nhận. Game account và Discord mapping được tạo trong một transaction qua
-hai file SQLite được attach. Cả hai database phải dùng rollback journal mode
-(`delete`, `truncate` hoặc `persist`); mode không tương thích bị từ chối trước
-khi tạo. Nếu check này thất bại ở hệ thống đang có dữ liệu, hãy kiểm tra config
-và backup database trước khi đổi mode. Bot dùng chính sách grant nonconsumable
-cộng thêm dùng chung, không copy database người chơi production.
+Nếu đang chuyển một DB cũ dùng WAL, bot sẽ từ chối tạo tài khoản qua Discord. Dùng lệnh tạo acc ở chương 5a hoặc liên hệ quản trị viên để kiểm DB trước khi đổi chế độ ghi. Một lần cài mới theo chương 5a không cần bước đổi này.
 
 ## Khởi động và kiểm tra
 
@@ -74,15 +68,15 @@ sudo systemctl enable --now lygus-bot.service
 sudo systemctl is-active lygus-bot.service
 ```
 
-Service phải báo `active`. Mở Discord và xác nhận bot online. Slash command được sync
-khi bot khởi động; có thể cần chờ để chúng xuất hiện. Test `/help` và `/ranking`, sau
-đó tạo hoặc liên kết test account rồi chạy `/profile`. Mỗi trang ranking có năm player;
-chỉ Discord user đã mở ranking mới điều khiển được nút Previous/Next.
-`/profile` và `/recent` nhận Akaine username hoặc Discord user ở option
-`discord_profile`. Nếu paste `<@mention>` vào option username, bot cũng nhận diện được.
-Kết quả profile và recent-play thành công được đăng công khai trong channel để mọi
-người cùng xem; profile private của người khác vẫn bị ẩn. Với account mới, dùng
-**Cloud Sync → Download** trong game.
+Service phải báo `active`. Mở Discord và xác nhận bot online. Nếu chưa thấy lệnh, đợi bot đồng bộ rồi thử `/help`.
+
+### Tạo tài khoản đầu tiên
+
+1. Hoàn thành [bước nạp nội dung ở chương 5a](05a-install-game-server.md#3-cung-cấp-content-file-đã-xác-minh). Bot cấp quyền dựa trên danh mục đã nạp vào server của bạn. Với hướng dẫn hiện tại, chọn bộ nội dung 7.1.0. Source 7.3.1 trong repo là bản tham khảo port.
+2. Trong Discord, gõ `/create` và nhập tên, mật khẩu trong hộp thoại riêng. Lưu thông tin bot trả về và thử `/profile` để xem acc vừa tạo.
+3. Đăng nhập trong game, chọn **Cloud Sync → Download**, rồi kiểm một pack và một nhân vật có trong bộ nội dung của bạn. Nếu thiếu nội dung, quay lại bước nạp dữ liệu ở chương 5a. Phần [kiểm quyền của tài khoản](05a-install-game-server.md#tạo-tài-khoản-và-kiểm-quyền) có lệnh xem thử cho admin.
+
+Dùng `/link` nếu đã có tài khoản. `/profile` và `/recent` nhận tên Akaine hoặc mục `discord_profile`. `/ranking` hiển thị năm người mỗi trang.
 
 Nếu service không active, chỉ kiểm tra status và log gần đây:
 

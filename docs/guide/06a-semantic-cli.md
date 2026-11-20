@@ -3,8 +3,8 @@
 The 7.1.0 client exposes native UI actions with short-lived context tokens. List the current state before activating a token. A token is valid only for the exact current scene, owned UI object, and registered callback.
 
 ```powershell
-& $python scripts/akaine_cli/akaine.py --serial $serial ui list
-& $python scripts/akaine_cli/akaine.py --serial $serial ui activate <token-from-ui-list>
+& $python -m akaine_cli --serial $serial ui list
+& $python -m akaine_cli --serial $serial ui activate <token-from-ui-list>
 ```
 
 ## First-run setup and guides
@@ -27,8 +27,8 @@ The ordinary Offset Setup cancellation path requires incomplete calibration and 
 ## Inspect or advance one guide step
 
 ```powershell
-& $python scripts/akaine_cli/akaine.py --serial $serial guide status
-& $python scripts/akaine_cli/akaine.py --serial $serial guide next
+& $python -m akaine_cli --serial $serial guide status
+& $python -m akaine_cli --serial $serial guide next
 ```
 
 These host conveniences require explicit native guide metadata. Older native
@@ -67,16 +67,16 @@ this API does not dismiss them or write tutorial preferences.
 Select the intended song and difficulty, then use its native Play callback:
 
 ```powershell
-& $python scripts/akaine_cli/akaine.py --serial $serial song select <song-id>
-& $python scripts/akaine_cli/akaine.py --serial $serial song difficulty ftr
-& $python scripts/akaine_cli/akaine.py --serial $serial song play <song-id>
+& $python -m akaine_cli --serial $serial song select <song-id>
+& $python -m akaine_cli --serial $serial song difficulty ftr
+& $python -m akaine_cli --serial $serial song play <song-id>
 ```
 
 When the first-play Note Speed popup is open, `ui.overlays` includes `note_speed_setup`; underlying scene actions are blocked. `NOTE_SPEED_SETUP_REQUIRED` means the native Play path reached that popup. Inspect the selected chart and popup before confirming:
 
 ```powershell
-& $python scripts/akaine_cli/akaine.py --serial $serial ui list
-& $python scripts/akaine_cli/akaine.py --serial $serial song confirm-speed <song-id>
+& $python -m akaine_cli --serial $serial ui list
+& $python -m akaine_cli --serial $serial song confirm-speed <song-id>
 ```
 
 `song confirm-speed` maps to the exact native `play_set_speed` command. It supplies no replacement speed. The registered Set callback preserves the displayed value, marks the ordinary first-play setup complete, and runs the existing continuation for that selected song and difficulty. This continuation can enter gameplay or a native download/tutorial prompt. Inspect the returned state before the next action.

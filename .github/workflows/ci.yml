@@ -22,7 +22,7 @@ jobs:
       - run: python -m pip install -r server/requirements.txt
       - run: python scripts/doctor.py --ci
       - run: python scripts/ci_public_repo_check.py
-      - run: python -m compileall -q server scripts
+      - run: python -m compileall -q server scripts akaine_build akaine_cli
       - run: python scripts/test_build_android_client.py
       - run: python scripts/test_build_content_bundle.py
       - run: python scripts/test_encrypt_akfc_aff.py
@@ -31,7 +31,7 @@ jobs:
       - run: python scripts/test_vietnamese_guide.py
       - name: Run reproducible server and bot tests
         working-directory: server
-        run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tests.test_content_bundle_cache tests.test_bundle_profiles tests.test_client_7_1 tests.test_content_projection_parity tests.test_diein_world_projection tools.test_discord_bot
+        run: python -m unittest -v tests.test_fresh_install_bundle tests.test_security_defaults tests.test_content_bundle_cache tests.test_bundle_profiles tests.test_client_7_1 tests.test_content_projection_parity tests.test_diein_world_projection tests.test_ptt_v7 tools.test_discord_bot
 
   b30-web-tool:
     runs-on: ubuntu-latest

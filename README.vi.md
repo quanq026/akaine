@@ -33,6 +33,8 @@ native offset khác, vì vậy không thể dùng chung các bước trong repos
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
 từ APKPure; content và đầu vào chart key tương ứng được cung cấp riêng khi cần.
 
+[Mã patch ARM64 của 7.3.1](patches/arcaea-7.3.1-arm64/) gồm phần native, Android và CLI. Lệnh build trong hướng dẫn bên dưới dùng cho 7.1.0.
+
 ## Tính năng
 
 ### Server
@@ -122,7 +124,16 @@ release trùng nhau hoặc phục vụ lượng tải lớn.
 Khi AWS credit hết hạn, bạn có thể tiếp tục trả phí cho Lightsail hoặc chuyển
 hệ thống sang nhà cung cấp VPS khác.
 
+## Cấu trúc repo
+
+- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để build client. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
+- [Semantic CLI](akaine_cli/) điều khiển client đã cài.
+- [Server](server/) cung cấp API game. Xem cách cài trong [hướng dẫn](docs/guide/vi/).
+
 ## Bắt đầu hướng dẫn
+
+- [Build APK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
+- [Tự dựng server](docs/guide/vi/) nếu bạn bắt đầu từ đầu.
 
 1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).
 2. [Tạo cloud server và kết nối tên miền](docs/guide/vi/02-cloud-domain.md).

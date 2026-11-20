@@ -6,6 +6,8 @@ Chuẩn bị đầu vào một lần, rồi chạy một lệnh build. Lệnh s�
 gói APKPure gốc, áp dụng thay đổi 7.1 hiện hành, biên dịch runtime, căn chỉnh
 và ký APK của bạn. Không dùng APK Akaine đã patch làm đầu vào.
 
+Xem [mã patch 7.3.1](../../../patches/arcaea-7.3.1-arm64/) nếu bạn muốn tham khảo port. Để build APK theo chương này, chọn 7.1.0.
+
 Chương này chỉ hỗ trợ Arcaea **7.1.0 (`1209907`), arm64-v8a**.
 Không thay bằng phiên bản khác hoặc bản tải armeabi-v7a.
 
@@ -33,7 +35,7 @@ $kitRoot = [Environment]::GetEnvironmentVariable("AKAINE_KIT_ROOT", "User")
 $python = Join-Path $repoRoot ".venv\Scripts\python.exe"
 Set-Location $repoRoot
 Get-Item $python, $kitRoot
-& $python scripts\build_android_client.py --help
+& $python -m akaine_build.android --help
 if ($LASTEXITCODE -ne 0) { throw "Client builder is unavailable." }
 ```
 
@@ -193,7 +195,7 @@ $arguments = @(
     "--key-alias", $keyAlias,
     "--build-tools", $buildTools.FullName
 )
-& $python scripts\build_android_client.py @arguments
+& $python -m akaine_build.android @arguments
 if ($LASTEXITCODE -ne 0) { throw "7.1 build failed. Keep the first error; do not install its output." }
 $signedApk = Join-Path $buildOutput "Akaine-7.1.0.apk"
 $receipt = Get-Content (Join-Path $buildOutput "BUILD_RECEIPT.json") -Raw | ConvertFrom-Json
@@ -265,9 +267,9 @@ Mở ứng dụng và đọc semantic state:
 ```powershell
 adb -s $serial shell am start -n "akai.arc.lmao/low.moe.AppActivity"
 if ($LASTEXITCODE -ne 0) { throw "Android launch request failed." }
-& $python scripts\akaine_cli\akaine.py --serial $serial status
+& $python -m akaine_cli --serial $serial status
 if ($LASTEXITCODE -ne 0) { throw "Client bridge is not ready. Inspect the app and logs." }
-& $python scripts\akaine_cli\akaine.py --serial $serial ui list
+& $python -m akaine_cli --serial $serial ui list
 if ($LASTEXITCODE -ne 0) { throw "Client UI state read failed." }
 ```
 

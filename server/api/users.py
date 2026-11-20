@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from core.api_user import APIUser
 from core.config_manager import Config
 from core.error import InputError, NoAccess, NoData
+from core.ptt_v7 import BEST_COUNT, potential_v7
 from core.score import Potential, UserScoreList
 from core.sql import Connect, Query, Sql
 from core.user import UserChanger, UserInfo, UserRegister
@@ -136,6 +137,26 @@ def users_user_b30_get(user, user_id):
         r = x.to_dict_list()
         rating_sum = sum(i.rating for i in x.scores)
         return success_return({'user_id': user_id, 'b30_ptt': rating_sum / 30, 'data': r})
+
+
+@bp.route('/<int:user_id>/b50', methods=['GET'])
+@role_required(request, ['select', 'select_me'])
+@api_try
+def users_user_b50_get(user, user_id):
+    '''Best 50 theo luật Arcaea 7.0: Top 10 x2, hạng 11-50 x1, chia 60.'''
+    if user_id <= 0:
+        return error_return(InputError(api_error_code=-110))
+    if user_id != user.user_id and not user.role.has_power('select'):
+        return error_return(NoAccess('No permission', api_error_code=-1), 403)
+
+    with Connect() as c:
+        x = UserScoreList(c, UserInfo(c, user_id))
+        x.query.limit = BEST_COUNT  # 50
+        x.select_from_user()
+        x.select_song_name()
+        r = x.to_dict_list()
+        b50_ptt = potential_v7(i.rating for i in x.scores)
+        return success_return({'user_id': user_id, 'b50_ptt': b50_ptt, 'data': r})
 
 
 @bp.route('/<int:user_id>/best', methods=['GET'])

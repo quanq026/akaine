@@ -13,7 +13,7 @@ import zipfile
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-BASELINE = HERE.with_name('arcaea-7.0.255-arm64')
+BASELINE = HERE.with_name('shared')
 STOCK_SHA = '1290b99ef6ef9d15f1c26183147ae10c7878cf5bd0f52e2119172e8ac8fc45da'
 CORE_ENTRY = 'lib/arm64-v8a/libcocos2dcpp.so'
 PROVIDER_ENTRY = 'lib/arm64-v8a/libfmodProvider.so'
