@@ -148,7 +148,7 @@ class Character(CollectionItemMixin):
 
     @property
     def is_base_character(self) -> bool:
-        return self.character_id == 1 or Config.CLIENT_7_1_ENABLED is True and self.character_id == 101
+        return self.character_id == 1 or Config.CLIENT_7_3_ENABLED is True and self.character_id == 101
 
     def to_dict(self, has_cores=False) -> dict:
         # 用于API里，游戏内的数据不太一样，故不能super

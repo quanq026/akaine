@@ -72,7 +72,7 @@ The service should report `active`. Open Discord and confirm the bot is online. 
 
 ### Create your first account
 
-1. Complete [the content setup in chapter 5a](05a-install-game-server.md#3-supply-the-verified-content-files). The bot grants items from the catalogue installed on your server. This guide uses 7.1.0 content. The 7.3.1 source in the repository is a port reference.
+1. Complete [the content setup in chapter 5a](05a-install-game-server.md#3-supply-the-verified-content-files). The bot grants items from the catalogue installed on your server. This guide uses 7.3.1 content.
 2. In Discord, run `/create` and enter a username and password in the private dialog. Save the details the bot returns and try `/profile` for your new account.
 3. Sign in to the game, choose **Cloud Sync → Download**, then check a pack and a character from your content set. If either is missing, review the content setup. See [how to check account access](05a-install-game-server.md#create-an-account-and-check-access) for an administrator preview.
 

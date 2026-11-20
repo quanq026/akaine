@@ -1,4 +1,4 @@
-# Akaine
+# Akaine 7.3.1
 
 [English](README.md) | Tiếng Việt
 
@@ -6,7 +6,6 @@
 
 <p align="center">
   <a href="https://discord.gg/9BBXhX7DkN"><img alt="Tham gia Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&amp;logo=discord&amp;logoColor=white"></a>
-  <a href="docs/guide/vi/06-build-android-client.md"><img alt="Hướng dẫn build 7.1.0" src="https://img.shields.io/badge/Build-7.1.0-547EA8?style=flat"></a>
   <a href="patches/arcaea-7.3.1-arm64/"><img alt="Mã patch 7.3.1" src="https://img.shields.io/badge/Patch_source-7.3.1-547EA8?style=flat"></a>
   <a href="docs/guide/vi/06-build-android-client.md"><img alt="Android arm64" src="https://img.shields.io/badge/Android-arm64-3DDC84?style=flat&amp;logo=android&amp;logoColor=white"></a>
   <a href="https://github.com/quanq026/akaine/search?l=python"><img alt="Python và C++" src="https://img.shields.io/badge/Code-Python%20%2B%20C%2B%2B-3776AB?style=flat"></a>
@@ -17,22 +16,25 @@
 </p>
 
 <p align="center">
-  <strong><a href="docs/guide/vi/06-build-android-client.md">Build client</a></strong> ·
+  <strong><a href="docs/guide/vi/06-build-android-client.md">Chuẩn bị file client</a></strong> ·
   <a href="docs/guide/vi/README.md">Bắt đầu hướng dẫn</a> ·
   <a href="https://discord.gg/9BBXhX7DkN">Discord</a>
 </p>
 
 Akaine cung cấp mã nguồn công khai và hướng dẫn cho người mới muốn tự dựng
-game server và build client Android.
+game server và chuẩn bị đầu vào cho client Android.
 
 | Bạn muốn làm gì | Bắt đầu ở đâu |
 | --- | --- |
-| Build APK để cài | [Hướng dẫn build Arcaea 7.1.0 ARM64 (1209907)](docs/guide/vi/06-build-android-client.md) |
+| Chuẩn bị client gốc | [Kiểm và gộp XAPK Arcaea 7.3.1 ARM64](docs/guide/vi/06-build-android-client.md) |
 | Tự dựng server | [Hướng dẫn từ máy trắng](docs/guide/vi/) |
 | Xem phần chuyển sang 7.3.1 | [Mã patch native, Android và CLI](patches/arcaea-7.3.1-arm64/). Bản build độc lập 7.3.1 vẫn đang chờ hoàn thiện. |
 
-Tải client gốc từ APKPure. Hướng dẫn chỉ rõ khi nào cần bộ nội dung và khóa
-chart tương ứng.
+**Nếu bắt đầu từ số 0, kiểm ba đầu vào trước khi thuê VPS:**
+
+1. **Chỉ chuẩn bị client gốc:** tải XAPK ARM64 7.3.1 và làm theo chương client. Kết quả là file `merged.apk` gốc.
+2. **Để self-host:** xin [bộ nội dung 7.3.1 đã chuẩn bị](docs/guide/vi/04-private-resources.md) từ nguồn được phép. Cần manifest, các phần bundle, danh mục và thư mục nhạc tải từng bài.
+3. **Để chơi:** cần APK Akaine 7.3.1 đã áp patch, ký và cấu hình cho hostname của bạn. Repo hiện cung cấp mã patch và công cụ chuẩn bị XAPK; bước tạo APK Akaine hoàn chỉnh chưa có lệnh public.
 
 ## Tính năng
 
@@ -41,7 +43,7 @@ chart tương ứng.
 | Tính năng | Khả năng hỗ trợ |
 | --- | --- |
 | Tài khoản | Đăng ký, đăng nhập, phiên đăng nhập và giới hạn tần suất đăng nhập/đăng ký. |
-| Điểm số và Potential | Gửi/kiểm tra điểm, lịch sử chơi, Best 30, Recent 10 và xếp hạng bài. |
+| Điểm số và Potential | Gửi/kiểm tra điểm, lịch sử chơi, Potential theo Best 50 và xếp hạng bài. |
 | Bạn bè | Danh sách bạn bè, thêm/xóa bạn và so sánh điểm. |
 | Cloud Sync | Upload/download dữ liệu lưu và chính sách cấp nội dung chung. |
 | World Mode | Bản đồ, thể lực, tiến trình và phần thưởng. |
@@ -89,49 +91,23 @@ Sau khi hoàn thành các chương, bạn sẽ có:
 - một tên miền được Cloudflare bảo vệ
 - private-server API truy cập qua HTTPS
 - kho riêng để lưu bundle và file bài hát
-- client Android build từ gói APKPure gốc với các patch 7.1 hiện tại
+- gói Android gốc 7.3.1 đã được xác minh và gộp từ APKPure
 - Discord bot để quản lý tài khoản và công cụ score
 - quy trình sao lưu và khôi phục
 
-Client dùng Akaine production host đi kèm. Muốn kết nối tên miền riêng cần
-route patch được kiểm chứng riêng; xem [chương 6](docs/guide/vi/06-build-android-client.md).
+Để đăng nhập từ game, bạn cần APK Akaine 7.3.1 đã build cho đúng hostname server.
 
 ![Tổng quan nền tảng Akaine](docs/images/akaine-platform-overview.svg)
 
-## Trước khi bắt đầu
-
-Bạn nên dành trọn một buổi cho lần setup đầu tiên. Cần chuẩn bị:
-
-- máy Windows 10 hoặc Windows 11 còn trống ít nhất 30 GB
-- điện thoại Android hoặc máy tính đủ khả năng chạy Android Emulator
-- thẻ thanh toán được AWS và nhà đăng ký tên miền chấp nhận
-- email do bạn quản lý và có thể bảo vệ bằng xác thực hai lớp
-- bộ tài nguyên riêng của Akaine cùng mã SHA-256 để kiểm tra file
-
-Khách hàng AWS mới có thể nhận tối đa 200 USD credit trong sáu tháng. Khoản
-này đủ để chạy Lightsail trong giai đoạn setup ban đầu. Công dân Việt Nam từ
-18 đến 23 tuổi cũng có thể đủ điều kiện đăng ký miễn phí một tên miền `.id.vn`
-trong hai năm qua các nhà đăng ký `.vn` tham gia chương trình như iNET. Tên
-miền khuyến mãi có thể bắt đầu ở khoảng 40.000 VND, nhưng hãy kiểm tra cả phí
-gia hạn trước khi mua.
-
-Cloudflare DNS, CDN và SSL dùng gói Free. R2 miễn phí 10 GB Standard storage
-mỗi tháng; dung lượng vượt mức hiện có giá 0,015 USD cho mỗi GB-tháng. Một hệ
-thống nhỏ thường tốn dưới 1 USD mỗi tháng cho R2, trừ khi bạn giữ nhiều bản
-release trùng nhau hoặc phục vụ lượng tải lớn.
-
-Khi AWS credit hết hạn, bạn có thể tiếp tục trả phí cho Lightsail hoặc chuyển
-hệ thống sang nhà cung cấp VPS khác.
-
 ## Cấu trúc repo
 
-- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để build client. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
+- [Bộ build Android](akaine_build/) và [patch theo phiên bản](patches/) dùng để chuẩn bị file gốc và tham khảo source port. Mã patch dùng chung nằm ở [patches/shared](patches/shared/).
 - [Semantic CLI](akaine_cli/) điều khiển client đã cài.
 - [Server](server/) cung cấp API game. Xem cách cài trong [hướng dẫn](docs/guide/vi/).
 
 ## Bắt đầu hướng dẫn
 
-- [Build APK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
+- [Chuẩn bị XAPK Android](docs/guide/vi/06-build-android-client.md) nếu bạn đã có công cụ và file đầu vào.
 - [Tự dựng server](docs/guide/vi/) nếu bạn bắt đầu từ đầu.
 
 1. [Tìm hiểu hệ thống hoạt động như thế nào](docs/guide/vi/01-architecture.md).
@@ -140,7 +116,7 @@ hệ thống sang nhà cung cấp VPS khác.
 4. [Nhận và kiểm tra bộ tài nguyên riêng](docs/guide/vi/04-private-resources.md).
 5. [Cấu hình R2](docs/guide/vi/05-cloudflare-content.md), [cài game server](docs/guide/vi/05a-install-game-server.md), [chạy Discord bot tùy chọn](docs/guide/vi/05b-discord-bot.md) và [thiết lập backup](docs/guide/vi/05c-backup-recovery.md).
 6. [Build, ký và kiểm thử client Android](docs/guide/vi/06-build-android-client.md).
-7. [Build, xác minh và phát hành content bundle 7.1.0](docs/guide/vi/07-build-release-content-bundle.md).
+7. [Phát hành bundle 7.3.1 đã chuẩn bị](docs/guide/vi/07-build-release-content-bundle.md).
 8. [Đọc kinh nghiệm và lỗi đã gặp khi xây dựng Akaine](docs/guide/vi/08-lessons-and-failures.md).
 9. [Thêm fan chart và đặt nó vào một pack](docs/guide/vi/09-add-fan-chart.md).
 

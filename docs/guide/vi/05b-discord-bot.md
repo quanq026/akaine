@@ -72,7 +72,7 @@ Service phải báo `active`. Mở Discord và xác nhận bot online. Nếu ch�
 
 ### Tạo tài khoản đầu tiên
 
-1. Hoàn thành [bước nạp nội dung ở chương 5a](05a-install-game-server.md#3-cung-cấp-content-file-đã-xác-minh). Bot cấp quyền dựa trên danh mục đã nạp vào server của bạn. Với hướng dẫn hiện tại, chọn bộ nội dung 7.1.0. Source 7.3.1 trong repo là bản tham khảo port.
+1. Hoàn thành [bước nạp nội dung ở chương 5a](05a-install-game-server.md#3-cung-cấp-content-file-đã-xác-minh). Bot cấp quyền dựa trên danh mục đã nạp vào server của bạn. Với hướng dẫn hiện tại, chọn bộ nội dung 7.3.1.
 2. Trong Discord, gõ `/create` và nhập tên, mật khẩu trong hộp thoại riêng. Lưu thông tin bot trả về và thử `/profile` để xem acc vừa tạo.
 3. Đăng nhập trong game, chọn **Cloud Sync → Download**, rồi kiểm một pack và một nhân vật có trong bộ nội dung của bạn. Nếu thiếu nội dung, quay lại bước nạp dữ liệu ở chương 5a. Phần [kiểm quyền của tài khoản](05a-install-game-server.md#tạo-tài-khoản-và-kiểm-quyền) có lệnh xem thử cho admin.
 

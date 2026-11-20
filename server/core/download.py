@@ -2,6 +2,7 @@ import os
 import json
 import hashlib
 import hmac
+import re
 import secrets
 from functools import lru_cache
 from json import loads
@@ -20,13 +21,25 @@ from .client_packs import reload_dynamic_pack_catalog
 from .user import User
 from .util import get_file_md5, md5
 
+
+def read_pinned_73_json(path, expected):
+    if not isinstance(expected, str) or not re.fullmatch(r'[0-9a-f]{64}', expected):
+        raise ValueError('Missing reviewed 7.3.1 song delivery pin')
+    with open(path, 'rb') as stream:
+        raw = stream.read(8 * 1024 * 1024 + 1)
+    if len(raw) > 8 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != expected:
+        raise ValueError('7.3.1 song delivery bytes differ from their reviewed pin')
+    return loads(raw)
+
+
 # Load metadata JSON if exists
 SONG_METADATA_PATH = os.path.join(os.path.dirname(Constant.SONG_FILE_FOLDER_PATH.rstrip('/\\')), 'song_metadata.json')
 REMOTE70_SONG_METADATA_PATH = os.path.join(
     os.path.dirname(Constant.SONG_FILE_FOLDER_PATH.rstrip('/\\')),
     'remote70', 'song_metadata.json')
 song_metadata = {}
-for metadata_path in (SONG_METADATA_PATH, REMOTE70_SONG_METADATA_PATH):
+for metadata_path in (() if Config.CLIENT_7_3_ENABLED is True else
+                      (SONG_METADATA_PATH, REMOTE70_SONG_METADATA_PATH)):
     if not os.path.isfile(metadata_path):
         continue
     try:
@@ -119,6 +132,7 @@ class SonglistParser:
     pack_info: 'dict[str, set]' = {}  # {pack_id: {song_id, ...}, ...}
     free_songs: set = set()  # {song_id, ...}
     world_songs: set = set()  # {world_song_id, ...}
+    qa73_waves: dict = {}
 
     def __init__(self, path=Constant.SONGLIST_FILE_PATH) -> None:
         self.path = path
@@ -130,7 +144,9 @@ class SonglistParser:
         '''判断文件是否允许被下载'''
         if song_id not in SonglistParser.songs:
             # songlist没有，则只限制文件名
-            return file_name in SonglistParser.FILE_NAMES
+            return Config.CLIENT_7_3_ENABLED is not True and file_name in SonglistParser.FILE_NAMES
+        if Config.CLIENT_7_3_ENABLED is True and file_name.endswith('.wav'):
+            return file_name in SonglistParser.qa73_waves.get(song_id, ())
         rule = SonglistParser.songs[song_id]
         for i, v in enumerate(SonglistParser.FILE_NAMES):
             if file_name == v and rule & (1 << i) != 0:
@@ -163,6 +179,7 @@ class SonglistParser:
         r.update(x.free_songs)
 
         return r
+
 
     def parse_one(self, song: dict) -> dict:
         '''解析单个歌曲'''
@@ -199,6 +216,11 @@ class SonglistParser:
             return {}
         x = SonglistParser
         if Constant.FREE_PACK_NAME == song['set']:
+            if Config.CLIENT_7_3_ENABLED is True and song.get('world_unlock') is True:
+                x.world_songs.add(song['id'])
+                if any(i['ratingClass'] == 3 for i in song.get('difficulties', [])):
+                    x.world_songs.add(song['id'] + '3')
+                return None
             if any(i['ratingClass'] == 3 for i in song.get('difficulties', [])):
                 x.world_songs.add(song['id'] + '3')
             x.free_songs.add(song['id'])
@@ -214,10 +236,22 @@ class SonglistParser:
 
     def parse(self) -> None:
         '''解析songlist文件'''
-        if not os.path.isfile(self.path):
-            return
-        with open(self.path, 'rb') as f:
-            self.data = loads(f.read()).get('songs', [])
+        if Config.CLIENT_7_3_ENABLED is True:
+            self.data = read_pinned_73_json(self.path, Config.SONGLIST_7_3_SHA256)['songs']
+            waves = {}
+            for song in self.data:
+                for row in song.get('additional_files', []):
+                    name = row['file_name']
+                    if name.endswith('.wav'):
+                        if not re.fullmatch(r'[A-Za-z0-9_][A-Za-z0-9_.-]{0,250}\.wav', name) or '..' in name:
+                            raise ValueError('Invalid 7.3.1 WAV delivery filename')
+                        waves.setdefault(song['id'],set()).add(name)
+            SonglistParser.qa73_waves = waves
+        else:
+            if not os.path.isfile(self.path):
+                return
+            with open(self.path, 'rb') as f:
+                self.data = loads(f.read()).get('songs', [])
         self.has_songlist = True
         for x in self.data:
             self.songs.update(self.parse_one(x))
@@ -329,8 +363,25 @@ class DownloadList(UserDownload):
     @classmethod
     def initialize_cache(cls) -> None:
         '''初始化歌曲数据缓存，包括md5、文件目录遍历、解析songlist'''
+        if Config.CLIENT_7_3_ENABLED is True:
+            SonglistParser.has_songlist = False
         SonglistParser()
+        if Config.CLIENT_7_3_ENABLED is True:
+            reviewed = read_pinned_73_json(SONG_METADATA_PATH, Config.SONG_METADATA_7_3_SHA256)
+            if not isinstance(reviewed, dict) or not reviewed or set(reviewed) != set(SonglistParser.songs):
+                raise ValueError('7.3.1 songlist and delivery metadata membership differ')
+            for song_id, entry in reviewed.items():
+                files, hashes = entry['files'], entry['hashes']
+                if (not isinstance(files, list) or not files or len(files) != len(set(files))
+                        or set(files) != set(hashes)
+                        or any(not SonglistParser.is_available_file(song_id, f)
+                               or not re.fullmatch(r'[0-9a-f]{32}', hashes[f]) for f in files)):
+                    raise ValueError('7.3.1 song delivery file list differs from its catalogue')
+            song_metadata.clear()
+            song_metadata.update(reviewed)
         reload_dynamic_pack_catalog()
+        if Config.CLIENT_7_3_ENABLED is True:
+            SonglistParser.has_songlist = True
         if Config.SONG_FILE_HASH_PRE_CALCULATE:
             x = cls()
             x.url_flag = False
@@ -347,6 +398,7 @@ class DownloadList(UserDownload):
         SonglistParser.pack_info = {}
         SonglistParser.free_songs = set()
         SonglistParser.world_songs = set()
+        SonglistParser.qa73_waves = {}
         SonglistParser.has_songlist = False
 
     def clear_download_token(self) -> None:
@@ -424,13 +476,20 @@ class DownloadList(UserDownload):
     def get_all_song_ids() -> list:
         '''获取全歌曲文件夹列表，有lru缓存'''
         if song_metadata:
-            return list(song_metadata.keys())
+            song_ids = list(song_metadata.keys())
+            if SonglistParser.songs:
+                return [song_id for song_id in song_ids if song_id in SonglistParser.songs]
+            return song_ids
         if os.path.isdir(Constant.SONG_FILE_FOLDER_PATH):
             return [i.name for i in os.scandir(Constant.SONG_FILE_FOLDER_PATH) if i.is_dir()]
         return []
 
+
     def add_songs(self, song_ids: list = None) -> None:
         '''添加一个或多个歌曲到下载列表，若`song_ids`为空，则添加所有歌曲'''
+        if Config.CLIENT_7_3_ENABLED is True and (
+                not SonglistParser.has_songlist or Config.DOWNLOAD_FORBID_WHEN_NO_ITEM is not True):
+            raise NoAccess('The reviewed 7.3.1 song delivery policy is unavailable.', status=503)
         if song_ids is not None:
             self.song_ids = song_ids
 

@@ -581,9 +581,9 @@ class UserInfo(User):
         if self.name is None:
             self.select_user()
 
-        if app_version == '7.1.0':
+        if app_version == '7.3.1':
             if not has_request_context() or request.headers.get('AppVersion') != app_version:
-                raise NoAccess('The 7.1 account serializer requires its request profile.', status=503)
+                raise NoAccess('The 7.3.1 account serializer requires its request profile.', status=503)
             packs = pack_ids_for_dynamic_user(self, request.headers)
         else:
             packs = self.packs if client_pack_projection is None else \

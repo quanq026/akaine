@@ -67,12 +67,10 @@ class AKFCSourceTests(unittest.TestCase):
         self.assertIn("#define LOGI(...) ((void)0)", source)
 
     def test_loader_uses_prefixed_static_crypto(self):
-        guide = (ROOT / "docs/guide/06-build-android-client.md").read_text(
+        guide = (ROOT / "patches/shared/README.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("--crypto", guide)
         self.assertIn("build_boringssl_android.py", guide)
-        self.assertNotIn("Copy-Item $crypto", guide)
         self.assertEqual(len(build_boringssl_android.REVISION), 40)
         source = (
             ROOT / "patches/shared/native/akfc_loader.cpp"

@@ -2,10 +2,7 @@
 
 [English](../README.md) | Tiếng Việt
 
-Bộ hướng dẫn này giúp bạn build server Akaine và client Android cho Arcaea `7.1.0`
-(`1209907`) từ đầu. Các chương dùng chung một bộ tên ví dụ và phải được làm theo thứ tự,
-vì mỗi chương sau dựa trên kết quả kiểm tra của chương trước. Không dùng hash hoặc APK
-patch trong hướng dẫn cho phiên bản client khác.
+Chương này hướng dẫn dựng server và chuẩn bị APK gốc Arcaea 7.3.1. Trước khi bắt đầu, kiểm [bộ nội dung riêng](04-private-resources.md) và [điều kiện phía client](06-build-android-client.md).
 
 ## Ví dụ được sử dụng trong hướng dẫn
 
@@ -54,19 +51,13 @@ phối content, DNS Cloudflare và đủ công cụ cần thiết trên Windows.
 
 ## Phần 2: Client Android
 
-6. [Build, ký và kiểm client Android 7.1](06-build-android-client.md).
+6. [Chuẩn bị file Android gốc 7.3.1](06-build-android-client.md).
 
-Chương 6 bắt đầu từ XAPK APKPure gốc. Sau phần setup, một lệnh build sẽ merge
-các module gốc, áp dụng 7.1, biên dịch, căn chỉnh và ký. Sau đó là bước cài
-đặt và kiểm semantic CLI. Catalogue, chart key và content tương ứng vẫn
-được cung cấp ngoài repository.
+Chương 6 chuẩn bị APK gốc 7.3.1 đã gộp. Phần apply patch và ký APK Akaine cần quy trình riêng.
 
-## Phần 3: phát hành content
+## Phần 3: Phát hành nội dung
 
-7. [Build, xác minh và phát hành content bundle](07-build-release-content-bundle.md).
-
-Chương 7 bắt đầu từ full-root bundle 7.1.0 đã xác minh, áp dụng overlay có kiểm soát,
-kiểm thử trên staging rồi đưa đúng bộ byte bất biến đó lên production.
+7. [Đưa bundle 7.3.1 đã chuẩn bị lên R2](07-build-release-content-bundle.md).
 
 ## Phần 4: kinh nghiệm vận hành
 

@@ -1,6 +1,6 @@
 # Semantic CLI: first-run playing flow
 
-The 7.1.0 client exposes native UI actions with short-lived context tokens. List the current state before activating a token. A token is valid only for the exact current scene, owned UI object, and registered callback.
+The 7.3.1 client exposes native UI actions with short-lived context tokens. List the current state before activating a token. A token is valid only for the exact current scene, owned UI object, and registered callback.
 
 ```powershell
 & $python -m akaine_cli --serial $serial ui list
@@ -42,11 +42,11 @@ at most one known callback. It returns the remaining guide state and the
 ownership and listener flags. Invisible swallowing listeners remain blockers.
 Welcome, offset cancellation, Settings close and the known Main Menu,
 notification, Pack Select and partner steps reuse their typed callbacks.
-7.1 reports four overlay coverage kinds: progression guide, note-speed setup,
+7.3.1 reports four overlay coverage kinds: progression guide, note-speed setup,
 category tutorial and partner tutorial. The partner action requires its exact
 open character dialog and validated owner/callback; hidden input blockers
 remain visible in CLI state. Bridge metadata fixes the application version,
-so an old 7.0 bridge cannot acquire the 7.1 contract from a cached catalogue.
+so an old 7.0 bridge cannot acquire the 7.3.1 contract from a cached catalogue.
 
 An exact Advanced Tutorial prompt is exposed as `advanced_guide`, including
 selected chart, Skip eligibility and priority. Skip and Note Speed Set can run

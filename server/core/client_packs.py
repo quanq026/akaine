@@ -17,19 +17,20 @@ _MAX_CATALOG_BYTES = 4 * 1024 * 1024
 def uses_dynamic_packs(headers):
     app_version = headers.get('AppVersion')
     uses_current_contract(app_version)
-    if app_version == '7.1.0' and (Config.DYNAMIC_PACKS_ENABLED is not True
-                                  or headers.get('Akaine-Packs') != 'dynamic1'):
-        raise NoAccess('The 7.1 native pack capability is required.', status=503)
+    if app_version == '7.3.1' and (Config.DYNAMIC_PACKS_ENABLED is not True
+                                 or Config.DYNAMIC_PACKS_7_3_NATIVE_ACCEPTED is not True
+                                 or headers.get('Akaine-Packs') != 'dynamic1'):
+        raise NoAccess('The reviewed 7.3.1 native pack capability is required.', status=503)
     return dynamic_pack_profile_enabled(headers.get('AppVersion'), headers.get('Akaine-Packs'),
                                         Config.DYNAMIC_PACKS_ENABLED)
 
 
 def _catalog_key(app_version):
-    if app_version == '7.1.0':
+    if app_version == '7.3.1':
         uses_current_contract(app_version)
-        path = Config.DYNAMIC_CLIENT_7_1_PACKLIST_PATH
-        expected = Config.DYNAMIC_CLIENT_7_1_PACKLIST_SHA256
-        epoch = Config.DYNAMIC_CLIENT_7_1_CATALOG_EPOCH
+        path = Config.DYNAMIC_CLIENT_7_3_PACKLIST_PATH
+        expected = Config.DYNAMIC_CLIENT_7_3_PACKLIST_SHA256
+        epoch = Config.DYNAMIC_CLIENT_7_3_CATALOG_EPOCH
     elif app_version == '7.0.255':
         path = Config.DYNAMIC_CLIENT_PACKLIST_PATH
         expected = Config.DYNAMIC_CLIENT_PACKLIST_SHA256
@@ -39,7 +40,7 @@ def _catalog_key(app_version):
     if (not isinstance(expected, str) or len(expected) != 64
             or any(c not in '0123456789abcdef' for c in expected)
             or not isinstance(epoch, str) or not epoch
-            or app_version == '7.1.0' and not path):
+            or app_version == '7.3.1' and not path):
         raise ValueError('dynamic catalog pin/epoch is missing')
     return str(Path(path).absolute()), expected, epoch
 
@@ -61,8 +62,9 @@ def reload_dynamic_pack_catalog(app_version=None):
         return None
     if app_version is None:
         versions = ['7.0.255']
-        if Config.CLIENT_7_1_ENABLED is True:
-            versions.append('7.1.0')
+        if Config.CLIENT_7_3_ENABLED is True:
+            versions.append('7.3.1')
+        if Config.CLIENT_7_3_ENABLED is True:
             if Config.ALLOW_APPVERSION:
                 versions = [version for version in versions if version in Config.ALLOW_APPVERSION]
         catalogs = [reload_dynamic_pack_catalog(version) for version in versions]
@@ -99,8 +101,9 @@ def pack_ids_for_dynamic_user(user, headers, for_authorization=False):
             catalog, raw_grants, free_pack_ids=[*Config.FREE_PACKS, 'base'],
             hidden_pack_ids=() if for_authorization else Config.DYNAMIC_CLIENT_HIDDEN_PACK_IDS,
             entitlement_expansions=expansions, profile_enabled=True,
-            capacity_accepted=(Config.DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED
-                               if app_version == '7.1.0' else Config.DYNAMIC_PACKS_NATIVE_ACCEPTED))
+            capacity_accepted={
+                '7.3.1': Config.DYNAMIC_PACKS_7_3_NATIVE_ACCEPTED,
+            }.get(app_version, Config.DYNAMIC_PACKS_NATIVE_ACCEPTED))
         if for_authorization:
             # Preserve only explicitly declared, actually granted server aliases.
             packs.extend(sorted((set(expansions) & raw_grants) - set(packs)))

@@ -1,0 +1,63 @@
+{
+  "application_version": "7.3.1",
+  "source_sha256": "c731c419e9eea3818bb85e0d990391756896a80f72a1920ddccccefd01179952",
+  "amiya_level30": [
+    72,
+    85,
+    74
+  ],
+  "characters": [
+    {
+      "character_id": 98,
+      "name": "insight_konzetsu",
+      "char_type": 4,
+      "base_frag": 63,
+      "base_prog": 92.5,
+      "base_over": 59.5,
+      "max_frag": 85,
+      "max_prog": 125,
+      "max_over": 80,
+      "skill_id": "skill_insight_konzetsu",
+      "skill_unlock_level": 0
+    },
+    {
+      "character_id": 100,
+      "name": "ilith_halloween",
+      "char_type": 2,
+      "base_frag": 39.5,
+      "base_prog": 67,
+      "base_over": 39.5,
+      "max_frag": 60,
+      "max_prog": 101,
+      "max_over": 60,
+      "skill_id": "skill_ilith_halloween",
+      "skill_unlock_level": 0
+    },
+    {
+      "character_id": 101,
+      "name": "silky6_nene",
+      "char_type": 0,
+      "base_frag": 45,
+      "base_prog": 39.5,
+      "base_over": 41.5,
+      "max_frag": 72,
+      "max_prog": 63,
+      "max_over": 66,
+      "skill_id": "skill_stream_palette",
+      "skill_unlock_level": 0
+    },
+    {
+      "character_id": 102,
+      "name": "amiya",
+      "char_type": 0,
+      "base_frag": 39,
+      "base_prog": 47,
+      "base_over": 40,
+      "max_frag": 62,
+      "max_prog": 75,
+      "max_over": 64,
+      "skill_id": "skill_amiya",
+      "skill_unlock_level": 0
+    }
+  ]
+}

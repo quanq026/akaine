@@ -11,7 +11,8 @@ from core.config_manager import Config
 from core.constant import ARCAEA_DATABASE_VERSION, ARCAEA_LOG_DATBASE_VERSION
 from core.content_grants import grant_missing_full_characters
 from core.course import Course
-from core.download import DownloadList
+from core.download import DownloadList, SonglistParser
+from core.client_packs import reload_dynamic_pack_catalog
 from core.purchase import Purchase
 from core.sql import (Connect, DatabaseMigrator, LogDatabaseMigrator,
                       MemoryDatabase)
@@ -78,47 +79,48 @@ class DatabaseInit:
         for i in self.init_data.char_core:
             self.c.executemany('''insert into char_item values(?,?,'core',?)''', [
                 (i, j['core_id'], j['amount']) for j in self.init_data.char_core[i]])
-        self.client_7_1_character_init()
+        self.client_7_3_character_init()
 
-    def client_7_1_character_init(self) -> None:
+    def client_7_3_character_init(self) -> None:
         """Apply canonical candidate definitions in the caller's transaction."""
-        if Config.CLIENT_7_1_ENABLED is not True:
+        if Config.CLIENT_7_3_ENABLED is not True:
             return
         if not self.c.connection.in_transaction:
             raise RuntimeError('Character seeding requires a caller-owned transaction')
-        with open(os.path.join(self.init_folder_path, 'client7_1_characters.json'), 'rb') as stream:
+        with open(os.path.join(self.init_folder_path, 'client7_3_characters.json'), 'rb') as stream:
             seed = load(stream)
         # Pin the canonical rows independently of JSON formatting or operator paths.
-        if (not isinstance(seed, dict) or seed.get('schema') != 'akaine.character-seed-input.v1'
-                or seed.get('application_version') != '7.1.0'
-                or seed.get('retained_character_ids') != [98]
-                or seed.get('new_character_ids') != [100, 101]
-                or seed.get('source_member') != 'assets/char/characters.json'
-                or seed.get('source_sha256') != '01f199b78a31bfdfc37354e25270bbf841d55c234136ed37ffcf83f50d91e36d'
+        if (not isinstance(seed, dict) or seed.get('application_version') != '7.3.1'
+                or seed.get('amiya_level30') != [72, 85, 74]
+                or seed.get('source_sha256') != 'c731c419e9eea3818bb85e0d990391756896a80f72a1920ddccccefd01179952'
                 or sha256(dumps(seed.get('characters'), sort_keys=True, separators=(',', ':')).encode()).hexdigest()
-                != 'd7b48c707d32e40818e8d7cc3f2cef45823f74ac3b5acf01221a4034cc0e561a'):
-            raise ValueError('The canonical 7.1 character seed differs')
+                != '47a230bb1b48b6eeab9e8df4a4447fe01bb6ada50dffe1ab2b5f72e96874f764'):
+            raise ValueError('The canonical 7.3.1 character seed differs')
         character_columns = self.c.execute('PRAGMA table_info(character)').fetchall()
         if ([column[1] for column in character_columns] !=
                 'character_id name max_level frag1 prog1 overdrive1 frag20 prog20 overdrive20 frag30 prog30 overdrive30 skill_id skill_unlock_level skill_requires_uncap skill_id_uncap char_type is_uncapped'.split()
                 or [column[1] for column in character_columns if column[5]] != ['character_id']):
-            raise ValueError('The 7.1 character definition schema differs')
+            raise ValueError('The 7.3.1 character definition schema differs')
         # Canonical Maya71 in the hash-qualified source above; no stats or grants change here.
         maya = self.c.execute('SELECT name,skill_id,skill_id_uncap FROM character WHERE character_id=71').fetchone()
         if (maya is None or not isinstance(maya[0], str) or maya[0].lower() != 'maya'
                 or maya[1] != 'skill_maya' or maya[2] not in ('', 'skill_maya_uncap')):
             raise ValueError('Conflicting Maya awakening definition')
         self.c.execute("UPDATE character SET skill_id_uncap='skill_maya_uncap' WHERE character_id=71 AND skill_id_uncap=''")
-        rows = [(row['character_id'], row['name'], 20,
-                 row['base_frag'], row['base_prog'], row['base_over'],
-                 row['max_frag'], row['max_prog'], row['max_over'],
-                 row['max_frag'], row['max_prog'], row['max_over'],
-                 row['skill_id'], row['skill_unlock_level'], 0, '', row['char_type'], 0)
-                for row in seed['characters']]
+        rows = []
+        for row in seed['characters']:
+            amiya = row['character_id'] == 102
+            base_stats = row['base_frag'], row['base_prog'], row['base_over']
+            max_stats = row['max_frag'], row['max_prog'], row['max_over']
+            rows.append((row['character_id'], row['name'], 30 if amiya else 20,
+                         *base_stats, *max_stats, *(seed['amiya_level30'] if amiya else max_stats),
+                         row['skill_id'], row['skill_unlock_level'], 0, '', row['char_type'], int(amiya)))
+        self.c.execute("INSERT OR IGNORE INTO item VALUES('core_arknights','core',1)")
+        self.c.execute("INSERT OR IGNORE INTO char_item VALUES(102,'core_arknights','core',15)")
         for row in rows:
             existing = self.c.execute('SELECT * FROM character WHERE character_id=?', (row[0],)).fetchone()
             if existing is not None and tuple(existing) != row:
-                raise ValueError(f'Conflicting 7.1 character definition: {row[0]}')
+                raise ValueError(f'Conflicting 7.3.1 character definition: {row[0]}')
         self.c.executemany('INSERT OR IGNORE INTO character VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)', rows)
         if Config.CHARACTER_FULL_UNLOCK:
             for table in ('user_char', 'user_char_full'):
@@ -126,7 +128,7 @@ class DatabaseInit:
                 if ([column[1] for column in columns] !=
                         'user_id character_id level exp is_uncapped is_uncapped_override skill_flag'.split()
                         or [column[1] for column in columns if column[5]] != ['user_id', 'character_id']):
-                    raise ValueError('The 7.1 user character schema differs')
+                    raise ValueError('The 7.3.1 user character schema differs')
                 flags = self.c.execute('SELECT is_uncapped,is_uncapped_override,skill_flag FROM ' + table + ' WHERE character_id=71').fetchall()
                 if any(type(value) is not int or value not in (0, 1) for row in flags for value in row):
                     raise ValueError('Unknown Maya awakening flags')
@@ -328,8 +330,8 @@ class FileChecker:
             if not x or x[0] != ARCAEA_DATABASE_VERSION:
                 self.logger.warning(
                     f'Maybe the file `{db_path}` is an old version. Version: {x[0] if x else "None"}')
-                if Config.CLIENT_7_1_ENABLED is True:
-                    self.logger.error('The 7.1 candidate requires a reviewed current-schema database; automatic migration is blocked.')
+                if Config.CLIENT_7_3_ENABLED is True:
+                    self.logger.error('The 7.3.1 profile requires a reviewed current-schema database; automatic migration is blocked.')
                     return False
                 try:
                     self.logger.info(
@@ -370,10 +372,10 @@ class FileChecker:
     def check_update_database(self) -> bool:
         return (self._check_update_database_main() and self._check_update_database_log()
                 and self._check_update_database_main(Config.SQLITE_DATABASE_DELETED_PATH, DeletedDatabaseInit)
-                and self.check_client_7_1_characters())
+                and self.check_client_7_3_characters())
 
-    def check_client_7_1_characters(self) -> bool:
-        if Config.CLIENT_7_1_ENABLED is not True:
+    def check_client_7_3_characters(self) -> bool:
+        if Config.CLIENT_7_3_ENABLED is not True:
             return True
         success = False
         try:
@@ -381,7 +383,14 @@ class FileChecker:
                 cursor.execute('BEGIN IMMEDIATE')
                 initializer = DatabaseInit(Config.SQLITE_DATABASE_PATH, Config.DATABASE_INIT_PATH)
                 initializer.c = cursor
-                initializer.client_7_1_character_init()
+                initializer.client_7_3_character_init()
+                if Config.DYNAMIC_PACKS_FULL_CATALOG:
+                    pack_ids = reload_dynamic_pack_catalog('7.3.1')
+                    cursor.executemany("INSERT OR IGNORE INTO item VALUES(?,'pack',1)",
+                                       [(pack_id,) for pack_id in pack_ids])
+                if Config.WORLD_SONG_FULL_UNLOCK:
+                    cursor.executemany("INSERT OR IGNORE INTO item VALUES(?,'world_song',1)",
+                                       [(song_id,) for song_id in SonglistParser.world_songs])
                 # Connect rolls back and suppresses non-ArcError failures.
                 success = True
         except Exception:

@@ -35,24 +35,24 @@ bool error_pins() {
     for (const auto& pin : CLI_BUNDLE_ERROR_PINS)
         if (!in_ranges(module.executable, module.executable_count, module.base + pin.address, pin.size)
             || !same_bytes(reinterpret_cast<const unsigned char*>(module.base + pin.address), pin.bytes, pin.size)) return false;
-    return pointer(0x1ae5b98 + 0x30, 0x1619540) && pointer(0x1b72c18 + 0x30, 0xa571a0)
-        && pointer(0x1a8ece0 + 0x630, 0xf66c9c);
+    return pointer(0x1bdc040 + 0x30, 0xeb51e8) && pointer(0x1bc0388 + 0x30, 0x13f7bd4)
+        && pointer(0x1c05b30 + 0x630, 0x180d76c);
 }
 // Match only the one-button ContentBundleError continuation owned by this StartScene.
 bool inspect_error(Reader& h, Address scene, const UiTree& tree, View& v) {
     if (h.get<unsigned char>(scene + 0x3f0) != 1) return false;
     for (Size i = 0; i < tree.count; ++i) {
         const Address button = tree.queue[i].node;
-        if (!h.readable(button, 0x449) || h.get<Address>(button) != module.base + 0x1a8ece0) continue;
+        if (!h.readable(button, 0x449) || h.get<Address>(button) != module.base + 0x1c05b30) continue;
         const Address outer = h.get<Address>(button + 0x400);
-        if (!h.readable(outer, 0x68) || h.get<Address>(outer) != module.base + 0x1ae5b98) continue;
+        if (!h.readable(outer, 0x68) || h.get<Address>(outer) != module.base + 0x1bdc040) continue;
         const Address root = h.get<Address>(outer + 0x30), dim = h.get<Address>(outer + 0x20);
         const Address image = h.get<Address>(outer + 0x28), inner = h.get<Address>(outer + 0x60);
         if (h.get<Address>(outer + 0x10) != scene || h.get<Address>(outer + 0x18) != scene
-            || h.get<Address>(outer + 0x38) != button || !member(h, tree, root, scene, 0x1b4d3e8)
-            || !member(h, tree, dim, scene, 0x1b90800) || !member(h, tree, image, root, 0x1aa0128)
-            || !member(h, tree, button, root, 0x1a8ece0) || !h.readable(inner, 0x10)
-            || h.get<Address>(inner) != module.base + 0x1b72c18 || h.get<Address>(inner + 8) != scene
+            || h.get<Address>(outer + 0x38) != button || !member(h, tree, root, scene, 0x1bf8c28)
+            || dim != tree.bundle_dim || !member(h, tree, dim, scene, 0x1ba1c10) || !member(h, tree, image, root, 0x1baa378)
+            || !member(h, tree, button, root, 0x1c05b30) || !h.readable(inner, 0x10)
+            || h.get<Address>(inner) != module.base + 0x1bc0388 || h.get<Address>(inner + 8) != scene
             || !error_pins()) continue;
         if (v.error_popup) { v.button = v.root = 0; v.reason = "ambiguous_bundle_error"; return true; }
         v.error_popup = true; v.phase = "failed"; v.reason = "native_bundle_error";
@@ -74,28 +74,28 @@ bool inspect_transport_error(Reader& h, Address scene, const UiTree& tree, View&
     if (h.get<unsigned char>(scene + 0x3f0) != 1) return false;
     for (Size i = 0; i < tree.count; ++i) {
         const Address retry = tree.queue[i].node;
-        if (!h.readable(retry, 0x449) || h.get<Address>(retry) != module.base + 0x1a8ece0) continue;
+        if (!h.readable(retry, 0x449) || h.get<Address>(retry) != module.base + 0x1c05b30) continue;
         const Address accept_outer = h.get<Address>(retry + 0x400);
-        if (!h.readable(accept_outer, 0x78) || h.get<Address>(accept_outer) != module.base + 0x1b1a7c0) continue;
+        if (!h.readable(accept_outer, 0x78) || h.get<Address>(accept_outer) != module.base + 0x1bf6e80) continue;
         const Address root = h.get<Address>(accept_outer + 0x30), dim = h.get<Address>(accept_outer + 0x20);
         const Address image = h.get<Address>(accept_outer + 0x28), cancel = h.get<Address>(accept_outer + 0x40);
         const Address retry_inner = h.get<Address>(accept_outer + 0x70);
         if (h.get<Address>(accept_outer + 0x10) != scene || h.get<Address>(accept_outer + 0x18) != scene
-            || h.get<Address>(accept_outer + 0x38) != retry || !member(h, tree, root, scene, 0x1b4d3e8)
-            || !member(h, tree, dim, scene, 0x1b90800) || !member(h, tree, image, root, 0x1aa0128)
-            || !member(h, tree, retry, root, 0x1a8ece0) || !member(h, tree, cancel, root, 0x1a8ece0)
+            || h.get<Address>(accept_outer + 0x38) != retry || !member(h, tree, root, scene, 0x1bf8c28)
+            || dim != tree.bundle_dim || !member(h, tree, dim, scene, 0x1ba1c10) || !member(h, tree, image, root, 0x1baa378)
+            || !member(h, tree, retry, root, 0x1c05b30) || !member(h, tree, cancel, root, 0x1c05b30)
             || retry == cancel || !h.readable(cancel, 0x449) || !h.readable(retry_inner, 0x18)
-            || h.get<Address>(retry_inner) != module.base + 0x1af9ad8 || h.get<Address>(retry_inner + 0x10) != scene) continue;
+            || h.get<Address>(retry_inner) != module.base + 0x1b6e0b0 || h.get<Address>(retry_inner + 0x10) != scene) continue;
         const Address cancel_outer = h.get<Address>(cancel + 0x400);
-        if (!h.readable(cancel_outer, 0x78) || h.get<Address>(cancel_outer) != module.base + 0x1b41a40
+        if (!h.readable(cancel_outer, 0x78) || h.get<Address>(cancel_outer) != module.base + 0x1bd0138
             || h.get<Address>(cancel_outer + 0x10) != scene || h.get<Address>(cancel_outer + 0x18) != scene
             || h.get<Address>(cancel_outer + 0x20) != dim || h.get<Address>(cancel_outer + 0x28) != image
             || h.get<Address>(cancel_outer + 0x30) != root || h.get<Address>(cancel_outer + 0x38) != retry
             || h.get<Address>(cancel_outer + 0x40) != cancel) continue;
         const Address cancel_inner = h.get<Address>(cancel_outer + 0x70);
-        if (!h.readable(cancel_inner, 8) || h.get<Address>(cancel_inner) != module.base + 0x1ac9828
-            || !error_pins() || !pointer(0x1b1a7c0 + 0x30, 0xf208c4) || !pointer(0x1b41a40 + 0x30, 0xcf77d8)
-            || !pointer(0x1af9ad8 + 0x30, 0xc91f68) || !pointer(0x1ac9828 + 0x30, 0x142b6c8)) continue;
+        if (!h.readable(cancel_inner, 8) || h.get<Address>(cancel_inner) != module.base + 0x1ba38e8
+            || !error_pins() || !pointer(0x1bf6e80 + 0x30, 0x1061184) || !pointer(0x1bd0138 + 0x30, 0x191e658)
+            || !pointer(0x1b6e0b0 + 0x30, 0xa79530) || !pointer(0x1ba38e8 + 0x30, 0x1745d1c)) continue;
         v.error_popup = true; v.phase = "failed"; v.reason = "native_bundle_error";
         v.button = v.root = 0;
         return true;
@@ -108,16 +108,16 @@ bool version(Reader& h, Address at, char (&out)[32]) {
     const unsigned char tag = h.get<unsigned char>(at);
     const Size length = tag & 1 ? h.get<Size>(at + 8) : Size(tag >> 1);
     const Address data = tag & 1 ? h.get<Address>(at + 16) : at + 1;
-    if (length < 9 || length >= sizeof(out) || !h.readable(data, length + 1)) return false;
+    if (length < 7 || length > 15 || !h.readable(data, length + 1)) return false;
     const char* text = reinterpret_cast<const char*>(data);
-    if (memcmp(text, "7.0.255.", 8) || text[length] || text[8] == '0') return false;
-    for (Size i = 8; i < length; ++i) if (text[i] < '0' || text[i] > '9') return false;
+    if (memcmp(text, "7.3.1.", 6) || text[length] || text[6] == '0') return false;
+    for (Size i = 6; i < length; ++i) if (text[i] < '0' || text[i] > '9') return false;
     memcpy(out, text, length + 1);
     return !h.fault;
 }
 View inspect(Reader& h, Address scene, const UiTree& tree) {
     View v;
-    if (!h.readable(scene, 0x3f1) || h.get<Address>(scene) != module.base + 0x1a9b4c0) return v;
+    if (!h.readable(scene, 0x3f1) || h.get<Address>(scene) != module.base + 0x1b79ec8) return v;
     v.available = true; v.reason = "unavailable";
     if (!pins() || !tree.valid || h.get<unsigned char>(scene + 0x1c0) != 1) return v;
     const unsigned ready = h.get<unsigned char>(scene + 0x391), failed = h.get<unsigned char>(scene + 0x392);
@@ -152,7 +152,7 @@ View inspect(Reader& h, Address scene, const UiTree& tree) {
     if (h.fault) return View{};
     if (failed) { v.phase = "failed"; v.reason = "native_bundle_error"; return v; }
     const Address progress = h.get<Address>(scene + 0x320);
-    if (popup && member(h, tree, progress, scene, 0x1b4d3e8)) {
+    if (popup && member(h, tree, progress, scene, 0x1bf8c28)) {
         v.phase = "downloading"; return v;
     }
     if (!popup) {
@@ -165,30 +165,30 @@ View inspect(Reader& h, Address scene, const UiTree& tree) {
     if (!ready || !v.count || !v.bytes || tree.has_modal) return v;
     for (Size i = 0; i < tree.count; ++i) {
         const Address button = tree.queue[i].node;
-        if (!h.readable(button, 0x449) || h.get<Address>(button) != module.base + 0x1a8ece0) continue;
+        if (!h.readable(button, 0x449) || h.get<Address>(button) != module.base + 0x1c05b30) continue;
         const Address outer = h.get<Address>(button + 0x400);
-        if (!h.readable(outer, 0x78) || h.get<Address>(outer) != module.base + 0x1afa520) continue;
+        if (!h.readable(outer, 0x78) || h.get<Address>(outer) != module.base + 0x1b58e38) continue;
         if (v.button) { v.button = 0; v.reason = "ambiguous_prompt"; return v; }
         const Address root = h.get<Address>(outer + 0x30), dim = h.get<Address>(outer + 0x20);
         const Address image = h.get<Address>(outer + 0x28), cancel = h.get<Address>(outer + 0x40);
         const Address inner = h.get<Address>(outer + 0x70);
         if (h.get<Address>(outer + 0x10) != scene || h.get<Address>(outer + 0x18) != scene
-            || h.get<Address>(outer + 0x38) != button || !member(h, tree, root, scene, 0x1b4d3e8)
-            || !member(h, tree, dim, scene, 0x1b90800) || !member(h, tree, image, root, 0x1aa0128)
-            || !member(h, tree, button, root, 0x1a8ece0) || !member(h, tree, cancel, root, 0x1a8ece0)
-            || !h.readable(inner, 0x28) || h.get<Address>(inner) != module.base + 0x1b70038
+            || h.get<Address>(outer + 0x38) != button || !member(h, tree, root, scene, 0x1bf8c28)
+            || dim != tree.bundle_dim || !member(h, tree, dim, scene, 0x1ba1c10) || !member(h, tree, image, root, 0x1baa378)
+            || !member(h, tree, button, root, 0x1c05b30) || !member(h, tree, cancel, root, 0x1c05b30)
+            || !h.readable(inner, 0x28) || h.get<Address>(inner) != module.base + 0x1bf2788
             || h.get<Address>(inner + 8) != scene || h.get<Address>(inner + 16) != scene
             || h.get<uint64_t>(inner + 24) != v.bytes || h.get<uint64_t>(inner + 32) != largest) continue;
         const Address cancel_outer = h.get<Address>(cancel + 0x400);
-        if (!h.readable(cancel_outer, 0x78) || h.get<Address>(cancel_outer) != module.base + 0x1b56270
+        if (!h.readable(cancel_outer, 0x78) || h.get<Address>(cancel_outer) != module.base + 0x1b4e8b8
             || h.get<Address>(cancel_outer + 0x10) != scene || h.get<Address>(cancel_outer + 0x18) != scene
             || h.get<Address>(cancel_outer + 0x20) != dim || h.get<Address>(cancel_outer + 0x30) != root
             || h.get<Address>(cancel_outer + 0x38) != button || h.get<Address>(cancel_outer + 0x40) != cancel) continue;
         const Address cancel_inner = h.get<Address>(cancel_outer + 0x70);
-        if (!h.readable(cancel_inner, 8) || h.get<Address>(cancel_inner) != module.base + 0x1b09a28
-            || !pointer(0x1afa520 + 0x30, 0x14b215c) || !pointer(0x1b70038 + 0x30, 0xbd8c68)
-            || !pointer(0x1b56270 + 0x30, 0x88920c) || !pointer(0x1b09a28 + 0x30, 0xf43c54)
-            || !pointer(0x1a8ece0 + 0x630, 0xf66c9c)) continue;
+        if (!h.readable(cancel_inner, 8) || h.get<Address>(cancel_inner) != module.base + 0x1b97e00
+            || !pointer(0x1b58e38 + 0x30, 0x177b76c) || !pointer(0x1bf2788 + 0x30, 0x9b8ea4)
+            || !pointer(0x1b4e8b8 + 0x30, 0x1237d0c) || !pointer(0x1b97e00 + 0x30, 0x1729400)
+            || !pointer(0x1c05b30 + 0x630, 0x180d76c)) continue;
         v.button = button; v.root = root;
     }
     if (h.fault || !v.button) return v;
@@ -206,7 +206,7 @@ const char* confirm(Reader& h, Address scene, const UiTree& tree, const View& ex
     for (Size i = 0; i < current.count; ++i)
         if (strcmp(current.versions[i], expected.versions[i])) return "BUNDLE_TARGET_CHANGED";
     if (!cli_dispatch_allowed()) return "EXPIRED";
-    OfficialHost host; host.call<void>(0xf66c9c, current.button);
+    OfficialHost host; host.call<void>(0x180d76c, current.button);
     return host.fault ? "NATIVE_GUARD" : nullptr;
 }
 
@@ -217,7 +217,7 @@ const char* dismiss_error(Reader& h, Address scene, const UiTree& tree, const Vi
         || current.root != expected.root) return "BUNDLE_ERROR_UNAVAILABLE";
     if (!error_button_ready(h, current.button)) return "BUNDLE_ERROR_NOT_READY";
     if (!cli_dispatch_allowed()) return "EXPIRED";
-    OfficialHost host; host.call<void>(0xf66c9c, current.button);
+    OfficialHost host; host.call<void>(0x180d76c, current.button);
     return host.fault ? "NATIVE_GUARD" : nullptr;
 }
 

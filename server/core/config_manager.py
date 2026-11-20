@@ -17,7 +17,7 @@ class Config:
     OLD_GAME_API_PREFIX = []  # str | list[str]
 
     ALLOW_APPVERSION = []  # list[str]
-    CLIENT_7_1_ENABLED = False
+    CLIENT_7_3_ENABLED = False
 
     BUNDLE_STRICT_MODE = True
     BUNDLE_ASSETSET_PROFILES_ENABLED = False
@@ -29,10 +29,10 @@ class Config:
     DYNAMIC_CLIENT_PACKLIST_PATH = './database/client_catalogs/7.0.255/packlist'
     DYNAMIC_CLIENT_PACKLIST_SHA256 = ''
     DYNAMIC_CLIENT_CATALOG_EPOCH = ''
-    DYNAMIC_PACKS_7_1_NATIVE_ACCEPTED = False
-    DYNAMIC_CLIENT_7_1_PACKLIST_PATH = ''
-    DYNAMIC_CLIENT_7_1_PACKLIST_SHA256 = ''
-    DYNAMIC_CLIENT_7_1_CATALOG_EPOCH = ''
+    DYNAMIC_PACKS_7_3_NATIVE_ACCEPTED = False
+    DYNAMIC_CLIENT_7_3_PACKLIST_PATH = ''
+    DYNAMIC_CLIENT_7_3_PACKLIST_SHA256 = ''
+    DYNAMIC_CLIENT_7_3_CATALOG_EPOCH = ''
     DYNAMIC_CLIENT_HIDDEN_PACK_IDS = []
     DYNAMIC_PACK_ENTITLEMENT_EXPANSIONS = {}
     # When set, only a client with no content bundle receives this root bundle.
@@ -69,7 +69,10 @@ class Config:
 
     DOWNLOAD_LINK_PREFIX = ''  # http(s)://host(:port)/download/
     DOWNLOAD_LINK_PREFIX_7_0_255 = ''
-    DOWNLOAD_LINK_PREFIX_7_1_0 = ''
+    DOWNLOAD_LINK_PREFIX_7_3_1 = ''
+    BUNDLE_MANIFEST_7_3_SHA256 = ''
+    SONGLIST_7_3_SHA256 = ''
+    SONG_METADATA_7_3_SHA256 = ''
     BUNDLE_DOWNLOAD_LINK_PREFIX = ''  # http(s)://host(:port)/bundle_download/
 
     ASSET_SIGNING_ENABLED = False

@@ -1,4 +1,4 @@
-"""Legacy upstream example. Chapter 5a uses config.7.0.255.example.py."""
+"""Base server settings. Use config.7.3.1.example.py for the documented setup."""
 
 
 class Config():

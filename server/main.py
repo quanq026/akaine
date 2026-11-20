@@ -188,6 +188,38 @@ def validate_runtime_config():
             + ', '.join(missing)
         )
 
+    if Config.CLIENT_7_3_ENABLED is True:
+        import re
+        from urllib.parse import urlsplit
+
+        def https_prefix(value):
+            if not isinstance(value, str) or any(c.isspace() for c in value):
+                return False
+            try:
+                url = urlsplit(value)
+                return bool(url.scheme == 'https' and url.hostname and url.username is None
+                            and not url.query and not url.fragment)
+            except ValueError:
+                return False
+
+        if (Config.HOST not in ('127.0.0.1', '::1')
+                or Config.ALLOW_APPVERSION != ['7.3.1']
+                or Config.SET_LINKPLAY_SERVER_AS_SUB_PROCESS or Config.LINKPLAY_HOST
+                or Config.INSECURE_LOCAL_OAUTH_COMPAT_ENABLED
+                or Config.ALLOW_SCORE_WITH_NO_SONG or not Config.DOWNLOAD_FORBID_WHEN_NO_ITEM):
+            raise RuntimeError('The 7.3.1 profile requires the standalone server policy')
+        target = Config.FRESH_INSTALL_APP_BUNDLE_OVERRIDES.get('7.3.1', '')
+        if (not re.fullmatch(r'7\.3\.1\.[1-9][0-9]{0,8}', target)
+                or not re.fullmatch(r'[0-9a-f]{64}', Config.BUNDLE_MANIFEST_7_3_SHA256)
+                or not all(isinstance(pin, str) and re.fullmatch(r'[0-9a-f]{64}', pin) for pin in
+                           (Config.SONGLIST_7_3_SHA256, Config.SONG_METADATA_7_3_SHA256))
+                or Config.DYNAMIC_PACKS_ENABLED is not True
+                or Config.DYNAMIC_PACKS_7_3_NATIVE_ACCEPTED is not True
+                or not https_prefix(Config.DOWNLOAD_LINK_PREFIX_7_3_1)):
+            raise RuntimeError('The 7.3.1 profile requires reviewed bundle, song and native pack inputs')
+        bundle_prefix = Config.BUNDLE_DOWNLOAD_LINK_PREFIX_APP_OVERRIDES.get('7.3.1', '')
+        if bundle_prefix and not https_prefix(bundle_prefix):
+            raise RuntimeError('The 7.3.1 bundle prefix must use HTTPS')
 
 def main():
     validate_runtime_config()
