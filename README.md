@@ -34,6 +34,8 @@ supplied separately when the guide needs them.
 
 Discord: kuan.026 if you have any questions!
 
+The [7.3.1 ARM64 source checkpoint](patches/arcaea-7.3.1-arm64/) covers the native patch, Android bindings and CLI. The one-command build below targets 7.1.0.
+
 ## Features
 
 ### Server

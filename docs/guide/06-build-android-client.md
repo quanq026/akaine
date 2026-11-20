@@ -6,6 +6,8 @@ Prepare the inputs once, then run one build command. It verifies and merges
 the original APKPure package, applies the current 7.1 changes, compiles the
 runtime, and aligns and signs your APK. No prepatched Akaine APK is an input.
 
+For development on 7.3.1, see the [source checkpoint](../../patches/arcaea-7.3.1-arm64/). If you want an installable APK from this guide, choose 7.1.0 below.
+
 This chapter supports only Arcaea **7.1.0 (`1209907`), arm64-v8a**.
 Do not substitute another version or the armeabi-v7a download.
 

@@ -33,6 +33,8 @@ native offset khác, vì vậy không thể dùng chung các bước trong repos
 Repository chứa hướng dẫn, mã nguồn server và công cụ build. Tải client gốc
 từ APKPure; content và đầu vào chart key tương ứng được cung cấp riêng khi cần.
 
+[Mã patch ARM64 của 7.3.1](patches/arcaea-7.3.1-arm64/) gồm phần native, Android và CLI. Lệnh build trong hướng dẫn bên dưới dùng cho 7.1.0.
+
 ## Tính năng
 
 ### Server

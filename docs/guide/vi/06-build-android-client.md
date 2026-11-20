@@ -6,6 +6,8 @@ Chuẩn bị đầu vào một lần, rồi chạy một lệnh build. Lệnh s�
 gói APKPure gốc, áp dụng thay đổi 7.1 hiện hành, biên dịch runtime, căn chỉnh
 và ký APK của bạn. Không dùng APK Akaine đã patch làm đầu vào.
 
+Xem [mã patch 7.3.1](../../../patches/arcaea-7.3.1-arm64/) nếu bạn muốn tham khảo port. Để build APK theo chương này, chọn 7.1.0.
+
 Chương này chỉ hỗ trợ Arcaea **7.1.0 (`1209907`), arm64-v8a**.
 Không thay bằng phiên bản khác hoặc bản tải armeabi-v7a.
 
