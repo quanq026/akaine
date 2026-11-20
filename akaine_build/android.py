@@ -275,7 +275,15 @@ MODULES = {'moe.low.arc.apk': 'base', 'arcassets.apk': 'arcassets',
            'config.arm64_v8a.apk': 'config.arm64_v8a', 'config.en.apk': 'config.en',
            'config.mdpi.apk': 'config.mdpi'}
 
-
+XAPK_73 = (1282543787, 'b996a23570e927f907a096da950f4347c818a388fc610a84fd0b8f58a7faa91e')
+MERGED_73 = (1270354570, 'c622e705c5818d5773b61ca57bd3ea712e49668e984d38f6ae49003978f6908b')
+MODULES_73 = {
+    'moe.low.arc.apk': 'base',
+    'config.arm64_v8a.apk': 'config.arm64_v8a',
+    'config.en.apk': 'config.en',
+    'config.xxxhdpi.apk': 'config.xxxhdpi',
+    'arcassets.apk': 'arcassets',
+}
 
 
 def checked_path(value, *, fresh=False):
@@ -294,17 +302,25 @@ def checked_path(value, *, fresh=False):
     return path
 
 
-def prepare_input(source, java, apkeditor, outputdir):
+def prepare_input(source, java, apkeditor, outputdir, *, app_version='7.1.0'):
     """Return a verified merged APK; accept the pinned XAPK or its pinned merge only."""
+    if app_version == '7.1.0':
+        xapk, merged, modules, version_code = XAPK, MERGED, MODULES, '1209907'
+        metadata = {'icon.png', 'manifest.json'}
+    elif app_version == '7.3.1':
+        xapk, merged, modules, version_code = XAPK_73, MERGED_73, MODULES_73, '1210500'
+        metadata = {'manifest.json'}
+    else:
+        raise ValueError(f'Unsupported Android input version: {app_version}')
     source = checked_path(source)
     outputdir = checked_path(outputdir, fresh=True)
     size = source.stat().st_size
-    if size not in (XAPK[0], MERGED[0]):
-        raise ValueError('Use the verified APKPure 7.1.0 arm64 XAPK or its verified merged APK; a base/split APK alone is incomplete')
+    if size not in (xapk[0], merged[0]):
+        raise ValueError(f'Use the verified APKPure {app_version} arm64 XAPK or its verified merged APK; a base/split APK alone is incomplete')
     source_hash = sha256_file(source)
-    kind = 'xapk' if (size, source_hash) == XAPK else 'merged' if (size, source_hash) == MERGED else None
+    kind = 'xapk' if (size, source_hash) == xapk else 'merged' if (size, source_hash) == merged else None
     if kind is None:
-        raise ValueError('Input does not match the verified APKPure 7.1.0 arm64 input; V9/staging APKs are not accepted')
+        raise ValueError(f'Input does not match the verified APKPure {app_version} arm64 input; V9/staging APKs are not accepted')
     if kind == 'xapk':
         java, apkeditor = checked_path(java), checked_path(apkeditor)
         if (apkeditor.stat().st_size, sha256_file(apkeditor)) != EDITOR:
@@ -312,8 +328,8 @@ def prepare_input(source, java, apkeditor, outputdir):
         with zipfile.ZipFile(source) as archive:
             rows = archive.infolist()
             names = [row.filename for row in rows]
-            if len(set(names)) != len(names) or set(names) != set(MODULES) | {'icon.png', 'manifest.json'}:
-                raise ValueError('XAPK must contain exactly the verified five APK modules, icon and manifest')
+            if len(set(names)) != len(names) or set(names) != set(modules) | metadata:
+                raise ValueError('XAPK must contain exactly the verified APK modules and metadata')
             for row in rows:
                 path = PurePosixPath(row.filename)
                 if (path.is_absolute() or path.as_posix() != row.filename or '..' in path.parts
@@ -324,10 +340,10 @@ def prepare_input(source, java, apkeditor, outputdir):
             if manifest_row.file_size > 65536:
                 raise ValueError('XAPK manifest is too large')
             manifest = json.loads(archive.read(manifest_row))
-            if (manifest.get('package_name') != 'moe.low.arc' or manifest.get('version_name') != '7.1.0'
-                    or str(manifest.get('version_code')) != '1209907'
-                    or manifest.get('split_apks') != [{'file': name, 'id': value} for name, value in MODULES.items()]
-                    or manifest.get('split_configs') != list(MODULES.values())[1:]):
+            if (manifest.get('package_name') != 'moe.low.arc' or manifest.get('version_name') != app_version
+                    or str(manifest.get('version_code')) != version_code
+                    or manifest.get('split_apks') != [{'file': name, 'id': value} for name, value in modules.items()]
+                    or manifest.get('split_configs') != list(modules.values())[1:]):
                 raise ValueError('XAPK package/version/split identity differs')
     outputdir.mkdir(parents=True)
     target = outputdir / 'merged.apk'
@@ -344,7 +360,7 @@ def prepare_input(source, java, apkeditor, outputdir):
         if (apkeditor.stat().st_size, sha256_file(apkeditor)) != EDITOR:
             raise ValueError('APKEditor changed during input preparation')
     target = checked_path(target)
-    if (target.stat().st_size, sha256_file(target)) != MERGED:
+    if (target.stat().st_size, sha256_file(target)) != merged:
         raise ValueError('Merged APK does not match the verified reference; stop before patching')
     if (source.stat().st_size, sha256_file(source)) != (size, source_hash):
         raise ValueError('Source input changed during preparation')

@@ -57,6 +57,33 @@ class AndroidClientBuilderTests(unittest.TestCase):
         ):
             self.assertIn(required, guide)
 
+    def test_7_3_input_rejects_an_xapk_with_the_wrong_version(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'stock.xapk'
+            editor = root / 'editor.jar'
+            java = root / 'java.exe'
+            editor.write_bytes(b'editor')
+            java.write_bytes(b'java')
+            modules = build_android_client.MODULES_73
+            with zipfile.ZipFile(source, 'w') as archive:
+                archive.writestr('manifest.json', json.dumps({
+                    'package_name': 'moe.low.arc',
+                    'version_name': '7.3.0',
+                    'version_code': '1210500',
+                    'split_apks': [{'file': name, 'id': value} for name, value in modules.items()],
+                    'split_configs': list(modules.values())[1:],
+                }))
+                for name in modules:
+                    archive.writestr(name, b'test module')
+            with patch.object(build_android_client, 'XAPK_73', (source.stat().st_size, digest(source))), \
+                 patch.object(build_android_client, 'EDITOR', (editor.stat().st_size, digest(editor))), \
+                 patch.object(build_android_client.subprocess, 'run') as run:
+                with self.assertRaisesRegex(ValueError, 'package/version/split identity'):
+                    build_android_client.prepare_input(source, java, editor, root / 'out', app_version='7.3.1')
+                run.assert_not_called()
+                self.assertFalse((root / 'out').exists())
+
     def test_replaces_payload_and_removes_old_v1_signature(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
