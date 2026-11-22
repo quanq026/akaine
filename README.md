@@ -19,8 +19,11 @@ English | [Tiếng Việt](README.vi.md)
   <a href="docs/guide/README.md">Start the guide</a>
 </p>
 
-Akaine provides public source and a beginner's guide for setting up a game server
-and preparing the Android client inputs.
+Akaine is a setup guide and public source repository for a server and Android client based on Arcaea 7.0.255. The guide starts with a clean Windows computer and a new cloud account. You do not need previous experience with Linux, Cloudflare or Android builds.
+
+The guide and public client patches target only version 7.3.1 with version code 1209852. Older and newer Arcaea releases use different files and native offsets, so they are outside this repository's instructions.
+
+The repository contains the guide, server and build tools. The APK input and game content are supplied separately when the guide needs them.
 
 | What you want to do | Where to start |
 | --- | --- |
@@ -120,6 +123,30 @@ To connect a client to your server, supply a compatible APK built for your hostn
 
 Start with chapter one and continue in order. Every later chapter assumes the
 previous chapter's checks have passed.
+
+## Before you start
+
+Set aside an uninterrupted afternoon for the first setup. You need:
+
+- a Windows 10 or Windows 11 computer with at least 30 GB free
+- an Android phone or a computer capable of running an Android emulator
+- a payment card accepted by AWS and your domain registrar
+- an email address you control and can protect with two-factor authentication
+- the private Akaine resource kit and its expected SHA-256 value
+
+New AWS customers may receive up to USD 200 in credits for six months, enough
+to cover the Lightsail server during the initial setup period. Vietnamese
+citizens aged 18 to 23 may also qualify for one free `.id.vn` domain for two
+years through participating `.vn` registrars such as iNET. Promotional domains
+can start at roughly 40,000 VND, but check the renewal price before buying.
+
+Cloudflare DNS, CDN and SSL use the Free plan. R2 includes 10 GB of Standard
+storage each month, and extra storage costs USD 0.015 per GB-month. For a small
+installation, the R2 bill is usually below USD 1 per month unless you keep many
+duplicate releases or serve unusually heavy traffic.
+
+When the AWS credits expire, you can pay for the same Lightsail server or move
+the installation to another VPS provider.
 
 ## Private resources
 
