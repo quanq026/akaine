@@ -472,6 +472,55 @@ def build_random_payload(
     return embed, jfile
 
 
+def _external_api_doc_urls() -> tuple[str, str]:
+    view_url = os.environ.get(
+        "AKAINE_EXTERNAL_API_DOCS_URL",
+        "https://github.com/quanq026/akaine/blob/main/docs/EXTERNAL_API.md",
+    )
+    download_url = os.environ.get(
+        "AKAINE_EXTERNAL_API_DOCS_RAW_URL",
+        "https://raw.githubusercontent.com/quanq026/akaine/main/docs/EXTERNAL_API.md",
+    )
+    return view_url, download_url
+
+
+def _dev_key_docs_view() -> discord.ui.View:
+    view_url, download_url = _external_api_doc_urls()
+    view = discord.ui.View(timeout=None)
+    view.add_item(
+        discord.ui.Button(
+            label="View API Docs",
+            emoji="📖",
+            style=discord.ButtonStyle.link,
+            url=view_url,
+        )
+    )
+    view.add_item(
+        discord.ui.Button(
+            label="Download Doc (.md)",
+            emoji="⬇️",
+            style=discord.ButtonStyle.link,
+            url=download_url,
+        )
+    )
+    return view
+
+
+def _load_external_api_doc_bytes(server_cwd: Path, base_url: str) -> Optional[bytes]:
+    candidates = (
+        server_cwd / "docs" / "EXTERNAL_API.md",
+        server_cwd.parent / "docs" / "EXTERNAL_API.md",
+    )
+    for path in candidates:
+        if path.is_file():
+            text = path.read_text(encoding="utf-8").replace(
+                "https://api.example.com/external/v1",
+                base_url,
+            )
+            return text.encode("utf-8")
+    return None
+
+
 def help_embed_for_category(category: str) -> discord.Embed:
     if category == "scores":
         embed = discord.Embed(title="Demiurge · Play & Scores", color=BRAND_COLOR)
@@ -534,6 +583,7 @@ def help_embed_for_category(category: str) -> discord.Embed:
         embed.add_field(name="/ranking", value="Server Potential leaderboard.", inline=False)
         return embed
     if category == "account":
+        view_url, download_url = _external_api_doc_urls()
         embed = discord.Embed(title="Demiurge · Account & Security", color=SUCCESS_COLOR)
         embed.add_field(
             name="/account · /default · /create · /link · /dev_key",
@@ -541,7 +591,7 @@ def help_embed_for_category(category: str) -> discord.Embed:
                 "Create or manage up to 3 linked Discord accounts per Akaine account.\n"
                 "• **Default account** sets which account quick commands (`/rs`, `/b30n`, `/profile`, ...) use (`⭐ Set Default` in `/account` or `/default <account>`).\n"
                 "• **Primary link** controls Rename, Password reset, and Remove other Discords.\n"
-                "• **Developer API** (`/dev_key`): issue your personal read-only Bearer key (`60 req / 60s`, public profiles only).\n"
+                f"• **Developer API** (`/dev_key`): issue your personal read-only Bearer key (`60 req / 60s`, public profiles only) · [View Docs]({view_url}) · [Download .md]({download_url}).\n"
                 "• **Brute-force lockout** protects `/link` after 5 failed attempts; **DM alerts** notify owners on new links."
             ),
             inline=False,
@@ -2343,10 +2393,10 @@ def build_bot(settings: BotSettings) -> LygusBot:
 
     @bot.tree.command(
         name="dev_key",
-        description="Generate, view status, or revoke your personal read-only API key",
+        description="Generate, check status, revoke key, or download External API docs",
     )
     @app_commands.describe(
-        action="Action to perform (generate, status, or revoke)",
+        action="Action to perform (generate, status, revoke, or docs)",
         label="Optional short label for your app or bot (max 40 chars)",
     )
     @app_commands.choices(
@@ -2354,6 +2404,7 @@ def build_bot(settings: BotSettings) -> LygusBot:
             app_commands.Choice(name="Generate / Rotate key", value="generate"),
             app_commands.Choice(name="Status", value="status"),
             app_commands.Choice(name="Revoke key", value="revoke"),
+            app_commands.Choice(name="Download API Docs (.md)", value="docs"),
         ]
     )
     async def dev_key_command(
@@ -2365,6 +2416,34 @@ def build_bot(settings: BotSettings) -> LygusBot:
         try:
             mode = (action.value if hasattr(action, "value") else action) or "generate"
             base_url = os.environ.get("AKAINE_EXTERNAL_API", "https://api.example.com/external/v1")
+            view_url, download_url = _external_api_doc_urls()
+            docs_links = f"[View on GitHub]({view_url}) · [Download .md]({download_url})"
+            docs_view = _dev_key_docs_view()
+
+            if mode == "docs":
+                doc_bytes = await asyncio.to_thread(
+                    _load_external_api_doc_bytes, bot.settings.server_cwd, base_url
+                )
+                embed = discord.Embed(
+                    title="Akaine External API v1 · Documentation",
+                    description=(
+                        f"**Base URL:** `{base_url}`\n"
+                        f"**Docs:** {docs_links}\n"
+                        "**Auth:** `Authorization: Bearer <token>` (issue yours with `/dev_key action:Generate / Rotate key`)."
+                    ),
+                    color=INFO_COLOR,
+                )
+                if doc_bytes is not None:
+                    await interaction.followup.send(
+                        embed=embed,
+                        file=discord.File(io.BytesIO(doc_bytes), filename="akaine-external-api.md"),
+                        view=docs_view,
+                        ephemeral=True,
+                    )
+                else:
+                    await interaction.followup.send(embed=embed, view=docs_view, ephemeral=True)
+                return
+
             if mode == "status":
                 info = await asyncio.to_thread(
                     bot.repository.get_community_api_key_info, interaction.user.id
@@ -2372,7 +2451,10 @@ def build_bot(settings: BotSettings) -> LygusBot:
                 if info is None:
                     embed = discord.Embed(
                         title="Developer API Key Status",
-                        description="You do not have an active personal API key.\nUse `/dev_key action:Generate / Rotate key` to create one.",
+                        description=(
+                            "You do not have an active personal API key.\n"
+                            f"Use `/dev_key action:Generate / Rotate key` to create one.\n\n**Docs:** {docs_links}"
+                        ),
                         color=INFO_COLOR,
                     )
                 else:
@@ -2385,7 +2467,8 @@ def build_bot(settings: BotSettings) -> LygusBot:
                     embed.add_field(name="Label", value=label_text, inline=True)
                     embed.add_field(name="Created at", value=f"`{info['created_at']}`", inline=True)
                     embed.add_field(name="Base URL", value=f"`{base_url}`", inline=False)
-                await interaction.followup.send(embed=embed, ephemeral=True)
+                    embed.add_field(name="Docs", value=docs_links, inline=False)
+                await interaction.followup.send(embed=embed, view=docs_view, ephemeral=True)
                 return
 
             if mode == "revoke":
@@ -2418,11 +2501,12 @@ def build_bot(settings: BotSettings) -> LygusBot:
                     f"**Base URL:** `{base_url}`\n"
                     f"**Header:** `Authorization: Bearer <token>`\n"
                     "**Endpoints:** `/players`, `/best-scores`, `/recent-scores`, `/plays`, `/charts`\n"
-                    "**Limits & privacy:** `60 req / 60s` per key · public profiles only · no assets or account endpoints."
+                    "**Limits & privacy:** `60 req / 60s` per key · public profiles only · no assets or account endpoints.\n"
+                    f"**Docs:** {docs_links}"
                 ),
                 color=SUCCESS_COLOR,
             )
-            await interaction.followup.send(embed=embed, ephemeral=True)
+            await interaction.followup.send(embed=embed, view=docs_view, ephemeral=True)
         except Exception as error:
             await handle_interaction_error(interaction, error)
 
