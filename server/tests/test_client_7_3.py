@@ -238,3 +238,58 @@ class Client73Test(TestCase):
                 DownloadList.initialize_cache()
             with self.assertRaises(NoAccess):
                 DownloadList(app_version='7.3.1').add_songs(['hascome'])
+
+    def test_anomaly_song_downloads_expand_to_unlocked_targets_only(self):
+        songlist = self.root / 'songs.json'
+        metadata = self.root / 'song_metadata.json'
+        rows = [
+            {'id': 'axiumcrisis', 'set': 'vicious', 'purchase': 'vicious', 'remote_dl': True,
+             'difficulties': [{'ratingClass': 0}]},
+            {'id': 'grievouslady', 'set': 'vicious', 'purchase': 'vicious', 'remote_dl': True,
+             'difficulties': [{'ratingClass': 0}]},
+            {'id': 'etherstrike', 'set': 'luminous', 'purchase': 'luminous', 'remote_dl': True,
+             'difficulties': [{'ratingClass': 0}]},
+            {'id': 'fractureray', 'set': 'luminous', 'purchase': '', 'remote_dl': True,
+             'world_unlock': True, 'difficulties': [{'ratingClass': 0}]},
+        ]
+        songlist.write_text(json.dumps({'songs': rows}), encoding='utf-8')
+        hashes = {
+            row['id']: {
+                'files': ['base.ogg', '0.aff'],
+                'hashes': {'base.ogg': f"{idx}" * 32, '0.aff': f"{idx + 4}" * 32},
+            }
+            for idx, row in enumerate(rows, 1)
+        }
+        metadata.write_text(json.dumps(hashes), encoding='utf-8')
+        original_init = SonglistParser.__init__
+        for clear_cache in (DownloadList.get_one_song_file_names.cache_clear,
+                            DownloadList.get_all_song_ids.cache_clear):
+            clear_cache()
+            self.addCleanup(clear_cache)
+        with patch.multiple(
+                Config, SONGLIST_7_3_SHA256=sha256(songlist.read_bytes()).hexdigest(),
+                SONG_METADATA_7_3_SHA256=sha256(metadata.read_bytes()).hexdigest(),
+                SONG_FILE_HASH_PRE_CALCULATE=False, DOWNLOAD_FORBID_WHEN_NO_ITEM=True,
+                DOWNLOAD_LINK_PREFIX_7_3_1='https://stage.invalid/songs/',
+        ), patch.multiple(
+                SonglistParser, has_songlist=False, songs={}, pack_info={},
+                free_songs=set(), world_songs=set(), qa73_waves={},
+        ), patch.object(SonglistParser, '__init__', lambda instance: original_init(instance, songlist)), \
+                patch('core.download.SONG_METADATA_PATH', metadata), \
+                patch('core.download.song_metadata', {}), patch('core.download.reload_dynamic_pack_catalog'):
+            DownloadList.initialize_cache()
+            for song_id, packs, world, expected in (
+                ('axiumcrisis', ['vicious'], [], {'axiumcrisis', 'grievouslady'}),
+                ('etherstrike', ['luminous'], ['fractureray'], {'etherstrike', 'fractureray'}),
+                ('etherstrike', ['luminous'], [], {'etherstrike'}),
+                ('axiumcrisis', [], [], set()),
+            ):
+                user = SimpleNamespace(owned_pack_ids=packs, singles=[], world_songs=world)
+                downloads = DownloadList(user=user, app_version='7.3.1')
+                downloads.add_songs([song_id])
+                self.assertEqual(set(downloads.urls), expected)
+            with patch.object(SonglistParser, 'get_user_unlocks', return_value={'axiumcrisis'}):
+                user = SimpleNamespace(owned_pack_ids=['vicious'], singles=[], world_songs=[])
+                downloads = DownloadList(user=user, app_version='7.3.1')
+                downloads.add_songs(['axiumcrisis'])
+                self.assertEqual(set(downloads.urls), {'axiumcrisis'})

@@ -503,6 +503,16 @@ class DownloadList(UserDownload):
             for i in self.song_ids:
                 self.add_one_song(i)
         else:
+            anomaly_targets = {
+                'axiumcrisis': ('grievouslady',),
+                'etherstrike': ('fractureray',),
+            }
+            expanded_song_ids = list(self.song_ids)
+            for sid in list(self.song_ids):
+                for target in anomaly_targets.get(sid, ()):
+                    if target not in expanded_song_ids:
+                        expanded_song_ids.append(target)
+            self.song_ids = expanded_song_ids
             if Config.DOWNLOAD_FORBID_WHEN_NO_ITEM and SonglistParser.has_songlist:
                 # 没有歌曲时不允许下载
                 self.song_ids = list(SonglistParser.get_user_unlocks(
