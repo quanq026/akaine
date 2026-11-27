@@ -124,6 +124,7 @@ class Account:
     user_code: str
     created_at: Optional[str] = None
     is_primary: bool = True
+    is_default: bool = False
 
 
 @dataclass(frozen=True)
@@ -543,14 +544,15 @@ class BotRepository:
                 connection.execute("DROP TABLE IF EXISTS user_mapping_v2")
                 self._create_mapping_table(connection, table_name="user_mapping_v2")
                 primary_expr = "COALESCE(is_primary, 0)" if "is_primary" in columns else "0"
+                default_expr = "COALESCE(is_default, 0)" if "is_default" in columns else "0"
                 connection.execute(
                     f"""
                     INSERT OR IGNORE INTO user_mapping_v2 (
-                        discord_id, user_id, username, user_code, created_at, is_primary
+                        discord_id, user_id, username, user_code, created_at, is_primary, is_default
                     )
                     SELECT
                         CAST(discord_id AS TEXT), CAST(user_id AS INTEGER),
-                        username, user_code, created_at, {primary_expr}
+                        username, user_code, created_at, {primary_expr}, {default_expr}
                     FROM user_mapping
                     WHERE discord_id IS NOT NULL
                       AND user_id IS NOT NULL
@@ -563,6 +565,7 @@ class BotRepository:
                 connection.execute("ALTER TABLE user_mapping_v2 RENAME TO user_mapping")
                 self._create_mapping_indexes(connection)
                 self._backfill_primary_flags(connection)
+                self._backfill_default_flags(connection)
                 connection.commit()
                 return
 
@@ -571,8 +574,13 @@ class BotRepository:
                 connection.execute(
                     "ALTER TABLE user_mapping ADD COLUMN is_primary INTEGER NOT NULL DEFAULT 0"
                 )
+            if "is_default" not in columns:
+                connection.execute(
+                    "ALTER TABLE user_mapping ADD COLUMN is_default INTEGER NOT NULL DEFAULT 0"
+                )
             self._create_mapping_indexes(connection)
             self._backfill_primary_flags(connection)
+            self._backfill_default_flags(connection)
             connection.commit()
         except Exception:
             connection.rollback()
@@ -594,6 +602,7 @@ class BotRepository:
                 user_code TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 is_primary INTEGER NOT NULL DEFAULT 0,
+                is_default INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (discord_id, user_id),
                 UNIQUE (discord_id, username)
             )
@@ -627,6 +636,52 @@ class BotRepository:
                     "UPDATE user_mapping SET is_primary = 1 WHERE rowid = ?",
                     (int(oldest["rowid"]),),
                 )
+
+    @staticmethod
+    def _backfill_default_flags(connection: sqlite3.Connection) -> None:
+        discord_rows = connection.execute(
+            """
+            SELECT discord_id, SUM(COALESCE(is_default, 0)) AS default_count
+            FROM user_mapping
+            GROUP BY discord_id
+            HAVING default_count <> 1
+            """
+        ).fetchall()
+        for row in discord_rows:
+            did = str(row["discord_id"])
+            count = int(row["default_count"])
+            if count == 0:
+                chosen = connection.execute(
+                    """
+                    SELECT rowid
+                    FROM user_mapping
+                    WHERE discord_id = ?
+                    ORDER BY is_primary DESC, created_at DESC, user_id DESC
+                    LIMIT 1
+                    """,
+                    (did,),
+                ).fetchone()
+                if chosen is not None:
+                    connection.execute(
+                        "UPDATE user_mapping SET is_default = 1 WHERE rowid = ?",
+                        (int(chosen["rowid"]),),
+                    )
+            else:
+                chosen = connection.execute(
+                    """
+                    SELECT rowid
+                    FROM user_mapping
+                    WHERE discord_id = ? AND COALESCE(is_default, 0) = 1
+                    ORDER BY is_primary DESC, created_at DESC, user_id DESC
+                    LIMIT 1
+                    """,
+                    (did,),
+                ).fetchone()
+                if chosen is not None:
+                    connection.execute(
+                        "UPDATE user_mapping SET is_default = CASE WHEN rowid = ? THEN 1 ELSE 0 END WHERE discord_id = ?",
+                        (int(chosen["rowid"]), did),
+                    )
 
     @staticmethod
     def _has_single_user_id_unique(connection: sqlite3.Connection) -> bool:
@@ -745,6 +800,7 @@ class BotRepository:
     def _account_from_row(row: sqlite3.Row) -> Account:
         keys = row.keys()
         is_primary = bool(row["is_primary"]) if "is_primary" in keys else True
+        is_default = bool(row["is_default"]) if "is_default" in keys else False
         return Account(
             discord_id=str(row["discord_id"]),
             user_id=int(row["user_id"]),
@@ -752,6 +808,7 @@ class BotRepository:
             user_code=str(row["user_code"]),
             created_at=row["created_at"],
             is_primary=is_primary,
+            is_default=is_default,
         )
 
     def list_accounts(self, discord_id: str | int) -> list[Account]:
@@ -759,10 +816,10 @@ class BotRepository:
         try:
             rows = connection.execute(
                 """
-                SELECT discord_id, user_id, username, user_code, created_at, is_primary
+                SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default
                 FROM user_mapping
                 WHERE discord_id = ?
-                ORDER BY is_primary DESC, created_at DESC, user_id DESC
+                ORDER BY is_default DESC, is_primary DESC, created_at DESC, user_id DESC
                 """,
                 (str(discord_id),),
             ).fetchall()
@@ -775,7 +832,7 @@ class BotRepository:
         try:
             row = connection.execute(
                 """
-                SELECT discord_id, user_id, username, user_code, created_at, is_primary
+                SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default
                 FROM user_mapping
                 WHERE discord_id = ? AND user_id = ?
                 """,
@@ -820,13 +877,20 @@ class BotRepository:
             if connection.execute("SELECT 1 FROM user WHERE name = ?", (username,)).fetchone():
                 raise AccountConflict("Username already exists.")
             payload = _provision_fn(connection.cursor(), username, password)
+            existing_for_discord = int(
+                connection.execute(
+                    "SELECT COUNT(*) FROM botdb.user_mapping WHERE discord_id = ?",
+                    (str(discord_id),),
+                ).fetchone()[0]
+            )
+            is_default = 1 if existing_for_discord == 0 else 0
             connection.execute(
-                "INSERT INTO botdb.user_mapping (discord_id, user_id, username, user_code, is_primary) "
-                "VALUES (?, ?, ?, ?, 1)",
-                (str(discord_id), payload["user_id"], payload["username"], payload["user_code"]),
+                "INSERT INTO botdb.user_mapping (discord_id, user_id, username, user_code, is_primary, is_default) "
+                "VALUES (?, ?, ?, ?, 1, ?)",
+                (str(discord_id), payload["user_id"], payload["username"], payload["user_code"], is_default),
             )
             account_row = connection.execute(
-                "SELECT discord_id, user_id, username, user_code, created_at, is_primary "
+                "SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default "
                 "FROM botdb.user_mapping WHERE discord_id = ? AND user_id = ?",
                 (str(discord_id), payload["user_id"]),
             ).fetchone()
@@ -872,18 +936,25 @@ class BotRepository:
                     (int(user_id),),
                 ).fetchone()[0]
             )
+            existing_for_discord = int(
+                mapping.execute(
+                    "SELECT COUNT(*) FROM user_mapping WHERE discord_id = ?",
+                    (str(discord_id),),
+                ).fetchone()[0]
+            )
             is_primary = 1 if existing_count == 0 else 0
+            is_default = 1 if existing_for_discord == 0 else 0
             mapping.execute(
                 """
                 INSERT INTO user_mapping (
-                    discord_id, user_id, username, user_code, is_primary
-                ) VALUES (?, ?, ?, ?, ?)
+                    discord_id, user_id, username, user_code, is_primary, is_default
+                ) VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (str(discord_id), int(user_id), value, str(user_code), is_primary),
+                (str(discord_id), int(user_id), value, str(user_code), is_primary, is_default),
             )
             account_row = mapping.execute(
                 """
-                SELECT discord_id, user_id, username, user_code, created_at, is_primary
+                SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default
                 FROM user_mapping WHERE discord_id = ? AND user_id = ?
                 """,
                 (str(discord_id), int(user_id)),
@@ -905,7 +976,7 @@ class BotRepository:
             mapping.execute("BEGIN IMMEDIATE")
             row = mapping.execute(
                 """
-                SELECT discord_id, user_id, username, user_code, created_at, is_primary
+                SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default
                 FROM user_mapping WHERE discord_id = ? AND user_id = ?
                 """,
                 (str(discord_id), int(user_id)),
@@ -913,6 +984,7 @@ class BotRepository:
             if row is None:
                 raise PermissionDenied("This Discord user does not own that account.")
             was_primary = bool(row["is_primary"])
+            was_default = bool(row["is_default"])
             mapping.execute(
                 "DELETE FROM user_mapping WHERE discord_id = ? AND user_id = ?",
                 (str(discord_id), int(user_id)),
@@ -933,6 +1005,22 @@ class BotRepository:
                         "UPDATE user_mapping SET is_primary = 1 WHERE rowid = ?",
                         (int(next_owner["rowid"]),),
                     )
+            if was_default:
+                next_default = mapping.execute(
+                    """
+                    SELECT rowid
+                    FROM user_mapping
+                    WHERE discord_id = ?
+                    ORDER BY is_primary DESC, created_at DESC, user_id DESC
+                    LIMIT 1
+                    """,
+                    (str(discord_id),),
+                ).fetchone()
+                if next_default is not None:
+                    mapping.execute(
+                        "UPDATE user_mapping SET is_default = 1 WHERE rowid = ?",
+                        (int(next_default["rowid"]),),
+                    )
             mapping.commit()
         except Exception:
             mapping.rollback()
@@ -940,6 +1028,52 @@ class BotRepository:
         finally:
             mapping.close()
         return self._account_from_row(row)
+
+    def set_default_account(self, discord_id: str | int, user_id: int) -> Account:
+        mapping = self._connect(self.mapping_db_path)
+        try:
+            mapping.execute("BEGIN IMMEDIATE")
+            exists = mapping.execute(
+                "SELECT 1 FROM user_mapping WHERE discord_id = ? AND user_id = ?",
+                (str(discord_id), int(user_id)),
+            ).fetchone()
+            if exists is None:
+                raise PermissionDenied("This Discord user does not own that account.")
+            mapping.execute(
+                "UPDATE user_mapping SET is_default = CASE WHEN user_id = ? THEN 1 ELSE 0 END WHERE discord_id = ?",
+                (int(user_id), str(discord_id)),
+            )
+            account_row = mapping.execute(
+                """
+                SELECT discord_id, user_id, username, user_code, created_at, is_primary, is_default
+                FROM user_mapping WHERE discord_id = ? AND user_id = ?
+                """,
+                (str(discord_id), int(user_id)),
+            ).fetchone()
+            mapping.commit()
+            return self._account_from_row(account_row)
+        except Exception:
+            mapping.rollback()
+            raise
+        finally:
+            mapping.close()
+
+    def set_default_account_by_name(self, discord_id: str | int, account_query: str) -> Account:
+        query = account_query.strip()
+        if not query:
+            raise ValidationError("Provide an account username, user code, or user ID.")
+        accounts = self.list_accounts(discord_id)
+        if not accounts:
+            raise AccountNotFound("Use `/create` or `/link` first.")
+        matched: Optional[Account] = None
+        q_lower = query.lower()
+        for acc in accounts:
+            if str(acc.user_id) == query or acc.user_code == query or acc.username.lower() == q_lower:
+                matched = acc
+                break
+        if matched is None:
+            raise AccountNotFound("That account is not linked to your Discord user.")
+        return self.set_default_account(discord_id, matched.user_id)
 
     @staticmethod
     def _link_failure_scopes(discord_id: str | int, username: str) -> tuple[str, str]:

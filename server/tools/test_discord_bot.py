@@ -593,5 +593,93 @@ class GameFeaturesTests(unittest.TestCase):
                 self.assertEqual(b30n2_im.size, (2560, 1600))
 
 
+class DefaultAccountTests(unittest.IsolatedAsyncioTestCase):
+    async def test_default_account_migration_switch_unlink_and_resolution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            game_db = root / "game.db"
+            map_db = root / "mapping.db"
+            pw = discord_bot_core.hash_password("FixturePass99!")
+            with sqlite3.connect(game_db) as conn:
+                conn.executescript(
+                    f"""
+                    CREATE TABLE user (
+                        user_id INTEGER PRIMARY KEY,
+                        name TEXT UNIQUE,
+                        password TEXT,
+                        join_date TEXT,
+                        user_code TEXT UNIQUE,
+                        rating_ptt INTEGER,
+                        character_id INTEGER,
+                        is_profile_public INTEGER DEFAULT 1
+                    );
+                    INSERT INTO user VALUES
+                        (10, 'FirstAcc', '{pw}', '2026-01-01', '101010101', 1200, 0, 1),
+                        (20, 'SecondAcc', '{pw}', '2026-01-02', '202020202', 1100, 1, 1);
+                    """
+                )
+                conn.commit()
+            # Pre-is_default legacy schema backfill check
+            with sqlite3.connect(map_db) as conn:
+                conn.executescript(
+                    """
+                    CREATE TABLE user_mapping (
+                        discord_id TEXT NOT NULL,
+                        user_id INTEGER NOT NULL,
+                        username TEXT NOT NULL,
+                        user_code TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        is_primary INTEGER NOT NULL DEFAULT 0,
+                        PRIMARY KEY (discord_id, user_id),
+                        UNIQUE (discord_id, username)
+                    );
+                    INSERT INTO user_mapping (discord_id, user_id, username, user_code, created_at, is_primary)
+                    VALUES ('555', 10, 'FirstAcc', '101010101', '2026-01-01 00:00:00', 1);
+                    """
+                )
+                conn.commit()
+
+            repo = discord_bot_core.BotRepository(game_db, map_db)
+            repo.migrate_mapping_schema()
+            accounts = repo.list_accounts(555)
+            self.assertEqual(len(accounts), 1)
+            self.assertTrue(accounts[0].is_default)
+
+            # Linking a second account preserves FirstAcc as default
+            second = repo.link_account(555, "SecondAcc", "FixturePass99!")
+            self.assertFalse(second.is_default)
+            ordered = repo.list_accounts(555)
+            self.assertEqual([a.user_id for a in ordered], [10, 20])
+            self.assertTrue(ordered[0].is_default)
+
+            # Switch default to SecondAcc by name
+            switched = repo.set_default_account_by_name(555, "secondacc")
+            self.assertTrue(switched.is_default)
+            ordered = repo.list_accounts(555)
+            self.assertEqual([a.user_id for a in ordered], [20, 10])
+            self.assertTrue(ordered[0].is_default)
+            self.assertFalse(ordered[1].is_default)
+
+            # Another Discord user cannot switch a foreign account
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.set_default_account(999, 20)
+
+            # resolve_target_user picks SecondAcc (active default) when no args given
+            from types import SimpleNamespace
+            fake_bot = SimpleNamespace(repository=repo)
+            fake_interaction = SimpleNamespace(user=SimpleNamespace(id=555))
+            resolved_uid, is_owner = await discord_bot.resolve_target_user(
+                fake_bot, fake_interaction, None, None
+            )
+            self.assertEqual(resolved_uid, 20)
+            self.assertTrue(is_owner)
+
+            # Unlinking the default promotes remaining account
+            repo.unlink_account(555, 20)
+            remaining = repo.list_accounts(555)
+            self.assertEqual([a.user_id for a in remaining], [10])
+            self.assertTrue(remaining[0].is_default)
+
+
 if __name__ == "__main__":
     unittest.main()

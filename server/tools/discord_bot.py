@@ -536,9 +536,10 @@ def help_embed_for_category(category: str) -> discord.Embed:
     if category == "account":
         embed = discord.Embed(title="Demiurge · Account & Security", color=SUCCESS_COLOR)
         embed.add_field(
-            name="/account · /create · /link",
+            name="/account · /default · /create · /link",
             value=(
                 "Create or manage up to 3 linked Discord accounts per Akaine account.\n"
+                "• **Default account** sets which account quick commands (`/rs`, `/b30n`, `/profile`, ...) use (`⭐ Set Default` in `/account` or `/default <account>`).\n"
                 "• **Primary link** controls Rename, Password reset, and Remove other Discords.\n"
                 "• **Brute-force lockout** protects `/link` after 5 failed attempts.\n"
                 "• **Security alerts** DM existing linked Discord owners whenever a new Discord links."
@@ -570,7 +571,7 @@ def help_embed_for_category(category: str) -> discord.Embed:
     )
     embed.add_field(
         name="Account",
-        value="`/account` · `/create` · `/link`",
+        value="`/account` · `/default` · `/create` · `/link`",
         inline=False,
     )
     embed.set_footer(text="Demiurge · Use the dropdown menu for detailed command usage.")
@@ -1240,9 +1241,14 @@ class CreateAccountModal(GuardedModal, title="Create Akaine account"):
                 username,
                 password,
             )
+            default_note = (
+                "Active **⭐ Default** for quick commands."
+                if account.is_default
+                else "Use `/default` or `/account` to set as your default."
+            )
             embed = discord.Embed(
                 title="Account created",
-                description=f"These credentials are shown once. Store them somewhere private.\n\n{ACCOUNT_SETUP_NOTE}",
+                description=f"These credentials are shown once. Store them somewhere private.\n{default_note}\n\n{ACCOUNT_SETUP_NOTE}",
                 color=SUCCESS_COLOR,
             )
             embed.add_field(name="Username", value=f"`{account.username}`", inline=True)
@@ -1271,10 +1277,15 @@ class LinkAccountModal(GuardedModal, title="Link existing account"):
                 str(self.password.value),
             )
             role_note = "Primary" if account.is_primary else "Secondary (view & play commands)"
+            default_note = (
+                "Active **⭐ Default** for quick commands."
+                if account.is_default
+                else "Use `/default` or `/account` to set as your default."
+            )
             await interaction.followup.send(
                 embed=discord.Embed(
                     title="Account linked",
-                    description=f"`{account.username}` is now available in `/account` as **{role_note}**.",
+                    description=f"`{account.username}` is now available in `/account` as **{role_note}**.\n{default_note}",
                     color=SUCCESS_COLOR,
                 ),
                 ephemeral=True,
@@ -1408,9 +1419,11 @@ class AccountSelect(discord.ui.Select):
             discord.SelectOption(
                 label=account.username,
                 value=str(account.user_id),
+                emoji="⭐" if account.is_default else None,
                 description=(
+                    f"{'Default · ' if account.is_default else ''}"
                     f"{'Primary' if account.is_primary else 'Secondary'} · {account.user_code}"
-                ),
+                )[:100],
                 default=account.user_id == dashboard.selected_user_id,
             )
             for account in accounts[:25]
@@ -1449,13 +1462,17 @@ class AccountDashboardView(OwnerView):
                     selected = item
                     break
         is_primary = bool(selected and selected.is_primary)
+        is_default = bool(selected and selected.is_default)
         other_links = self.linked_counts.get(selected.user_id, 1) > 1 if selected else False
 
         for child in self.children:
             if not isinstance(child, discord.ui.Button):
                 continue
-            if child.custom_id in {"lygus-profile", "lygus-recent", "lygus-b30", "lygus-unlink"}:
+            if child.custom_id in {"lygus-profile", "lygus-recent", "lygus-b30", "lygus-b30n", "lygus-unlink"}:
                 child.disabled = not has_accounts
+            elif child.custom_id == "lygus-set-default":
+                child.disabled = not has_accounts or is_default
+                child.label = "Default ✓" if is_default else "Set Default"
             elif child.custom_id in {"lygus-rename", "lygus-password"}:
                 child.disabled = not (has_accounts and is_primary)
             elif child.custom_id == "lygus-revoke-others":
@@ -1488,12 +1505,30 @@ class AccountDashboardView(OwnerView):
             value="Primary (owner)" if account.is_primary else "Secondary (view only)",
             inline=True,
         )
-        embed.add_field(name="Linked accounts", value=str(len(self.accounts)), inline=True)
+        embed.add_field(
+            name="Quick commands",
+            value="⭐ Default" if account.is_default else "Not default",
+            inline=True,
+        )
         embed.add_field(
             name="Linked Discord",
             value=f"{linked_discords}/{MAX_DISCORD_LINKS_PER_ACCOUNT}",
             inline=True,
         )
+        if len(self.accounts) > 1:
+            overview_lines: list[str] = []
+            for acc in self.accounts[:10]:
+                marker = "⭐" if acc.is_default else "•"
+                role = "Primary" if acc.is_primary else "Secondary"
+                overview_lines.append(f"{marker} **{acc.username}** · {role} · `{acc.user_code}`")
+            overview_text = "\n".join(overview_lines)
+            if len(overview_text) > 1024:
+                overview_text = overview_text[:1020].rsplit("\n", 1)[0]
+            embed.add_field(
+                name=f"Your accounts ({len(self.accounts)})",
+                value=overview_text,
+                inline=False,
+            )
         return embed, partner_file
 
     async def refresh(self, interaction: discord.Interaction) -> None:
@@ -1564,6 +1599,44 @@ class AccountDashboardView(OwnerView):
             await interaction.followup.send(file=discord.File(output), ephemeral=True)
         except Exception as error:
             await handle_interaction_error(interaction, error)
+
+    @discord.ui.button(
+        label="B30N",
+        style=discord.ButtonStyle.primary,
+        custom_id="lygus-b30n",
+        row=1,
+    )
+    async def b30n(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
+        account = self.selected_account()
+        await interaction.response.defer(ephemeral=True, thinking=True)
+        try:
+            jpg_bytes = await asyncio.to_thread(
+                render_b30n,
+                self.bot.settings.game_db_path,
+                account.user_id,
+            )
+            await interaction.followup.send(
+                file=discord.File(io.BytesIO(jpg_bytes), filename=f"b30n_{account.username}.jpg"),
+                ephemeral=True,
+            )
+        except Exception as error:
+            await handle_interaction_error(interaction, error)
+
+    @discord.ui.button(
+        label="Set Default",
+        emoji="⭐",
+        style=discord.ButtonStyle.success,
+        custom_id="lygus-set-default",
+        row=1,
+    )
+    async def set_default(self, interaction: discord.Interaction, _: discord.ui.Button) -> None:
+        account = self.selected_account()
+        await asyncio.to_thread(
+            self.bot.repository.set_default_account,
+            interaction.user.id,
+            account.user_id,
+        )
+        await self.refresh(interaction)
 
     @discord.ui.button(
         label="Rename",
@@ -1754,6 +1827,21 @@ def build_bot(settings: BotSettings) -> LygusBot:
             choices.append(app_commands.Choice(name=label[:100], value=chart.song_id[:100]))
         return choices
 
+    async def linked_account_autocomplete(
+        interaction: discord.Interaction, current: str
+    ) -> list[app_commands.Choice[str]]:
+        accounts = await asyncio.to_thread(bot.repository.list_accounts, interaction.user.id)
+        needle = current.strip().lower()
+        choices: list[app_commands.Choice[str]] = []
+        for acc in accounts:
+            if needle and needle not in acc.username.lower() and needle not in acc.user_code:
+                continue
+            prefix = "⭐ " if acc.is_default else ""
+            role = "Primary" if acc.is_primary else "Secondary"
+            label = f"{prefix}{acc.username} ({role} · {acc.user_code})"
+            choices.append(app_commands.Choice(name=label[:100], value=acc.username[:100]))
+        return choices[:25]
+
     @bot.event
     async def on_ready() -> None:
         LOGGER.info("Logged in as %s (%s).", bot.user, bot.user.id if bot.user else "unknown")
@@ -1776,6 +1864,57 @@ def build_bot(settings: BotSettings) -> LygusBot:
                 )
             else:
                 await interaction.followup.send(embed=embed, view=view, ephemeral=True)
+        except Exception as error:
+            await handle_interaction_error(interaction, error)
+
+    @bot.tree.command(
+        name="default",
+        description="View or switch your default Akaine account for quick commands",
+    )
+    @app_commands.describe(account="Optional linked username, user code, or user ID")
+    @app_commands.autocomplete(account=linked_account_autocomplete)
+    async def default_command(
+        interaction: discord.Interaction,
+        account: Optional[str] = None,
+    ) -> None:
+        await interaction.response.defer(ephemeral=True, thinking=True)
+        try:
+            if account is None or not account.strip():
+                accounts = await asyncio.to_thread(bot.repository.list_accounts, interaction.user.id)
+                if not accounts:
+                    raise AccountNotFound("Use `/create` or `/link` first.")
+                lines = []
+                for acc in accounts[:15]:
+                    marker = "⭐" if acc.is_default else "•"
+                    role = "Primary" if acc.is_primary else "Secondary"
+                    tag = " **(Default)**" if acc.is_default else ""
+                    lines.append(f"{marker} **{acc.username}** · {role} · `{acc.user_code}`{tag}")
+                embed = discord.Embed(
+                    title="Default Akaine Account",
+                    description="\n".join(lines),
+                    color=BRAND_COLOR,
+                )
+                embed.set_footer(
+                    text="Use /default <account> to switch quickly, or /account for full management."
+                )
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+
+            switched = await asyncio.to_thread(
+                bot.repository.set_default_account_by_name,
+                interaction.user.id,
+                account,
+            )
+            embed = discord.Embed(
+                title="Default account updated",
+                description=(
+                    f"⭐ **{switched.username}** (`{switched.user_code}`) is now your default account.\n"
+                    "Quick commands (`/rs`, `/profile`, `/b30`, `/b30n`, `/b30n2`, `/score`, "
+                    "`/top`, `/whatif`, `/progress`, `/compare`) now use it automatically."
+                ),
+                color=SUCCESS_COLOR,
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
         except Exception as error:
             await handle_interaction_error(interaction, error)
 
