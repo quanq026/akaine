@@ -1,6 +1,7 @@
 """Regression tests for Discord interaction response helpers."""
 
 import asyncio
+import io
 import sqlite3
 import sys
 import tempfile
@@ -13,6 +14,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import discord_bot  # noqa: E402
 import discord_bot_core  # noqa: E402
 import b30_generator  # noqa: E402
+import score_card_renderer  # noqa: E402
+import b30n_generator  # noqa: E402
+from PIL import Image
 
 
 class _Response:
@@ -68,6 +72,14 @@ class SendEphemeralTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(interaction.followup.sent), 1)
         self.assertNotIn("view", interaction.followup.sent[0])
         self.assertTrue(interaction.followup.sent[0]["ephemeral"])
+
+    async def test_anti_raid_skips_autocomplete_interactions(self) -> None:
+        import discord
+        interaction = _Interaction(done=False, user_id=999999)
+        interaction.type = discord.InteractionType.autocomplete
+        self.assertTrue(await discord_bot._anti_raid(interaction))
+        self.assertTrue(await discord_bot._anti_raid(interaction))
+        self.assertEqual(interaction.response.sent, [])
 
 
 class _User:
@@ -304,3 +316,282 @@ class RankingViewTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(first_buttons["lygus-ranking-next"])
         self.assertFalse(last_buttons["lygus-ranking-previous"])
         self.assertTrue(last_buttons["lygus-ranking-next"])
+
+
+class MultiDiscordLinkTests(unittest.TestCase):
+    def _setup_dbs(self, directory: str):
+        root = Path(directory)
+        game_db = root / "game.db"
+        map_db = root / "mapping.db"
+        with sqlite3.connect(game_db) as conn:
+            conn.execute(
+                """
+                CREATE TABLE user (
+                    user_id INTEGER PRIMARY KEY,
+                    name TEXT NOT NULL UNIQUE,
+                    password TEXT NOT NULL,
+                    user_code TEXT NOT NULL,
+                    rating_ptt INTEGER DEFAULT 1200,
+                    character_id INTEGER DEFAULT 0,
+                    join_date TEXT DEFAULT '2026-01-01',
+                    is_profile_public INTEGER DEFAULT 1
+                )
+                """
+            )
+            conn.execute("CREATE TABLE login (user_id INTEGER, token TEXT)")
+            pw_hash = discord_bot_core.hash_password("secretpass1")
+            conn.execute(
+                "INSERT INTO user (user_id, name, password, user_code) VALUES (1, 'Alice', ?, '123456789')",
+                (pw_hash,),
+            )
+            conn.execute("INSERT INTO login (user_id, token) VALUES (1, 'tok1')")
+            conn.commit()
+        return game_db, map_db
+
+    def test_migrate_legacy_unique_user_id_and_multilink_security(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            game_db, map_db = self._setup_dbs(directory)
+            with sqlite3.connect(map_db) as conn:
+                conn.execute(
+                    """
+                    CREATE TABLE user_mapping (
+                        discord_id TEXT NOT NULL,
+                        user_id INTEGER NOT NULL UNIQUE,
+                        username TEXT NOT NULL,
+                        user_code TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        PRIMARY KEY (discord_id, user_id),
+                        UNIQUE (discord_id, username)
+                    )
+                    """
+                )
+                conn.execute(
+                    "INSERT INTO user_mapping (discord_id, user_id, username, user_code) VALUES ('1001', 1, 'Alice', '123456789')"
+                )
+                conn.commit()
+
+            repo = discord_bot_core.BotRepository(game_db, map_db)
+            repo.migrate_mapping_schema()
+            repo.migrate_mapping_schema()  # idempotent
+
+            with sqlite3.connect(map_db) as conn:
+                self.assertFalse(repo._has_single_user_id_unique(conn))
+                idxs = {r[1] for r in conn.execute("PRAGMA index_list(user_mapping)").fetchall()}
+                self.assertIn("idx_user_mapping_user_id", idxs)
+
+            # Existing owner is backfilled as primary
+            self.assertTrue(repo.list_accounts("1001")[0].is_primary)
+
+            # Brute-force lockout after 5 wrong attempts
+            for _ in range(discord_bot_core.LINK_MAX_FAILURES):
+                with self.assertRaises(discord_bot_core.AuthenticationFailed):
+                    repo.link_account("1002", "Alice", "wrongpass1", now_ts=1000)
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.link_account("1002", "Alice", "secretpass1", now_ts=1100)
+            # After lockout window passes, link succeeds as secondary
+            acc2 = repo.link_account("1002", "Alice", "secretpass1", now_ts=1000 + 1000)
+            self.assertFalse(acc2.is_primary)
+
+            # Secondary cannot rename, reset password, or revoke others
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.rename_account("1002", 1, "AliceHack")
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.reset_password("1002", 1, "newpass123")
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.revoke_other_discords("1002", 1)
+
+            # Link 3rd Discord account, reject 4th
+            acc3 = repo.link_account("1003", "Alice", "secretpass1")
+            self.assertFalse(acc3.is_primary)
+            self.assertEqual(repo.count_linked_discords(1), 3)
+            with self.assertRaises(discord_bot_core.AccountConflict):
+                repo.link_account("1004", "Alice", "secretpass1")
+
+            # Primary renames -> synced to all rows
+            repo.rename_account("1001", 1, "AliceNew")
+            for did in ("1001", "1002", "1003"):
+                self.assertEqual(repo.list_accounts(did)[0].username, "AliceNew")
+
+            # Unlink primary -> oldest secondary promoted to primary
+            repo.unlink_account("1001", 1)
+            self.assertEqual(repo.count_linked_discords(1), 2)
+            promoted = [did for did in ("1002", "1003") if repo.list_accounts(did)[0].is_primary]
+            self.assertEqual(len(promoted), 1)
+            primary_did = promoted[0]
+
+            # Promoted primary can revoke other Discords and reset password
+            removed = repo.revoke_other_discords(primary_did, 1)
+            self.assertEqual(removed, 1)
+            self.assertEqual(repo.count_linked_discords(1), 1)
+
+
+class GameFeaturesTests(unittest.TestCase):
+    def _create_game_fixture(self, directory: str):
+        root = Path(directory)
+        game_db = root / "game.db"
+        map_db = root / "map.db"
+        pw = discord_bot_core.hash_password("secretpass1")
+        with sqlite3.connect(game_db) as conn:
+            conn.executescript(
+                f"""
+                CREATE TABLE user (
+                    user_id INTEGER PRIMARY KEY,
+                    name TEXT UNIQUE,
+                    password TEXT,
+                    join_date TEXT,
+                    user_code TEXT,
+                    rating_ptt INTEGER,
+                    character_id INTEGER,
+                    is_skill_sealed INTEGER DEFAULT 0,
+                    is_char_uncapped INTEGER DEFAULT 0,
+                    is_char_uncapped_override INTEGER DEFAULT 0,
+                    is_hide_rating INTEGER DEFAULT 0,
+                    song_id TEXT,
+                    difficulty INTEGER,
+                    score INTEGER,
+                    shiny_perfect_count INTEGER,
+                    perfect_count INTEGER,
+                    near_count INTEGER,
+                    miss_count INTEGER,
+                    clear_type INTEGER,
+                    rating REAL,
+                    time_played INTEGER,
+                    is_profile_public INTEGER DEFAULT 1
+                );
+                CREATE TABLE user_char (user_id INTEGER, character_id INTEGER, level INTEGER);
+                CREATE TABLE chart (
+                    song_id TEXT PRIMARY KEY,
+                    name TEXT,
+                    rating_pst INTEGER DEFAULT -1,
+                    rating_prs INTEGER DEFAULT -1,
+                    rating_ftr INTEGER DEFAULT -1,
+                    rating_byn INTEGER DEFAULT -1,
+                    rating_etr INTEGER DEFAULT -1
+                );
+                CREATE TABLE best_score (
+                    user_id INTEGER,
+                    song_id TEXT,
+                    difficulty INTEGER,
+                    score INTEGER,
+                    shiny_perfect_count INTEGER,
+                    perfect_count INTEGER,
+                    near_count INTEGER,
+                    miss_count INTEGER,
+                    time_played INTEGER,
+                    best_clear_type INTEGER,
+                    clear_type INTEGER,
+                    rating REAL,
+                    PRIMARY KEY (user_id, song_id, difficulty)
+                );
+                CREATE TABLE recent30 (
+                    user_id INTEGER,
+                    r_index INTEGER,
+                    time_played INTEGER,
+                    song_id TEXT,
+                    difficulty INTEGER,
+                    score INTEGER,
+                    shiny_perfect_count INTEGER,
+                    perfect_count INTEGER,
+                    near_count INTEGER,
+                    miss_count INTEGER,
+                    clear_type INTEGER,
+                    rating REAL,
+                    PRIMARY KEY (user_id, r_index)
+                );
+                INSERT INTO user (user_id, name, password, join_date, user_code, rating_ptt, character_id, song_id, difficulty, score, time_played, is_profile_public)
+                VALUES
+                    (1, 'Alice', '{pw}', '2026-01-01', '111111111', 1245, 0, 'arcanaeden', 3, 9936371, 1795770000, 1),
+                    (2, 'Bob', '{pw}', '2026-01-02', '222222222', 1180, 1, 'grievouslady', 2, 9850000, 1795760000, 1);
+                INSERT INTO user_char VALUES (1, 0, 20);
+                INSERT INTO chart VALUES
+                    ('arcanaeden', 'Arcana Eden', 55, 87, 105, 116, -1),
+                    ('cataclysmcry', 'Cataclysm Cry', 65, 88, 106, 118, -10),
+                    ('grievouslady', 'Grievous Lady', 65, 93, 111, -1, -1);
+                INSERT INTO best_score VALUES
+                    (1, 'arcanaeden', 3, 9936371, 1800, 2000, 12, 3, 1795770000, 2, 2, 13.281855),
+                    (1, 'grievouslady', 2, 9966880, 1300, 1400, 5, 0, 1795760000, 2, 2, 12.9344),
+                    (2, 'arcanaeden', 3, 9850000, 1500, 1900, 40, 20, 1795750000, 1, 1, 12.85),
+                    (2, 'grievouslady', 2, 9850000, 1200, 1350, 30, 15, 1795755000, 1, 1, 12.35);
+                INSERT INTO recent30 VALUES
+                    (1, 0, 1795770000, 'arcanaeden', 3, 9936371, 1800, 2000, 12, 3, 2, 13.281855),
+                    (1, 1, 1795760000, 'grievouslady', 2, 9910000, 1200, 1380, 20, 5, 1, 12.65);
+                """
+            )
+            conn.commit()
+        return discord_bot_core.BotRepository(game_db, map_db)
+
+    def test_rating_math_matches_live_formula(self) -> None:
+        r = discord_bot_core.calculate_play_rating(11.6, 9_936_371)
+        self.assertAlmostEqual(r, 13.281855, places=6)
+        self.assertEqual(discord_bot_core.calculate_play_rating(11.6, 10_000_000), 13.6)
+        needed = discord_bot_core.score_for_target_rating(11.6, 13.281855)
+        self.assertEqual(needed, 9_936_371)
+        self.assertIsNone(discord_bot_core.score_for_target_rating(11.6, 13.7))
+
+    def test_chart_queries_whatif_progress_random_and_card_render(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = self._create_game_fixture(directory)
+            repo.migrate_mapping_schema()
+
+            # Invalid constant -10 excluded
+            chart, diff_id, cc = repo.resolve_chart("cataclysm")
+            self.assertEqual(chart.song_id, "cataclysmcry")
+            self.assertEqual(diff_id, 3)
+            self.assertAlmostEqual(cc, 11.8)
+            self.assertNotIn(4, chart.constants)
+            with self.assertRaises(discord_bot_core.ValidationError):
+                repo.resolve_chart("cataclysmcry", 4)
+
+            # Recent cards & card PNG rendering
+            cards = repo.get_recent_score_cards(1, limit=10)
+            self.assertEqual(len(cards), 2)
+            self.assertEqual(cards[0].song_title, "Arcana Eden")
+            self.assertEqual(cards[0].chart_rank, 1)
+            self.assertEqual(cards[1].pb_delta, 9910000 - 9966880)
+
+            png = score_card_renderer.render_score_card(cards[0])
+            self.assertTrue(png.startswith(b"\x89PNG\r\n\x1a\n"))
+            with Image.open(io.BytesIO(png)) as im:
+                self.assertEqual(im.size, (600, 867))
+
+            # Leaderboard, Top, Whatif, Progress, Compare, Random
+            lb = repo.get_chart_leaderboard("arcanaeden", 3, viewer_user_id=2)
+            self.assertEqual(lb.entries[0].username, "Alice")
+            self.assertIsNotNone(lb.viewer_entry)
+            self.assertEqual(lb.viewer_entry.rank, 2)
+
+            top = repo.get_top_scores(1, min_cc=11.5)
+            self.assertEqual(top.total_entries, 1)
+            self.assertEqual(top.entries[0].song_id, "arcanaeden")
+
+            whatif_sum = repo.get_whatif_summary(1)
+            self.assertGreater(whatif_sum.b30_avg, 0.8)
+            sim = repo.simulate_whatif_chart(1, "cataclysmcry", 3, target_score=9_900_000)
+            self.assertAlmostEqual(sim.simulated_rating, 13.3, places=4)
+            self.assertGreater(sim.simulated_b30_delta, 0.0)
+
+            prog = repo.get_progress_summary(1)
+            self.assertEqual(prog.total_played, 2)
+            self.assertEqual(prog.total_ex_plus, 2)
+            self.assertEqual(prog.total_fr, 2)
+
+            comp = repo.compare_scores("arcanaeden", 3, 1, 2)
+            self.assertGreater(comp.left_score.score, comp.right_score.score)
+
+            rchart, rdiff, rcc = repo.get_random_chart(min_cc=11.0, max_cc=12.0)
+            self.assertGreaterEqual(rcc, 11.0)
+            self.assertLessEqual(rcc, 12.0)
+
+            jpg = b30n_generator.render_b30n(repo.game_db_path, 1)
+            self.assertTrue(jpg.startswith(b"\xff\xd8\xff"))
+            with Image.open(io.BytesIO(jpg)) as b30_im:
+                self.assertEqual(b30_im.width, 2000)
+
+            jpg2 = b30n_generator.render_b30n2(repo.game_db_path, 1)
+            self.assertTrue(jpg2.startswith(b"\xff\xd8\xff"))
+            with Image.open(io.BytesIO(jpg2)) as b30n2_im:
+                self.assertEqual(b30n2_im.size, (2560, 1600))
+
+
+if __name__ == "__main__":
+    unittest.main()

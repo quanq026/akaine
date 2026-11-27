@@ -76,7 +76,7 @@ The service should report `active`. Open Discord and confirm the bot is online. 
 2. In Discord, run `/create` and enter a username and password in the private dialog. Save the details the bot returns and try `/profile` for your new account.
 3. Sign in to the game, choose **Cloud Sync → Download**, then check a pack and a character from your content set. If either is missing, review the content setup. See [how to check account access](05a-install-game-server.md#create-an-account-and-check-access) for an administrator preview.
 
-Use `/link` if you already have an account. `/profile` and `/recent` accept an Akaine username or the `discord_profile` option. `/ranking` shows five players per page.
+Use `/link` if you already have an account, or `/account` to manage linked Discord users (up to 3 links with primary ownership control, 5-attempt `/link` lockout, and DM alerts on new links). `/profile`, `/recent` (alias `/rs`), `/score`, `/compare`, `/top`, `/whatif`, `/progress`, `/b30`, `/b30n` (Chieri vertical card), and `/b30n2` (16:10 widescreen) accept an Akaine username or the `discord_profile` option; `/song`, `/random`, `/lb`, and `/ranking` inspect charts and server leaderboards (five players per page). Score cards and `/b30n` images render with Pillow using your local `assets/jackets/`, `assets/char/`, and optional Apache-2.0 theme assets (`assets/card_theme/` from `SkyDynamic/nonebot-plugin-arcaeabot`).
 
 If the service is not active, inspect only its recent status and logs:
 
