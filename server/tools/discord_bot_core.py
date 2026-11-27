@@ -712,7 +712,34 @@ class BotRepository:
             CREATE TABLE IF NOT EXISTS external_api_key (
                 key_hash TEXT PRIMARY KEY,
                 created_by TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                scope TEXT NOT NULL DEFAULT 'admin',
+                label TEXT NOT NULL DEFAULT ''
+            )
+            """
+        )
+        columns = {
+            row[1] for row in connection.execute("PRAGMA table_info(external_api_key)")
+        }
+        if "scope" not in columns:
+            connection.execute(
+                "ALTER TABLE external_api_key ADD COLUMN scope TEXT NOT NULL DEFAULT 'admin'"
+            )
+        if "label" not in columns:
+            connection.execute(
+                "ALTER TABLE external_api_key ADD COLUMN label TEXT NOT NULL DEFAULT ''"
+            )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS idx_external_api_key_owner "
+            "ON external_api_key(created_by, scope)"
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS external_api_ban (
+                discord_id TEXT PRIMARY KEY,
+                banned_by TEXT NOT NULL,
+                reason TEXT NOT NULL DEFAULT '',
+                banned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
         )
@@ -769,9 +796,9 @@ class BotRepository:
         try:
             connection.execute("BEGIN IMMEDIATE")
             self._create_external_api_key_table(connection)
-            connection.execute("DELETE FROM external_api_key")
+            connection.execute("DELETE FROM external_api_key WHERE COALESCE(scope, 'admin') = 'admin'")
             connection.execute(
-                "INSERT INTO external_api_key (key_hash,created_by) VALUES (?,?)",
+                "INSERT INTO external_api_key (key_hash, created_by, scope, label) VALUES (?, ?, 'admin', 'admin')",
                 (key_hash, str(created_by)),
             )
             connection.commit()
@@ -782,12 +809,150 @@ class BotRepository:
             connection.close()
         return token
 
-    def revoke_external_api_key(self) -> bool:
+    def revoke_external_api_key(self, target_discord_id: Optional[str | int] = None) -> bool:
         connection = self._connect(self.mapping_db_path)
         try:
             connection.execute("BEGIN IMMEDIATE")
             self._create_external_api_key_table(connection)
-            changed = connection.execute("DELETE FROM external_api_key").rowcount > 0
+            if target_discord_id is None:
+                changed = (
+                    connection.execute(
+                        "DELETE FROM external_api_key WHERE COALESCE(scope, 'admin') = 'admin'"
+                    ).rowcount
+                    > 0
+                )
+            else:
+                changed = (
+                    connection.execute(
+                        "DELETE FROM external_api_key WHERE created_by = ? AND scope = 'community'",
+                        (str(target_discord_id),),
+                    ).rowcount
+                    > 0
+                )
+            connection.commit()
+            return changed
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+
+    @staticmethod
+    def _validate_api_key_label(label: str) -> str:
+        clean = label.strip()
+        if len(clean) > 40:
+            raise ValidationError("API key label must be 40 characters or fewer.")
+        if any(ord(ch) < 32 or ord(ch) == 127 for ch in clean):
+            raise ValidationError("API key label contains unsupported control characters.")
+        return clean
+
+    def issue_community_api_key(self, discord_id: str | int, label: str = "") -> tuple[str, bool]:
+        clean_label = self._validate_api_key_label(label)
+        if not self.list_accounts(discord_id):
+            raise AccountNotFound(
+                "Link or create an Akaine account first (`/create` or `/link`) before creating a developer API key."
+            )
+        token = "akdev_" + secrets.token_urlsafe(32)
+        key_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+        connection = self._connect(self.mapping_db_path)
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            self._create_external_api_key_table(connection)
+            banned = connection.execute(
+                "SELECT 1 FROM external_api_ban WHERE discord_id = ?",
+                (str(discord_id),),
+            ).fetchone()
+            if banned is not None:
+                raise PermissionDenied("Your Discord account is restricted from developer API access.")
+            replaced = (
+                connection.execute(
+                    "DELETE FROM external_api_key WHERE created_by = ? AND scope = 'community'",
+                    (str(discord_id),),
+                ).rowcount
+                > 0
+            )
+            connection.execute(
+                "INSERT INTO external_api_key (key_hash, created_by, scope, label) VALUES (?, ?, 'community', ?)",
+                (key_hash, str(discord_id), clean_label),
+            )
+            connection.commit()
+            return token, replaced
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+
+    def get_community_api_key_info(self, discord_id: str | int) -> Optional[dict]:
+        connection = self._connect(self.mapping_db_path)
+        try:
+            tables = self._existing_tables(connection)
+            if "external_api_key" not in tables:
+                return None
+            columns = {
+                row[1] for row in connection.execute("PRAGMA table_info(external_api_key)")
+            }
+            if "scope" not in columns:
+                return None
+            label_expr = "label" if "label" in columns else "''"
+            row = connection.execute(
+                f"""
+                SELECT created_at, {label_expr} AS label
+                FROM external_api_key
+                WHERE created_by = ? AND scope = 'community'
+                ORDER BY created_at DESC
+                LIMIT 1
+                """,
+                (str(discord_id),),
+            ).fetchone()
+            if row is None:
+                return None
+            return {"created_at": str(row["created_at"]), "label": str(row["label"] or "")}
+        finally:
+            connection.close()
+
+    def revoke_community_api_key(self, discord_id: str | int) -> bool:
+        return self.revoke_external_api_key(discord_id)
+
+    def ban_community_api_user(
+        self, discord_id: str | int, admin_id: str | int, reason: str = ""
+    ) -> bool:
+        clean_reason = reason.strip()[:160]
+        connection = self._connect(self.mapping_db_path)
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            self._create_external_api_key_table(connection)
+            revoked = (
+                connection.execute(
+                    "DELETE FROM external_api_key WHERE created_by = ? AND scope = 'community'",
+                    (str(discord_id),),
+                ).rowcount
+                > 0
+            )
+            connection.execute(
+                "INSERT OR REPLACE INTO external_api_ban (discord_id, banned_by, reason) VALUES (?, ?, ?)",
+                (str(discord_id), str(admin_id), clean_reason),
+            )
+            connection.commit()
+            return revoked
+        except Exception:
+            connection.rollback()
+            raise
+        finally:
+            connection.close()
+
+    def unban_community_api_user(self, discord_id: str | int) -> bool:
+        connection = self._connect(self.mapping_db_path)
+        try:
+            connection.execute("BEGIN IMMEDIATE")
+            self._create_external_api_key_table(connection)
+            changed = (
+                connection.execute(
+                    "DELETE FROM external_api_ban WHERE discord_id = ?",
+                    (str(discord_id),),
+                ).rowcount
+                > 0
+            )
             connection.commit()
             return changed
         except Exception:

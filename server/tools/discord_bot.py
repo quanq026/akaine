@@ -536,13 +536,13 @@ def help_embed_for_category(category: str) -> discord.Embed:
     if category == "account":
         embed = discord.Embed(title="Demiurge · Account & Security", color=SUCCESS_COLOR)
         embed.add_field(
-            name="/account · /default · /create · /link",
+            name="/account · /default · /create · /link · /dev_key",
             value=(
                 "Create or manage up to 3 linked Discord accounts per Akaine account.\n"
                 "• **Default account** sets which account quick commands (`/rs`, `/b30n`, `/profile`, ...) use (`⭐ Set Default` in `/account` or `/default <account>`).\n"
                 "• **Primary link** controls Rename, Password reset, and Remove other Discords.\n"
-                "• **Brute-force lockout** protects `/link` after 5 failed attempts.\n"
-                "• **Security alerts** DM existing linked Discord owners whenever a new Discord links."
+                "• **Developer API** (`/dev_key`): issue your personal read-only Bearer key (`60 req / 60s`, public profiles only).\n"
+                "• **Brute-force lockout** protects `/link` after 5 failed attempts; **DM alerts** notify owners on new links."
             ),
             inline=False,
         )
@@ -571,7 +571,7 @@ def help_embed_for_category(category: str) -> discord.Embed:
     )
     embed.add_field(
         name="Account",
-        value="`/account` · `/default` · `/create` · `/link`",
+        value="`/account` · `/default` · `/create` · `/link` · `/dev_key`",
         inline=False,
     )
     embed.set_footer(text="Demiurge · Use the dropdown menu for detailed command usage.")
@@ -2342,6 +2342,91 @@ def build_bot(settings: BotSettings) -> LygusBot:
         )
 
     @bot.tree.command(
+        name="dev_key",
+        description="Generate, view status, or revoke your personal read-only API key",
+    )
+    @app_commands.describe(
+        action="Action to perform (generate, status, or revoke)",
+        label="Optional short label for your app or bot (max 40 chars)",
+    )
+    @app_commands.choices(
+        action=[
+            app_commands.Choice(name="Generate / Rotate key", value="generate"),
+            app_commands.Choice(name="Status", value="status"),
+            app_commands.Choice(name="Revoke key", value="revoke"),
+        ]
+    )
+    async def dev_key_command(
+        interaction: discord.Interaction,
+        action: Optional[str] = "generate",
+        label: Optional[str] = None,
+    ) -> None:
+        await interaction.response.defer(ephemeral=True, thinking=True)
+        try:
+            mode = (action.value if hasattr(action, "value") else action) or "generate"
+            base_url = os.environ.get("AKAINE_EXTERNAL_API", "https://api.example.com/external/v1")
+            if mode == "status":
+                info = await asyncio.to_thread(
+                    bot.repository.get_community_api_key_info, interaction.user.id
+                )
+                if info is None:
+                    embed = discord.Embed(
+                        title="Developer API Key Status",
+                        description="You do not have an active personal API key.\nUse `/dev_key action:Generate / Rotate key` to create one.",
+                        color=INFO_COLOR,
+                    )
+                else:
+                    label_text = f"`{info['label']}`" if info["label"] else "*None*"
+                    embed = discord.Embed(
+                        title="Developer API Key Status",
+                        description="Active **community read-only** API key (token is only shown at creation).",
+                        color=SUCCESS_COLOR,
+                    )
+                    embed.add_field(name="Label", value=label_text, inline=True)
+                    embed.add_field(name="Created at", value=f"`{info['created_at']}`", inline=True)
+                    embed.add_field(name="Base URL", value=f"`{base_url}`", inline=False)
+                await interaction.followup.send(embed=embed, ephemeral=True)
+                return
+
+            if mode == "revoke":
+                revoked = await asyncio.to_thread(
+                    bot.repository.revoke_community_api_key, interaction.user.id
+                )
+                msg = (
+                    "Your personal developer API key has been revoked."
+                    if revoked
+                    else "You had no active personal developer API key."
+                )
+                await interaction.followup.send(msg, ephemeral=True)
+                return
+
+            token, replaced = await asyncio.to_thread(
+                bot.repository.issue_community_api_key,
+                interaction.user.id,
+                label or "",
+            )
+            action_note = (
+                "Your previous personal key was replaced."
+                if replaced
+                else "Store this token privately — it is shown once."
+            )
+            embed = discord.Embed(
+                title="Personal Read-Only Developer API Key",
+                description=(
+                    f"{action_note}\n\n"
+                    f"**Token (shown once):**\n||`{token}`||\n\n"
+                    f"**Base URL:** `{base_url}`\n"
+                    f"**Header:** `Authorization: Bearer <token>`\n"
+                    "**Endpoints:** `/players`, `/best-scores`, `/recent-scores`, `/plays`, `/charts`\n"
+                    "**Limits & privacy:** `60 req / 60s` per key · public profiles only · no assets or account endpoints."
+                ),
+                color=SUCCESS_COLOR,
+            )
+            await interaction.followup.send(embed=embed, ephemeral=True)
+        except Exception as error:
+            await handle_interaction_error(interaction, error)
+
+    @bot.tree.command(
         name="api_key",
         description="Rotate the external read-only API key (administrator only)",
     )
@@ -2361,14 +2446,45 @@ def build_bot(settings: BotSettings) -> LygusBot:
 
     @bot.tree.command(
         name="api_key_revoke",
-        description="Revoke the external read-only API key (administrator only)",
+        description="Revoke admin API key or a user's developer API key (administrator only)",
+    )
+    @app_commands.describe(
+        discord_user="Optional Discord user whose community developer key to revoke",
+        ban="Also prevent this Discord user from issuing future developer keys",
     )
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.check(project_admin)
-    async def api_key_revoke_command(interaction: discord.Interaction) -> None:
-        revoked = await asyncio.to_thread(bot.repository.revoke_external_api_key)
+    async def api_key_revoke_command(
+        interaction: discord.Interaction,
+        discord_user: Optional[discord.User] = None,
+        ban: bool = False,
+    ) -> None:
+        if discord_user is None:
+            revoked = await asyncio.to_thread(bot.repository.revoke_external_api_key)
+            await interaction.response.send_message(
+                "Admin read-only API key revoked." if revoked else "No active admin API key.",
+                ephemeral=True,
+            )
+            return
+        if ban:
+            revoked = await asyncio.to_thread(
+                bot.repository.ban_community_api_user,
+                discord_user.id,
+                interaction.user.id,
+            )
+            detail = "active key revoked and " if revoked else ""
+            await interaction.response.send_message(
+                f"<@{discord_user.id}>: {detail}developer API access banned.",
+                ephemeral=True,
+            )
+            return
+        revoked = await asyncio.to_thread(
+            bot.repository.revoke_external_api_key, discord_user.id
+        )
         await interaction.response.send_message(
-            "Read-only API key revoked." if revoked else "No active API key.",
+            f"Revoked developer API key for <@{discord_user.id}>."
+            if revoked
+            else f"<@{discord_user.id}> had no active developer API key.",
             ephemeral=True,
         )
 

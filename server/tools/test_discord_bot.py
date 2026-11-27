@@ -681,5 +681,50 @@ class DefaultAccountTests(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(remaining[0].is_default)
 
 
+class CommunityApiKeyTests(unittest.TestCase):
+    def test_community_key_lifecycle_isolation_and_ban(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            game_db = root / "game.db"
+            map_db = root / "mapping.db"
+            with sqlite3.connect(game_db) as conn:
+                conn.executescript(
+                    "CREATE TABLE user (user_id INTEGER PRIMARY KEY, name TEXT UNIQUE, user_code TEXT UNIQUE);"
+                    "INSERT INTO user VALUES (1, 'DevUser', '123456789');"
+                )
+                conn.commit()
+            repo = discord_bot_core.BotRepository(game_db, map_db)
+            repo.migrate_mapping_schema()
+
+            # Unlinked user cannot mint a developer key
+            with self.assertRaises(discord_bot_core.AccountNotFound):
+                repo.issue_community_api_key(777, "app")
+
+            repo.register_mapping(777, 1, "DevUser", "123456789")
+            token1, replaced = repo.issue_community_api_key(777, "bot-v1")
+            self.assertTrue(token1.startswith("akdev_"))
+            self.assertFalse(replaced)
+            info = repo.get_community_api_key_info(777)
+            self.assertIsNotNone(info)
+            self.assertEqual(info["label"], "bot-v1")
+
+            # Admin key rotation preserves community keys; admin revoke only drops admin key
+            repo.rotate_external_api_key(999)
+            self.assertIsNotNone(repo.get_community_api_key_info(777))
+            self.assertTrue(repo.revoke_external_api_key())
+            self.assertIsNotNone(repo.get_community_api_key_info(777))
+
+            # Banning revokes key and blocks reissue; unbanning restores
+            self.assertTrue(repo.ban_community_api_user(777, 999, "abuse"))
+            self.assertIsNone(repo.get_community_api_key_info(777))
+            with self.assertRaises(discord_bot_core.PermissionDenied):
+                repo.issue_community_api_key(777, "bot-v2")
+            self.assertTrue(repo.unban_community_api_user(777))
+            token2, _ = repo.issue_community_api_key(777, "bot-v2")
+            self.assertNotEqual(token1, token2)
+            self.assertTrue(repo.revoke_community_api_key(777))
+            self.assertIsNone(repo.get_community_api_key_info(777))
+
+
 if __name__ == "__main__":
     unittest.main()
